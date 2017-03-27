@@ -1,3 +1,77 @@
-<h1>
-  {{title}}
-</h1>
+<section layout="row" flex>
+    <md-sidenav-container fullscreen>
+        <md-sidenav #sidenav mode="side" class="app-sidenav" opened="true">
+            <md-list>
+                <!--<h1 style="text-align:center;font-size:1.5em;">Entities</h1>-->
+                <!--<md-divider></md-divider>-->
+            </md-list>
+            <md-list>
+                <h3 md-subheader> System Admin </h3>
+                <md-list-item>
+                    <button 
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['genre']">
+                        Type
+                    </button>
+                </md-list-item>
+                <md-list-item>
+                    <button 
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['attribute']">
+                        Attribute
+                    </button>
+                </md-list-item>
+                <md-list-item>
+                    <button 
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['entity']">
+                        Entity
+                    </button>
+                </md-list-item>
+                <md-divider></md-divider>
+                <h3 md-subheader> App Admin </h3>
+                <md-list-item *ngFor="let e of serviceList">
+                    <button
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['view', e.id]">
+                        {{e.label?e.label:"(no label)"}}
+                    </button>
+                </md-list-item>
+                <md-divider></md-divider>
+                <h3 md-subheader> User </h3>
+                <md-list-item>
+                    <button 
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['manufacturing']">
+                        Manufacturing
+                    </button>
+                </md-list-item>
+                <md-list-item>
+                    <button 
+                        md-list-item
+                        md-button
+                        class="sidenav-item-button"
+                        [routerLink]="['query']">
+                        Query
+                    </button>
+                </md-list-item>
+            </md-list>
+        </md-sidenav>
+        <md-toolbar>
+            <button md-icon-button checked="true" (click)="sidenav.toggle()">N</button>
+        </md-toolbar>
+        <div class="central-content">
+            <router-outlet></router-outlet>
+        </div>
+    </md-sidenav-container>
+</section>

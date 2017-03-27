@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {EntityService} from './entity/service'
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  serviceList: any[] = []
+
+  constructor(
+    private entityService: EntityService
+  ){}
+
+  ngOnInit(){
+    this.getServiceList()
+  }
+  getServiceList(){
+    this.entityService.retrieveByType("domain")
+    .subscribe(
+      data => {
+        this.serviceList = data
+      }
+    )
+  }
 }

@@ -3,18 +3,41 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import {routingModule} from './app.routes'
+import {MaterialModule} from '@angular/material'
+import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
+
 import { AppComponent } from './app.component';
+
+import {ObjectKeysPipe} from './objectKeys.pipe'
+
+import {EntityService} from './entity/service';
+import {GenreService} from './genre/service';
+import {AttributeService} from './attribute/service';
+
+import {ViewComponent} from './entity/view.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    ObjectKeysPipe,
+
+    AppComponent,
+    ViewComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    FlexLayoutModule,
+    MaterialModule.forRoot(),
+    routingModule,
+
   ],
-  providers: [],
+  providers: [
+    EntityService,
+    GenreService,
+    AttributeService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
