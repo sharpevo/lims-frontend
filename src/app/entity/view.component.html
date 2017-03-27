@@ -1,0 +1,108 @@
+
+
+<h3>{{entity[entity.SYS_LABEL]}} ({{entity.SYS_ENTITY_TYPE}}: {{entity.SYS_IDENTIFIER}})
+    <span style="font-size:9pt;color:#eee">
+        {{entity.id}}
+    </span>
+</h3>
+{{entity | json}}
+
+<div *ngFor="let genre of entity.SYS_GENRE_LIST">
+    <md-card>
+        <md-card-title>
+        </md-card-title>
+        <md-list>
+            <p md-line>
+                <button
+                    md-icon-button
+                    [routerLink]="['/entity', genre.id]">
+                    +
+                </button>
+                <b>{{genre[genre.SYS_LABEL]}}</b>({{genre.SYS_IDENTIFIER}})
+                <span style="font-size:9pt;color:#eee">
+                    {{genre.id}}
+                </span>
+                {{entity.classes|json}}
+                <!--<span *ngFor="let e of entity['subgenres'][genre.identifier]">-->
+                    <!--<br/>-->
+                <!--<a-->
+                    <!--[routerLink]="['/view', e.id]">-->
+                    <!--{{e.label?e.label:e.identifier?e.identifier:e.id}}-->
+                <!--</a>-->
+                <!--</span>-->
+            </p>
+        </md-list>
+    </md-card>
+</div>
+<div *ngFor="let g of object.genres">
+    <md-card>
+        <md-card-title>
+        </md-card-title>
+        <md-list>
+            <p md-line>
+                <button
+                    md-icon-button
+                    [routerLink]="['/entity', g.id]">
+                    +
+                </button>
+                <b>{{g["label"]?g["label"]:g.id}}</b> ({{g.identifier}})
+                <span style="font-size:9pt;color:#eee">
+                    {{g.id}}
+                </span>
+                <span *ngFor="let e of entity['subgenres'][g.identifier]">
+                    <br/>
+                <a
+                    [routerLink]="['/view', e.id]">
+                    {{e.label?e.label:e.identifier?e.identifier:e.id}}
+                </a>
+                </span>
+            </p>
+        </md-list>
+    </md-card>
+</div>
+
+<!--entities without any type, i.e., not sub entities-->
+<div *ngIf="object?.genres?.length == 0">
+    <p *ngFor="let key of objectKeys">
+        <b>{{key}}:</b>
+        <span *ngIf="object[key]?.length != 24">
+            {{object[key] | json}}
+        </span>
+        <span *ngIf="object[key]?.length == 24">
+            <a [routerLink]="['/view', object[key]]">
+            {{object[key]}}
+            </a>
+        </span>
+    </p>
+</div>
+<div *ngFor="let k of object.subEntitiesKeys">
+{{object.subEntities| objectKeys}}
+    <p *ngFor="let v of object.subEntities[k]">
+        <b>
+            <a [routerLink]="['/view',v.id]">
+                {{v.label}}
+            </a>
+        :</b>
+        {{k}}: {{object.label}}
+        <span *ngIf="v[k].length != 24">
+            <span *ngFor="let e of v[k]">
+                <span *ngIf="e.id == object.id">
+                    <ul *ngFor="let ek of e | objectKeys">
+                        <b>{{ek}}:</b>
+                        {{e[ek]}}
+                    </ul>
+                </span>
+            </span>
+        </span>
+    </p>
+
+</div>
+<span style="color:#aaa">{{object.subEntities | json}}</span>
+
+    <!--<span *ngIf="object.subEntities">-->
+    <!--<p *ngFor="let r of object['subEntities']['reagent']">-->
+        <!--<b>{{r|objectKeys}}</b>-->
+    <!--</p>-->
+    <!--</span>-->
+    <!--{{object.subEntities?.reagent | objectKeys}}-->
+    <!--{{object| objectKeys}}-->
