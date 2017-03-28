@@ -1,0 +1,25 @@
+<ul>
+    <li *ngFor="let d of entityList; let i = index">
+        <!--<span>-->
+        <!--<md-checkbox-->
+        <!--[checked]="d.checked"-->
+        <!--(change)="d.check()">-->
+        <!--</md-checkbox>-->
+        <!--</span>-->
+        <span
+            mdTooltip="{{d.SYS_IDENTIFIER}}"
+            [mdTooltipPosition]="'left'"
+            [mdTooltipShowDelay]="2000"
+            [mdTooltipHideDelay]="0"
+            (click)="d.tmp_open=!d.tmp_open">
+            <h3
+                style="font-weight:normal">
+                {{d[d["SYS_LABEL"]]}}
+            </h3>
+        </span>
+        <tree-view 
+            *ngIf="d.tmp_open"
+            [identifierPrefix]="d.SYS_IDENTIFIER">
+        </tree-view>
+    </li>
+</ul>

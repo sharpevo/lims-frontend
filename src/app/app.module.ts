@@ -16,6 +16,7 @@ import {GenreService} from './genre/service';
 import {AttributeService} from './attribute/service';
 
 import {ViewComponent} from './entity/view.component';
+import {TreeViewComponent} from './tree/component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,8 @@ import {ViewComponent} from './entity/view.component';
 
     AppComponent,
     ViewComponent,
+
+    TreeViewComponent,
   ],
   imports: [
     BrowserModule,

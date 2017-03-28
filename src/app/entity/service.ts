@@ -47,6 +47,13 @@ export class EntityService {
     .map(res => res.json())
   }
 
+  retrieveByIdentifier(identifier: string){
+    let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}`
+    console.log(url)
+    return this.http.get(url)
+    .map(res => res.json())
+  }
+
 
 
 
@@ -110,7 +117,7 @@ export class EntityService {
   }
 
   // get class entity for objects entity when track children
-  retrieveByIdentifier(identifier: string){
+  retrieveByIdentifier2(identifier: string){
     return this.http.get(`${this.url}?identifier=${identifier}`)
     .map(res => res.json())
   }
