@@ -1,25 +1,47 @@
-<ul>
-    <li *ngFor="let d of entityList; let i = index">
-        <!--<span>-->
-        <!--<md-checkbox-->
-        <!--[checked]="d.checked"-->
-        <!--(change)="d.check()">-->
-        <!--</md-checkbox>-->
-        <!--</span>-->
-        <span
-            mdTooltip="{{d.SYS_IDENTIFIER}}"
-            [mdTooltipPosition]="'left'"
-            [mdTooltipShowDelay]="2000"
-            [mdTooltipHideDelay]="0"
-            (click)="d.tmp_open=!d.tmp_open">
-            <h3
-                style="font-weight:normal">
-                {{d[d["SYS_LABEL"]]}}
-            </h3>
-        </span>
+<ul style="list-style:none">
+    <li
+		style="list-style:none"
+		*ngFor="let d of entityList; let i = index">
+		<md-menu #menu="mdMenu" style="font-size:9pt">
+			<button md-menu-item>
+				<md-icon>add</md-icon>
+				<span>Create New {{d[d["SYS_LABEL"]]}}</span>
+			</button>
+			<button md-menu-item>
+				<md-icon>edit</md-icon>
+				<span>Edit the Genre of {{d[d["SYS_LABEL"]]}} </span>
+			</button>
+		</md-menu>
+		<span
+			fxLayout="row"
+			fxLayoutAlign="space-between end">
+			<span
+				style="width:100%"
+				mdTooltip="{{d.SYS_IDENTIFIER}}"
+				[mdTooltipPosition]="'right'"
+				[mdTooltipShowDelay]="2000"
+				[mdTooltipHideDelay]="0"
+				(click)="d.tmp_open=!d.tmp_open">
+				<span
+					style="font-size:12pt">
+					<!--<md-checkbox-->
+					<!--[checked]="d.tmp_checked"-->
+					<!--(change)="d.tmp_checked=!d.tmp_checked">-->
+					<!--</md-checkbox>-->
+					{{d[d["SYS_LABEL"]]}}
+				</span>
+			</span>
+			<button
+				md-icon-button
+				style="opacity:0.5"
+				[mdMenuTriggerFor]="menu">
+				<md-icon>more_vert</md-icon>
+			</button>
+		</span>
         <tree-view 
             *ngIf="d.tmp_open"
             [identifierPrefix]="d.SYS_IDENTIFIER">
         </tree-view>
     </li>
 </ul>
+
