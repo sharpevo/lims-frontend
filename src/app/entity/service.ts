@@ -49,7 +49,6 @@ export class EntityService {
 
   retrieveByIdentifier(identifier: string){
     let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}`
-    console.log(url)
     return this.http.get(url)
     .map(res => res.json())
   }

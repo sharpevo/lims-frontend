@@ -1,4 +1,8 @@
 import {Component, Input} from '@angular/core'
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {NewEntityDialog} from '../entity/create.dialog.component'
+import {NewAttributeDialog} from '../attribute/form.dialog.component'
+
 import {EntityService} from '../entity/service'
 
 @Component({
@@ -10,8 +14,11 @@ export class TreeViewComponent {
   @Input() hierarchy: any[]
   @Input() entityList: any[]
   @Input() identifierPrefix: string
-  @Input() open: boolean = false
-  constructor(private entityService: EntityService){
+  selectedOption: string
+  constructor(
+    public dialog: MdDialog,
+    private entityService: EntityService
+  ){
     if (!this.hierarchy){
       this.hierarchy = []
     }
@@ -36,7 +43,7 @@ export class TreeViewComponent {
     if (!this.identifierPrefix){
       this.identifierPrefix = ""
     }
-    console.log(this.identifierPrefix)
+    //console.log(this.identifierPrefix)
     let identifier = `^${this.identifierPrefix}/[a-zA-Z0-9_]*$`
     this.entityService.retrieveByIdentifier(identifier)
     .subscribe(
@@ -46,6 +53,20 @@ export class TreeViewComponent {
     )
   }
 
+  openNewEntityDialog() {
+    let dialogRef = this.dialog.open(NewEntityDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedOption = result;
+    });
+  }
+
+  openNewAttributeDialog(entity: any) {
+    let dialogRef = this.dialog.open(NewAttributeDialog, {width:'600px'});
+    dialogRef.componentInstance.config.entity = entity
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedOption = result;
+    });
+  }
 }
 
 class Hierarchy{

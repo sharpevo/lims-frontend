@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map'
 
 @Injectable()
 export class GenreService {
-  private url: string = 'http://dell:1337/genre'
+  private url: string = 'http://dell:3000/genre'
   private headers: Headers
   constructor(private http: Http){
     this.headers = new Headers()
@@ -37,6 +37,13 @@ export class GenreService {
     return this.http.get(this.url)
     .map(res => res.json())
   }
+
+  retrieveByEntityId(entityId: string){
+    return this.http.get(`${this.url}?SYS_ENTITY=${entityId}`)
+    .map(res => res.json())
+  }
+
+
 
   retrieveByEntityCode(code: string){
     let url = `${this.url}?where={"entitycode":{"contains":"${code}"}}`

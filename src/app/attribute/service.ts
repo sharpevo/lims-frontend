@@ -20,6 +20,14 @@ export class AttributeService {
       .map(res => res.json())
   }
 
+  update(object: any){
+    return this.http.put(
+      `${this.url}/${object.id}`,
+      JSON.stringify(object),
+      {headers: this.headers})
+      .map(res => res.json())
+  }
+
   deleteById(id: string){
     return this.http.delete(`${this.url}/${id}`)
     .map(res => res.json())
@@ -31,7 +39,7 @@ export class AttributeService {
   }
 
   retrieveByGenreId(id: string){
-    return this.http.get(`${this.url}?genre=${id}`)
+    return this.http.get(`${this.url}?SYS_GENRE=${id}`)
     .map(res => res.json())
   }
 

@@ -18,6 +18,9 @@ import {AttributeService} from './attribute/service';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 
+import {NewEntityDialog} from './entity/create.dialog.component';
+import {NewAttributeDialog} from './attribute/form.dialog.component';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -26,6 +29,12 @@ import {TreeViewComponent} from './tree/component';
     ViewComponent,
 
     TreeViewComponent,
+    NewEntityDialog,
+    NewAttributeDialog,
+  ],
+  entryComponents:[
+    NewEntityDialog,
+    NewAttributeDialog,
   ],
   imports: [
     BrowserModule,

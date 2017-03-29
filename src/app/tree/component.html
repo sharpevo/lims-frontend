@@ -1,34 +1,38 @@
 <ul style="list-style:none">
     <li
 		style="list-style:none"
-		*ngFor="let d of entityList; let i = index">
+		*ngFor="let entity of entityList">
 		<md-menu #menu="mdMenu" style="font-size:9pt">
-			<button md-menu-item>
+			<button
+				md-menu-item
+				(click)="openNewEntityDialog()">
 				<md-icon>add</md-icon>
-				<span>Create New {{d[d["SYS_LABEL"]]}}</span>
+				<span>Create New {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
-			<button md-menu-item>
+			<button
+                md-menu-item
+                (click)="openNewAttributeDialog(entity)">
 				<md-icon>edit</md-icon>
-				<span>Edit the Genre of {{d[d["SYS_LABEL"]]}} </span>
+				<span>Attributes of {{entity[entity["SYS_LABEL"]]}} </span>
 			</button>
 		</md-menu>
 		<span
 			fxLayout="row"
-			fxLayoutAlign="space-between end">
+			fxLayoutAlign="space-between center">
 			<span
 				style="width:100%"
-				mdTooltip="{{d.SYS_IDENTIFIER}}"
+				mdTooltip="{{entity.SYS_IDENTIFIER}}"
 				[mdTooltipPosition]="'right'"
 				[mdTooltipShowDelay]="2000"
 				[mdTooltipHideDelay]="0"
-				(click)="d.tmp_open=!d.tmp_open">
+				(click)="entity.tmp_open=!entity.tmp_open">
 				<span
 					style="font-size:12pt">
 					<!--<md-checkbox-->
 					<!--[checked]="d.tmp_checked"-->
 					<!--(change)="d.tmp_checked=!d.tmp_checked">-->
 					<!--</md-checkbox>-->
-					{{d[d["SYS_LABEL"]]}}
+					{{entity[entity["SYS_LABEL"]]}}
 				</span>
 			</span>
 			<button
@@ -39,8 +43,8 @@
 			</button>
 		</span>
         <tree-view 
-            *ngIf="d.tmp_open"
-            [identifierPrefix]="d.SYS_IDENTIFIER">
+            *ngIf="entity.tmp_open"
+            [identifierPrefix]="entity.SYS_IDENTIFIER">
         </tree-view>
     </li>
 </ul>
