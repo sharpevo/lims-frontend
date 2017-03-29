@@ -18,8 +18,8 @@ import {AttributeService} from './attribute/service';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 
-import {NewEntityDialog} from './entity/create.dialog.component';
-import {NewAttributeDialog} from './attribute/form.dialog.component';
+import {EntityFormDialog} from './entity/form.dialog.component';
+import {AttributeFormDialog} from './attribute/form.dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,12 +29,12 @@ import {NewAttributeDialog} from './attribute/form.dialog.component';
     ViewComponent,
 
     TreeViewComponent,
-    NewEntityDialog,
-    NewAttributeDialog,
+    EntityFormDialog,
+    AttributeFormDialog,
   ],
   entryComponents:[
-    NewEntityDialog,
-    NewAttributeDialog,
+    EntityFormDialog,
+    AttributeFormDialog,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {MdDialog, MdDialogRef} from '@angular/material'
-import {NewEntityDialog} from '../entity/create.dialog.component'
-import {NewAttributeDialog} from '../attribute/form.dialog.component'
+import {EntityFormDialog} from '../entity/form.dialog.component'
+import {AttributeFormDialog} from '../attribute/form.dialog.component'
 
 import {EntityService} from '../entity/service'
 
@@ -54,14 +54,14 @@ export class TreeViewComponent {
   }
 
   openNewEntityDialog() {
-    let dialogRef = this.dialog.open(NewEntityDialog);
+    let dialogRef = this.dialog.open(EntityFormDialog);
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
     });
   }
 
   openNewAttributeDialog(entity: any) {
-    let dialogRef = this.dialog.open(NewAttributeDialog, {width:'600px'});
+    let dialogRef = this.dialog.open(AttributeFormDialog, {width:'600px'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
