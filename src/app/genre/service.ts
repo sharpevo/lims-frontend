@@ -20,6 +20,14 @@ export class GenreService {
       .map(res => res.json())
   }
 
+  update(object: any){
+    return this.http.put(
+      `${this.url}/${object.id}`,
+      JSON.stringify(object),
+      {headers: this.headers})
+      .map(res => res.json())
+  }
+
   addAttribute(objectid: string, attributeid: string){
     return this.http.post(
       `${this.url}/${objectid}/attributes/${attributeid}`,
@@ -43,6 +51,11 @@ export class GenreService {
     .map(res => res.json())
   }
 
+  retrieveByIdentifier(identifier: string){
+    return this.http.get(`${this.url}?SYS_IDENTIFIER=${identifier}`)
+    .map(res => res.json())
+  }
+
 
 
   retrieveByEntityCode(code: string){
@@ -57,7 +70,7 @@ export class GenreService {
   }
 
   // used in entity creating page
-  retrieveByIdentifier(identifier: string){
+  retrieveByIdentifier2(identifier: string){
     return this.http.get(`${this.url}?identifier=${identifier}`)
     .map(res => res.json())
   }

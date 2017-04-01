@@ -1,0 +1,123 @@
+<md-input-container style="display:none">
+	<input
+		mdInput
+		[required]="true"
+		type="text"
+		[(ngModel)]="instance['genre']"
+		placeholder="Entity Type"/>
+</md-input-container>
+<md-input-container style="display:none">
+	<input
+		mdInput
+		[required]="true"
+		type="text"
+		[(ngModel)]="instance['identifier']"
+		placeholder="Identifier"/>
+</md-input-container>
+<div class="container">
+    <table
+        fxLayout="row"
+        fxLayoutAlign="center"
+        *ngIf="(genre|json) != '{}'">
+        <tr>
+            <td
+            *ngFor="let attr of genre.attributes">
+                {{attr|json}}
+                <span [ngSwitch]="attr.type">
+                    <span *ngSwitchCase="'string'">
+                        <md-input-container class="full-width">
+                            <input
+                                mdInput
+                                [required]="attr.required"
+                                type="text"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}"/>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'text'">
+                        <md-input-container class="full-width">
+                            <textarea
+                                mdInput
+                                [required]="attr.required"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}">
+                            </textarea>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'number'">
+                        <md-input-container class="full-width">
+                            <input
+                                mdInput
+                                [required]="attr.required"
+                                type="number"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}"/>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'list'">
+                        <md-select
+                            [(ngModel)]="instance[attr.code]"
+                            placeholder="{{attr.label}}">
+                            <md-option 
+                                value="{{o.split(':')[0]}}"
+                                *ngFor="let o of attr.typeList.split(',')">
+                                {{o.split(':')[1]}} ({{o.split(':')[0]}})
+                            </md-option>
+                        </md-select>
+                    </span>
+                    <span *ngSwitchCase="'boolean'">
+                        <md-checkbox
+                            class="example-margin"
+                            [(ngModel)]="instance[attr.code]">
+                            {{attr.label}}
+                        </md-checkbox>
+                    </span>
+                    <span *ngSwitchCase="'date'">
+                        <md-input-container class="full-width">
+                            <input
+                                mdInput
+                                type="date"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}"/>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'datetime'">
+                        <md-input-container class="full-width">
+                            <input
+                                mdInput
+                                type="datetime-local"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}"/>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'file'">
+                        <md-input-container class="full-width">
+                            {{attr.label}}
+                            <input
+                                mdInput
+                                type="file"/>
+                        </md-input-container>
+                    </span>
+                    <span *ngSwitchCase="'entity'">
+                        <span *ngIf="attr.typeEntityRef">
+                            <md-select
+                                class="full-width"
+                                [(ngModel)]="instance[attr.code]"
+                                placeholder="{{attr.label}}">
+                                <md-option
+                                    value="{{e.id}}"
+                                    *ngFor="let e of attrEntityList[attr.code]">
+                                    {{e.label?e.label:e.identifier?e.identifier:e.id}}
+                                </md-option>
+                            </md-select>
+                        </span>
+                    </span>
+                    <span *ngSwitchDefault>
+                        Unknown type: {{attr?.label}} ({{attr.code}})
+                    </span>
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>
+

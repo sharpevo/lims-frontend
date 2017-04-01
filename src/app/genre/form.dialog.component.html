@@ -1,0 +1,93 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between start">
+    <h3>
+        {{config.entity[config.entity["SYS_LABEL"]] | uppercase}}
+    </h3>
+    <button
+        tabindex="-1"
+        md-icon-button
+        md-dialog-close>
+        x 
+    </button>
+</div>
+<br/>
+<br/>
+
+<div
+    fxLayout="column"
+    fxLayoutAlign="center stretch"> 
+    <md-input-container class="full-width">
+        <input
+            mdInput
+            disabled
+            tabindex="-1"
+            type="text"
+            [(ngModel)]="object.SYS_ENTITY"
+            placeholder="{{config.entity[config.entity['SYS_LABEL']]}}"/>
+    </md-input-container>
+    <md-input-container class="full-width">
+        <input
+            mdInput
+            tabindex="-1"
+            required
+            type="text"
+            [(ngModel)]="object.SYS_IDENTIFIER"
+            placeholder="IDENTIFIER"/>
+    </md-input-container>
+    <md-input-container class="full-width">
+        <input
+            mdInput
+            required
+            type="text"
+            [(ngModel)]="object.label"
+            placeholder="Label"/>
+    </md-input-container>
+
+</div>
+<div
+    fxLayout="row"
+    fxLayoutAlign="end end">
+    <button 
+        md-button
+        (click)="createObject()">
+        SUBMIT
+    </button>
+    <button 
+        md-button
+        (click)="object = {}">
+        CLEAR
+    </button>
+</div>
+
+<div
+    *ngFor="let genre of genreList"
+    fxLayout="column"
+    fxLayoutAlign="center stretch">
+    <md-card
+        fxLayout="row"
+        fxLayoutAlign="space-between center">
+        <div>
+            {{genre[genre["SYS_LABEL"]]}}
+        </div>
+        <div>
+            {{genre.SYS_CODE}}
+        </div>
+        <div>
+            <span style="color: #aaa">{{genre.id}}</span>
+        </div>
+        <div>
+            <button
+                md-icon-button
+                  (click)="editGenre(genre)">
+                <md-icon style="opacity:0.5">edit</md-icon>
+            </button>
+            <button
+                md-icon-button
+                (click)="deleteGenreById(genre.id)">
+                <md-icon style="opacity:0.5">delete</md-icon>
+            </button>
+        </div>
+    </md-card>
+    <br/>
+</div>

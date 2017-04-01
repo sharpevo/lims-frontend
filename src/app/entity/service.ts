@@ -20,6 +20,14 @@ export class EntityService {
       .map(res => res.json())
   }
 
+  update(object: any){
+    return this.http.put(
+      `${this.url}/${object.id}`,
+      JSON.stringify(object),
+      {headers: this.headers})
+      .map(res => res.json())
+  }
+
   deleteById(id: string){
     return this.http.delete(`${this.url}/${id}`)
     .map(res => res.json())
@@ -51,6 +59,14 @@ export class EntityService {
     let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}`
     return this.http.get(url)
     .map(res => res.json())
+  }
+
+  retrieveByIdentifierAndCategory(identifier: string, category: string){
+    let url = `${this.url}?where={"SYS_IDENTIFIER":{"regex":"^${identifier}/[A-Za-z0-9_.]%2B"}, "SYS_ENTITY_TYPE":{"=": "${category}"}}`
+    console.log(url)
+    return this.http.get(url)
+    .map(res => res.json())
+
   }
 
 

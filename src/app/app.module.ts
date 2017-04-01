@@ -15,9 +15,11 @@ import {EntityService} from './entity/service';
 import {GenreService} from './genre/service';
 import {AttributeService} from './attribute/service';
 
+import {EntityFormInlineComponent} from './entity/form.inline.component';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 
+import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
 import {AttributeFormDialog} from './attribute/form.dialog.component';
 
@@ -27,12 +29,15 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
 
     AppComponent,
     ViewComponent,
+    EntityFormInlineComponent,
 
     TreeViewComponent,
+    GenreFormDialog,
     EntityFormDialog,
     AttributeFormDialog,
   ],
   entryComponents:[
+    GenreFormDialog,
     EntityFormDialog,
     AttributeFormDialog,
   ],

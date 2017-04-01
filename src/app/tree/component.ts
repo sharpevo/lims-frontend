@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {MdDialog, MdDialogRef} from '@angular/material'
+import {GenreFormDialog} from '../genre/form.dialog.component'
 import {EntityFormDialog} from '../entity/form.dialog.component'
 import {AttributeFormDialog} from '../attribute/form.dialog.component'
 
@@ -39,12 +40,20 @@ export class TreeViewComponent {
     this.getNextEntityList()
   }
 
+  // TODO: get SYS_LABEL from Genre and assigne to each Entity
   getNextEntityList(){
+    let identifier = ""
     if (!this.identifierPrefix){
-      this.identifierPrefix = ""
+      //this.identifierPrefix = ""
+      identifier = "^/$"
+    } else if (this.identifierPrefix == "/"){
+      //identifier = `^/[a-zA-Z0-9_\.]{1,50}$`
+      identifier = `^/[a-zA-Z0-9_\.]%2B$`
+    } else {
+      identifier = `^${this.identifierPrefix}/[a-zA-Z0-9_\.]*$`
     }
     //console.log(this.identifierPrefix)
-    let identifier = `^${this.identifierPrefix}/[a-zA-Z0-9_]*$`
+    //let identifier = `^${this.identifierPrefix}/[a-zA-Z0-9_\.]*$`
     this.entityService.retrieveByIdentifier(identifier)
     .subscribe(
       data => {
@@ -53,8 +62,24 @@ export class TreeViewComponent {
     )
   }
 
-  openNewEntityDialog() {
-    let dialogRef = this.dialog.open(EntityFormDialog);
+  deleteObjectById(entityId: string, entityList: any[]){
+    this.entityService.deleteById(entityId)
+    .subscribe(data => {
+      console.log('Delete entity:', data)
+    })
+  }
+
+  openNewGenreDialog(entity: any) {
+    let dialogRef = this.dialog.open(GenreFormDialog, {width: '600px'});
+    dialogRef.componentInstance.config.entity = entity
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedOption = result;
+    });
+  }
+
+  openNewEntityDialog(entity: any) {
+    let dialogRef = this.dialog.open(EntityFormDialog, {width: '600px'});
+    dialogRef.componentInstance.config.entity = entity
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
     });
