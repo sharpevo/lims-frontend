@@ -14,7 +14,10 @@
 		[(ngModel)]="instance['identifier']"
 		placeholder="Identifier"/>
 </md-input-container>
-<div *ngFor="let entity of entityList">
+<div
+    fxLayout="column"
+    fxLayoutAlign="space-around stretch"
+    *ngFor="let entity of entityList">
     <entity-form-inline
         [entity]="entity">
     </entity-form-inline>
