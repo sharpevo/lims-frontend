@@ -143,31 +143,31 @@ export class EntityFormDialog {
           data.forEach(attribute => {
             switch (attribute.SYS_TYPE){
               case "entity":
-                if (attribute.SYS_TYPE_ENTITY_REF){
-                // get the identifier of the entity
-                // TODO: save SYS_IDENTIFIER instead of ID seems better
-                // or automate populate
-                this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-                .subscribe(data => {
-                  // get the entity list
-                  if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-                    attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-                  }
-                  this.entityService.retrieveByIdentifierAndCategory(
-                    data.SYS_IDENTIFIER,
-                    attribute.SYS_FLOOR_ENTITY_TYPE)
-                    .subscribe(data => {
-                      // compose a new key
-                      attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-                    })
-                })
+                //if (attribute.SYS_TYPE_ENTITY_REF){
+                //// get the identifier of the entity
+                //// TODO: save SYS_IDENTIFIER instead of ID seems better
+                //// or automate populate
+                //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
+                //.subscribe(data => {
+                //// get the entity list
+                //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
+                //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
+                //}
+                //this.entityService.retrieveByIdentifierAndCategory(
+                //data.SYS_IDENTIFIER,
+                //attribute.SYS_FLOOR_ENTITY_TYPE)
+                //.subscribe(data => {
+                //// compose a new key
+                //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
+                //})
+                //})
 
 
-              }else {
+                //}else {
 
-              }
+                //}
 
-              break
+                break
               default:
                 console.log("pass attribute type", attribute.SYS_TYPE)
             }

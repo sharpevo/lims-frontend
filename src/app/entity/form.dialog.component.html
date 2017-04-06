@@ -134,16 +134,12 @@
             <div *ngSwitchCase="'entity'">
                 <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <br/>
-                    <md-select
-                        class="full-width"
-                        [(ngModel)]="object[attribute.SYS_CODE]"
-                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                        <md-option
-                            value="{{e.id}}"
-                            *ngFor="let e of attribute[attribute.SYS_CODE + '_ENTITY_LIST']">
-                            {{e[e['SYS_LABEL']]}}
-                        </md-option>
-                    </md-select>
+                    <entity-select-list
+                        [placeholder]="attribute[attribute['SYS_LABEL']]"
+                        [object]="object"
+                        [attribute]="attribute"
+                        [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
+                    </entity-select-list>
                     <br/>
                     <br/>
                 </div>
