@@ -49,6 +49,33 @@ export class EntityService {
     .map(res => res.json())
   }
 
+  retrieveGenre(entityId: string){
+    return this.http.get(`${this.url}/${entityId}/genre`)
+    .map(res => res.json())
+  }
+
+  retrieveAttribute(entityId: string){
+    //console.log(`${this.url}/${entityId}/attribute`)
+    return this.http.get(`${this.url}/${entityId}/attribute`)
+    .map(res => res.json())
+  }
+
+  retrieveEntity(entityId: string, entityType: string){
+    console.log(entityType)
+    if (!entityType) {
+      entityType = "object"
+    }
+    //console.log(`${this.url}/${entityId}/entity`)
+    //return this.http.get(`${this.url}/${entityId}/entity`)
+    return this.http.get(`${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}`)
+    .map(res => res.json())
+  }
+
+
+
+
+
+
   retrieveByGenre(genreIdentifier: string){
     let url = `${this.url}?SYS_GENRE_IDENTIFIER=${genreIdentifier}`
     return this.http.get(url)
@@ -63,7 +90,7 @@ export class EntityService {
 
   retrieveByIdentifierAndCategory(identifier: string, category: string){
     let url = `${this.url}?where={"SYS_IDENTIFIER":{"regex":"^${identifier}/[A-Za-z0-9_.]%2B"}, "SYS_ENTITY_TYPE":{"=": "${category}"}}`
-    console.log(url)
+    //console.log(url)
     return this.http.get(url)
     .map(res => res.json())
 

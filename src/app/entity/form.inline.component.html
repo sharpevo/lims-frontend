@@ -14,33 +14,41 @@
 		[(ngModel)]="instance['identifier']"
 		placeholder="Identifier"/>
 </md-input-container>
-<div class="container">
+<div *ngFor="let entity of entityList">
+    <entity-bom-form
+        [entity]="entity">
+    </entity-bom-form>
+</div>
+<div
+  *ngIf="attributeMap.length > 0"
+    class="container">
+{{attributeMap | objectKeys}}
     <table
         fxLayout="row"
-        fxLayoutAlign="center"
-        *ngIf="(genre|json) != '{}'">
+        fxLayoutAlign="center">
         <tr>
             <td
-            *ngFor="let attr of genre.attributes">
-                {{attr|json}}
-                <span [ngSwitch]="attr.type">
+            *ngFor="let key of attributeList">
+                {{key}}
+                {{attributeMap[key]}}
+                <span [ngSwitch]="attr.SYS_TYPE">
                     <span *ngSwitchCase="'string'">
                         <md-input-container class="full-width">
                             <input
                                 mdInput
-                                [required]="attr.required"
+                                [required]="attr.SYS_REQUIRED"
                                 type="text"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}"/>
+                                [(ngModel)]="instance[attr.SYS_CODE]"
+                                placeholder="{{attr.SYS_LABEL}}"/>
                         </md-input-container>
                     </span>
                     <span *ngSwitchCase="'text'">
                         <md-input-container class="full-width">
                             <textarea
                                 mdInput
-                                [required]="attr.required"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}">
+                                [required]="attr.SYS_REQUIRED"
+                                [(ngModel)]="instance[attr.SYS_CODE]"
+                                placeholder="{{attr.SYS_LABEL}}">
                             </textarea>
                         </md-input-container>
                     </span>
@@ -48,16 +56,16 @@
                         <md-input-container class="full-width">
                             <input
                                 mdInput
-                                [required]="attr.required"
+                                [required]="attr.SYS_REQUIRED"
                                 type="number"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}"/>
+                                [(ngModel)]="instance[attr.SYS_CODE]"
+                                placeholder="{{attr.SYS_LABEL}}"/>
                         </md-input-container>
                     </span>
                     <span *ngSwitchCase="'list'">
                         <md-select
-                            [(ngModel)]="instance[attr.code]"
-                            placeholder="{{attr.label}}">
+                            [(ngModel)]="instance[attr.SYS_CODE]"
+                            placeholder="{{attr.SYS_LABEL}}">
                             <md-option 
                                 value="{{o.split(':')[0]}}"
                                 *ngFor="let o of attr.typeList.split(',')">
@@ -68,8 +76,8 @@
                     <span *ngSwitchCase="'boolean'">
                         <md-checkbox
                             class="example-margin"
-                            [(ngModel)]="instance[attr.code]">
-                            {{attr.label}}
+                            [(ngModel)]="instance[attr.SYS_CODE]">
+                            {{attr.SYS_LABEL}}
                         </md-checkbox>
                     </span>
                     <span *ngSwitchCase="'date'">
@@ -77,8 +85,8 @@
                             <input
                                 mdInput
                                 type="date"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}"/>
+                                [(ngModel)]="instance[attr.SYS_CODE]"
+                                placeholder="{{attr.SYS_LABEL}}"/>
                         </md-input-container>
                     </span>
                     <span *ngSwitchCase="'datetime'">
@@ -86,34 +94,33 @@
                             <input
                                 mdInput
                                 type="datetime-local"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}"/>
+                                [(ngModel)]="instance[attr.SYS_CODE]"
+                                placeholder="{{attr.SYS_LABEL}}"/>
                         </md-input-container>
                     </span>
                     <span *ngSwitchCase="'file'">
                         <md-input-container class="full-width">
-                            {{attr.label}}
+                            {{attr.SYS_LABEL}}
                             <input
                                 mdInput
                                 type="file"/>
                         </md-input-container>
                     </span>
                     <span *ngSwitchCase="'entity'">
-                        <span *ngIf="attr.typeEntityRef">
-                            <md-select
-                                class="full-width"
-                                [(ngModel)]="instance[attr.code]"
-                                placeholder="{{attr.label}}">
-                                <md-option
-                                    value="{{e.id}}"
-                                    *ngFor="let e of attrEntityList[attr.code]">
-                                    {{e.label?e.label:e.identifier?e.identifier:e.id}}
-                                </md-option>
-                            </md-select>
-                        </span>
+                        <h1>test</h1>
+                        <md-select
+                            class="full-width"
+                            [(ngModel)]="instance[attr.SYS_CODE]"
+                            placeholder="{{attr.SYS_LABEL}}">
+                            <md-option
+                                value="{{e.id}}"
+                                *ngFor="let e of attrEntityList[attr.SYS_CODE]">
+                                {{e.SYS_LABEL?e.SYS_LABEL:e.identifier?e.identifier:e.id}}
+                            </md-option>
+                        </md-select>
                     </span>
                     <span *ngSwitchDefault>
-                        Unknown type: {{attr?.label}} ({{attr.code}})
+                        Unknown type: {{attr?.SYS_LABEL}} ({{attr.SYS_CODE}})
                     </span>
                 </span>
             </td>

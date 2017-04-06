@@ -20,11 +20,11 @@
     <md-select
         class="full-width"
         placeholder="Entity Genre (identifier)"
-        [(ngModel)]="object.TMP_GENRE_IDENTIFIER">
+        [(ngModel)]="object.SYS_GENRE">
         <md-option
             *ngFor="let genre of genreList"
-            (click)="getAttributesByGenre(genre.id); getEntityByGenre(genre.SYS_IDENTIFIER)"
-            [value]="genre.SYS_IDENTIFIER">
+            (click)="getAttributesByGenre(genre)"
+            [value]="genre.id">
             {{genre[genre["SYS_LABEL"]]}}
         </md-option>
     </md-select>
@@ -148,7 +148,6 @@
                     <br/>
                 </div>
                 <div *ngIf="!attribute.typeEntityRef">
-                    {{attribute|json}}
                     <entity-form-inline
                         [entity]="attribute.SYS_TYPE_ENTITY">
                     </entity-form-inline>

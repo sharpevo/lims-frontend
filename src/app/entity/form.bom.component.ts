@@ -1,6 +1,5 @@
-import {Component} from '@angular/core'
+import {Component, Input} from '@angular/core'
 import {DatePipe} from '@angular/common'
-import {MdDialog, MdDialogRef} from '@angular/material';
 import {MdSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
@@ -8,10 +7,13 @@ import {GenreService} from '../genre/service'
 import {EntityService} from './service'
 
 @Component({
-  selector: 'new-entity-dialog',
-  templateUrl: './form.dialog.component.html',
+  selector: 'entity-bom-form',
+  templateUrl: './form.bom.component.html',
 })
-export class EntityFormDialog {
+export class EntityFormBomComponent {
+  @Input('entity') entity
+
+
   config: any = {}
   object: any = {}
   genre: any = {}
@@ -28,13 +30,24 @@ export class EntityFormDialog {
     private snackBar: MdSnackBar,
     private genreService: GenreService,
     private entityService: EntityService,
-    private attributeService: AttributeService,
-    public dialogRef: MdDialogRef<EntityFormDialog>) {}
+    private attributeService: AttributeService) {}
 
     ngOnInit(){
-      this.getGenreListByEntityId(this.config.entity.id)
-      this.generateEntityCode()
-      this.generateEntityType()
+      this.getAttributeList()
+      //this.getGenreListByEntityId(this.config.entity.id)
+      //this.generateEntityCode()
+      //this.generateEntityType()
+    }
+
+    getAttributeList(){
+      this.entityService.retrieveAttribute(this.entity.id)
+      .subscribe(data => {
+        console.log(data)
+        data.forEach(attribute => {
+          this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
+        })
+        this.attributeList = data
+      })
     }
 
     clearForm(){

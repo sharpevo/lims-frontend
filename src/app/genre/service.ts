@@ -51,10 +51,25 @@ export class GenreService {
     .map(res => res.json())
   }
 
+  retrieveAttribute(genreId: string){
+    return this.http.get(`${this.url}/${genreId}/attribute`)
+    .map(res => res.json())
+  }
+
+  retrieveEntity(genreId: string){
+    return this.http.get(`${this.url}/${genreId}/entity`)
+    .map(res => res.json())
+  }
+
+
+
+
   retrieveByIdentifier(identifier: string){
     return this.http.get(`${this.url}?SYS_IDENTIFIER=${identifier}`)
     .map(res => res.json())
   }
+
+
 
 
 

@@ -16,6 +16,8 @@ import {GenreService} from './genre/service';
 import {AttributeService} from './attribute/service';
 
 import {EntityFormInlineComponent} from './entity/form.inline.component';
+import {EntityFormBomComponent} from './entity/form.bom.component';
+import {EntityOptionListComponent} from './entity/form.list.component';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 
@@ -30,6 +32,8 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     AppComponent,
     ViewComponent,
     EntityFormInlineComponent,
+    EntityOptionListComponent,
+    EntityFormBomComponent,
 
     TreeViewComponent,
     GenreFormDialog,

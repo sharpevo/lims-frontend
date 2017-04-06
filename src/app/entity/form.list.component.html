@@ -1,0 +1,10 @@
+<md-select
+    class="full-width"
+    [(ngModel)]="object[attribute.SYS_CODE]"
+    placeholder="{{label}}">
+    <md-option
+        value="{{entity.id}}"
+        *ngFor="let entity of entityList">
+        {{entity[entity['SYS_LABEL']]}}
+    </md-option>
+</md-select>
