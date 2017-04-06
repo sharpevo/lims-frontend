@@ -1,130 +1,97 @@
-<md-input-container style="display:none">
-	<input
-		mdInput
-		[required]="true"
-		type="text"
-		[(ngModel)]="instance['genre']"
-		placeholder="Entity Type"/>
-</md-input-container>
-<md-input-container style="display:none">
-	<input
-		mdInput
-		[required]="true"
-		type="text"
-		[(ngModel)]="instance['identifier']"
-		placeholder="Identifier"/>
-</md-input-container>
-<div *ngFor="let entity of entityList">
-    <entity-bom-form
-        [entity]="entity">
-    </entity-bom-form>
-</div>
 <div
-  *ngIf="attributeMap.length > 0"
-    class="container">
-{{attributeMap | objectKeys}}
-    <table
-        fxLayout="row"
-        fxLayoutAlign="center">
-        <tr>
-            <td
-            *ngFor="let key of attributeList">
-                {{key}}
-                {{attributeMap[key]}}
-                <span [ngSwitch]="attr.SYS_TYPE">
-                    <span *ngSwitchCase="'string'">
-                        <md-input-container class="full-width">
-                            <input
-                                mdInput
-                                [required]="attr.SYS_REQUIRED"
-                                type="text"
-                                [(ngModel)]="instance[attr.SYS_CODE]"
-                                placeholder="{{attr.SYS_LABEL}}"/>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'text'">
-                        <md-input-container class="full-width">
-                            <textarea
-                                mdInput
-                                [required]="attr.SYS_REQUIRED"
-                                [(ngModel)]="instance[attr.SYS_CODE]"
-                                placeholder="{{attr.SYS_LABEL}}">
-                            </textarea>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'number'">
-                        <md-input-container class="full-width">
-                            <input
-                                mdInput
-                                [required]="attr.SYS_REQUIRED"
-                                type="number"
-                                [(ngModel)]="instance[attr.SYS_CODE]"
-                                placeholder="{{attr.SYS_LABEL}}"/>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'list'">
-                        <md-select
-                            [(ngModel)]="instance[attr.SYS_CODE]"
-                            placeholder="{{attr.SYS_LABEL}}">
-                            <md-option 
-                                value="{{o.split(':')[0]}}"
-                                *ngFor="let o of attr.typeList.split(',')">
-                                {{o.split(':')[1]}} ({{o.split(':')[0]}})
-                            </md-option>
-                        </md-select>
-                    </span>
-                    <span *ngSwitchCase="'boolean'">
-                        <md-checkbox
-                            class="example-margin"
-                            [(ngModel)]="instance[attr.SYS_CODE]">
-                            {{attr.SYS_LABEL}}
-                        </md-checkbox>
-                    </span>
-                    <span *ngSwitchCase="'date'">
-                        <md-input-container class="full-width">
-                            <input
-                                mdInput
-                                type="date"
-                                [(ngModel)]="instance[attr.SYS_CODE]"
-                                placeholder="{{attr.SYS_LABEL}}"/>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'datetime'">
-                        <md-input-container class="full-width">
-                            <input
-                                mdInput
-                                type="datetime-local"
-                                [(ngModel)]="instance[attr.SYS_CODE]"
-                                placeholder="{{attr.SYS_LABEL}}"/>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'file'">
-                        <md-input-container class="full-width">
-                            {{attr.SYS_LABEL}}
-                            <input
-                                mdInput
-                                type="file"/>
-                        </md-input-container>
-                    </span>
-                    <span *ngSwitchCase="'entity'">
-                        <h1>test</h1>
-                        <md-select
-                            class="full-width"
-                            [(ngModel)]="instance[attr.SYS_CODE]"
-                            placeholder="{{attr.SYS_LABEL}}">
-                            <md-option
-                                value="{{e.id}}"
-                                *ngFor="let e of attrEntityList[attr.SYS_CODE]">
-                                {{e.SYS_LABEL?e.SYS_LABEL:e.identifier?e.identifier:e.id}}
-                            </md-option>
-                        </md-select>
-                    </span>
-                    <span *ngSwitchDefault>
-                        Unknown type: {{attr?.SYS_LABEL}} ({{attr.SYS_CODE}})
-                    </span>
+    fxLayout="row"
+    fxLayoutAlign="space-between stretch"> 
+    <span
+        *ngFor="let attribute of attributeList">
+        <span [ngSwitch]="attribute.SYS_TYPE">
+            <span *ngSwitchCase="'string'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        type="text"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'text'">
+                <md-input-container class="full-width">
+                    <textarea
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                    </textarea>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'number'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        type="number"
+                        value="{{entity[attribute.SYS_CODE]}}"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'list'">
+                <md-select
+					class="full-width"
+                    [(ngModel)]="object[attribute.SYS_CODE]"
+                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                    <md-option 
+                        value="{{o.split(':')[0]}}"
+                        *ngFor="let o of attribute.typeList.split(',')">
+                        {{o.split(':')[1]}}
+                    </md-option>
+                </md-select>
+            </span>
+            <span *ngSwitchCase="'boolean'">
+                <md-checkbox
+                    class="example-margin"
+                    [(ngModel)]="object[attribute.SYS_CODE]">
+                    {{attribute[attribute['SYS_LABEL']]}}
+                </md-checkbox>
+            </span>
+            <span *ngSwitchCase="'date'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        type="date"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'datetime'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        type="datetime-local"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'file'">
+                <md-input-container class="full-width">
+                    {{attribute[attribute['SYS_LABEL']]}}
+                    <input
+                        mdInput
+                        type="file"/>
+                </md-input-container>
+            </span>
+            <span *ngSwitchCase="'entity'">
+                <span *ngIf="attribute.typeEntityRef">
+                    <entity-select-list
+                        [object]="object"
+                        [attribute]="attribute"
+                        [ceilingEntity]="entity">
+                    </entity-select-list>
                 </span>
-            </td>
-        </tr>
-    </table>
+            </span>
+            <span *ngSwitchDefault>
+                Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
+            </span>
+        </span>
+    </span>
 </div>
-

@@ -1,0 +1,21 @@
+<md-input-container style="display:none">
+	<input
+		mdInput
+		[required]="true"
+		type="text"
+		[(ngModel)]="instance['genre']"
+		placeholder="Entity Type"/>
+</md-input-container>
+<md-input-container style="display:none">
+	<input
+		mdInput
+		[required]="true"
+		type="text"
+		[(ngModel)]="instance['identifier']"
+		placeholder="Identifier"/>
+</md-input-container>
+<div *ngFor="let entity of entityList">
+    <entity-form-inline
+        [entity]="entity">
+    </entity-form-inline>
+</div>

@@ -2,14 +2,14 @@ import {Component,Input} from '@angular/core'
 import {EntityService} from './service'
 
 @Component({
-  selector: 'entity-option-list',
-  templateUrl: './form.list.component.html',
+  selector: 'entity-select-list',
+  templateUrl: './select.list.component.html',
 })
 
-export class EntityOptionListComponent {
+export class EntitySelectListComponent {
   @Input('object') object // object to generate the form
-  @Input('attribute') attribute // object to generate the form
-  @Input('ceilingEntity') entity // object to generate the form
+  @Input('attribute') attribute
+  @Input('ceilingEntity') entity
   entityList: any[] = []
   label: string = ""
 
