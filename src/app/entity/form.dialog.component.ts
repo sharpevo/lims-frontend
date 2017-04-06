@@ -143,7 +143,7 @@ export class EntityFormDialog {
           data.forEach(attribute => {
             switch (attribute.SYS_TYPE){
               case "entity":
-                if (attribute.typeEntityRef){
+                if (attribute.SYS_TYPE_ENTITY_REF){
                 // get the identifier of the entity
                 // TODO: save SYS_IDENTIFIER instead of ID seems better
                 // or automate populate

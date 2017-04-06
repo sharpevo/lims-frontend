@@ -132,7 +132,7 @@
                 </md-input-container>
             </div>
             <div *ngSwitchCase="'entity'">
-                <div *ngIf="attribute.typeEntityRef">
+                <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <br/>
                     <md-select
                         class="full-width"
@@ -147,7 +147,7 @@
                     <br/>
                     <br/>
                 </div>
-                <div *ngIf="!attribute.typeEntityRef">
+                <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
                     <entity-collection-expansion
                         [entity]="attribute.SYS_TYPE_ENTITY">
                     </entity-collection-expansion>
