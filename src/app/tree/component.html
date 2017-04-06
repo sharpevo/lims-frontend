@@ -10,16 +10,16 @@
 				<span>Genres of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
 			<button
-				md-menu-item
-				(click)="openNewEntityDialog(entity)">
-				<md-icon>add</md-icon>
-				<span>Entities of {{entity[entity["SYS_LABEL"]]}}</span>
-			</button>
-			<button
                 md-menu-item
                 (click)="openNewAttributeDialog(entity)">
 				<md-icon>edit</md-icon>
 				<span>Attributes of {{entity[entity["SYS_LABEL"]]}}</span>
+			</button>
+			<button
+				md-menu-item
+				(click)="openNewEntityDialog(entity)">
+				<md-icon>add</md-icon>
+				<span>Entities of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
             <md-divider></md-divider>
 			<button
