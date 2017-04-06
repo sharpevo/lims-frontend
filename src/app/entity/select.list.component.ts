@@ -9,24 +9,29 @@ import {EntityService} from './service'
 export class EntitySelectListComponent {
   @Input('object') object // object to generate the form
   @Input('attribute') attribute // used in the template for ngModel
-  @Input('placeholder') placeholder
   @Input('ceilingEntityId') entityId
+  @Input('generated') generated // get placeholder and collection
   entityList: any[] = []
+  placeholder: string = ""
+  floorEntityType: string = ""
 
   constructor(
     private entityService: EntityService,
   ){}
 
   ngOnInit(){
-    this.getEntityList()
-    console.log("placeholder:", this.placeholder)
-    if (!this.placeholder){
+    if (this.generated){
       this.getEntityPlaceholder()
+      this.floorEntityType = "collection"
+    } else{
+      this.placeholder = this.attribute[this.attribute['SYS_LABEL']]
+      this.floorEntityType = this.attribute['SYS_FLOOR_ENTITY_TYPE']
     }
+    this.getEntityList()
   }
 
   getEntityList(){
-    this.entityService.retrieveEntity(this.entityId, "collection")
+    this.entityService.retrieveEntity(this.entityId, this.floorEntityType)
     .subscribe(data => {
       this.entityList = data
       console.log(data)
