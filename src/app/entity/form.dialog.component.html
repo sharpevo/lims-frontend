@@ -144,6 +144,7 @@
                 </div>
                 <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
                     <entity-collection-expansion
+                        [object]="parentMap[attribute.SYS_CODE]"
                         [entity]="attribute.SYS_TYPE_ENTITY">
                     </entity-collection-expansion>
                 </div>

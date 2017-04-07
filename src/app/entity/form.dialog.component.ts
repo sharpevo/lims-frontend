@@ -18,6 +18,7 @@ export class EntityFormDialog {
   genreList: any[] = []
   attributeList: any[] = []
   entityList: any[] = []
+  parentMap: any = {}
   categoryList = [
     {value: "domain", title: "Domain"},
     {value: "class", title: "Class"},
@@ -167,7 +168,11 @@ export class EntityFormDialog {
 
                 //}
 
-                break
+                if (!attribute.SYS_TYPE_ENTITY_REF) {
+                this.parentMap[attribute.SYS_CODE] = {}
+              }
+
+              break
               default:
                 console.log("pass attribute type", attribute.SYS_TYPE)
             }
