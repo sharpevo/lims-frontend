@@ -12,12 +12,17 @@ import {EntityService} from './service'
 })
 export class EntityFormInlineComponent {
   @Input('entity') entity
+  @Input('object') objectMap
   object: any = {}
   attributeList: any[] = []
   constructor(
     private entityService: EntityService) {}
 
     ngOnInit(){
+      if (!this.objectMap[this.entity.id]){
+        this.objectMap[this.entity.id] = {}
+      }
+      this.object = this.objectMap[this.entity.id]
       this.getAttributeList()
     }
 

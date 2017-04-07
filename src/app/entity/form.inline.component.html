@@ -83,7 +83,6 @@
             <span *ngSwitchCase="'entity'">
                 <span *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <entity-select-list
-                        [object]="object"
                         [generated]="true"
                         [attribute]="attribute"
                         [ceilingEntityId]="entity[attribute['SYS_CODE']]">
