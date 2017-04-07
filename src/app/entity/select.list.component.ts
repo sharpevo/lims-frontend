@@ -20,6 +20,9 @@ export class EntitySelectListComponent {
   ){}
 
   ngOnInit(){
+    if (!this.object){
+      this.object = {}
+    }
     if (this.generated){
       this.getEntityPlaceholder()
       this.floorEntityType = "collection"
