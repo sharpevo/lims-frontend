@@ -33,10 +33,8 @@ export class EntityToStringComponent {
       // attribute, but has an `label` attribute which will be used as label
       // in preference to the id
       if (this.entity['label']){
-        console.log('label:',this.label)
         this.label = this.entity.label
       } else {
-        console.log('id:',this.label)
         this.label = this.entity.id
       }
     })
