@@ -82,6 +82,9 @@ export class EntityFormDialog {
         this.object.TMP_CODE
       delete this.object.TMP_CODE
 
+      console.log(this.object)
+      console.log(this.parentMap)
+
       //this.attributeList.forEach(attribute =>{
       //if (attribute.SYS_TYPE == "entity" && 
       //!attribute["SYS_TYPE_EXPANDABLE"]) {
@@ -93,18 +96,54 @@ export class EntityFormDialog {
 
       if (!this.object.id){
         this.entityService.create(this.object)
-        .subscribe(
-          data => {
-            //this.getObject()
-            this.object = {}
-            this.object.SYS_GENRE = this.genre.id
-            this.generateEntityCode()
-            console.log('Add Entity:', data)
-            this.showMessage("Added")
-            //this.getEntityByGenre(data.SYS_GENRE_IDENTIFIER)
-            this.getEntityByGenre(data.SYS_GENRE)
-          }
-        )
+        .subscribe(data => {
+          Object.keys(this.parentMap).forEach(key => { // e.g. "bom"
+            Object.keys(this.parentMap[key]).forEach(entityId =>{ // e.g. bom object id
+              let usage = this.parentMap[key][entityId]
+              console.log(usage['SYS_SOURCE'])
+              this.entityService.retrieveById(usage['SYS_SOURCE'])
+              .subscribe(material => {
+                console.log("merge from entity:", material)
+                // recommend to merge entities from genre attributes
+                // since there's some virtual attributes in response.
+
+                this.entityService.retrieveAttribute(material.id)
+                .subscribe(attributes => {
+                  console.log(attributes)
+                  let subMaterial = {}
+                  attributes.forEach(attribute => {
+                    subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+                  })
+                  subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
+                    this.object.TMP_CODE
+                  subMaterial['SYS_ENTITY_TYPE'] = 'object'
+                  subMaterial['SYS_TARGET'] = data.id
+
+                  Object.keys(usage).forEach(usageKey => {
+                    console.log(usageKey)
+                    subMaterial[usageKey] = usage[usageKey]
+                  })
+
+                  console.log("merged entity:", subMaterial)
+                  this.entityService.create(subMaterial)
+                  .subscribe(data =>{
+                    console.log("merged entity:", data)
+                  })
+
+                })
+              })
+            })
+          })
+
+          //this.getObject()
+          this.object = {}
+          this.object.SYS_GENRE = this.genre.id
+          this.generateEntityCode()
+          console.log('Add Entity:', data)
+          this.showMessage("Added")
+          //this.getEntityByGenre(data.SYS_GENRE_IDENTIFIER)
+          this.getEntityByGenre(data.SYS_GENRE)
+        })
       } else {
         this.entityService.update(this.object)
         .subscribe(
