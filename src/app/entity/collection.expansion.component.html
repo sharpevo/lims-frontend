@@ -19,6 +19,7 @@
     fxLayoutAlign="space-around stretch"
     *ngFor="let entity of entityList">
     <entity-form-inline
+        [object]="object"
         [entity]="entity">
     </entity-form-inline>
 </div>
