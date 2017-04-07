@@ -45,7 +45,9 @@
 					<!--[checked]="d.tmp_checked"-->
 					<!--(change)="d.tmp_checked=!d.tmp_checked">-->
 					<!--</md-checkbox>-->
-					{{entity[entity["SYS_LABEL"]]}}
+					<entity-tostring
+                        [entity]="entity">
+                    </entity-tostring>
 				</span>
 			</span>
 			<button
