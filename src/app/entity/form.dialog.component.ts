@@ -85,51 +85,64 @@ export class EntityFormDialog {
       console.log(this.object)
       console.log(this.parentMap)
 
-      //this.attributeList.forEach(attribute =>{
-      //if (attribute.SYS_TYPE == "entity" && 
-      //!attribute["SYS_TYPE_EXPANDABLE"]) {
-      //this.attributeList[attribute.SYS_CODE].forEach(entity => {
-      //console.log(entity)
-      //})
-      //}
-      //})
-
       if (!this.object.id){
         this.entityService.create(this.object)
         .subscribe(data => {
-          Object.keys(this.parentMap).forEach(key => { // e.g. "bom"
-            Object.keys(this.parentMap[key]).forEach(entityId =>{ // e.g. bom object id
+
+          // Get the keys for each kind of BoM/Routing
+          // e.g. "bom", "bill_of_material"
+          Object.keys(this.parentMap).forEach(key => {
+
+            // Get the bom object id, which is used as the key of the actual
+            // usage, e.g., <bom object id>
+            Object.keys(this.parentMap[key]).forEach(entityId =>{
+
+              // `usage` is the inputs from user and contains SYS_QUANT,
+              // SYS_SOURCE, etc.
               let usage = this.parentMap[key][entityId]
-              console.log(usage['SYS_SOURCE'])
+
+              // Get the material collection from the SYS_SOURCE
               this.entityService.retrieveById(usage['SYS_SOURCE'])
               .subscribe(material => {
-                console.log("merge from entity:", material)
-                // recommend to merge entities from genre attributes
-                // since there's some virtual attributes in response.
+                //console.log("merge from entity:", material)
 
+
+                // Get attributes of the material then assign them to the
+                // material object. Note that it's recommended to merge entities
+                // by this way, instead of the object deep copy for the reason
+                // of attributes undefined in frontend
                 this.entityService.retrieveAttribute(material.id)
                 .subscribe(attributes => {
                   console.log(attributes)
+
+                  // subMaterial is the material object under the corresponding
+                  // collection
                   let subMaterial = {}
                   attributes.forEach(attribute => {
                     subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
                   })
+
+                  // Customize attributes for new entity. It's not necessary to
+                  // save workcenter incidentally coz there's already a link
+                  // between the SYS_TARGET and the workcenter
                   subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
                     this.object.TMP_CODE
                   subMaterial['SYS_ENTITY_TYPE'] = 'object'
                   subMaterial['SYS_TARGET'] = data.id
 
+                  // Assign new values to the new material object
                   Object.keys(usage).forEach(usageKey => {
                     console.log(usageKey)
                     subMaterial[usageKey] = usage[usageKey]
                   })
 
-                  console.log("merged entity:", subMaterial)
+                  //console.log("merged entity:", subMaterial)
                   this.entityService.create(subMaterial)
                   .subscribe(data =>{
                     console.log("merged entity:", data)
+                    // TODO: Deduct the quantity in the material collection
+                    // after the merger
                   })
-
                 })
               })
             })
