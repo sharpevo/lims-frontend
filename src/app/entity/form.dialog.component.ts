@@ -44,6 +44,14 @@ export class EntityFormDialog {
       this.generateEntityType()
     }
 
+    initObject(){
+      this.object = {}
+      this.object.SYS_GENRE = this.genreId
+      this.generateEntityType()
+      this.generateEntityCode()
+      this.getEntityByGenreId(this.genreId)
+    }
+
     generateEntityCode(){
       this.object.TMP_CODE = this.config.entity.SYS_CODE + '.' +
         new DatePipe('en-US').transform(new Date(), 'yyyyMMddhhmmss')
@@ -150,7 +158,7 @@ export class EntityFormDialog {
             })
           })
 
-          this.initObject(data)
+          this.initObject()
           console.log('Add Entity:', data)
           this.showMessage("Added")
         })
@@ -158,21 +166,13 @@ export class EntityFormDialog {
         this.entityService.update(this.object)
         .subscribe(
           data => {
-            this.initObject(data)
+            this.initObject()
             console.log('Upadte Entity:', data)
             this.showMessage("Updated")
           }
         )
 
       }
-    }
-
-    initObject(data: any){
-      this.object = {}
-      this.object.SYS_GENRE = data.SYS_GENRE
-      this.object.SYS_ENTITY_TYPE = data.SYS_ENTITY_TYPE
-      this.generateEntityCode()
-      this.getEntityByGenre(data.SYS_GENRE)
     }
 
     getGenreListByEntityId(entityId: string){
