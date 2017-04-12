@@ -178,7 +178,9 @@
         fxLayout="row"
         fxLayoutAlign="space-between center">
         <div>
-            {{entity[entity["SYS_LABEL"]]}}
+            <entity-tostring
+                [entity]="entity">
+            </entity-tostring>
         </div>
         <div>
             {{entity.SYS_CODE}}
