@@ -78,7 +78,9 @@ export class EntityFormDialog {
     }
 
     createObject(){
-      this.object.SYS_IDENTIFIER = this.genre.SYS_IDENTIFIER +
+      // Get SYS_IDENTIFIER from the entity instead of the gere, in order to
+      // enable creating entities with shared genre but under different entity.
+      this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
         this.object.TMP_CODE
       delete this.object.TMP_CODE
 
