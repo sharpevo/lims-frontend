@@ -23,7 +23,7 @@
         [(ngModel)]="object.SYS_GENRE">
         <md-option
             *ngFor="let genre of genreList"
-            (click)="getAttributesByGenre(genre)"
+            (click)="getAttributesByGenreId(genre.id)"
             [value]="genre.id">
             {{genre[genre["SYS_LABEL"]]}}
         </md-option>

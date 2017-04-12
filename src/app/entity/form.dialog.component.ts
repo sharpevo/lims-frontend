@@ -14,7 +14,7 @@ import {EntityService} from './service'
 export class EntityFormDialog {
   config: any = {}
   object: any = {}
-  genre: any = {}
+  genreId: string = ""
   genreList: any[] = []
   attributeList: any[] = []
   entityList: any[] = []
@@ -73,7 +73,7 @@ export class EntityFormDialog {
         }
       })
       if (!this.object.SYS_LABEL) {
-        console.log("not valid label for the genre:", this.genre)
+        console.log("not valid label for the genre:", this.genreId)
       }
     }
 
@@ -206,9 +206,9 @@ export class EntityFormDialog {
       }
     }
 
-    getAttributesByGenre(genre: any){
-      this.genre = genre
-      let genreId = genre.id
+    getAttributesByGenreId(genreId: string){
+      this.genreId = genreId
+      //let genreId = genre.id
       //this.attributeService.retrieveByGenreId(genreId)
       this.genreService.retrieveAttribute(genreId)
       .subscribe(
@@ -264,13 +264,13 @@ export class EntityFormDialog {
         }
       )
 
-      this.getEntityByGenre(genreId)
+      this.getEntityByGenreId(genreId)
     }
 
     //getEntityByGenre(genreIdentifier: string){
     //let identifier = `^${genreIdentifier}[a-zA-Z0-9_\.]*$`
     //this.entityService.retrieveByIdentifier(identifier)
-    getEntityByGenre(genreId: string){
+    getEntityByGenreId(genreId: string){
       this.genreService.retrieveEntity(genreId)
       .subscribe(
         data => {
@@ -292,7 +292,7 @@ export class EntityFormDialog {
       .subscribe(
         data => {
           console.log('Delete Entity:', data)
-          this.getEntityByGenre(data.SYS_GENRE_IDENTIFIER)
+          this.getEntityByGenreId(this.genreId)
         }
       )
     }
