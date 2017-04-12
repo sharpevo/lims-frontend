@@ -188,14 +188,24 @@ export class EntityFormDialog {
     }
 
     getGenreList(){
-      // Get the genre identifier for the current entity
-      let genreIdentifier = this.config.entity.SYS_GENRE_IDENTIFIER
-      console.log("GENRE", this.config.entity.SYS_GENRE_IDENTIFIER)
-      // Get genres start with the given identifier
-      this.genreService.retrieveByIdentifierPrefix(genreIdentifier)
-      .subscribe(data => {
-        this.genreList = data
-      })
+      // Get all sibling genres only if the specific entity is collection
+      if (this.config.entity.SYS_ENTITY_TYPE == 'collection'){
+        // Get the genre identifier for the current entity
+        let genreIdentifier = this.config.entity.SYS_GENRE_IDENTIFIER
+        // Get genres start with the given identifier
+        this.genreService.retrieveByIdentifierPrefix(genreIdentifier)
+        .subscribe(data => {
+          this.genreList = data
+        })
+      } else {
+        // Get the exclusive genre for other type of entity
+        this.entityService.retrieveGenre(this.config.entity.id)
+        .subscribe(data => {
+          this.genreList = data
+        }
+                  )
+
+      }
     }
 
     getAttributesByGenre(genre: any){
