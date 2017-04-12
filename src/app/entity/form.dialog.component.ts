@@ -150,31 +150,29 @@ export class EntityFormDialog {
             })
           })
 
-          //this.getObject()
-          this.object = {}
-          this.object.SYS_GENRE = this.genre.id
-          this.generateEntityCode()
+          this.initObject(data)
           console.log('Add Entity:', data)
           this.showMessage("Added")
-          //this.getEntityByGenre(data.SYS_GENRE_IDENTIFIER)
-          this.getEntityByGenre(data.SYS_GENRE)
         })
       } else {
         this.entityService.update(this.object)
         .subscribe(
           data => {
-            //this.getObject()
-            this.object = {}
-            this.object.SYS_GENRE = this.genre.id
-            this.generateEntityCode()
+            this.initObject(data)
             console.log('Upadte Entity:', data)
             this.showMessage("Updated")
-            //this.getEntityByGenre(data.SYS_GENRE_IDENTIFIER)
-            this.getEntityByGenre(data.SYS_GENRE)
           }
         )
 
       }
+    }
+
+    initObject(data: any){
+      this.object = {}
+      this.object.SYS_GENRE = data.SYS_GENRE
+      this.object.SYS_ENTITY_TYPE = data.SYS_ENTITY_TYPE
+      this.generateEntityCode()
+      this.getEntityByGenre(data.SYS_GENRE)
     }
 
     getGenreListByEntityId(entityId: string){
