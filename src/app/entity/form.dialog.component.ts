@@ -33,7 +33,7 @@ export class EntityFormDialog {
     public dialogRef: MdDialogRef<EntityFormDialog>) {}
 
     ngOnInit(){
-      this.getGenreListByEntityId(this.config.entity.id)
+      this.getGenreList()
       this.generateEntityCode()
       this.generateEntityType()
     }
@@ -78,7 +78,9 @@ export class EntityFormDialog {
     }
 
     createObject(){
-      this.object.SYS_IDENTIFIER = this.genre.SYS_IDENTIFIER +
+      // Get SYS_IDENTIFIER from the entity instead of the gere, in order to
+      // enable creating entities with shared genre but under different entity.
+      this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
         this.object.TMP_CODE
       delete this.object.TMP_CODE
 
@@ -183,6 +185,27 @@ export class EntityFormDialog {
           this.genreList = data
         }
       )
+    }
+
+    getGenreList(){
+      // Get all sibling genres only if the specific entity is collection
+      if (this.config.entity.SYS_ENTITY_TYPE == 'collection'){
+        // Get the genre identifier for the current entity
+        let genreIdentifier = this.config.entity.SYS_GENRE_IDENTIFIER
+        // Get genres start with the given identifier
+        this.genreService.retrieveByIdentifierPrefix(genreIdentifier)
+        .subscribe(data => {
+          this.genreList = data
+        })
+      } else {
+        // Get the exclusive genre for other type of entity
+        this.entityService.retrieveGenre(this.config.entity.id)
+        .subscribe(data => {
+          this.genreList = data
+        }
+                  )
+
+      }
     }
 
     getAttributesByGenre(genre: any){

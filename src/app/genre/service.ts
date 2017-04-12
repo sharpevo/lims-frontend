@@ -61,6 +61,13 @@ export class GenreService {
     .map(res => res.json())
   }
 
+  retrieveByIdentifierPrefix(identifier: string){
+    let url = `${this.url}?where={"SYS_IDENTIFIER":{"regex":"^${identifier}[A-Za-z0-9_.]%2B/$"}}`
+    return this.http.get(url)
+    .map(res => res.json())
+
+  }
+
 
 
 
@@ -68,10 +75,6 @@ export class GenreService {
     return this.http.get(`${this.url}?SYS_IDENTIFIER=${identifier}`)
     .map(res => res.json())
   }
-
-
-
-
 
   retrieveByEntityCode(code: string){
     let url = `${this.url}?where={"entitycode":{"contains":"${code}"}}`
