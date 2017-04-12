@@ -33,7 +33,7 @@ export class EntityFormDialog {
     public dialogRef: MdDialogRef<EntityFormDialog>) {}
 
     ngOnInit(){
-      this.getGenreListByEntityId(this.config.entity.id)
+      this.getGenreList()
       this.generateEntityCode()
       this.generateEntityType()
     }
@@ -185,6 +185,17 @@ export class EntityFormDialog {
           this.genreList = data
         }
       )
+    }
+
+    getGenreList(){
+      // Get the genre identifier for the current entity
+      let genreIdentifier = this.config.entity.SYS_GENRE_IDENTIFIER
+      console.log("GENRE", this.config.entity.SYS_GENRE_IDENTIFIER)
+      // Get genres start with the given identifier
+      this.genreService.retrieveByIdentifierPrefix(genreIdentifier)
+      .subscribe(data => {
+        this.genreList = data
+      })
     }
 
     getAttributesByGenre(genre: any){
