@@ -5,6 +5,8 @@
     <md-option
         value="{{entity.id}}"
         *ngFor="let entity of entityList">
-        {{entity[entity['SYS_LABEL']]}}
+        <entity-tostring
+            [entity]="entity">
+        </entity-tostring>
     </md-option>
 </md-select>
