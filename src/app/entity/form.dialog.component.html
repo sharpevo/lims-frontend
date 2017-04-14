@@ -92,10 +92,11 @@
                     placeholder="{{attribute[attribute['SYS_LABEL']]}}">
                     <md-option 
                         value="{{o.split(':')[0]}}"
-                        *ngFor="let o of attribute.typeList.split(',')">
+                        *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
                         {{o.split(':')[1]}}
                     </md-option>
                 </md-select>
+                <br/>
                 <br/>
             </div>
             <div *ngSwitchCase="'boolean'">
