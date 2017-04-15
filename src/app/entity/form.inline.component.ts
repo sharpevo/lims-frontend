@@ -13,6 +13,7 @@ import {EntityService} from './service'
 export class EntityFormInlineComponent {
   @Input('entity') entity
   @Input('object') objectMap
+  @Input('optionLevel') optionLevel
   object: any = {}
   attributeList: any[] = []
   constructor(

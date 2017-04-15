@@ -10,7 +10,7 @@ export class EntitySelectListComponent {
   @Input('object') object // object to generate the form
   @Input('attribute') attribute // used in the template for ngModel
   @Input('ceilingEntityId') entityId
-  @Input('generated') generated // get placeholder and collection
+  @Input('optionLevel') optionLevel
   entityList: any[] = []
   placeholder: string = ""
   floorEntityType: string = ""
@@ -23,17 +23,15 @@ export class EntitySelectListComponent {
     if (!this.object){
       this.object = {}
     }
-    if (this.generated){
-      this.getEntityPlaceholder()
-      this.floorEntityType = "collection"
-    } else{
-      this.placeholder = this.attribute[this.attribute['SYS_LABEL']]
-      this.floorEntityType = this.attribute['SYS_FLOOR_ENTITY_TYPE']
-    }
+
+    this.getEntityPlaceholder()
+    this.floorEntityType = this.optionLevel
     this.getEntityList()
   }
 
   getEntityList(){
+    //console.log('>>floor:', this.floorEntityType)
+    //console.log('>>attribute:', this.attribute)
     this.entityService.retrieveEntity(this.entityId, this.floorEntityType)
     .subscribe(data => {
       this.entityList = data

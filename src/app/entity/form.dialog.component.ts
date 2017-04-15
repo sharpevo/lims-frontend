@@ -152,6 +152,9 @@ export class EntityFormDialog {
                     console.log("merged entity:", data)
                     // TODO: Deduct the quantity in the material collection
                     // after the merger
+
+                    // TODO: Trigger the first experiment in the routing queue.
+                    //
                   })
                 })
               })

@@ -49,6 +49,7 @@
             </span>
             <span *ngSwitchCase="'boolean'">
                 <md-checkbox
+                    color="primary"
                     class="example-margin"
                     [(ngModel)]="object[attribute.SYS_CODE]">
                     {{attribute[attribute['SYS_LABEL']]}}
@@ -84,7 +85,7 @@
                 <span *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <entity-select-list
                         [object]="object"
-                        [generated]="true"
+                        [optionLevel]="optionLevel"
                         [attribute]="attribute"
                         [ceilingEntityId]="entity[attribute['SYS_CODE']]">
                     </entity-select-list>

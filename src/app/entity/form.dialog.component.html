@@ -101,6 +101,7 @@
             </div>
             <div *ngSwitchCase="'boolean'">
                 <md-checkbox
+                    color="primary"
                     class="example-margin"
                     [(ngModel)]="object[attribute.SYS_CODE]">
                     {{attribute[attribute['SYS_LABEL']]}}
@@ -144,8 +145,10 @@
                     <br/>
                 </div>
                 <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
+                    <br/>
                     <entity-collection-expansion
                         [object]="parentMap[attribute.SYS_CODE]"
+                        [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
                         [entity]="attribute.SYS_TYPE_ENTITY">
                     </entity-collection-expansion>
                 </div>
