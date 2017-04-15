@@ -12,6 +12,7 @@ import {ActivatedRoute, Router} from '@angular/router'
 export class EntityCollectionExpansionComponent {
   @Input('entity') entity // object to generate the form
   @Input('object') object
+  @Input('optionLevel') optionLevel
 
   instance: any = {}
   entityList: any[] = []
