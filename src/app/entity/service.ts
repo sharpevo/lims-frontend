@@ -67,7 +67,9 @@ export class EntityService {
     }
     //console.log(`${this.url}/${entityId}/entity`)
     //return this.http.get(`${this.url}/${entityId}/entity`)
-    return this.http.get(`${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}`)
+    let url = `${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}`
+    //console.log('retrieveEntity:', url)
+    return this.http.get(url)
     .map(res => res.json())
   }
 
