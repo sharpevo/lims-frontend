@@ -133,8 +133,6 @@ export class EntityFormDialog {
                   if (this.object['SYS_DATE_ARRIVED']){
                     SYS_DATE_ARRIVED = new Date(this.object['SYS_DATE_ARRIVED'])
                     console.log('DATE not exists, but object exist', SYS_DATE_ARRIVED)
-                  } else {
-                    SYS_DATE_ARRIVED = new Date()
                   }
                   DATE_EXISTS = true
                 }
