@@ -84,6 +84,15 @@ export class EntityFormDialog {
         console.log("not valid label for the genre:", this.genreId)
       }
     }
+    createObject2(){
+
+      this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
+        this.object.TMP_CODE
+      delete this.object.TMP_CODE
+
+      console.log("OBJECT:", this.object)
+      console.log("PARENT_MAP:", this.parentMap)
+    }
 
     createObject(){
       // Get SYS_IDENTIFIER from the entity instead of the gere, in order to
@@ -103,6 +112,9 @@ export class EntityFormDialog {
           // e.g. "bom", "bill_of_material"
           Object.keys(this.parentMap).forEach(key => {
 
+            let SYS_DATE_ARRIVED = new Date()
+            let DATE_EXISTS = false
+
             // Get the bom object id, which is used as the key of the actual
             // usage, e.g., <bom object id>
             Object.keys(this.parentMap[key]).forEach(entityId =>{
@@ -111,54 +123,82 @@ export class EntityFormDialog {
               // SYS_SOURCE, etc.
               let usage = this.parentMap[key][entityId]
 
-              // Get the material collection from the SYS_SOURCE
-              this.entityService.retrieveById(usage['SYS_SOURCE'])
-              .subscribe(material => {
-                //console.log("merge from entity:", material)
+              // only process checked Material or Workcenter
+              if (usage['SYS_CHECKED']){
+                console.log('process checked entry:', usage)
+
+                // Calculate SYS_DATE_ARRIVED// {{{
+                //
+                if (!DATE_EXISTS){
+                  if (this.object['SYS_DATE_ARRIVED']){
+                    SYS_DATE_ARRIVED = new Date(this.object['SYS_DATE_ARRIVED'])
+                    console.log('DATE not exists, but object exist', SYS_DATE_ARRIVED)
+                  }
+                  DATE_EXISTS = true
+                }
+
+                // The date object is address-reference, so that if not
+                // assigned with "new Date", all the usage date is the final
+                // one
+                usage['SYS_DATE_ARRIVED'] = new Date(SYS_DATE_ARRIVED)
+                SYS_DATE_ARRIVED.setDate(SYS_DATE_ARRIVED.getDate() +
+                                         (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+                console.log("Next date: ", SYS_DATE_ARRIVED)// }}}
 
 
-                // Get attributes of the material then assign them to the
-                // material object. Note that it's recommended to merge entities
-                // by this way, instead of the object deep copy for the reason
-                // of attributes undefined in frontend
-                this.entityService.retrieveAttribute(material.id)
-                .subscribe(attributes => {
-                  console.log(attributes)
+                // Get the material collection from the SYS_SOURCE
+                this.entityService.retrieveById(usage['SYS_SOURCE'])
+                .subscribe(material => {
+                  //console.log("merge from entity:", material)
 
-                  // subMaterial is the material object under the corresponding
-                  // collection
-                  let subMaterial = {}
-                  attributes.forEach(attribute => {
-                    subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+
+                  // Get attributes of the material then assign them to the
+                  // material object. Note that it's recommended to merge entities
+                  // by this way, instead of the object deep copy for the reason
+                  // of attributes undefined in frontend
+                  this.entityService.retrieveAttribute(material.id)
+                  .subscribe(attributes => {
+                    console.log(attributes)
+
+                    // subMaterial is the material object under the corresponding
+                    // collection
+                    let subMaterial = {}
+                    attributes.forEach(attribute => {
+                      subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+                    })
+
+                    // Customize attributes for new entity. It's not necessary to
+                    // save workcenter incidentally coz there's already a link
+                    // between the SYS_TARGET and the workcenter
+                    subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
+                      this.object.TMP_CODE
+                    subMaterial['SYS_ENTITY_TYPE'] = 'object'
+                    subMaterial['SYS_TARGET'] = data.id
+
+                    // Assign new values to the new material object
+                    Object.keys(usage).forEach(usageKey => {
+                      //console.log(usageKey)
+                      subMaterial[usageKey] = usage[usageKey]
+                    })
+
+                    //console.log("merged entity:", subMaterial)
+                    this.entityService.create(subMaterial)
+                    .subscribe(data =>{
+                      console.log("merged entity:", data)
+                      // TODO: Deduct the quantity in the material collection
+                      // after the merger
+
+                      // TODO: Trigger the first experiment in the routing queue.
+                      //
+                    })
+
                   })
 
-                  // Customize attributes for new entity. It's not necessary to
-                  // save workcenter incidentally coz there's already a link
-                  // between the SYS_TARGET and the workcenter
-                  subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                    this.object.TMP_CODE
-                  subMaterial['SYS_ENTITY_TYPE'] = 'object'
-                  subMaterial['SYS_TARGET'] = data.id
-
-                  // Assign new values to the new material object
-                  Object.keys(usage).forEach(usageKey => {
-                    console.log(usageKey)
-                    subMaterial[usageKey] = usage[usageKey]
-                  })
-
-                  //console.log("merged entity:", subMaterial)
-                  this.entityService.create(subMaterial)
-                  .subscribe(data =>{
-                    console.log("merged entity:", data)
-                    // TODO: Deduct the quantity in the material collection
-                    // after the merger
-
-                    // TODO: Trigger the first experiment in the routing queue.
-                    //
-                  })
                 })
-              })
+              }
+
             })
+
           })
 
           this.initObject()
