@@ -29,7 +29,7 @@ export class EntityCollectionExpansionComponent {
   getEntityList(){
     this.entityService.retrieveEntity(this.entity.id, "")
     .subscribe(data => {
-      console.log(data)
+      //console.log(data)
       this.entityList = data
     })
   }

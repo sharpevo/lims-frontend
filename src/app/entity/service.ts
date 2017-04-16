@@ -61,7 +61,7 @@ export class EntityService {
   }
 
   retrieveEntity(entityId: string, entityType: string){
-    console.log(entityType)
+    //console.log(entityType)
     if (!entityType) {
       entityType = "object"
     }

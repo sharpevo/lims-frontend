@@ -76,7 +76,7 @@ export class EntityFormDialog {
     generateEntityLabel(){
       this.attributeList.forEach(attribute => {
         if (attribute.SYS_IS_ENTITY_LABEL) {
-          console.log("get label attribute:", attribute.SYS_CODE)
+          //console.log("get label attribute:", attribute.SYS_CODE)
           this.object.SYS_LABEL = attribute.SYS_CODE
         }
       })
@@ -216,7 +216,7 @@ export class EntityFormDialog {
       this.genreService.retrieveAttribute(genreId)
       .subscribe(
         data => {
-          console.log(data)
+          //console.log(data)
           data.forEach(attribute => {
             switch (attribute.SYS_TYPE){
               case "entity":
@@ -250,7 +250,7 @@ export class EntityFormDialog {
 
               break
               default:
-                console.log("pass attribute type", attribute.SYS_TYPE)
+                //console.log("pass attribute type", attribute.SYS_TYPE)
             }
 
           })

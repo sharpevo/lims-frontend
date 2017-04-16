@@ -35,7 +35,7 @@ export class EntitySelectListComponent {
     this.entityService.retrieveEntity(this.entityId, this.floorEntityType)
     .subscribe(data => {
       this.entityList = data
-      console.log(data)
+      //console.log(data)
     })
   }
 

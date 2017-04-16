@@ -30,7 +30,7 @@ export class EntityFormInlineComponent {
     getAttributeList(){
       this.entityService.retrieveAttribute(this.entity.id)
       .subscribe(data => {
-        console.log(data)
+        //console.log(data)
         data.forEach(attribute => {
           this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
         })
