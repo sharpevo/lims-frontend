@@ -112,7 +112,8 @@ export class EntityFormDialog {
           // e.g. "bom", "bill_of_material"
           Object.keys(this.parentMap).forEach(key => {
 
-            let SYS_DATE_ARRIVED = ""
+            let SYS_DATE_ARRIVED = new Date()
+            let DATE_EXISTS = false
 
             // Get the bom object id, which is used as the key of the actual
             // usage, e.g., <bom object id>
@@ -121,26 +122,31 @@ export class EntityFormDialog {
               // `usage` is the inputs from user and contains SYS_QUANT,
               // SYS_SOURCE, etc.
               let usage = this.parentMap[key][entityId]
-              console.log("current date", usage['SYS_DATE_ARRIVED'])
-
 
               // only process checked Material or Workcenter
               if (usage['SYS_CHECKED']){
                 console.log('process checked entry:', usage)
 
-                if (SYS_DATE_ARRIVED) {
-                  console.log("DATE exists: ", SYS_DATE_ARRIVED)
-                  usage['SYS_DATE_ARRIVED'] = SYS_DATE_ARRIVED
-                  SYS_DATE_ARRIVED += usage['SYS_DURATION']?usage['SYS_DURATION']:""
-                  console.log("new date: ", usage['SYS_DATE_ARRIVED'])
-                } else if (this.object['SYS_DATE_ARRIVED']){
-                  SYS_DATE_ARRIVED = this.object['SYS_DATE_ARRIVED']
-                  usage['SYS_DATE_ARRIVED'] = SYS_DATE_ARRIVED
-                  SYS_DATE_ARRIVED += usage['SYS_DURATION']?usage['SYS_DURATION']:""
-                  console.log('DATE not exists, but object exist', SYS_DATE_ARRIVED)
-                } else {
-                  console.log('None of date exists?!')
+                // Calculate SYS_DATE_ARRIVED// {{{
+                //
+                if (!DATE_EXISTS){
+                  if (this.object['SYS_DATE_ARRIVED']){
+                    SYS_DATE_ARRIVED = new Date(this.object['SYS_DATE_ARRIVED'])
+                    console.log('DATE not exists, but object exist', SYS_DATE_ARRIVED)
+                  } else {
+                    SYS_DATE_ARRIVED = new Date()
+                  }
+                  DATE_EXISTS = true
                 }
+
+                // The date object is address-reference, so that if not
+                // assigned with "new Date", all the usage date is the final
+                // one
+                usage['SYS_DATE_ARRIVED'] = new Date(SYS_DATE_ARRIVED)
+                SYS_DATE_ARRIVED.setDate(SYS_DATE_ARRIVED.getDate() +
+                                         (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+                console.log("Next date: ", SYS_DATE_ARRIVED)// }}}
+
 
                 // Get the material collection from the SYS_SOURCE
                 this.entityService.retrieveById(usage['SYS_SOURCE'])
