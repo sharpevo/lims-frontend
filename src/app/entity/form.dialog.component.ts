@@ -95,6 +95,12 @@ export class EntityFormDialog {
     }
 
     createObject(){
+
+      if (this.object['SYS_SAMPLE_CODE']){
+        this.object.TMP_CODE = this.object['SYS_SAMPLE_CODE']
+      }
+      let TMP_CODE = this.object.TMP_CODE
+
       // Get SYS_IDENTIFIER from the entity instead of the gere, in order to
       // enable creating entities with shared genre but under different entity.
       this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
@@ -171,7 +177,7 @@ export class EntityFormDialog {
                     // save workcenter incidentally coz there's already a link
                     // between the SYS_TARGET and the workcenter
                     subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                      this.object.TMP_CODE
+                      TMP_CODE
                     subMaterial['SYS_ENTITY_TYPE'] = 'object'
                     subMaterial['SYS_TARGET'] = data.id
 
