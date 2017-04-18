@@ -210,7 +210,6 @@ export class EntityFormDialog {
               // of attributes undefined in frontend
               this.entityService.retrieveAttribute(material.id)
               .subscribe(attributes => {
-                console.log(attributes)
 
                 // subMaterial is the material object under the corresponding
                 // collection
@@ -224,7 +223,8 @@ export class EntityFormDialog {
                 // between the SYS_TARGET and the workcenter
                 subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
                   TMP_CODE
-                subMaterial['SYS_ENTITY_TYPE'] = 'object'
+                // promote to collection instead of object
+                subMaterial['SYS_ENTITY_TYPE'] = 'collection'
                 subMaterial['SYS_TARGET'] = data.id
 
                 // Assign new values to the new material object
