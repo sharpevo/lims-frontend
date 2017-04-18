@@ -49,7 +49,7 @@ export class EntityFormDialog {
       this.object.SYS_GENRE = this.genreId
       this.generateEntityType()
       this.generateEntityCode()
-      this.getEntityByGenreId(this.genreId)
+      this.getEntity()
     }
 
     generateEntityCode(){
@@ -345,28 +345,22 @@ export class EntityFormDialog {
           this.generateEntityLabel()
         }
       )
-
-      this.getEntityByGenreId(genreId)
+      this.getEntity()
     }
 
-    //getEntityByGenre(genreIdentifier: string){
-    //let identifier = `^${genreIdentifier}[a-zA-Z0-9_\.]*$`
-    //this.entityService.retrieveByIdentifier(identifier)
-    getEntityByGenreId(genreId: string){
-      this.genreService.retrieveEntity(genreId)
-      .subscribe(
-        data => {
-          this.entityList = data.sort(
-            (a,b) => {
-              if (a.updatedAt > b.updatedAt) {
-                return 1
-              } else {
-                return -1
-              }
+    getEntity(){
+      this.entityService.retrieveEntity(this.config.entity.id, this.object.SYS_ENTITY_TYPE)
+      .subscribe(data => {
+        this.entityList = data.sort(
+          (a,b) => {
+            if (a.updatedAt > b.updatedAt) {
+              return 1
+            } else {
+              return -1
             }
-          )
-        }
-      )
+          }
+        )
+      })
     }
 
     deleteEntityById(entityId: string){
@@ -374,7 +368,7 @@ export class EntityFormDialog {
       .subscribe(
         data => {
           console.log('Delete Entity:', data)
-          this.getEntityByGenreId(this.genreId)
+          this.getEntity()
         }
       )
     }
