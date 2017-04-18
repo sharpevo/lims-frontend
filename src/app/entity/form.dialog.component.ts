@@ -218,20 +218,28 @@ export class EntityFormDialog {
                 let subMaterial = {}
                 attributes.forEach(attribute => {
                   subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+
                 })
 
+                if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
+                  subMaterial['SYS_GENRE'] = data['SYS_GENRE']
+                  subMaterial['SYS_ENTITY_TYPE'] = 'collection'
+                  this.attributeList.forEach(attribute => {
+                    subMaterial[attribute['SYS_CODE']] = this.object[attribute['SYS_CODE']]
+                  })
+                } else {
+                  subMaterial['SYS_GENRE'] = material['SYS_GENRE']
+                  subMaterial['SYS_ENTITY_TYPE'] = 'object'
+                }
                 // Customize attributes for new entity. It's not necessary to
                 // save workcenter incidentally coz there's already a link
                 // between the SYS_TARGET and the workcenter
                 subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
                   TMP_CODE
-                // promote to collection instead of object
-                subMaterial['SYS_ENTITY_TYPE'] = 'collection'
                 subMaterial['SYS_TARGET'] = data.id
 
                 // Assign new values to the new material object
                 Object.keys(usage).forEach(usageKey => {
-                  //console.log(usageKey)
                   subMaterial[usageKey] = usage[usageKey]
                 })
 
