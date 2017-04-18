@@ -1,0 +1,52 @@
+<ul style="list-style:none">
+    <li
+        style="list-style:none">
+        <h4>Pending</h4>
+        <ul>
+            <li 
+                style="list-style:none"
+                *ngFor="let sample of samplePendingList">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <h4>Processing</h4>
+        <ul>
+            <li
+                style="list-style:none"
+                *ngFor="let sample of sampleProcessingList">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <h4>Completed</h4>
+        <ul>
+            <li
+                style="list-style:none"
+                *ngFor="let sample of sampleCompletedList">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <h4>Exceptional</h4>
+        <ul>
+            <li
+                style="list-style:none"
+                *ngFor="let sample of sampleExceptionalList">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+            </li>
+        </ul>
+    </li>
+<ul>
+

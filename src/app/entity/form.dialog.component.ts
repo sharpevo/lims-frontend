@@ -115,26 +115,29 @@ export class EntityFormDialog {
         .subscribe(data => {
 
           this.upsertSubEntities(
-            data, TMP_CODE,
+            data,
+            TMP_CODE,
             (subMaterial) => {
               this.entityService.create(subMaterial)
               .subscribe(data =>{
                 console.log("merged entity:", data)
                 // TODO: Deduct the quantity in the material collection
                 // after the merger
+
+                this.initObject()
+                console.log('Add Entity:', data)
+                this.showMessage("Added")
               })
             })
 
-            this.initObject()
-            console.log('Add Entity:', data)
-            this.showMessage("Added")
         })
       } else {
         this.entityService.update(this.object)
         .subscribe(data => {
 
           this.upsertSubEntities(
-            data, TMP_CODE,
+            data, // id and SYS_GENRE
+            TMP_CODE,
             (subMaterial) => {
               this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
               .subscribe(entity => {
@@ -145,14 +148,15 @@ export class EntityFormDialog {
                   console.log("merged entity:", material)
                   // TODO: Deduct the quantity in the material collection
                   // after the merger
+
+                  this.initObject()
+                  console.log('Upadte Entity:', data)
+                  this.showMessage("Updated")
                 })
               })
 
             })
 
-            this.initObject()
-            console.log('Upadte Entity:', data)
-            this.showMessage("Updated")
         })
 
       }
@@ -210,26 +214,34 @@ export class EntityFormDialog {
               // of attributes undefined in frontend
               this.entityService.retrieveAttribute(material.id)
               .subscribe(attributes => {
-                console.log(attributes)
 
                 // subMaterial is the material object under the corresponding
                 // collection
                 let subMaterial = {}
                 attributes.forEach(attribute => {
                   subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+
                 })
 
+                if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
+                  subMaterial['SYS_GENRE'] = data['SYS_GENRE']
+                  subMaterial['SYS_ENTITY_TYPE'] = 'collection'
+                  this.attributeList.forEach(attribute => {
+                    subMaterial[attribute['SYS_CODE']] = this.object[attribute['SYS_CODE']]
+                  })
+                } else {
+                  subMaterial['SYS_GENRE'] = material['SYS_GENRE']
+                  subMaterial['SYS_ENTITY_TYPE'] = 'object'
+                }
                 // Customize attributes for new entity. It's not necessary to
                 // save workcenter incidentally coz there's already a link
                 // between the SYS_TARGET and the workcenter
                 subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
                   TMP_CODE
-                subMaterial['SYS_ENTITY_TYPE'] = 'object'
                 subMaterial['SYS_TARGET'] = data.id
 
                 // Assign new values to the new material object
                 Object.keys(usage).forEach(usageKey => {
-                  //console.log(usageKey)
                   subMaterial[usageKey] = usage[usageKey]
                 })
 
