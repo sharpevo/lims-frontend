@@ -115,7 +115,8 @@ export class EntityFormDialog {
         .subscribe(data => {
 
           this.upsertSubEntities(
-            data, TMP_CODE,
+            data,
+            TMP_CODE,
             (subMaterial) => {
               this.entityService.create(subMaterial)
               .subscribe(data =>{
@@ -135,7 +136,8 @@ export class EntityFormDialog {
         .subscribe(data => {
 
           this.upsertSubEntities(
-            data, TMP_CODE,
+            data, // id and SYS_GENRE
+            TMP_CODE,
             (subMaterial) => {
               this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
               .subscribe(entity => {
