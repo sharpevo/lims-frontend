@@ -22,6 +22,8 @@ import {EntityToStringComponent} from './entity/tostring.component';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 import {WorkcenterOverviewComponent} from './workcenter/overview.component';
+import {WorkcenterViewComponent} from './workcenter/view.component';
+import {EntityInfoInlineComponent} from './entity/info.inline.component';
 
 import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
@@ -44,6 +46,8 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     AttributeFormDialog,
 
     WorkcenterOverviewComponent,
+    WorkcenterViewComponent,
+    EntityInfoInlineComponent,
   ],
   entryComponents:[
     GenreFormDialog,
