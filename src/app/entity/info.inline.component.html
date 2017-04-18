@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="space-between stretch" > 
+    <span
+        *ngFor="let attribute of attributeList">
+        {{attribute[attribute['SYS_LABEL']]}}:
+        <span *ngIf="attribute['SYS_TYPE'] == 'date'">
+            {{entity[attribute['SYS_CODE']] | date: 'yyyy.MM.dd'}}
+        </span>
+        <span *ngIf="attribute['SYS_TYPE'] != 'date'">
+            {{entity[attribute['SYS_CODE']]}}
+        </span>
+    </span>
+</div>
