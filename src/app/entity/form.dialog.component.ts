@@ -54,7 +54,7 @@ export class EntityFormDialog {
 
     generateEntityCode(){
       this.object.TMP_CODE = this.config.entity.SYS_CODE + '.' +
-        new DatePipe('en-US').transform(new Date(), 'yyyyMMddhhmmss')
+        new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
     }
 
     generateEntityType(){
