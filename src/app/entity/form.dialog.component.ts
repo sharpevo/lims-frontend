@@ -131,13 +131,29 @@ export class EntityFormDialog {
         })
       } else {
         this.entityService.update(this.object)
-        .subscribe(
-          data => {
+        .subscribe(data => {
+
+          this.upsertSubEntities(
+            data, TMP_CODE,
+            (subMaterial) => {
+              this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
+              .subscribe(entity => {
+                subMaterial.id = entity[0].id
+
+                this.entityService.update(subMaterial)
+                .subscribe(material =>{
+                  console.log("merged entity:", material)
+                  // TODO: Deduct the quantity in the material collection
+                  // after the merger
+                })
+              })
+
+            })
+
             this.initObject()
             console.log('Upadte Entity:', data)
             this.showMessage("Updated")
-          }
-        )
+        })
 
       }
     }
