@@ -15,6 +15,7 @@ export class TreeViewComponent {
   @Input() hierarchy: any[]
   @Input() entityList: any[]
   @Input() identifierPrefix: string
+  @Input() parentEntity
   selectedOption: string
   constructor(
     public dialog: MdDialog,
@@ -38,6 +39,7 @@ export class TreeViewComponent {
 
   ngOnInit(){
     this.getNextEntityList()
+    //this.getNextEntityListByEntity(this.parentEntity)
   }
 
   // TODO: get SYS_LABEL from Genre and assigne to each Entity
@@ -60,6 +62,39 @@ export class TreeViewComponent {
         this.entityList = data
       }
     )
+  }
+
+  getNextEntityListByEntity(entity){
+    let targetEntityType = ''
+    if (!this.parentEntity){
+      this.entityService.retrieveByType('domain')
+      .subscribe(
+        data => {
+          this.entityList = data
+        }
+      )
+    } else {
+      switch (this.parentEntity['SYS_ENTITY_TYPE']) {
+        case 'domain':
+          targetEntityType = 'class'
+        break
+        case 'class':
+          targetEntityType = 'collection'
+        break
+        case 'collection':
+          targetEntityType = 'object'
+        break
+        default:
+          console.log("nothing to expand")
+
+      }
+      this.entityService.retrieveEntity(entity.id, targetEntityType)
+      .subscribe(
+        data => {
+          this.entityList = data
+        }
+      )
+    }
   }
 
   deleteObjectById(entityId: string, entityList: any[]){

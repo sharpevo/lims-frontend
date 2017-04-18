@@ -60,7 +60,8 @@
         <md-divider></md-divider>
         <tree-view 
             *ngIf="entity.tmp_open"
-            [identifierPrefix]="entity.SYS_IDENTIFIER">
+            [identifierPrefix]="entity.SYS_IDENTIFIER"
+            [parentEntity]="entity">
         </tree-view>
     </li>
 </ul>
