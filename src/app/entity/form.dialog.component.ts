@@ -122,12 +122,13 @@ export class EntityFormDialog {
                 console.log("merged entity:", data)
                 // TODO: Deduct the quantity in the material collection
                 // after the merger
+
+                this.initObject()
+                console.log('Add Entity:', data)
+                this.showMessage("Added")
               })
             })
 
-            this.initObject()
-            console.log('Add Entity:', data)
-            this.showMessage("Added")
         })
       } else {
         this.entityService.update(this.object)
@@ -145,14 +146,15 @@ export class EntityFormDialog {
                   console.log("merged entity:", material)
                   // TODO: Deduct the quantity in the material collection
                   // after the merger
+
+                  this.initObject()
+                  console.log('Upadte Entity:', data)
+                  this.showMessage("Updated")
                 })
               })
 
             })
 
-            this.initObject()
-            console.log('Upadte Entity:', data)
-            this.showMessage("Updated")
         })
 
       }
