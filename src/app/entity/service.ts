@@ -98,7 +98,11 @@ export class EntityService {
 
   }
 
-
+  // query entity by identifier in form.dialog.component
+  retrieveByIdentifierFull(identifier: string){
+    return this.http.get(`${this.url}?SYS_IDENTIFIER=${identifier}`)
+    .map(res => res.json())
+  }
 
 
 
