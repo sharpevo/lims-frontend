@@ -1,0 +1,9 @@
+<h4>Scheduled</h4>
+<div fxLayout="column" fxLayoutAlign="space-between stretch" >
+    <md-card
+        *ngFor="let sample of sampleList">
+        <entity-info-inline
+            [entity]="sample">
+        </entity-info-inline>
+    </md-card>
+</div>
