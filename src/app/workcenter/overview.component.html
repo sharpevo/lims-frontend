@@ -24,9 +24,9 @@
             <md-divider></md-divider>
 			<button
                 md-menu-item
-                (click)="deleteObjectById(entity.id)">
-				<md-icon>delete</md-icon>
-				<span>Delete {{entity[entity["SYS_LABEL"]]}}</span>
+                [routerLink]="['/workcenter-dashboard', entity.id]">
+				<md-icon>info</md-icon>
+				<span>Details of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
 		</md-menu>
 		<span
