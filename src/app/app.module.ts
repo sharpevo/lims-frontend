@@ -22,7 +22,6 @@ import {EntityToStringComponent} from './entity/tostring.component';
 import {ViewComponent} from './entity/view.component';
 import {TreeViewComponent} from './tree/component';
 import {WorkcenterOverviewComponent} from './workcenter/overview.component';
-import {WorkcenterViewComponent} from './workcenter/view.component';
 import {EntityInfoInlineComponent} from './entity/info.inline.component';
 import {WorkcenterDashboardComponent} from './workcenter/dashboard.component';
 import {WorkcenterSampleCandidateComponent} from './workcenter/sample.candidate.component';
@@ -50,7 +49,6 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     AttributeFormDialog,
 
     WorkcenterOverviewComponent,
-    WorkcenterViewComponent,
     EntityInfoInlineComponent,
     WorkcenterDashboardComponent,
     WorkcenterSampleCandidateComponent,

@@ -62,10 +62,28 @@
             *ngIf="entity.tmp_open"
             style="list-style:none">
             <li
-                style="list-style:none">
-                <workcenter-view
+                style="list-style:none"
+                *ngIf="(workcenter | json) != '{}'">
+                <workcenter-sample-scheduled
                     [workcenter]="entity">
-                </workcenter-view>
+                </workcenter-sample-scheduled>
+            </li>
+            <li
+                style="list-style:none"
+                *ngIf="(workcenter | json) != '{}'">
+                <workcenter-sample-activated
+                    [workcenter]="entity">
+                </workcenter-sample-activated>
+            </li>
+            <li
+                style="list-style:none"
+                *ngIf="(workcenter | json) != '{}'">
+                Completed
+            </li>
+            <li
+                style="list-style:none"
+                *ngIf="(workcenter | json) != '{}'">
+                Exceptional
             </li>
         </ul>
     </li>
