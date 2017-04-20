@@ -44,9 +44,21 @@
         <md-card-actions
             fxLayout="row"
             fxLayoutAlign="end end">
+            <md-select
+                class="full-width"
+                [(ngModel)]="operator"
+                placeholder="Operator">
+                <md-option
+                    *ngFor="let operator of operatorList"
+                    [value]="operator.id">
+                    <entity-tostring
+                        [entity]="operator">
+                    </entity-tostring>
+                </md-option>
+            </md-select>
             <button
                 md-button
-                (click)="createObject()">
+                (click)="dispatch()">
                 SUBMIT
             </button>
             <button
