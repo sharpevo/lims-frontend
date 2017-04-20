@@ -65,9 +65,12 @@
                 Dispatched
             </md-card-subtitle>
             <md-card-content>
-                <workcenter-sample-dispatched
-                    [workcenter]="workcenter">
-                </workcenter-sample-dispatched>
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <workcenter-sample-dispatched
+                        [workcenter]="workcenter">
+                    </workcenter-sample-dispatched>
+                </div>
             </md-card-content>
         </md-card>
         <md-card
