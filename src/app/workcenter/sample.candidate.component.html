@@ -6,9 +6,11 @@
             [workcenter]="workcenter">
         </workcenter-sample-scheduled>
     </div>
-    <div>
-        Available
-    </div>
+    <div
+        *ngIf="(workcenter | json) != '{}'">
+        <workcenter-sample-activated
+            [workcenter]="workcenter">
+        </workcenter-sample-activated>
     <div>
         Completed
     </div>
