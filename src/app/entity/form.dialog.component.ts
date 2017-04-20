@@ -138,6 +138,7 @@ export class EntityFormDialog {
             data, // id and SYS_GENRE
             TMP_CODE,
             (subMaterial) => {
+
               this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
               .subscribe(entity => {
                 subMaterial.id = entity[0].id
@@ -162,6 +163,7 @@ export class EntityFormDialog {
     }
 
     upsertSubEntities(data, TMP_CODE, callback){
+      let object = Object.assign({}, this.object)
 
       // Get the keys for each kind of BoM/Routing
       // e.g. "bom", "bill_of_material"
@@ -185,8 +187,8 @@ export class EntityFormDialog {
             // Calculate SYS_DATE_SCHEDULED// {{{
             //
             if (!DATE_EXISTS){
-              if (this.object['SYS_DATE_SCHEDULED']){
-                SYS_DATE_SCHEDULED = new Date(this.object['SYS_DATE_SCHEDULED'])
+              if (object['SYS_DATE_SCHEDULED']){
+                SYS_DATE_SCHEDULED = new Date(object['SYS_DATE_SCHEDULED'])
                 //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
               }
               DATE_EXISTS = true
@@ -226,7 +228,7 @@ export class EntityFormDialog {
                   subMaterial['SYS_GENRE'] = data['SYS_GENRE']
                   subMaterial['SYS_ENTITY_TYPE'] = 'collection'
                   this.attributeList.forEach(attribute => {
-                    subMaterial[attribute['SYS_CODE']] = this.object[attribute['SYS_CODE']]
+                    subMaterial[attribute['SYS_CODE']] = object[attribute['SYS_CODE']]
                   })
                 } else {
                   subMaterial['SYS_GENRE'] = material['SYS_GENRE']
