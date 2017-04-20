@@ -11,6 +11,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Scheduled</h4>
                     <workcenter-sample-scheduled
+                        [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-scheduled>
                 </div>
@@ -18,6 +19,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Activated</h4>
                     <workcenter-sample-activated
+                        [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-activated>
                 </div>
@@ -25,6 +27,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Completed</h4>
                     <workcenter-sample-completed
+                        [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-completed>
                 </div>
@@ -32,6 +35,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Terminated</h4>
                     <workcenter-sample-terminated
+                        [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-terminated>
                 </div>
