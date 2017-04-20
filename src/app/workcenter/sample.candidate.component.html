@@ -20,7 +20,11 @@
             [workcenter]="workcenter">
         </workcenter-sample-completed>
     </div>
-    <div>
-        Exceptional
+    <div
+        *ngIf="(workcenter | json) != '{}'">
+        <h4>Terminated</h4>
+        <workcenter-sample-terminated
+            [workcenter]="workcenter">
+        </workcenter-sample-terminated>
     </div>
 </div>
