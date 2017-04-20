@@ -1,0 +1,25 @@
+<h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
+<div fxLayout="row" fxLayoutAlign="space-between stretch" >
+    <div
+        class="full-width"
+        style="background: #268bd2">
+        <workcenter-sample-candidate
+            [workcenter]="workcenter">
+        </workcenter-sample-candidate>
+    </div>
+    <div
+        class="full-width"
+        fxLayout="column" fxLayoutAlign="space-between stretch" >
+        <div
+            class="full-width"
+            style="background: #859900">
+            sample.assigned
+        </div>
+        <div
+            class="full-width"
+            style="background: #2aa198">
+            sample.processing
+        </div>
+    </div>
+</div>
+{{workcenter | json}}
