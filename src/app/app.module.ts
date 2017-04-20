@@ -27,6 +27,7 @@ import {EntityInfoInlineComponent} from './entity/info.inline.component';
 import {WorkcenterDashboardComponent} from './workcenter/dashboard.component';
 import {WorkcenterSampleCandidateComponent} from './workcenter/sample.candidate.component';
 import {WorkcenterSampleScheduledComponent} from './workcenter/sample.scheduled.component';
+import {WorkcenterSampleActivatedComponent} from './workcenter/sample.activated.component';
 
 import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
@@ -54,6 +55,7 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     WorkcenterDashboardComponent,
     WorkcenterSampleCandidateComponent,
     WorkcenterSampleScheduledComponent,
+    WorkcenterSampleActivatedComponent,
   ],
   entryComponents:[
     GenreFormDialog,
