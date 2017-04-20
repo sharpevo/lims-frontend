@@ -64,6 +64,7 @@
             <li
                 style="list-style:none"
                 *ngIf="(workcenter | json) != '{}'">
+                <h4>Scheduled</h4>
                 <workcenter-sample-scheduled
                     [workcenter]="entity">
                 </workcenter-sample-scheduled>
@@ -71,6 +72,7 @@
             <li
                 style="list-style:none"
                 *ngIf="(workcenter | json) != '{}'">
+                <h4>Activated</h4>
                 <workcenter-sample-activated
                     [workcenter]="entity">
                 </workcenter-sample-activated>
