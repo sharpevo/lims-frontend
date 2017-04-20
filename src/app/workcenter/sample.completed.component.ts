@@ -8,13 +8,15 @@ import {EntityService} from '../entity/service'
 export class WorkcenterSampleCompletedComponent{
   @Input() workcenter
   @Input() callback
+  @Input() checkedEntityList
+
   sampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
   ){}
 
-  ngAfterViewInit(){
+  ngOnInit(){
     this.getSampleList()
   }
 
