@@ -80,6 +80,8 @@
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-dispatched
+                        #dispatchComponent
+                        [checkedEntityList]="checkedDispatchedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-dispatched>
                 </div>

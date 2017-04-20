@@ -1,4 +1,4 @@
-import {Component} from '@angular/core'
+import {Component, ViewChild} from '@angular/core'
 import {ActivatedRoute, Router} from '@angular/router'
 import {EntityService} from '../entity/service'
 
@@ -12,8 +12,10 @@ export class WorkcenterDashboardComponent{
   workcenter: any = {}
   workcenterId: string = ''
   checkedEntityList: any[] = []
+  checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
-  operator: any = {}
+  operator: string = ''
+  @ViewChild('dispatchComponent') dispatchComponent
 
   constructor(
     private route: ActivatedRoute,
