@@ -34,7 +34,7 @@ export class WorkcenterViewComponent {
       .subscribe(data => {
         console.log(data)
         data.forEach(sample => {
-          let sampleDate = sample['SYS_DATE_ARRIVED']
+          let sampleDate = sample['SYS_DATE_SCHEDULED']
           if (sample['SYS_OPERATOR']) {
             if (sample['SYS_DATE_COMPLETED']){
               this.sampleCompletedList.push(sample)

@@ -1,7 +1,10 @@
 <h2>Candidates</h2>
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-    <div>
-        Scheduled
+    <div
+        *ngIf="(workcenter | json) != '{}'">
+        <workcenter-sample-scheduled
+            [workcenter]="workcenter">
+        </workcenter-sample-scheduled>
     </div>
     <div>
         Available
@@ -13,4 +16,3 @@
         Exceptional
     </div>
 </div>
-{{workcenter|json}}

@@ -138,6 +138,7 @@ export class EntityFormDialog {
             data, // id and SYS_GENRE
             TMP_CODE,
             (subMaterial) => {
+
               this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
               .subscribe(entity => {
                 subMaterial.id = entity[0].id
@@ -162,12 +163,13 @@ export class EntityFormDialog {
     }
 
     upsertSubEntities(data, TMP_CODE, callback){
+      let object = Object.assign({}, this.object)
 
       // Get the keys for each kind of BoM/Routing
       // e.g. "bom", "bill_of_material"
       Object.keys(this.parentMap).forEach(key => {
 
-        let SYS_DATE_ARRIVED = new Date()
+        let SYS_DATE_SCHEDULED = new Date()
         let DATE_EXISTS = false
 
         // Get the bom object id, which is used as the key of the actual
@@ -180,14 +182,14 @@ export class EntityFormDialog {
 
           // only process checked Material or Workcenter
           if (usage['SYS_CHECKED']){
-            console.log('process checked entry:', usage)
+            //console.log('process checked entry:', usage)
 
-            // Calculate SYS_DATE_ARRIVED// {{{
+            // Calculate SYS_DATE_SCHEDULED// {{{
             //
             if (!DATE_EXISTS){
-              if (this.object['SYS_DATE_ARRIVED']){
-                SYS_DATE_ARRIVED = new Date(this.object['SYS_DATE_ARRIVED'])
-                console.log('DATE not exists, but object exist', SYS_DATE_ARRIVED)
+              if (object['SYS_DATE_SCHEDULED']){
+                SYS_DATE_SCHEDULED = new Date(object['SYS_DATE_SCHEDULED'])
+                //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
               }
               DATE_EXISTS = true
             }
@@ -195,10 +197,10 @@ export class EntityFormDialog {
             // The date object is address-reference, so that if not
             // assigned with "new Date", all the usage date is the final
             // one
-            usage['SYS_DATE_ARRIVED'] = new Date(SYS_DATE_ARRIVED)
-            SYS_DATE_ARRIVED.setDate(SYS_DATE_ARRIVED.getDate() +
-                                     (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
-            console.log("Next date: ", SYS_DATE_ARRIVED)// }}}
+            usage['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
+            SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() +
+                                       (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+            //console.log("Next date: ", SYS_DATE_SCHEDULED)// }}}
 
 
             // Get the material collection from the SYS_SOURCE
@@ -226,7 +228,7 @@ export class EntityFormDialog {
                   subMaterial['SYS_GENRE'] = data['SYS_GENRE']
                   subMaterial['SYS_ENTITY_TYPE'] = 'collection'
                   this.attributeList.forEach(attribute => {
-                    subMaterial[attribute['SYS_CODE']] = this.object[attribute['SYS_CODE']]
+                    subMaterial[attribute['SYS_CODE']] = object[attribute['SYS_CODE']]
                   })
                 } else {
                   subMaterial['SYS_GENRE'] = material['SYS_GENRE']
