@@ -2,17 +2,23 @@
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
     <div
         *ngIf="(workcenter | json) != '{}'">
+        <h4>Scheduled</h4>
         <workcenter-sample-scheduled
             [workcenter]="workcenter">
         </workcenter-sample-scheduled>
     </div>
     <div
         *ngIf="(workcenter | json) != '{}'">
+        <h4>Activated</h4>
         <workcenter-sample-activated
             [workcenter]="workcenter">
         </workcenter-sample-activated>
-    <div>
-        Completed
+    <div
+        *ngIf="(workcenter | json) != '{}'">
+        <h4>Completed</h4>
+        <workcenter-sample-completed
+            [workcenter]="workcenter">
+        </workcenter-sample-completed>
     </div>
     <div>
         Exceptional

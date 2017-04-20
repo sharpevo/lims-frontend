@@ -1,0 +1,8 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" >
+    <span
+        *ngFor="let sample of sampleList">
+        <entity-info-inline
+            [entity]="sample">
+        </entity-info-inline>
+    </span>
+</div>
