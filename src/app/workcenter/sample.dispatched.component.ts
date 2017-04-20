@@ -25,7 +25,7 @@ export class WorkcenterSampleDispatchedComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (d['SYS_WORKCENTER_OPERATOR'])
+        return (d['SYS_WORKCENTER_OPERATOR'] != '')
       })
       .filter(d => {
         if (this.callback) {
