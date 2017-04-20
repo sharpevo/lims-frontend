@@ -174,7 +174,7 @@ export class EntityFormDialog {
 
         // Get the bom object id, which is used as the key of the actual
         // usage, e.g., <bom object id>
-        Object.keys(this.parentMap[key]).forEach(entityId =>{
+        Object.keys(this.parentMap[key]).forEach((entityId, index) =>{
 
           // `usage` is the inputs from user and contains SYS_QUANT,
           // SYS_SOURCE, etc.
@@ -200,6 +200,9 @@ export class EntityFormDialog {
             usage['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
             SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() +
                                        (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+            if (index == 0){
+              usage['SYS_DATE_ARRIVED'] = usage['SYS_DATE_SCHEDULED']
+            }
             //console.log("Next date: ", SYS_DATE_SCHEDULED)// }}}
 
 
