@@ -50,15 +50,20 @@ export class WorkcenterDashboardComponent{
   }
 
   dispatch(){
-    this.checkedEntityList.forEach(entityId => {
-      this.entityService.retrieveById(entityId)
-      .subscribe(entity => {
-        entity['SYS_WORKCENTER_OPERATOR'] = this.operator
-        this.entityService.update(entity)
-        .subscribe(data => {
+    if (this.operator) {
+      this.checkedEntityList.forEach(entityId => {
+        this.entityService.retrieveById(entityId)
+        .subscribe(entity => {
+          entity['SYS_WORKCENTER_OPERATOR'] = this.operator
+          this.entityService.update(entity)
+          .subscribe(data => {
+            this.dispatchComponent.getSampleList()
+          })
         })
       })
-    })
+    } else {
+      console.log("invalid operator")
+    }
   }
 
 }
