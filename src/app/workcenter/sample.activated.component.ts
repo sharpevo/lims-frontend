@@ -23,7 +23,7 @@ export class WorkcenterSampleActivatedComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (!d['SYS_DATE_SCHEDULED']) &&
+        return (d['SYS_DATE_SCHEDULED']) &&
           (d['SYS_DATE_ARRIVED']) &&
           (!d['SYS_DATE_COMPLETED']) &&
           (!d['SYS_DATE_TERMINATED'])
