@@ -1,25 +1,36 @@
 <h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
-<div fxLayout="row" fxLayoutAlign="space-between stretch" >
+<div fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="10px">
+    <md-card
+        class="full-width">
+        <md-card-subtitle>
+            Candidates
+        </md-card-subtitle>
+        <md-card-content>
+            <workcenter-sample-candidate
+                [workcenter]="workcenter">
+            </workcenter-sample-candidate>
+        </md-card-content>
+    </md-card>
     <div
         class="full-width"
-        style="background: #268bd2">
-        <workcenter-sample-candidate
-            [workcenter]="workcenter">
-        </workcenter-sample-candidate>
-    </div>
-    <div
-        class="full-width"
-        fxLayout="column" fxLayoutAlign="space-between stretch" >
-        <div
-            class="full-width"
-            style="background: #859900">
-            sample.assigned
-        </div>
-        <div
-            class="full-width"
-            style="background: #2aa198">
-            sample.processing
-        </div>
+        fxLayoutGap="10px"
+        fxLayout="column" fxLayoutAlign="start stretch" >
+        <md-card
+            class="full-width">
+            <md-card-subtitle>
+                Dispatched
+            </md-card-subtitle>
+            <md-card-content>
+                <workcenter-sample-dispatched
+                    [workcenter]="workcenter">
+                </workcenter-sample-dispatched>
+            </md-card-content>
+        </md-card>
+        <md-card
+            class="full-width">
+            <md-card-subtitle>
+                Processing
+            </md-card-subtitle>
+        </md-card>
     </div>
 </div>
-{{workcenter | json}}
