@@ -23,7 +23,7 @@ export class WorkcenterSampleTerminatedComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (!d['SYS_DATE_TERMINATED'])
+        return (d['SYS_DATE_TERMINATED'])
       })
       .filter(d => {
         if (this.callback) {
