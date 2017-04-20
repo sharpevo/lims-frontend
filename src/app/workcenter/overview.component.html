@@ -78,7 +78,10 @@
             <li
                 style="list-style:none"
                 *ngIf="(workcenter | json) != '{}'">
-                Completed
+                <h4>Completed</h4>
+                <workcenter-sample-completed
+                    [workcenter]="entity">
+                </workcenter-sample-completed>
             </li>
             <li
                 style="list-style:none"
