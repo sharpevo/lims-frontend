@@ -2,6 +2,7 @@
     <span
         *ngFor="let sample of sampleList">
         <entity-info-inline
+            [checkedEntityList]="checkedEntityList"
             [entity]="sample">
         </entity-info-inline>
     </span>

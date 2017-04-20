@@ -11,6 +11,7 @@ export class WorkcenterDashboardComponent{
   objectId: string = ''
   workcenter: any = {}
   workcenterId: string = ''
+  checkedEntityList: any[] = []
 
   constructor(
     private route: ActivatedRoute,

@@ -10,6 +10,7 @@ import {AttributeService} from '../attribute/service'
 })
 export class EntityInfoInlineComponent{
   @Input() entity
+  @Input() checkedEntityList
   attributeList: any[] = []
 
   constructor(
@@ -20,16 +21,30 @@ export class EntityInfoInlineComponent{
   ){}
 
   ngOnInit(){
+    // It is shared with Dashboard and Overview at least, the former one will
+    // provide a checkedEntityList and the latter one does not
+    // As a result, selection on Overview will be overwrited since the
+    // initializatoin
+    //if (!this.checkedEntityList){
+    //this.checkedEntityList = []
+    //}
+    this.entity['checked']=false
     this.getAttributeList()
   }
 
   getAttributeList(){
     this.entityService.retrieveAttribute(this.entity.id)
     .subscribe(data => {
-      console.log(this.entity)
-      console.log("<<", data)
       this.attributeList = data
     })
   }
 
+  checkEntity(){
+    if (!this.entity.checked){
+      this.checkedEntityList.push(this.entity.id)
+    } else {
+      this.checkedEntityList.splice(
+        this.checkedEntityList.indexOf(this.entity.id),1)
+    }
+  }
 }
