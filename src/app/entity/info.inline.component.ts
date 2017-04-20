@@ -43,8 +43,8 @@ export class EntityInfoInlineComponent{
     if (!this.entity.checked){
       this.checkedEntityList.push(this.entity.id)
     } else {
-      this.checkedEntityList = this.checkedEntityList.filter(
-        entityId => entityId !== this.entity.id)
+      this.checkedEntityList.splice(
+        this.checkedEntityList.indexOf(this.entity.id),1)
     }
   }
 }
