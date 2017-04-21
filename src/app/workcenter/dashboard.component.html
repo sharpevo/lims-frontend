@@ -27,17 +27,13 @@
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <h4>Activated</h4>
-                    <workcenter-sample-activated
-                        #activatedComponent
-                        [checkedEntityList]="checkedEntityList"
-                        [workcenter]="workcenter">
-                    </workcenter-sample-activated>
-                </div>
                 <div
                     fxLayout="row"
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center">
+                    <h4>
+                        Activated
+                    </h4>
                     <md-select
                         [(ngModel)]="operator"
                         placeholder="Operator">
@@ -50,7 +46,7 @@
                         </md-option>
                     </md-select>
                     <button
-                        md-raised-button
+                        md-button
                         (click)="dispatch()">
                         DISPATCH
                     </button>
@@ -59,28 +55,34 @@
                         TERMINATED
                     </button>
                 </div>
+                    <workcenter-sample-activated
+                        #activatedComponent
+                        [checkedEntityList]="checkedEntityList"
+                        [workcenter]="workcenter">
+                    </workcenter-sample-activated>
+                </div>
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <h4>Dispatched</h4>
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center">
+                        <h4>Dispatched</h4>
+                        <button
+                            md-button
+                            (click)="undispatch()">
+                            RELEASE
+                        </button>
+                        <button
+                            md-button>
+                            TERMINATED
+                        </button>
+                    </div>
                     <workcenter-sample-dispatched
                         #dispatchedComponent
                         [checkedEntityList]="checkedDispatchedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-dispatched>
-                </div>
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center">
-                    <button
-                        md-raised-button
-                        (click)="undispatch()">
-                        RELEASE
-                    </button>
-                    <button
-                        md-button>
-                        TERMINATED
-                    </button>
                 </div>
             </div>
         </md-card-content>
