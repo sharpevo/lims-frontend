@@ -15,6 +15,7 @@ export class WorkcenterDashboardComponent{
   checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
   operator: string = ''
+  operatorCode: string
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
 
@@ -38,6 +39,8 @@ export class WorkcenterDashboardComponent{
     this.entityService.retrieveById(this.workcenterId)
     .subscribe(data => {
       this.workcenter = data
+      this.operatorCode = this.workcenter['SYS_CODE'] + "ATTR_OPERATOR"
+
     })
   }
 
@@ -55,7 +58,7 @@ export class WorkcenterDashboardComponent{
       this.checkedEntityList.forEach(entityId => {
         this.entityService.retrieveById(entityId)
         .subscribe(entity => {
-          entity['SYS_WORKCENTER_OPERATOR'] = this.operator
+          entity[this.operatorCode] = this.operator
           this.entityService.update(entity)
           .subscribe(data => {
             this.dispatchedComponent.getSampleList()
@@ -72,7 +75,7 @@ export class WorkcenterDashboardComponent{
     this.checkedDispatchedEntityList.forEach(entityId => {
       this.entityService.retrieveById(entityId)
       .subscribe(entity => {
-        entity['SYS_WORKCENTER_OPERATOR'] = ""
+        entity[this.operatorCode] = ""
         this.entityService.update(entity)
         .subscribe(data => {
           this.activatedComponent.getSampleList()

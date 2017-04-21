@@ -21,13 +21,14 @@ export class WorkcenterSampleActivatedComponent{
   }
 
   getSampleList(){
+    let operatorCode = this.workcenter['SYS_CODE'] + "ATTR_OPERATOR"
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
         return (d['SYS_DATE_SCHEDULED']) &&
           (d['SYS_DATE_ARRIVED']) &&
-          (!d['SYS_WORKCENTER_OPERATOR']) &&
+          (!d[operatorCode]) &&
           (!d['SYS_DATE_COMPLETED']) &&
           (!d['SYS_DATE_TERMINATED'])
       })
