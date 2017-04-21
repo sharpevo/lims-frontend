@@ -27,6 +27,7 @@ export class WorkcenterSampleActivatedComponent{
       .filter(d => {
         return (d['SYS_DATE_SCHEDULED']) &&
           (d['SYS_DATE_ARRIVED']) &&
+          (!d['SYS_WORKCENTER_OPERATOR']) &&
           (!d['SYS_DATE_COMPLETED']) &&
           (!d['SYS_DATE_TERMINATED'])
       })
