@@ -15,7 +15,7 @@ export class WorkcenterDashboardComponent{
   checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
   operator: string = ''
-  @ViewChild('dispatchComponent') dispatchComponent
+  @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
 
   constructor(
@@ -58,7 +58,8 @@ export class WorkcenterDashboardComponent{
           entity['SYS_WORKCENTER_OPERATOR'] = this.operator
           this.entityService.update(entity)
           .subscribe(data => {
-            this.dispatchComponent.getSampleList()
+            this.dispatchedComponent.getSampleList()
+            this.activatedComponent.getSampleList()
           })
         })
       })

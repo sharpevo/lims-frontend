@@ -1,12 +1,12 @@
 <h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
-<div fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="10px">
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <md-card
         class="full-width">
         <md-card-subtitle>
-            Candidates
+            SCHEDULING
         </md-card-subtitle>
         <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="space-between stretch" >
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Scheduled</h4>
@@ -15,14 +15,83 @@
                         [workcenter]="workcenter">
                     </workcenter-sample-scheduled>
                 </div>
+            </div>
+        </md-card-content>
+    </md-card>
+    <md-card
+        class="full-width">
+        <md-card-subtitle>
+            PROCESSING
+        </md-card-subtitle>
+        <md-card-content>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Activated</h4>
                     <workcenter-sample-activated
+                        #activatedComponent
                         [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-activated>
                 </div>
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center">
+                    <md-select
+                        [(ngModel)]="operator"
+                        placeholder="Operator">
+                        <md-option
+                            *ngFor="let operator of operatorList"
+                            [value]="operator.id">
+                            <entity-tostring
+                                [entity]="operator">
+                            </entity-tostring>
+                        </md-option>
+                    </md-select>
+                    <button
+                        md-raised-button
+                        (click)="dispatch()">
+                        DISPATCH
+                    </button>
+                    <button
+                        md-button>
+                        TERMINATED
+                    </button>
+                </div>
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <h4>Dispatched</h4>
+                    <workcenter-sample-dispatched
+                        #dispatchedComponent
+                        [checkedEntityList]="checkedDispatchedEntityList"
+                        [workcenter]="workcenter">
+                    </workcenter-sample-dispatched>
+                </div>
+                <div
+                    fxLayout="row"
+                    fxLayoutGap="10px"
+                    fxLayoutAlign="start center">
+                    <button
+                        md-raised-button
+                        (click)="undispatch()">
+                        RELEASE
+                    </button>
+                    <button
+                        md-button>
+                        TERMINATED
+                    </button>
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
+    <md-card
+        class="full-width">
+        <md-card-subtitle>
+            HISTORY
+        </md-card-subtitle>
+        <md-card-content>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Completed</h4>
@@ -41,57 +110,5 @@
                 </div>
             </div>
         </md-card-content>
-        <md-card-actions
-            fxLayout="row"
-            fxLayoutAlign="end end">
-            <md-select
-                class="full-width"
-                [(ngModel)]="operator"
-                placeholder="Operator">
-                <md-option
-                    *ngFor="let operator of operatorList"
-                    [value]="operator.id">
-                    <entity-tostring
-                        [entity]="operator">
-                    </entity-tostring>
-                </md-option>
-            </md-select>
-            <button
-                md-button
-                (click)="dispatch()">
-                SUBMIT
-            </button>
-            <button
-                md-button>
-                CLEAR
-            </button>
-        </md-card-actions>
     </md-card>
-    <div
-        class="full-width"
-        fxLayoutGap="10px"
-        fxLayout="column" fxLayoutAlign="start stretch" >
-        <md-card
-            class="full-width">
-            <md-card-subtitle>
-                Dispatched
-            </md-card-subtitle>
-            <md-card-content>
-                <div
-                    *ngIf="(workcenter | json) != '{}'">
-                    <workcenter-sample-dispatched
-                        #dispatchComponent
-                        [checkedEntityList]="checkedDispatchedEntityList"
-                        [workcenter]="workcenter">
-                    </workcenter-sample-dispatched>
-                </div>
-            </md-card-content>
-        </md-card>
-        <md-card
-            class="full-width">
-            <md-card-subtitle>
-                Processing
-            </md-card-subtitle>
-        </md-card>
-    </div>
 </div>
