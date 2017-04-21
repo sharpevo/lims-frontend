@@ -21,7 +21,7 @@
     <md-card
         class="full-width">
         <md-card-subtitle>
-            PROCESSING
+            DISPATCHING
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
@@ -72,6 +72,11 @@
                             md-button
                             (click)="undispatch()">
                             RELEASE
+                        </button>
+                        <button
+                            md-button
+                            (click)="openNewEntityDialog(workcenter)">
+                            <span>PROCESS</span>
                         </button>
                         <button
                             md-button>

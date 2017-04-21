@@ -1,6 +1,8 @@
 import {Component, ViewChild} from '@angular/core'
 import {ActivatedRoute, Router} from '@angular/router'
+import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
+import {EntityFormDialog} from '../entity/form.dialog.component'
 
 @Component({
   selector: 'workcenter-dashboard',
@@ -8,6 +10,7 @@ import {EntityService} from '../entity/service'
 })
 export class WorkcenterDashboardComponent{
   sub: any = {}
+  selectedOption: string
   objectId: string = ''
   workcenter: any = {}
   workcenterId: string = ''
@@ -20,6 +23,7 @@ export class WorkcenterDashboardComponent{
   @ViewChild('activatedComponent') activatedComponent
 
   constructor(
+    public dialog: MdDialog,
     private route: ActivatedRoute,
     private router: Router,
     private entityService: EntityService,
@@ -85,4 +89,11 @@ export class WorkcenterDashboardComponent{
     })
   }
 
+  openNewEntityDialog(entity: any) {
+    let dialogRef = this.dialog.open(EntityFormDialog, {width: '600px'});
+    dialogRef.componentInstance.config.entity = entity
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedOption = result;
+    });
+  }
 }
