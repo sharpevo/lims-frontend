@@ -37,17 +37,4 @@ export class WorkcenterSampleDispatchedComponent{
     })
   }
 
-  undispatch(){
-    this.checkedEntityList.forEach(entityId => {
-      this.entityService.retrieveById(entityId)
-      .subscribe(entity => {
-        entity['SYS_WORKCENTER_OPERATOR'] = ""
-        this.entityService.update(entity)
-        .subscribe(data => {
-          this.getSampleList()
-        })
-      })
-    })
-  }
-
 }

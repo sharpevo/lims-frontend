@@ -15,7 +15,8 @@ export class WorkcenterDashboardComponent{
   checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
   operator: string = ''
-  @ViewChild('dispatchComponent') dispatchComponent
+  @ViewChild('dispatchedComponent') dispatchedComponent
+  @ViewChild('activatedComponent') activatedComponent
 
   constructor(
     private route: ActivatedRoute,
@@ -57,13 +58,28 @@ export class WorkcenterDashboardComponent{
           entity['SYS_WORKCENTER_OPERATOR'] = this.operator
           this.entityService.update(entity)
           .subscribe(data => {
-            this.dispatchComponent.getSampleList()
+            this.dispatchedComponent.getSampleList()
+            this.activatedComponent.getSampleList()
           })
         })
       })
     } else {
       console.log("invalid operator")
     }
+  }
+
+  undispatch(){
+    this.checkedDispatchedEntityList.forEach(entityId => {
+      this.entityService.retrieveById(entityId)
+      .subscribe(entity => {
+        entity['SYS_WORKCENTER_OPERATOR'] = ""
+        this.entityService.update(entity)
+        .subscribe(data => {
+          this.activatedComponent.getSampleList()
+          this.dispatchedComponent.getSampleList()
+        })
+      })
+    })
   }
 
 }
