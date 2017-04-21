@@ -21,12 +21,12 @@ export class WorkcenterSampleDispatchedComponent{
   }
 
   getSampleList(){
-    let operatorCode = this.workcenter['SYS_CODE'] + "ATTR_OPERATOR"
+    let operatorCode = this.workcenter['SYS_CODE'] + "_ATTR_OPERATOR"
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (d[operatorCode] != '')
+        return (d[operatorCode] && d[operatorCode] != '')
       })
       .filter(d => {
         if (this.callback) {

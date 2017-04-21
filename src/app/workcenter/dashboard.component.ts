@@ -39,7 +39,7 @@ export class WorkcenterDashboardComponent{
     this.entityService.retrieveById(this.workcenterId)
     .subscribe(data => {
       this.workcenter = data
-      this.operatorCode = this.workcenter['SYS_CODE'] + "ATTR_OPERATOR"
+      this.operatorCode = this.workcenter['SYS_CODE'] + "_ATTR_OPERATOR"
 
     })
   }
