@@ -18,7 +18,7 @@ export class WorkcenterDashboardComponent{
   checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
   operator: string = ''
-  operatorCode: string
+  operatorCode: string = 'SYS_WORKCENTER_OPERATOR'
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
 
@@ -43,7 +43,6 @@ export class WorkcenterDashboardComponent{
     this.entityService.retrieveById(this.workcenterId)
     .subscribe(data => {
       this.workcenter = data
-      this.operatorCode = this.workcenter['SYS_CODE'] + "_ATTR_OPERATOR"
 
     })
   }
