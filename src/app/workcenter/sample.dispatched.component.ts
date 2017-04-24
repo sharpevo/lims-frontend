@@ -21,7 +21,7 @@ export class WorkcenterSampleDispatchedComponent{
   }
 
   getSampleList(){
-    let operatorCode = this.workcenter['SYS_CODE'] + "_ATTR_OPERATOR"
+    let operatorCode = 'SYS_WORKCENTER_OPERATOR'
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
       this.sampleList = data

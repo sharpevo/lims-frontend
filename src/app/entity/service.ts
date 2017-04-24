@@ -74,7 +74,7 @@ export class EntityService {
   }
 
   retrieveChainedSamples(targetId: string){
-    let url = `${this.url}?SYS_TARGET=${targetId}`
+    let url = `${this.url}?SYS_TARGET=${targetId}&sort=SYS_ORDER`
     return this.http.get(url)
     .map(res => res.json())
   }
