@@ -92,6 +92,7 @@ export class WorkcenterDashboardComponent{
   openNewEntityDialog(entity: any) {
     let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
     dialogRef.componentInstance.config.entity = entity
+    dialogRef.componentInstance.config.sampleList = this.checkedDispatchedEntityList
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
     });
