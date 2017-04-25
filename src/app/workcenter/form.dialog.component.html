@@ -14,6 +14,12 @@
 <br/>
 <br/>
 
+{{config.sampleList.length}} samples:
+<span *ngFor="let sample of config.sampleList">
+    {{sample}}
+</span>
+<br/>
+<br/>
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
@@ -165,7 +171,7 @@
     fxLayoutAlign="end end">
     <button 
         md-button
-        (click)="createObject()">
+        (click)="submitObject()">
         SUBMIT
     </button>
     <button 
@@ -174,7 +180,6 @@
         CLEAR
     </button>
 </div>
-
 <div
     *ngFor="let entity of entityList"
     fxLayout="column"
