@@ -86,12 +86,14 @@ export class SampleFormDialog {
     }
 
     submitObject(){
-      // samples from the previous workcenter or the current one in the first workcenter
-      // with workcenter-specific attributes:
-      // - for the attributes defined by administrator, if they are same, use the previous one
+      // samples from the previous workcenter or the current one in the first
+      // workcenter with workcenter-specific attributes:
+      // - for the attributes defined by administrator, if they are same, use
+      //   the previous one
       // - for the attributes starts with SYS, use current workcenter
-      this.config.sampleList.forEach(sampleId => {
-        this.entityService.retrieveById(sampleId)
+      this.config.sampleList.forEach(sample => {
+        console.log('processing candidate sample', sample)
+        this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
         .subscribe(data => {
           console.log("processing sample:", data)
           this.submitSample(data)
