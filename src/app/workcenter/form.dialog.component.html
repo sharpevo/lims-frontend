@@ -14,49 +14,15 @@
 <br/>
 <br/>
 
-{{config.sampleList.length}} samples:
-<span *ngFor="let sample of config.sampleList">
-    {{sample}}
-</span>
-<br/>
-<br/>
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
-    <md-select
-        class="full-width"
-        placeholder="Entity Genre (identifier)"
-        [(ngModel)]="object.SYS_GENRE">
-        <md-option
-            *ngFor="let genre of genreList"
-            (click)="getAttributesByGenreId(genre.id)"
-            [value]="genre.id">
-            {{genre[genre["SYS_LABEL"]]}}
-        </md-option>
-    </md-select>
+    {{config.sampleList.length}} samples:
+    <span *ngFor="let sample of config.sampleList">
+        {{sample['TMP_NEXT_SAMPLE_ID']}}
+    </span>
     <br/>
-    <md-input-container class="full-width">
-        <input
-            mdInput
-            required
-            type="text"
-            [(ngModel)]="object.TMP_CODE"
-            placeholder="CODE"/>
-    </md-input-container>
-	<br/>
-	<md-select
-		class="full-width"
-		[(ngModel)]="object.SYS_ENTITY_TYPE"
-		placeholder="Entity Type">
-		<!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
-		<md-option
-			*ngFor="let category of categoryList"
-			[value]="category.value">
-			{{category.title}}
-		</md-option>
-	</md-select>
-	<br/>
-	<br/>
+    <br/>
     <div
         *ngFor="let attribute of attributeList">
         <div [ngSwitch]="attribute.SYS_TYPE">
