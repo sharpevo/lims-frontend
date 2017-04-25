@@ -20,7 +20,7 @@ export class WorkcenterSampleDispatchedComponent{
     this.getSampleList()
   }
 
-  getSampleList(){
+  getSampleListCurrent(){
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
@@ -37,6 +37,62 @@ export class WorkcenterSampleDispatchedComponent{
           return true
         }
       })
+    })
+  }
+
+  getSampleList(){
+    this.sampleList = []
+    let operatorCode = 'SYS_WORKCENTER_OPERATOR'
+    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
+    .subscribe(data => {
+
+      //let dispatchedSampleList = []
+      data.forEach(d => {
+        // retrieve chained samples by the same SYS_TARGET
+        this.entityService.retrieveChainedSamples(d['SYS_TARGET'])
+        .subscribe(samples => {
+
+          // get previous sample
+          let index = -1
+          let previousSample = {}
+
+          for (let i=0; i < samples.length; i ++){
+            if (samples[i].id == d.id){
+              index = i
+              break
+            }
+          }
+
+          if (index > -1){
+            if (index > 0){
+              previousSample = samples[index-1]
+              // clear samples without operator in current workcenter
+              if (d[operatorCode] &&
+                  !d['SYS_DATE_COMPLETED']) {
+                previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
+              //dispatchedSampleList.push(previousSample)
+              this.sampleList.push(previousSample)
+              }
+
+            } else {
+              // d is the first sample in the chain and should be removed out
+              // of the scheduled list and moved into the activated list
+              previousSample = {}
+              if (d[operatorCode] &&
+                  !d['SYS_DATE_COMPLETED']) {
+                d['TMP_NEXT_SAMPLE_ID'] = d.id
+              //dispatchedSampleList.push(d)
+              this.sampleList.push(d)
+              }
+            }
+
+          } else {
+            console.log("samples no in the chain.")
+          }
+
+        })
+      })
+      //this.sampleList = dispatchedSampleList
     })
   }
 
