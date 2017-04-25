@@ -227,6 +227,9 @@ export class EntityFormDialog {
 
                 })
 
+                // Get default label from the source entity
+                subMaterial['SYS_LABEL'] = object['SYS_LABEL']
+
                 if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
                   subMaterial['SYS_GENRE'] = data['SYS_GENRE']
                   subMaterial['SYS_ENTITY_TYPE'] = 'collection'
