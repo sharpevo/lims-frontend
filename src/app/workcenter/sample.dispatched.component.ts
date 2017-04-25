@@ -26,7 +26,9 @@ export class WorkcenterSampleDispatchedComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (d[operatorCode] && d[operatorCode] != '')
+        return (d[operatorCode] &&
+                d[operatorCode] != '' &&
+                !d['SYS_DATE_COMPLETED'])
       })
       .filter(d => {
         if (this.callback) {
