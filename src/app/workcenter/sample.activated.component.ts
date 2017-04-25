@@ -64,7 +64,8 @@ export class WorkcenterSampleActivatedComponent{
             // previous sample should have been completed in some form
             if (previousSample['SYS_DATE_COMPLETED'] ||
                 previousSample['SYS_DATE_TERMINATED']){
-              activatedSampleList.push(d)
+              // push previous sample in the avalable list to get attributes
+              activatedSampleList.push(previousSample)
             }
           }
 
