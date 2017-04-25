@@ -58,8 +58,8 @@ export class WorkcenterDashboardComponent{
 
   dispatch(){
     if (this.operator) {
-      this.checkedEntityList.forEach(entityId => {
-        this.entityService.retrieveById(entityId)
+      this.checkedEntityList.forEach(previousSample => {
+        this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
         .subscribe(entity => {
           entity[this.operatorCode] = this.operator
           this.entityService.update(entity)
@@ -70,13 +70,13 @@ export class WorkcenterDashboardComponent{
         })
       })
     } else {
-      console.log("invalid operator")
+      console.log("invalid operator", this.checkedEntityList)
     }
   }
 
   undispatch(){
-    this.checkedDispatchedEntityList.forEach(entityId => {
-      this.entityService.retrieveById(entityId)
+    this.checkedDispatchedEntityList.forEach(previousSample => {
+      this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
       .subscribe(entity => {
         entity[this.operatorCode] = ""
         this.entityService.update(entity)

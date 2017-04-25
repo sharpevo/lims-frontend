@@ -50,6 +50,7 @@ export class WorkcenterSampleActivatedComponent{
               // of the scheduled list and moved into the activated list
               previousSample = {}
               if (!d[operatorCode]){
+                d['TMP_NEXT_SAMPLE_ID'] = d.id
                 activatedSampleList.push(d)
               }
             }
@@ -65,6 +66,7 @@ export class WorkcenterSampleActivatedComponent{
             if (previousSample['SYS_DATE_COMPLETED'] ||
                 previousSample['SYS_DATE_TERMINATED']){
               // push previous sample in the avalable list to get attributes
+              previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
               activatedSampleList.push(previousSample)
             }
           }
