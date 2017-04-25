@@ -32,7 +32,9 @@ export class EntityToStringComponent {
       // As default, there's some entity does not have any predefined
       // attribute, but has an `label` attribute which will be used as label
       // in preference to the id
-      if (this.entity['label']){
+      if (this.entity['SYS_LABEL']){
+        this.label = this.entity[this.entity['SYS_LABEL']]
+      } else if (this.entity['label']){
         this.label = this.entity.label
       } else {
         this.label = this.entity.id
