@@ -21,22 +21,27 @@ export class EntityToStringComponent {
     this.entityService.retrieveAttribute(this.entity.id)
     .subscribe(attributes => {
 
-      // No way to break Angular forEach, so native for-loop is better
-      for (let attribute of attributes){
-        if (attribute['SYS_IS_ENTITY_LABEL']) {
-          this.label = this.entity[attribute['SYS_CODE']]
-          return
-        }
-      }
-
       // As default, there's some entity does not have any predefined
       // attribute, but has an `label` attribute which will be used as label
       // in preference to the id
-      if (this.entity['label']){
+      if (this.entity['SYS_LABEL']){
+        this.label = this.entity[this.entity['SYS_LABEL']]
+      } else if (this.entity['label']){
         this.label = this.entity.label
       } else {
         this.label = this.entity.id
       }
+
+      if (!this.label) {
+        // No way to break Angular forEach, so native for-loop is better
+        for (let attribute of attributes){
+          if (attribute['SYS_IS_ENTITY_LABEL']) {
+            this.label = this.entity[attribute['SYS_CODE']]
+            return
+          }
+        }
+      }
+
     })
   } 
 }

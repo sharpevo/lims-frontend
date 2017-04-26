@@ -41,10 +41,14 @@ export class EntityInfoInlineComponent{
 
   checkEntity(){
     if (!this.entity.checked){
-      this.checkedEntityList.push(this.entity.id)
+      this.checkedEntityList.push(this.entity)
     } else {
-      this.checkedEntityList.splice(
-        this.checkedEntityList.indexOf(this.entity.id),1)
+      for (let i=0; i<this.checkedEntityList.length; i++){
+        if (this.checkedEntityList[i].id == this.entity.id){
+          this.checkedEntityList.splice(i, 1)
+          break
+        }
+      }
     }
   }
 }

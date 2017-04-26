@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="space-between stretch" > 
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <span
         *ngIf="checkedEntityList">
         <md-checkbox
@@ -7,7 +7,13 @@
             color="primary">
         </md-checkbox>
     </span>
+    <span>
+        <entity-tostring
+            [entity]='entity'>
+        </entity-tostring>
+    </span>
     <span
+        style="color: rgba(0, 0, 0, .54)"
         *ngFor="let attribute of attributeList">
         {{attribute[attribute['SYS_LABEL']]}}:
         <span *ngIf="attribute['SYS_TYPE'] == 'date'">

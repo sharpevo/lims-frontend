@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core'
 import {ActivatedRoute, Router} from '@angular/router'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
-import {EntityFormDialog} from '../entity/form.dialog.component'
+import {SampleFormDialog} from './form.dialog.component'
 
 @Component({
   selector: 'workcenter-dashboard',
@@ -18,7 +18,7 @@ export class WorkcenterDashboardComponent{
   checkedDispatchedEntityList: any[] = []
   operatorList: any[] = []
   operator: string = ''
-  operatorCode: string
+  operatorCode: string = 'SYS_WORKCENTER_OPERATOR'
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
 
@@ -43,7 +43,6 @@ export class WorkcenterDashboardComponent{
     this.entityService.retrieveById(this.workcenterId)
     .subscribe(data => {
       this.workcenter = data
-      this.operatorCode = this.workcenter['SYS_CODE'] + "_ATTR_OPERATOR"
 
     })
   }
@@ -59,8 +58,8 @@ export class WorkcenterDashboardComponent{
 
   dispatch(){
     if (this.operator) {
-      this.checkedEntityList.forEach(entityId => {
-        this.entityService.retrieveById(entityId)
+      this.checkedEntityList.forEach(previousSample => {
+        this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
         .subscribe(entity => {
           entity[this.operatorCode] = this.operator
           this.entityService.update(entity)
@@ -71,13 +70,13 @@ export class WorkcenterDashboardComponent{
         })
       })
     } else {
-      console.log("invalid operator")
+      console.log("invalid operator", this.checkedEntityList)
     }
   }
 
   undispatch(){
-    this.checkedDispatchedEntityList.forEach(entityId => {
-      this.entityService.retrieveById(entityId)
+    this.checkedDispatchedEntityList.forEach(previousSample => {
+      this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
       .subscribe(entity => {
         entity[this.operatorCode] = ""
         this.entityService.update(entity)
@@ -90,8 +89,9 @@ export class WorkcenterDashboardComponent{
   }
 
   openNewEntityDialog(entity: any) {
-    let dialogRef = this.dialog.open(EntityFormDialog, {width: '600px'});
+    let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
     dialogRef.componentInstance.config.entity = entity
+    dialogRef.componentInstance.config.sampleList = this.checkedDispatchedEntityList
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
     });

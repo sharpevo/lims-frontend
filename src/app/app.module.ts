@@ -29,6 +29,7 @@ import {WorkcenterSampleActivatedComponent} from './workcenter/sample.activated.
 import {WorkcenterSampleCompletedComponent} from './workcenter/sample.completed.component';
 import {WorkcenterSampleTerminatedComponent} from './workcenter/sample.terminated.component';
 import {WorkcenterSampleDispatchedComponent} from './workcenter/sample.dispatched.component';
+import {SampleFormDialog} from './workcenter/form.dialog.component';
 
 import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
@@ -58,11 +59,13 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     WorkcenterSampleCompletedComponent,
     WorkcenterSampleTerminatedComponent,
     WorkcenterSampleDispatchedComponent,
+    SampleFormDialog,
   ],
   entryComponents:[
     GenreFormDialog,
     EntityFormDialog,
     AttributeFormDialog,
+    SampleFormDialog,
   ],
   imports: [
     BrowserModule,

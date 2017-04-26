@@ -1,0 +1,183 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between start">
+    <h3>
+        {{config.entity[config.entity["SYS_LABEL"]] | uppercase}}
+    </h3>
+    <button
+        tabindex="-1"
+        md-icon-button
+        md-dialog-close>
+        x 
+    </button>
+</div>
+<br/>
+<br/>
+
+<div
+    fxLayout="column"
+    fxLayoutAlign="center stretch"> 
+    {{config.sampleList.length}} samples:
+    <span *ngFor="let sample of config.sampleList">
+        {{sample['TMP_NEXT_SAMPLE_ID']}}
+    </span>
+    <br/>
+    <br/>
+    <div
+        *ngFor="let attribute of attributeList">
+        <div [ngSwitch]="attribute.SYS_TYPE">
+            <div *ngSwitchCase="'string'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        type="text"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'text'">
+                <md-input-container class="full-width">
+                    <textarea
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                    </textarea>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'number'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        [required]="attribute.SYS_REQUIRED"
+                        type="number"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'list'">
+                <br/>
+                <md-select
+					class="full-width"
+                    [(ngModel)]="object[attribute.SYS_CODE]"
+                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                    <md-option 
+                        value="{{o.split(':')[0]}}"
+                        *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                        {{o.split(':')[1]}}
+                    </md-option>
+                </md-select>
+                <br/>
+                <br/>
+            </div>
+            <div *ngSwitchCase="'boolean'">
+                <md-checkbox
+                    color="primary"
+                    class="example-margin"
+                    [(ngModel)]="object[attribute.SYS_CODE]">
+                    {{attribute[attribute['SYS_LABEL']]}}
+                </md-checkbox>
+            </div>
+            <div *ngSwitchCase="'date'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        type="date"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'datetime'">
+                <md-input-container class="full-width">
+                    <input
+                        mdInput
+                        type="datetime-local"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'file'">
+                <md-input-container class="full-width">
+                    {{attribute[attribute['SYS_LABEL']]}}
+                    <input
+                        mdInput
+                        type="file"/>
+                </md-input-container>
+            </div>
+            <div *ngSwitchCase="'entity'">
+                <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
+                    <br/>
+                    <entity-select-list
+                        [object]="object"
+                        [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                        [attribute]="attribute"
+                        [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
+                    </entity-select-list>
+                    <br/>
+                    <br/>
+                </div>
+                <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
+                    <br/>
+                    <entity-collection-expansion
+                        [object]="parentMap[attribute.SYS_CODE]"
+                        [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                        [entity]="attribute.SYS_TYPE_ENTITY">
+                    </entity-collection-expansion>
+                </div>
+            </div>
+            <div *ngSwitchDefault>
+                Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    fxLayout="row"
+    fxLayoutAlign="end end">
+    <button 
+        md-button
+        (click)="submitObject()">
+        SUBMIT
+    </button>
+    <button 
+        md-button
+        (click)="clearForm()">
+        CLEAR
+    </button>
+</div>
+<div
+    *ngFor="let entity of entityList"
+    fxLayout="column"
+    fxLayoutAlign="center stretch">
+    <md-card
+        fxLayout="row"
+        fxLayoutAlign="space-between center">
+        <div>
+            <entity-tostring
+                [entity]="entity">
+            </entity-tostring>
+        </div>
+        <div>
+            {{entity.SYS_CODE}}
+        </div>
+        <div>
+            <span style="color: #aaa">{{entity.id}}</span>
+        </div>
+        <div>
+            <button
+                md-icon-button
+                  (click)="editEntity(entity)">
+                <md-icon style="opacity:0.5">edit</md-icon>
+            </button>
+            <button
+                md-icon-button
+                (click)="deleteEntityById(entity.id)">
+                <md-icon style="opacity:0.5">delete</md-icon>
+            </button>
+        </div>
+    </md-card>
+    <br/>
+</div>
+
+
