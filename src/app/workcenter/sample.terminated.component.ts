@@ -2,10 +2,10 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 
 @Component({
-  selector: 'workcenter-sample-completed',
-  templateUrl: './sample.completed.component.html',
+  selector: 'workcenter-sample-terminated',
+  templateUrl: './sample.terminated.component.html',
 })
-export class WorkcenterSampleCompletedComponent{
+export class WorkcenterSampleTerminatedComponent{
   @Input() workcenter
   @Input() callback
   @Input() checkedEntityList
@@ -25,8 +25,7 @@ export class WorkcenterSampleCompletedComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(d => {
-        return (d['SYS_DATE_COMPLETED'] &&
-                !d['SYS_DATE_TERMINATED'])
+        return (d['SYS_DATE_TERMINATED'])
       })
       .filter(d => {
         if (this.callback) {

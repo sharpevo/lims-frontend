@@ -1,8 +1,8 @@
-<h4>Scheduled</h4>
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
     <span
         *ngFor="let sample of sampleList">
         <entity-info-inline
+            [checkedEntityList]="checkedEntityList"
             [entity]="sample">
         </entity-info-inline>
     </span>

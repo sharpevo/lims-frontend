@@ -5,13 +5,13 @@ import {MdSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
 import {GenreService} from '../genre/service'
-import {EntityService} from './service'
+import {EntityService} from '../entity/service'
 
 @Component({
-  selector: 'new-entity-dialog',
+  selector: 'sample-form-dialog',
   templateUrl: './form.dialog.component.html',
 })
-export class EntityFormDialog {
+export class SampleFormDialog {
   config: any = {}
   object: any = {}
   genreId: string = ""
@@ -30,7 +30,7 @@ export class EntityFormDialog {
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
-    public dialogRef: MdDialogRef<EntityFormDialog>) {}
+    public dialogRef: MdDialogRef<SampleFormDialog>) {}
 
     ngOnInit(){
       this.getGenreList()
@@ -84,101 +84,90 @@ export class EntityFormDialog {
         console.log("not valid label for the genre:", this.genreId)
       }
     }
-    createObject2(){
 
-      this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
-        this.object.TMP_CODE
-      delete this.object.TMP_CODE
-
-      console.log("OBJECT:", this.object)
-      console.log("PARENT_MAP:", this.parentMap)
+    submitObject(){
+      // samples from the previous workcenter or the current one in the first
+      // workcenter with workcenter-specific attributes:
+      // - for the attributes defined by administrator, if they are same, use
+      //   the previous one
+      // - for the attributes starts with SYS, use current workcenter
+      this.config.sampleList.forEach(sample => {
+        console.log('processing candidate sample', sample)
+        this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+        .subscribe(data => {
+          console.log("processing sample:", data)
+          this.submitSample(data)
+        })
+      })
     }
 
-    createObject(){
+    submitSample(selectedSample: any){
+      let sample = {}
 
-      if (this.object['SYS_SAMPLE_CODE']){
-        this.object.TMP_CODE = this.object['SYS_SAMPLE_CODE']
-      }
-      let TMP_CODE = this.object.TMP_CODE
+      // Copy attributes from object to sample
+      Object.keys(this.object).forEach(key => {
+        sample[key] = this.object[key]
+      })
 
-      // Get SYS_IDENTIFIER from the entity instead of the gere, in order to
-      // enable creating entities with shared genre but under different entity.
-      this.object.SYS_IDENTIFIER = this.config.entity.SYS_IDENTIFIER + "/" +
-        this.object.TMP_CODE
-      delete this.object.TMP_CODE
+      // Add customized sample attribute
+      sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
+        '/' +
+        selectedSample['SYS_CODE']
 
-      console.log(this.object)
-      console.log(this.parentMap)
+      // Add default label
+      sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+      sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
-      if (!this.object.id){
-        this.entityService.create(this.object)
-        .subscribe(data => {
-
-          this.upsertSubEntities(
-            data,
-            TMP_CODE,
-            (subMaterial) => {
-              this.entityService.create(subMaterial)
-              .subscribe(data =>{
-                console.log("merged entity:", data)
-                // TODO: Deduct the quantity in the material collection
-                // after the merger
-              })
-            })
-            this.initObject()
-            console.log('Add Entity:', data)
-            this.showMessage("Added")
-
-        })
-      } else {
-        this.entityService.update(this.object)
-        .subscribe(data => {
-
-          this.upsertSubEntities(
-            data, // id and SYS_GENRE
-            TMP_CODE,
-            (subMaterial) => {
-
-              this.entityService.retrieveByIdentifierFull(subMaterial.SYS_IDENTIFIER)
-              .subscribe(entity => {
-                subMaterial.id = entity[0].id
-
-                this.entityService.update(subMaterial)
-                .subscribe(material =>{
-                  console.log("merged entity:", material)
-                  // TODO: Deduct the quantity in the material collection
-                  // after the merger
-
-                })
-              })
-
-            })
-
-            this.initObject()
-            console.log('Upadte Entity:', data)
-            this.showMessage("Updated")
-        })
-
-      }
+      sample['SYS_DATE_COMPLETED'] = new Date()
+      sample['SYS_ENTITY_TYPE'] = 'collection'
+      this.createObject(sample)
     }
 
-    upsertSubEntities(data, TMP_CODE, callback){
-      let object = Object.assign({}, this.object)
+    createObject(object: any){
+
+      //console.log(object)
+      //console.log(this.parentMap)
+
+      this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+      .subscribe(data => {
+        //console.log("retrive chained sample:", data)
+        object.id = data[0].id
+        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+        // Using update instead of create since the identifier /workcenter/17R001
+        // has been assigned to the scheduled sample
+        this.entityService.update(object)
+        .subscribe(data => {
+
+          this.makeConn(data, this.parentMap)
+          console.log('Add Entity:', data)
+          this.showMessage("Added")
+
+        },
+        err => {
+          console.error(err)
+        })
+      })
+    }
+
+    makeConn(sourceObject: any, parentObjects: any){
 
       // Get the keys for each kind of BoM/Routing
       // e.g. "bom", "bill_of_material"
-      Object.keys(this.parentMap).forEach(key => {
+      Object.keys(parentObjects).forEach(key => {
+        //console.log("processing key:", key)
 
         let SYS_DATE_SCHEDULED = new Date()
         let DATE_EXISTS = false
 
         // Get the bom object id, which is used as the key of the actual
         // usage, e.g., <bom object id>
-        Object.keys(this.parentMap[key]).forEach((entityId, index) =>{
+        Object.keys(parentObjects[key]).forEach((entityId, index) =>{
+          //console.log("processing id:", entityId)
 
           // `usage` is the inputs from user and contains SYS_QUANT,
           // SYS_SOURCE, etc.
-          let usage = this.parentMap[key][entityId]
+          let usage = parentObjects[key][entityId]
+          //console.log("processing usage:", usage)
 
           // only process checked Material or Workcenter
           if (usage['SYS_CHECKED']){
@@ -187,8 +176,8 @@ export class EntityFormDialog {
             // Calculate SYS_DATE_SCHEDULED// {{{
             //
             if (!DATE_EXISTS){
-              if (object['SYS_DATE_SCHEDULED']){
-                SYS_DATE_SCHEDULED = new Date(object['SYS_DATE_SCHEDULED'])
+              if (sourceObject['SYS_DATE_SCHEDULED']){
+                SYS_DATE_SCHEDULED = new Date(sourceObject['SYS_DATE_SCHEDULED'])
                 //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
               }
               DATE_EXISTS = true
@@ -205,12 +194,10 @@ export class EntityFormDialog {
             }
             //console.log("Next date: ", SYS_DATE_SCHEDULED)// }}}
 
-
             // Get the material collection from the SYS_SOURCE
             this.entityService.retrieveById(usage['SYS_SOURCE'])
             .subscribe(material => {
               //console.log("merge from entity:", material)
-
 
               // Get attributes of the material then assign them to the
               // material object. Note that it's recommended to merge entities
@@ -224,18 +211,17 @@ export class EntityFormDialog {
                 let subMaterial = {}
                 attributes.forEach(attribute => {
                   subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
-
                 })
 
                 // Get default label from the source entity
-                subMaterial['SYS_LABEL'] = object['SYS_LABEL']
-                subMaterial[subMaterial['SYS_LABEL']] = object[object['SYS_LABEL']]
+                subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
+                subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
 
                 if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
-                  subMaterial['SYS_GENRE'] = data['SYS_GENRE']
+                  subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
                   subMaterial['SYS_ENTITY_TYPE'] = 'collection'
                   this.attributeList.forEach(attribute => {
-                    subMaterial[attribute['SYS_CODE']] = object[attribute['SYS_CODE']]
+                    subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
                   })
                 } else {
                   subMaterial['SYS_GENRE'] = material['SYS_GENRE']
@@ -245,16 +231,18 @@ export class EntityFormDialog {
                 // save workcenter incidentally coz there's already a link
                 // between the SYS_TARGET and the workcenter
                 subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                  TMP_CODE
-                subMaterial['SYS_TARGET'] = data.id
+                  sourceObject['SYS_CODE']
+                subMaterial['SYS_TARGET'] = sourceObject.id
 
                 // Assign new values to the new material object
                 Object.keys(usage).forEach(usageKey => {
                   subMaterial[usageKey] = usage[usageKey]
                 })
 
-                callback(subMaterial)
-
+                this.entityService.create(subMaterial)
+                .subscribe(data =>{
+                  console.log("merged entity:", data)
+                })
               })
 
             })
@@ -290,8 +278,9 @@ export class EntityFormDialog {
         this.entityService.retrieveGenre(this.config.entity.id)
         .subscribe(data => {
           this.genreList = data
-        }
-                  )
+          this.object.SYS_GENRE = this.genreList[0].id
+          this.getAttributesByGenreId(this.object.SYS_GENRE)
+        })
 
       }
     }
