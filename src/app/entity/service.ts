@@ -90,7 +90,7 @@ export class EntityService {
   }
 
   retrieveByIdentifier(identifier: string){
-    let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}`
+    let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}&sort=-createdAt`
     return this.http.get(url)
     .map(res => res.json())
   }
