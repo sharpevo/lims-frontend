@@ -70,7 +70,6 @@ export class WorkcenterSampleDispatchedComponent{
               if (d[operatorCode] &&
                   !d['SYS_DATE_COMPLETED']) {
                 previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
-              //dispatchedSampleList.push(previousSample)
               this.sampleList.push(previousSample)
               }
 
@@ -81,7 +80,6 @@ export class WorkcenterSampleDispatchedComponent{
               if (d[operatorCode] &&
                   !d['SYS_DATE_COMPLETED']) {
                 d['TMP_NEXT_SAMPLE_ID'] = d.id
-              //dispatchedSampleList.push(d)
               this.sampleList.push(d)
               }
             }

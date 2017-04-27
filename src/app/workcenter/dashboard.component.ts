@@ -72,6 +72,7 @@ export class WorkcenterDashboardComponent{
     } else {
       console.log("invalid operator", this.checkedEntityList)
     }
+    this.checkedEntityList = []
   }
 
   undispatch(){
@@ -86,6 +87,7 @@ export class WorkcenterDashboardComponent{
         })
       })
     })
+    this.checkedDispatchedEntityList = []
   }
 
   openNewEntityDialog(entity: any) {
