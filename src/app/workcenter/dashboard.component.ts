@@ -21,6 +21,7 @@ export class WorkcenterDashboardComponent{
   operatorCode: string = 'SYS_WORKCENTER_OPERATOR'
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
+  @ViewChild('completedComponent') completedComponent
 
   constructor(
     public dialog: MdDialog,
@@ -95,7 +96,10 @@ export class WorkcenterDashboardComponent{
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.checkedDispatchedEntityList
     dialogRef.afterClosed().subscribe(result => {
-      this.selectedOption = result;
+      this.dispatchedComponent.getSampleList()
+      this.completedComponent.getSampleList()
+      this.checkedEntityList = []
+      this.checkedDispatchedEntityList = []
     });
   }
 }

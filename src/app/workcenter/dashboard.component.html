@@ -102,6 +102,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Completed</h4>
                     <workcenter-sample-completed
+                        #completedComponent
                         [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
                     </workcenter-sample-completed>
