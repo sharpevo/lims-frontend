@@ -4,6 +4,8 @@ import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
 
+import {Observable} from 'rxjs/Observable'
+
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
@@ -58,25 +60,60 @@ export class WorkcenterDashboardComponent{
   }
 
   dispatch(){
+    let retrieveObs = []
+    let updateObs = []
     if (this.operator) {
       this.checkedEntityList.forEach(previousSample => {
-        this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
-        .subscribe(entity => {
-          entity[this.operatorCode] = this.operator
-          this.entityService.update(entity)
-          .subscribe(data => {
-            this.dispatchedComponent.getSampleList()
-            this.activatedComponent.getSampleList()
-          })
+        retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+      })
+
+      Observable
+      .forkJoin(retrieveObs)
+      .subscribe(data => {
+        data.forEach(d => {
+          d[this.operatorCode] = this.operator
+          updateObs.push(this.entityService.update(d))
+        })
+
+        console.log("**", updateObs)
+        Observable
+        .forkJoin(updateObs)
+        .subscribe(data => {
+          this.dispatchedComponent.getSampleList()
+          this.activatedComponent.getSampleList()
+          this.checkedEntityList = []
         })
       })
-    } else {
-      console.log("invalid operator", this.checkedEntityList)
     }
-    this.checkedEntityList = []
+    //this.checkedEntityList = []
   }
 
   undispatch(){
+    let retrieveObs = []
+    let updateObs = []
+    this.checkedDispatchedEntityList.forEach(previousSample => {
+      retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+    })
+
+    Observable
+    .forkJoin(retrieveObs)
+    .subscribe(data => {
+      data.forEach(d => {
+        d[this.operatorCode] = ""
+        updateObs.push(this.entityService.update(d))
+      })
+
+      Observable
+      .forkJoin(updateObs)
+      .subscribe(data => {
+        this.dispatchedComponent.getSampleList()
+        this.activatedComponent.getSampleList()
+        this.checkedDispatchedEntityList = []
+      })
+    })
+  }
+
+  undispatch2(){
     this.checkedDispatchedEntityList.forEach(previousSample => {
       this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
       .subscribe(entity => {
