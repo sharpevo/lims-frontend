@@ -31,6 +31,8 @@ import {WorkcenterSampleTerminatedComponent} from './workcenter/sample.terminate
 import {WorkcenterSampleDispatchedComponent} from './workcenter/sample.dispatched.component';
 import {SampleFormDialog} from './workcenter/form.dialog.component';
 
+import {ProjectManagementComponent} from './workcenter/project.management.component';
+
 import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
 import {AttributeFormDialog} from './attribute/form.dialog.component';
@@ -60,6 +62,7 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     WorkcenterSampleTerminatedComponent,
     WorkcenterSampleDispatchedComponent,
     SampleFormDialog,
+    ProjectManagementComponent,
   ],
   entryComponents:[
     GenreFormDialog,
