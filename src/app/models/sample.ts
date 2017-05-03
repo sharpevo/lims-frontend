@@ -12,18 +12,21 @@ export class SampleService{
       let capCode = sampleList[i]['CAPTURE_CODE']
       if (capCode) {
         if (!resultList[capCode]){
-          resultList[capCode] = []
+          resultList[capCode] = {}
         }
-        resultList[capCode].push(sampleList[i])
+        resultList[capCode]['TMP_CODE'] = 'CAPTURE_CODE'
+        if (!resultList[capCode]['TMP_SAMPLES']){
+          resultList[capCode]['TMP_SAMPLES'] = []
+        }
+        resultList[capCode]['TMP_SAMPLES'].push(sampleList[i])
       } else {
-        resultList.push(sampleList[i])
+        resultList['TMP_CODE']['TMP_SAMPLES'].push(sampleList[i])
       }
     }
     return resultList
   }
 
   getPreviousChainedSample(sample: any, callback){
-    console.log("target", sample['SYS_TARGET'])
     this.entityService.retrieveBy({
       'SYS_TARGET': sample['SYS_TARGET'],
       'sort': 'SYS_ORDER',
@@ -39,7 +42,6 @@ export class SampleService{
           break
         }
       }
-      console.log(index)
 
       if (index < 0) {
         return
