@@ -38,6 +38,8 @@ import {GenreFormDialog} from './genre/form.dialog.component';
 import {EntityFormDialog} from './entity/form.dialog.component';
 import {AttributeFormDialog} from './attribute/form.dialog.component';
 
+import {SampleService} from './models/sample';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -86,6 +88,7 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
     EntityService,
     GenreService,
     AttributeService,
+    SampleService,
   ],
   bootstrap: [AppComponent]
 })
