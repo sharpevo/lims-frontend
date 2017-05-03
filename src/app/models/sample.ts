@@ -7,21 +7,39 @@ export class SampleService{
   constructor(private entityService: EntityService){}
 
   buildSampleInlineList(sampleList: any[]): any[]{
-    let resultList: any[] = []
+    let resultList: any = {}
+
     for (let i = 0; i < sampleList.length; i++){
       let capCode = sampleList[i]['CAPTURE_CODE']
-      if (capCode) {
+      let laneCode = sampleList[i]['LANE_CODE']
+      let runCode = sampleList[i]['RUN_CODE']
+
+      if (runCode) {
+        if (!resultList[runCode]){
+          resultList[runCode] = {}
+        }
+        if (!resultList[runCode][laneCode]){
+          resultList[runCode][laneCode] = {}
+        }
+        if (!resultList[runCode][laneCode][capCode]){
+          resultList[runCode][laneCode][capCode] = []
+        }
+        resultList[runCode][laneCode][capCode].push(sampleList[i])
+      } else if (laneCode){
+        if (!resultList[laneCode]){
+          resultList[laneCode] = {}
+        }
+        if (!resultList[laneCode][capCode]){
+          resultList[laneCode][capCode] = []
+        }
+        resultList[laneCode][capCode].push(sampleList[i])
+      } else if (capCode) {
         if (!resultList[capCode]){
-          resultList[capCode] = {}
+          resultList[capCode] = []
         }
-        resultList[capCode]['TMP_CODE'] = 'CAPTURE_CODE'
-        if (!resultList[capCode]['TMP_SAMPLES']){
-          resultList[capCode]['TMP_SAMPLES'] = []
-        }
-        resultList[capCode]['TMP_SAMPLES'].push(sampleList[i])
-      } else {
-        resultList['TMP_CODE']['TMP_SAMPLES'].push(sampleList[i])
+        resultList[capCode].push(sampleList[i])
       }
+
     }
     return resultList
   }
