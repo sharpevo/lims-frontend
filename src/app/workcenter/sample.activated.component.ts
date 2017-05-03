@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {SampleService} from '../models/sample'
 
 @Component({
   selector: 'workcenter-sample-activated',
@@ -14,6 +15,7 @@ export class WorkcenterSampleActivatedComponent{
 
   constructor(
     private entityService: EntityService,
+    private sampleService: SampleService,
   ){}
 
   ngOnInit(){
@@ -23,42 +25,14 @@ export class WorkcenterSampleActivatedComponent{
   getSampleList(){
     this.sampleList = []
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
+
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
 
       let activatedSampleList = []
       data.forEach(d => {
-        // retrieve chained samples by the same SYS_TARGET
-        this.entityService.retrieveChainedSamples(d['SYS_TARGET'])
-        .subscribe(samples => {
 
-          // get previous sample
-          let index = -1
-          let previousSample = {}
-
-          for (let i=0; i < samples.length; i ++){
-            if (samples[i].id == d.id){
-              index = i
-              break
-            }
-          }
-
-          if (index > -1){
-            if (index > 0){
-              previousSample = samples[index-1]
-            } else {
-              // d is the first sample in the chain and should be removed out
-              // of the scheduled list and moved into the activated list
-              previousSample = {}
-              if (!d[operatorCode]){
-                d['TMP_NEXT_SAMPLE_ID'] = d.id
-                activatedSampleList.push(d)
-              }
-            }
-
-          } else {
-            console.log("samples no in the chain.")
-          }
+        this.sampleService.getPreviousChainedSample(d, previousSample => {
 
           // clear samples without operator in current workcenter
           if (!d[operatorCode]) {
@@ -68,14 +42,12 @@ export class WorkcenterSampleActivatedComponent{
                 previousSample['SYS_DATE_TERMINATED']){
               // push previous sample in the avalable list to get attributes
               previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
-              activatedSampleList.push(previousSample)
+              this.sampleList.push(previousSample)
             }
           }
-
         })
+
       })
-      this.sampleList = activatedSampleList
     })
   }
-
 }
