@@ -10,6 +10,7 @@ import {AttributeService} from '../attribute/service'
 })
 export class EntityInfoInlineComponent{
   @Input() entity
+  @Input() showCheckbox
   @Input() checkedEntityList
   attributeList: any[] = []
 

@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <span
-        *ngIf="checkedEntityList">
+        *ngIf="checkedEntityList || showCheckbox">
         <md-checkbox
             (click)="checkEntity()"
             [(ngModel)]="entity['checked']"
