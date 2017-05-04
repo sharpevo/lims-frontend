@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {SampleService} from '../models/sample'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'workcenter-sample-dispatched',
@@ -45,27 +46,39 @@ export class WorkcenterSampleDispatchedComponent{
   getSampleList(){
     this.sampleList = []
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
+    let chainedSampleObs = []
+
     this.entityService.retrieveEntity(this.workcenter.id, 'collection')
     .subscribe(data => {
 
       data.forEach(d => {
-        this.sampleService.getPreviousChainedSample(d,previousSample => {
+        chainedSampleObs.push(
+          this.entityService.retrieveBy({
+            'SYS_TARGET': d['SYS_TARGET'],
+            'sort': 'SYS_ORDER'})
+        )
+      })
 
-          if (previousSample.id == d.id){
-            previousSample = {}
-            if (d[operatorCode] &&
-                !d['SYS_DATE_COMPLETED']) {
-              d['TMP_NEXT_SAMPLE_ID'] = d.id
-            this.sampleList.push(d)
+      Observable
+      .forkJoin(chainedSampleObs)
+      .subscribe((chainedSamples: any[][]) => {
+        for (let i=0; i<chainedSamples.length; i++){
+          let previousSample = this.sampleService.parsePreviousSample(data[i], chainedSamples[i])
+
+          if (previousSample.id == data[i].id){
+            if (data[i][operatorCode] &&
+                !data[i]['SYS_DATE_COMPLETED']) {
+              data[i]['TMP_NEXT_SAMPLE_ID'] = data[i].id
+            this.sampleList.push(data[i])
             }
           } else {
-            if (d[operatorCode] &&
-                !d['SYS_DATE_COMPLETED']) {
-              previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
+            if (data[i][operatorCode] &&
+                !data[i]['SYS_DATE_COMPLETED']) {
+              previousSample['TMP_NEXT_SAMPLE_ID'] = data[i].id
             this.sampleList.push(previousSample)
             }
           }
-        })
+        }
       })
     })
   }
