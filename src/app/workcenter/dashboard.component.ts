@@ -25,6 +25,8 @@ export class WorkcenterDashboardComponent{
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
 
+  sampleList: any[] = []
+
   constructor(
     public dialog: MdDialog,
     private route: ActivatedRoute,
@@ -39,6 +41,14 @@ export class WorkcenterDashboardComponent{
       this.workcenterId = params['id']
       this.getWorkcenter()
       this.getOperatorList()
+      this.getSampleList()
+    })
+  }
+
+  getSampleList(){
+    this.entityService.retrieveEntity(this.workcenterId, 'collection')
+    .subscribe(data => {
+      this.sampleList = data
     })
   }
 
