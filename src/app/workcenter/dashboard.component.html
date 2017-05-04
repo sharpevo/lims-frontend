@@ -11,7 +11,8 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <h4>Scheduled</h4>
                     <workcenter-sample-scheduled
-                        [workcenter]="workcenter">
+                        *ngIf="sampleList.length > 0"
+                        [sampleList]="sampleList">
                     </workcenter-sample-scheduled>
                 </div>
             </div>
