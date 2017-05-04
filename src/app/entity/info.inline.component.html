@@ -2,7 +2,6 @@
     <span
         *ngIf="checkedEntityList || showCheckbox">
         <md-checkbox
-            (click)="checkEntity()"
             [(ngModel)]="entity['TMP_CHECKED']"
             color="primary">
         </md-checkbox>
