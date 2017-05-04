@@ -57,8 +57,8 @@
                 </div>
                     <workcenter-sample-activated
                         #activatedComponent
-                        [checkedEntityList]="checkedEntityList"
-                        [workcenter]="workcenter">
+                        *ngIf="sampleList.length > 0"
+                        [sampleList]="sampleList">
                     </workcenter-sample-activated>
                 </div>
                 <div
