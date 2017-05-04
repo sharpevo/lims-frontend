@@ -37,6 +37,8 @@ export class SampleService{
           resultList[capCode] = []
         }
         resultList[capCode].push(sampleList[i])
+      } else {
+        resultList.push(sampleList[i])
       }
 
     }
