@@ -13,7 +13,6 @@ export class SampleService{
       let capCode = sampleList[i]['CAPTURE_CODE']
       let laneCode = sampleList[i]['LANE_CODE']
       let runCode = sampleList[i]['RUN_CODE']
-
       if (runCode) {
         if (!resultList[runCode]){
           resultList[runCode] = {}
@@ -75,5 +74,32 @@ export class SampleService{
       previousSample['TMP_NEXT_SAMPLE_ID'] = sample.id
       callback(previousSample)
     })
+  }
+
+  parsePreviousSample(sample: any, data: any[]): any{
+    // get previous sample
+    let index = -1
+    let previousSample = {}
+
+    for (let i=0; i < data.length; i ++){
+      if (data[i].id == sample.id){
+        index = i
+        break
+      }
+    }
+
+    if (index < 0) {
+      return
+    }
+    if (index == 0){
+      previousSample = sample
+    }
+
+    if (index >= 1){
+      previousSample = data[index-1]
+    }
+
+    previousSample['TMP_NEXT_SAMPLE_ID'] = sample.id
+    return previousSample
   }
 }
