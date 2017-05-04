@@ -8,12 +8,11 @@ import {Observable} from 'rxjs/Observable'
   templateUrl: './sample.activated.component.html',
 })
 export class WorkcenterSampleActivatedComponent{
-  @Input() workcenter
+  @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
 
-  sampleList: any[] = []
-  loaded: boolean = false
+  activatedSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -25,43 +24,34 @@ export class WorkcenterSampleActivatedComponent{
   }
 
   getSampleList(){
-    this.sampleList = []
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
     let chainedSampleObs = []
 
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(samples => {
+    this.sampleList.forEach(d => {
+      chainedSampleObs.push(
+        this.entityService.retrieveBy({
+          'SYS_TARGET': d['SYS_TARGET'],
+          'sort': 'SYS_ORDER'})
+      )
+    })
 
-      let activatedSampleList = []
-      samples.forEach(d => {
-        chainedSampleObs.push(
-          this.entityService.retrieveBy({
-            'SYS_TARGET': d['SYS_TARGET'],
-            'sort': 'SYS_ORDER'})
-        )
-      })
+    Observable
+    .forkJoin(chainedSampleObs)
+    .subscribe((data: any[][]) => {
 
+      for (let i=0; i<data.length; i++){
+        let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
+        if (!this.sampleList[i][operatorCode]) {
 
-      Observable
-      .forkJoin(chainedSampleObs)
-      .subscribe((data: any[][]) => {
-
-        for (let i=0; i<data.length; i++){
-          let previousSample = this.sampleService.parsePreviousSample(samples[i], data[i])
-          if (!samples[i][operatorCode]) {
-
-            // previous sample should have been completed in some form
-            if (previousSample['SYS_DATE_COMPLETED'] ||
-                previousSample['SYS_DATE_TERMINATED']){
-              // push previous sample in the avalable list to get attributes
-              previousSample['TMP_NEXT_SAMPLE_ID'] = samples[i].id
-              this.sampleList.push(previousSample)
-            }
+          // previous sample should have been completed in some form
+          if (previousSample['SYS_DATE_COMPLETED'] ||
+              previousSample['SYS_DATE_TERMINATED']){
+            // push previous sample in the avalable list to get attributes
+            previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
+            this.activatedSampleList.push(previousSample)
           }
         }
-
-
-      })
+      }
 
     })
   }
