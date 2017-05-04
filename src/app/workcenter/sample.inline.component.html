@@ -1,22 +1,33 @@
 <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
     *ngFor="let key of (result | objectKeys);">
-    <span
-        *ngIf="showCheckbox">
-        <md-checkbox
-            (click)="checkEntity(key)"
-            [(ngModel)]="result[key]['TMP_CHECKED']"
-            color="primary">
-        </md-checkbox>
-    </span>
-    <div (click)="result[key]['TMP_EXPAND']=!result[key]['TMP_EXPAND']">
-        {{key}}
-    </div>
-    <div *ngIf="result[key]['TMP_EXPAND']">
-       <div *ngFor="let sample of result[key]">
-           <entity-info-inline
-                [showCheckbox]="true"
-                [entity]="sample">
-            </entity-info-inline>
+    <span *ngIf="key != 'undefined'">
+        <span
+            *ngIf="showCheckbox">
+            <md-checkbox
+                (click)="checkEntity(key)"
+                [(ngModel)]="result[key]['TMP_CHECKED']"
+                color="primary">
+            </md-checkbox>
+        </span>
+        <span (click)="result[key]['TMP_EXPAND']=!result[key]['TMP_EXPAND']">
+            {{key}}
+        </span>
+        <div *ngIf="result[key]['TMP_EXPAND']">
+            <div
+                style="margin-left: 50px"
+                *ngFor="let sample of result[key]">
+                <entity-info-inline
+                    [showCheckbox]="true"
+                    [entity]="sample">
+                </entity-info-inline>
+            </div>
         </div>
-    </div>
+    </span>
+</div>
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
+    *ngFor="let sample of result['undefined'];">
+    <entity-info-inline
+        [showCheckbox]="true"
+        [entity]="sample">
+    </entity-info-inline>
 </div>
