@@ -32,13 +32,12 @@ export class SampleService{
           resultList[laneCode][capCode] = []
         }
         resultList[laneCode][capCode].push(sampleList[i])
-      } else if (capCode) {
+      } else { //else if (capCode) {
+        // treat general samples as the 'undefined' caps
         if (!resultList[capCode]){
           resultList[capCode] = []
         }
         resultList[capCode].push(sampleList[i])
-      } else {
-        resultList.push(sampleList[i])
       }
 
     }
