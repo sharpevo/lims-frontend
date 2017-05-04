@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core'
-import {ActivatedRoute, Router} from '@angular/router'
+import {SampleService} from '../models/sample'
 
 import {EntityService} from '../entity/service'
 import {AttributeService} from '../attribute/service'
@@ -9,47 +9,23 @@ import {AttributeService} from '../attribute/service'
   templateUrl: './sample.inline.component.html',
 })
 export class SampleInfoInlineComponent{
-  @Input() entity
-  @Input() checkedEntityList
   @Input() sampleList
-  attributeList: any[] = []
+  @Input() showCheckbox
+  result: any
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private entityService: EntityService,
     private attributeService: AttributeService,
+    private sampleService: SampleService,
   ){}
 
   ngOnInit(){
-    // It is shared with Dashboard and Overview at least, the former one will
-    // provide a checkedEntityList and the latter one does not
-    // As a result, selection on Overview will be overwrited since the
-    // initializatoin
-    //if (!this.checkedEntityList){
-    //this.checkedEntityList = []
-    //}
-    //this.entity['checked']=false
-    //this.getAttributeList()
+    this.result = this.sampleService.buildSampleInlineList(this.sampleList)
   }
 
-  getAttributeList(){
-    this.entityService.retrieveAttribute(this.entity.id)
-    .subscribe(data => {
-      this.attributeList = data
+  checkEntity(key: string){
+    this.result[key].forEach(sample => {
+      sample['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
     })
-  }
-
-  checkEntity(){
-    if (!this.entity.checked){
-      this.checkedEntityList.push(this.entity)
-    } else {
-      for (let i=0; i<this.checkedEntityList.length; i++){
-        if (this.checkedEntityList[i].id == this.entity.id){
-          this.checkedEntityList.splice(i, 1)
-          break
-        }
-      }
-    }
   }
 }
