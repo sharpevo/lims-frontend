@@ -29,7 +29,7 @@ export class EntityInfoInlineComponent{
     //if (!this.checkedEntityList){
     //this.checkedEntityList = []
     //}
-    this.entity['checked']=false
+    this.entity['TMP_CHECKED']=false
     this.getAttributeList()
   }
 
