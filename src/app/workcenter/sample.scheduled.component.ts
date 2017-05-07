@@ -20,6 +20,9 @@ export class WorkcenterSampleScheduledComponent{
   }
 
   getSampleList(){
+    if (!this.sampleList){
+      return
+    }
 
     this.sampleList.forEach(d => {
       // retrieve chained samples by the same SYS_TARGET
