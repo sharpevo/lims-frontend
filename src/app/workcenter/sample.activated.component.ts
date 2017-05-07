@@ -24,6 +24,10 @@ export class WorkcenterSampleActivatedComponent{
   }
 
   getSampleList(){
+    if (!this.sampleList){
+      return
+    }
+
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
     let chainedSampleObs = []
 
@@ -45,9 +49,12 @@ export class WorkcenterSampleActivatedComponent{
 
           // previous sample should have been completed in some form
           if (previousSample['SYS_DATE_COMPLETED'] ||
-              previousSample['SYS_DATE_TERMINATED']){
+              previousSample['SYS_DATE_TERMINATED'] ||
+                previousSample.id == this.sampleList[i].id){
+            // location indicator for sampleList
+            previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
             // push previous sample in the avalable list to get attributes
-            previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
+            //previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
             this.activatedSampleList.push(previousSample)
           }
         }
