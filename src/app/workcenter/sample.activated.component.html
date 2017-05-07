@@ -1,7 +1,9 @@
+{{activatedSampleList}}
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
     <sample-info-inline
-        *ngIf="sampleList.length > 0"
+        *ngIf="sampleList?.length > 0 && activatedSampleList.length > 0"
         [showCheckbox]="true"
+        [shownSampleList]="activatedSampleList"
         [sampleList]="sampleList">
     </sample-info-inline>
 </div>
