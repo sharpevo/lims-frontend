@@ -29,7 +29,7 @@ export class SampleInfoInlineComponent{
 
   checkEntity(key: string){
     this.result[key].forEach(sample => {
-      if (sample['TMP_NEXT_SAMPLE_INDEX']){
+      if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
         this.sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
       } else {
         sample['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
