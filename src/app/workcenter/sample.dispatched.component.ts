@@ -44,25 +44,23 @@ export class WorkcenterSampleDispatchedComponent{
     .subscribe((data: any[][]) => {
 
       for (let i=0; i<data.length; i++){
+        let currentSample = this.sampleList[i]
         let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
 
-        console.log(previousSample)
-        if (previousSample.id == this.sampleList[i].id){
-          if (data[i][operatorCode] &&
-              !data[i]['SYS_DATE_COMPLETED']) {
-            data[i]['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
-          data['TMP_NEXT_SAMPLE_INDEX'] = i
-          this.dispatchedSampleList.push(data[i])
-          }
-        } else {
-          if (data[i][operatorCode] &&
-              !data[i]['SYS_DATE_COMPLETED']) {
-            previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
-          previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
-          this.dispatchedSampleList.push(previousSample)
+        if (currentSample[operatorCode] &&
+            !currentSample['SYS_DATE_COMPLETED']) {
+          if (previousSample.id == currentSample.id){
+            currentSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+            currentSample['TMP_NEXT_SAMPLE_INDEX'] = i
+            this.dispatchedSampleList.push(currentSample)
+          } else {
+            previousSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+            previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
+            this.dispatchedSampleList.push(previousSample)
           }
         }
       }
+
     })
   }
 }
