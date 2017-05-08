@@ -17,7 +17,7 @@
                 style="margin-left: 50px"
                 *ngFor="let sample of result[key]">
                 <md-checkbox
-                    [(ngModel)]="sample['TMP_NEXT_SAMPLE_INDEX']?sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED']:sample['TMP_CHECKED']"
+                    [(ngModel)]="sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]?sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED']:sample['TMP_CHECKED']"
                     color="primary">
                 "{{sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]?sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['SYS_SAMPLE_CODE']:"-"|json}}"
                 </md-checkbox>
