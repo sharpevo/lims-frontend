@@ -8,11 +8,11 @@ import {Observable} from 'rxjs/Observable'
   templateUrl: './sample.dispatched.component.html',
 })
 export class WorkcenterSampleDispatchedComponent{
-  @Input() workcenter
+  @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
 
-  sampleList: any[] = []
+  dispatchedSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -23,63 +23,46 @@ export class WorkcenterSampleDispatchedComponent{
     this.getSampleList()
   }
 
-  getSampleListCurrent(){
-    let operatorCode = 'SYS_WORKCENTER_OPERATOR'
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
-      this.sampleList = data
-      .filter(d => {
-        return (d[operatorCode] &&
-                d[operatorCode] != '' &&
-                !d['SYS_DATE_COMPLETED'])
-      })
-      .filter(d => {
-        if (this.callback) {
-          return this.callback(d)
-        } else {
-          return true
-        }
-      })
-    })
-  }
-
   getSampleList(){
-    this.sampleList = []
+    if (!this.sampleList){
+      return
+    }
+
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
     let chainedSampleObs = []
 
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
+    this.sampleList.forEach(d => {
+      chainedSampleObs.push(
+        this.entityService.retrieveBy({
+          'SYS_TARGET': d['SYS_TARGET'],
+          'sort': 'SYS_ORDER'})
+      )
+    })
 
-      data.forEach(d => {
-        chainedSampleObs.push(
-          this.entityService.retrieveBy({
-            'SYS_TARGET': d['SYS_TARGET'],
-            'sort': 'SYS_ORDER'})
-        )
-      })
+    Observable
+    .forkJoin(chainedSampleObs)
+    .subscribe((data: any[][]) => {
 
-      Observable
-      .forkJoin(chainedSampleObs)
-      .subscribe((chainedSamples: any[][]) => {
-        for (let i=0; i<chainedSamples.length; i++){
-          let previousSample = this.sampleService.parsePreviousSample(data[i], chainedSamples[i])
+      for (let i=0; i<data.length; i++){
+        let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
 
-          if (previousSample.id == data[i].id){
-            if (data[i][operatorCode] &&
-                !data[i]['SYS_DATE_COMPLETED']) {
-              data[i]['TMP_NEXT_SAMPLE_ID'] = data[i].id
-            this.sampleList.push(data[i])
-            }
-          } else {
-            if (data[i][operatorCode] &&
-                !data[i]['SYS_DATE_COMPLETED']) {
-              previousSample['TMP_NEXT_SAMPLE_ID'] = data[i].id
-            this.sampleList.push(previousSample)
-            }
+        console.log(previousSample)
+        if (previousSample.id == this.sampleList[i].id){
+          if (data[i][operatorCode] &&
+              !data[i]['SYS_DATE_COMPLETED']) {
+            data[i]['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
+          data['TMP_NEXT_SAMPLE_INDEX'] = i
+          this.dispatchedSampleList.push(data[i])
+          }
+        } else {
+          if (data[i][operatorCode] &&
+              !data[i]['SYS_DATE_COMPLETED']) {
+            previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
+          previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
+          this.dispatchedSampleList.push(previousSample)
           }
         }
-      })
+      }
     })
   }
 }
