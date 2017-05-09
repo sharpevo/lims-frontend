@@ -1,15 +1,15 @@
 <h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
 <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+    <h2>Scheduling</h2>
     <md-card
         class="full-width">
         <md-card-subtitle>
-            SCHEDULING
+            SCHEDULED SAMPLES
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <h4>Scheduled</h4>
                     <workcenter-sample-scheduled
                         *ngIf="sampleList.length > 0"
                         [sampleList]="sampleList">
@@ -18,10 +18,11 @@
             </div>
         </md-card-content>
     </md-card>
+    <h2>Dispatching</h2>
     <md-card
         class="full-width">
         <md-card-subtitle>
-            DISPATCHING
+            ACTIVATED SAMPLES
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
@@ -31,9 +32,6 @@
                     fxLayout="row"
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center">
-                    <h4>
-                        Activated
-                    </h4>
                     <md-select
                         [(ngModel)]="operator"
                         placeholder="Operator">
@@ -61,6 +59,17 @@
                         [sampleList]="sampleList">
                     </workcenter-sample-activated>
                 </div>
+            </div>
+        </md-card-content>
+    </md-card>
+    <br/>
+    <md-card
+        class="full-width">
+        <md-card-subtitle>
+            DISPATCHED SAMPLES
+        </md-card-subtitle>
+        <md-card-content>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <div
@@ -92,24 +101,36 @@
             </div>
         </md-card-content>
     </md-card>
+
+    <h2>History</h2>
     <md-card
         class="full-width">
         <md-card-subtitle>
-            HISTORY
+            COMPLETED SAMPLES
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <h4>Completed</h4>
                     <workcenter-sample-completed
                         #completedComponent
+                        *ngIf="sampleList.length > 0"
                         [sampleList]="sampleList">
                     </workcenter-sample-completed>
                 </div>
+            </div>
+        </md-card-content>
+    </md-card>
+    <br/>
+    <md-card
+        class="full-width">
+        <md-card-subtitle>
+            TERMINATED SAMPLES
+        </md-card-subtitle>
+        <md-card-content>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <h4>Terminated</h4>
                     <workcenter-sample-terminated
                         [checkedEntityList]="checkedEntityList"
                         [workcenter]="workcenter">
