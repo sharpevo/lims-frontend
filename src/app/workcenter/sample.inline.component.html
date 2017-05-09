@@ -1,0 +1,65 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
+    *ngFor="let key of (result | objectKeys);">
+    <span *ngIf="key != 'undefined'">
+        <span
+            *ngIf="showCheckbox">
+            <md-checkbox
+                (click)="checkEntity(key)"
+                [(ngModel)]="result[key]['TMP_CHECKED']"
+                color="primary">
+            </md-checkbox>
+        </span>
+        <span (click)="result[key]['TMP_EXPAND']=!result[key]['TMP_EXPAND']">
+            {{key}}
+        </span>
+        <div *ngIf="result[key]['TMP_EXPAND']">
+            <div
+                style="margin-left: 50px"
+                *ngFor="let sample of result[key]">
+                <span
+                    *ngIf="showCheckbox">
+                    <span *ngIf="sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+                        <md-checkbox
+                            [(ngModel)]="sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED']"
+                            color="primary">
+                            "{{sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['SYS_SAMPLE_CODE']}}"
+                        </md-checkbox>
+                    </span>
+                    <span *ngIf="!sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+                        <md-checkbox
+                            [(ngModel)]="sample['TMP_CHECKED']"
+                            color="primary">
+                            "{{sample['SYS_SAMPLE_CODE']}}"
+                        </md-checkbox>
+                    </span>
+                </span>
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+            </div>
+        </div>
+    </span>
+</div>
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px"
+    *ngFor="let sample of result['undefined'];">
+    <span
+        *ngIf="showCheckbox">
+        <span *ngIf="sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+            <md-checkbox
+                [(ngModel)]="sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED']"
+                color="primary">
+                "{{sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['SYS_SAMPLE_CODE']}}"
+            </md-checkbox>
+        </span>
+        <span *ngIf="!sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+            <md-checkbox
+                [(ngModel)]="sample['TMP_CHECKED']"
+                color="primary">
+                "{{sample['SYS_SAMPLE_CODE']}}"
+            </md-checkbox>
+        </span>
+    </span>
+    <entity-info-inline
+        [entity]="sample">
+    </entity-info-inline>
+</div>

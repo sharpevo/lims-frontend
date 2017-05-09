@@ -38,6 +38,19 @@ export class EntityService {
     .map(res => res.json())
   }
 
+  retrieveBy(args: any){
+    let argString = ''
+    Object.keys(args).forEach(key => {
+      if (argString != '') {
+        argString += `&${key}=${args[key]}`
+      } else {
+        argString += `${key}=${args[key]}`
+      }
+    })
+    return this.http.get(`${this.url}?${argString}`)
+    .map(res => res.json())
+  }
+
   retrieveById(id: string){
     return this.http.get(`${this.url}/${id}`)
     .map(res => res.json())
@@ -90,7 +103,7 @@ export class EntityService {
   }
 
   retrieveByIdentifier(identifier: string){
-    let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}`
+    let url = `${this.url}?where={"SYS_IDENTIFIER": {"regex":"${identifier}"}}&sort=-createdAt`
     return this.http.get(url)
     .map(res => res.json())
   }

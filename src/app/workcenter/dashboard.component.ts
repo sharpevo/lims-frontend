@@ -4,6 +4,8 @@ import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
 
+import {Observable} from 'rxjs/Observable'
+
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
@@ -21,6 +23,9 @@ export class WorkcenterDashboardComponent{
   operatorCode: string = 'SYS_WORKCENTER_OPERATOR'
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
+  @ViewChild('completedComponent') completedComponent
+
+  sampleList: any[] = []
 
   constructor(
     public dialog: MdDialog,
@@ -36,6 +41,14 @@ export class WorkcenterDashboardComponent{
       this.workcenterId = params['id']
       this.getWorkcenter()
       this.getOperatorList()
+      this.getSampleList()
+    })
+  }
+
+  getSampleList(){
+    this.entityService.retrieveEntity(this.workcenterId, 'collection')
+    .subscribe(data => {
+      this.sampleList = data
     })
   }
 
@@ -57,32 +70,71 @@ export class WorkcenterDashboardComponent{
   }
 
   dispatch(){
-    if (this.operator) {
-      this.checkedEntityList.forEach(previousSample => {
-        this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
-        .subscribe(entity => {
-          entity[this.operatorCode] = this.operator
-          this.entityService.update(entity)
-          .subscribe(data => {
-            this.dispatchedComponent.getSampleList()
-            this.activatedComponent.getSampleList()
-          })
+    let retrieveObs = []
+    let updateObs = []
+    if (!this.operator) {
+      return
+    }
+
+    this.sampleList.forEach(previousSample => {
+      if (previousSample['TMP_CHECKED']){
+        //retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+        retrieveObs.push(this.entityService.retrieveById(previousSample.id))
+      }
+    })
+
+    Observable
+    .forkJoin(retrieveObs)
+    .subscribe(data => {
+      data.forEach(d => {
+        d[this.operatorCode] = this.operator
+        updateObs.push(this.entityService.update(d))
+      })
+
+      Observable
+      .forkJoin(updateObs)
+      .subscribe(data => {
+        // Update child component after updating sample list
+        // it works better than asynchronous func like getSampleList()
+        // same as undispatch()
+        this.entityService.retrieveEntity(this.workcenterId, 'collection')
+        .subscribe(data => {
+          this.sampleList = data
+          this.dispatchedComponent.getSampleList()
+          this.activatedComponent.getSampleList()
         })
       })
-    } else {
-      console.log("invalid operator", this.checkedEntityList)
-    }
+    })
+
   }
 
   undispatch(){
-    this.checkedDispatchedEntityList.forEach(previousSample => {
-      this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
-      .subscribe(entity => {
-        entity[this.operatorCode] = ""
-        this.entityService.update(entity)
+    let retrieveObs = []
+    let updateObs = []
+
+    this.sampleList.forEach(previousSample => {
+      if (previousSample['TMP_CHECKED']){
+        //retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+        retrieveObs.push(this.entityService.retrieveById(previousSample.id))
+      }
+    })
+
+    Observable
+    .forkJoin(retrieveObs)
+    .subscribe(data => {
+      data.forEach(d => {
+        d[this.operatorCode] = ""
+        updateObs.push(this.entityService.update(d))
+      })
+
+      Observable
+      .forkJoin(updateObs)
+      .subscribe(data => {
+        this.entityService.retrieveEntity(this.workcenterId, 'collection')
         .subscribe(data => {
-          this.activatedComponent.getSampleList()
+          this.sampleList = data
           this.dispatchedComponent.getSampleList()
+          this.activatedComponent.getSampleList()
         })
       })
     })
@@ -91,9 +143,12 @@ export class WorkcenterDashboardComponent{
   openNewEntityDialog(entity: any) {
     let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
     dialogRef.componentInstance.config.entity = entity
-    dialogRef.componentInstance.config.sampleList = this.checkedDispatchedEntityList
+    dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
-      this.selectedOption = result;
+      this.dispatchedComponent.getSampleList()
+      this.completedComponent.getSampleList()
+      this.checkedEntityList = []
+      this.checkedDispatchedEntityList = []
     });
   }
 }

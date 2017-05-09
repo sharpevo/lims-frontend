@@ -6,10 +6,10 @@ import {EntityService} from '../entity/service'
   templateUrl: './sample.scheduled.component.html',
 })
 export class WorkcenterSampleScheduledComponent{
-  @Input() workcenter
+  @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
-  sampleList: any[] = []
+  scheduledSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -20,50 +20,46 @@ export class WorkcenterSampleScheduledComponent{
   }
 
   getSampleList(){
+    if (!this.sampleList){
+      return
+    }
 
-    // retrieve samples in the current workcenter
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
+    this.sampleList.forEach(d => {
+      // retrieve chained samples by the same SYS_TARGET
+      this.entityService.retrieveChainedSamples(d['SYS_TARGET'])
+      .subscribe(samples => {
 
-      let scheduledSampleList = []
-      data.forEach(d => {
-        // retrieve chained samples by the same SYS_TARGET
-        this.entityService.retrieveChainedSamples(d['SYS_TARGET'])
-        .subscribe(samples => {
+        // get previous sample
+        let index = -1
+        let previousSample = {}
 
-          // get previous sample
-          let index = -1
-          let previousSample = {}
-
-          for (let i=0; i < samples.length; i ++){
-            if (samples[i].id == d.id){
-              index = i
-              break
-            }
+        for (let i=0; i < samples.length; i ++){
+          if (samples[i].id == d.id){
+            index = i
+            break
           }
+        }
 
-          if (index > -1){
-            if (index > 0){
-              previousSample = samples[index-1]
-            } else {
-              // d is the first sample in the chain and should be removed out
-              // of the scheduled list and moved into the activated list
-              previousSample = {}
-            }
-
+        if (index > -1){
+          if (index > 0){
+            previousSample = samples[index-1]
           } else {
-            console.log("samples no in the chain.")
+            // d is the first sample in the chain and should be removed out
+            // of the scheduled list and moved into the activated list
+            previousSample = {}
           }
 
-          if (previousSample['SYS_DATE_SCHEDULED'] &&
-              !previousSample['SYS_DATE_COMPLETED'] &&
-                !previousSample['SYS_DATE_TERMINATED']) {
-            scheduledSampleList.push(d)
-          }
+        } else {
+          console.log("samples no in the chain.")
+        }
 
-        })
+        if (previousSample['SYS_DATE_SCHEDULED'] &&
+            !previousSample['SYS_DATE_COMPLETED'] &&
+              !previousSample['SYS_DATE_TERMINATED']) {
+          this.scheduledSampleList.push(d)
+        }
+
       })
-      this.sampleList = scheduledSampleList
     })
   }
 
