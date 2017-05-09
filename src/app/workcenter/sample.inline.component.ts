@@ -9,6 +9,7 @@ import {AttributeService} from '../attribute/service'
   templateUrl: './sample.inline.component.html',
 })
 export class SampleInfoInlineComponent{
+  @Input() shownSampleList
   @Input() sampleList
   @Input() showCheckbox
   result: any
@@ -20,12 +21,19 @@ export class SampleInfoInlineComponent{
   ){}
 
   ngOnInit(){
-    this.result = this.sampleService.buildSampleInlineList(this.sampleList)
+    if (!this.shownSampleList) {
+      this.shownSampleList = this.sampleList
+    }
+    this.result = this.sampleService.buildSampleInlineList(this.shownSampleList)
   }
 
   checkEntity(key: string){
     this.result[key].forEach(sample => {
-      sample['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
+      if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
+        this.sampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
+      } else {
+        sample['TMP_CHECKED'] = !this.result[key]['TMP_CHECKED']
+      }
     })
   }
 }

@@ -1,8 +1,6 @@
-<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <span
         *ngIf="checkedEntityList || showCheckbox">
         <md-checkbox
-            (click)="checkEntity()"
             [(ngModel)]="entity['TMP_CHECKED']"
             color="primary">
         </md-checkbox>
@@ -23,4 +21,3 @@
             {{entity[attribute['SYS_CODE']]}}
         </span>
     </span>
-</div>

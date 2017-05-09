@@ -32,13 +32,15 @@ export class SampleService{
           resultList[laneCode][capCode] = []
         }
         resultList[laneCode][capCode].push(sampleList[i])
-      } else if (capCode) {
+      } else { //else if (capCode) {
+        // treat general samples as the 'undefined' caps
         if (!resultList[capCode]){
           resultList[capCode] = []
         }
+        // expression changed error occured w/o the following initialization
+        // in the sample.inline.component
+        sampleList[i]['TMP_CHECKED'] = false
         resultList[capCode].push(sampleList[i])
-      } else {
-        resultList.push(sampleList[i])
       }
 
     }
