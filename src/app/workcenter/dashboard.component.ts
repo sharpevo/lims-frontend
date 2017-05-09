@@ -94,9 +94,15 @@ export class WorkcenterDashboardComponent{
       Observable
       .forkJoin(updateObs)
       .subscribe(data => {
-        this.getSampleList()
-        this.dispatchedComponent.getSampleList()
-        this.activatedComponent.getSampleList()
+        // Update child component after updating sample list
+        // it works better than asynchronous func like getSampleList()
+        // same as undispatch()
+        this.entityService.retrieveEntity(this.workcenterId, 'collection')
+        .subscribe(data => {
+          this.sampleList = data
+          this.dispatchedComponent.getSampleList()
+          this.activatedComponent.getSampleList()
+        })
       })
     })
 
@@ -124,9 +130,12 @@ export class WorkcenterDashboardComponent{
       Observable
       .forkJoin(updateObs)
       .subscribe(data => {
-        this.getSampleList()
-        this.dispatchedComponent.getSampleList()
-        this.activatedComponent.getSampleList()
+        this.entityService.retrieveEntity(this.workcenterId, 'collection')
+        .subscribe(data => {
+          this.sampleList = data
+          this.dispatchedComponent.getSampleList()
+          this.activatedComponent.getSampleList()
+        })
       })
     })
   }
