@@ -145,10 +145,14 @@ export class WorkcenterDashboardComponent{
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
-      this.dispatchedComponent.getSampleList()
-      this.completedComponent.getSampleList()
-      this.checkedEntityList = []
-      this.checkedDispatchedEntityList = []
+      this.entityService.retrieveEntity(this.workcenterId, 'collection')
+      .subscribe(data => {
+        this.sampleList = data
+        this.dispatchedComponent.getSampleList()
+        this.completedComponent.getSampleList()
+        this.checkedEntityList = []
+        this.checkedDispatchedEntityList = []
+      })
     });
   }
 }
