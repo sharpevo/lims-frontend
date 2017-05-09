@@ -37,6 +37,9 @@ export class SampleService{
         if (!resultList[capCode]){
           resultList[capCode] = []
         }
+        // expression changed error occured w/o the following initialization
+        // in the sample.inline.component
+        sampleList[i]['TMP_CHECKED'] = false
         resultList[capCode].push(sampleList[i])
       }
 

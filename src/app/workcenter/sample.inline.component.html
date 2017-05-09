@@ -39,8 +39,11 @@
 </div>
 <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
     *ngFor="let sample of result['undefined'];">
+    <md-checkbox
+        [(ngModel)]="sample['TMP_CHECKED']"
+        color="primary">
+    </md-checkbox>
     <entity-info-inline
-        [showCheckbox]="true"
         [entity]="sample">
     </entity-info-inline>
 </div>
