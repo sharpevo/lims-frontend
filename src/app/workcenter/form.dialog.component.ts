@@ -85,7 +85,29 @@ export class SampleFormDialog {
       }
     }
 
+    issueSample(){
+      this.config.sampleList.forEach(sample => {
+        if (!sample['SYS_SAMPLE_CODE']){
+          console.log("invalid sample code")
+        }
+        sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+        sample['SYS_ENTITY_TYPE'] = 'collection'
+        sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
+          '/' +
+          sample['SYS_SAMPLE_CODE']
+        sample['SYS_DATE_SCHEDULED'] = this.object['SYS_DATE_SCHEDULED']
+        sample['SYS_GENRE'] = this.object['SYS_GENRE']
+        this.createObject(sample)
+      })
+    }
+
     submitObject(){
+      if (this.config.issueSample){
+        console.log("issueSample")
+        this.issueSample()
+        return
+      }
+      console.log("submitObject")
       // samples from the previous workcenter or the current one in the first
       // workcenter with workcenter-specific attributes:
       // - for the attributes defined by administrator, if they are same, use
@@ -93,7 +115,8 @@ export class SampleFormDialog {
       // - for the attributes starts with SYS, use current workcenter
       this.config.sampleList.forEach(sample => {
         console.log('processing candidate sample', sample)
-        this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+        //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+        this.entityService.retrieveById(sample.id)
         .subscribe(data => {
           console.log("processing sample:", data)
           this.submitSample(data)
@@ -128,25 +151,34 @@ export class SampleFormDialog {
       //console.log(object)
       //console.log(this.parentMap)
 
-      this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-      .subscribe(data => {
-        //console.log("retrive chained sample:", data)
-        object.id = data[0].id
-        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
-        // Using update instead of create since the identifier /workcenter/17R001
-        // has been assigned to the scheduled sample
-        this.entityService.update(object)
-        .subscribe(data => {
-
+      if (this.config.issueSample){
+        this.entityService.create(object)
+        .subscribe(data =>{
           this.makeConn(data, this.parentMap)
           console.log('Add Entity:', data)
           this.showMessage("Added")
-
-        },
-        err => {
-          console.error(err)
         })
-      })
+      } else {
+        this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+        .subscribe(data => {
+          //console.log("retrive chained sample:", data)
+          object.id = data[0].id
+          object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+          // Using update instead of create since the identifier /workcenter/17R001
+          // has been assigned to the scheduled sample
+          this.entityService.update(object)
+          .subscribe(data => {
+
+            this.makeConn(data, this.parentMap)
+            console.log('Add Entity:', data)
+            this.showMessage("Added")
+
+          },
+          err => {
+            console.error(err)
+          })
+        })
+      }
     }
 
     makeConn(sourceObject: any, parentObjects: any){

@@ -3,6 +3,7 @@ import {ViewComponent} from './entity/view.component'
 import {TreeViewComponent} from './tree/component'
 import {WorkcenterOverviewComponent} from './workcenter/overview.component'
 import {WorkcenterDashboardComponent} from './workcenter/dashboard.component'
+import {ProjectManagementComponent} from './workcenter/project.management.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'tree', component: TreeViewComponent},
   {path: 'workcenter-overview', component: WorkcenterOverviewComponent},
   {path: 'workcenter-dashboard/:id', component: WorkcenterDashboardComponent},
+  {path: 'project-management', component: ProjectManagementComponent},
   //{path: 'manufacturing', component: ManufacturingComponent},
   //{path: 'query', component: QueryComponent},
 ]
