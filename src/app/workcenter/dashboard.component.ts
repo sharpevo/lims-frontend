@@ -72,33 +72,67 @@ export class WorkcenterDashboardComponent{
   dispatch(){
     let retrieveObs = []
     let updateObs = []
-    if (this.operator) {
-      this.checkedEntityList.forEach(previousSample => {
-        retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+    if (!this.operator) {
+      return
+    }
+
+    this.sampleList.forEach(previousSample => {
+      if (previousSample['TMP_CHECKED']){
+        //retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+        retrieveObs.push(this.entityService.retrieveById(previousSample.id))
+      }
+    })
+
+    Observable
+    .forkJoin(retrieveObs)
+    .subscribe(data => {
+      data.forEach(d => {
+        d[this.operatorCode] = this.operator
+        updateObs.push(this.entityService.update(d))
       })
 
       Observable
-      .forkJoin(retrieveObs)
+      .forkJoin(updateObs)
       .subscribe(data => {
-        data.forEach(d => {
-          d[this.operatorCode] = this.operator
-          updateObs.push(this.entityService.update(d))
-        })
-
-        console.log("**", updateObs)
-        Observable
-        .forkJoin(updateObs)
-        .subscribe(data => {
-          this.dispatchedComponent.getSampleList()
-          this.activatedComponent.getSampleList()
-          this.checkedEntityList = []
-        })
+        this.getSampleList()
+        this.dispatchedComponent.getSampleList()
+        this.activatedComponent.getSampleList()
       })
-    }
-    //this.checkedEntityList = []
+    })
+
   }
 
   undispatch(){
+    let retrieveObs = []
+    let updateObs = []
+
+    this.sampleList.forEach(previousSample => {
+      if (previousSample['TMP_CHECKED']){
+        //retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
+        retrieveObs.push(this.entityService.retrieveById(previousSample.id))
+      }
+    })
+
+    Observable
+    .forkJoin(retrieveObs)
+    .subscribe(data => {
+      data.forEach(d => {
+        d[this.operatorCode] = ""
+        updateObs.push(this.entityService.update(d))
+      })
+
+      Observable
+      .forkJoin(updateObs)
+      .subscribe(data => {
+        this.getSampleList()
+        this.dispatchedComponent.getSampleList()
+        this.activatedComponent.getSampleList()
+      })
+    })
+  }
+
+
+  undispatch3(){
     let retrieveObs = []
     let updateObs = []
     this.checkedDispatchedEntityList.forEach(previousSample => {
@@ -116,6 +150,7 @@ export class WorkcenterDashboardComponent{
       Observable
       .forkJoin(updateObs)
       .subscribe(data => {
+        //this.getSampleList()
         this.dispatchedComponent.getSampleList()
         this.activatedComponent.getSampleList()
         this.checkedDispatchedEntityList = []
