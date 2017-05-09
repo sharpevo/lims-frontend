@@ -26,33 +26,11 @@ export class WorkcenterSampleCompletedComponent{
     if (!this.sampleList){
       return
     }
-
-    let chainedSampleObs = []
-
-    this.sampleList.forEach(d => {
-      chainedSampleObs.push(
-        this.entityService.retrieveBy({
-          'SYS_TARGET': d['SYS_TARGET'],
-          'sort': 'SYS_ORDER'})
-      )
-    })
-
-    Observable
-    .forkJoin(chainedSampleObs)
-    .subscribe((data: any[][]) => {
-
-      for (let i=0; i<data.length; i++){
-        let currentSample = this.sampleList[i]
-
-        if (currentSample['SYS_DATE_COMPLETED'] &&
-            !currentSample['SYS_DATE_TERMINATED']) {
-          this.completedSampleList.push(currentSample)
-        }
+    this.sampleList.forEach(sample => {
+      if (sample['SYS_DATE_COMPLETED'] &&
+          !sample['SYS_DATE_TERMINATED']) {
+        this.completedSampleList.push(sample)
       }
-
     })
-
-
   }
-
 }
