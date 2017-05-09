@@ -140,48 +140,6 @@ export class WorkcenterDashboardComponent{
     })
   }
 
-
-  undispatch3(){
-    let retrieveObs = []
-    let updateObs = []
-    this.checkedDispatchedEntityList.forEach(previousSample => {
-      retrieveObs.push(this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID']))
-    })
-
-    Observable
-    .forkJoin(retrieveObs)
-    .subscribe(data => {
-      data.forEach(d => {
-        d[this.operatorCode] = ""
-        updateObs.push(this.entityService.update(d))
-      })
-
-      Observable
-      .forkJoin(updateObs)
-      .subscribe(data => {
-        //this.getSampleList()
-        this.dispatchedComponent.getSampleList()
-        this.activatedComponent.getSampleList()
-        this.checkedDispatchedEntityList = []
-      })
-    })
-  }
-
-  undispatch2(){
-    this.checkedDispatchedEntityList.forEach(previousSample => {
-      this.entityService.retrieveById(previousSample['TMP_NEXT_SAMPLE_ID'])
-      .subscribe(entity => {
-        entity[this.operatorCode] = ""
-        this.entityService.update(entity)
-        .subscribe(data => {
-          this.activatedComponent.getSampleList()
-          this.dispatchedComponent.getSampleList()
-        })
-      })
-    })
-    this.checkedDispatchedEntityList = []
-  }
-
   openNewEntityDialog(entity: any) {
     let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
     dialogRef.componentInstance.config.entity = entity
