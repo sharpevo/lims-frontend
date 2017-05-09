@@ -1,9 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-    <span
-        *ngFor="let sample of sampleList">
-        <entity-info-inline
-            [checkedEntityList]="checkedEntityList"
-            [entity]="sample">
-        </entity-info-inline>
-    </span>
+    <sample-info-inline
+        *ngIf="sampleList?.length > 0 && completedSampleList.length > 0"
+        [shownSampleList]="completedSampleList"
+        [sampleList]="sampleList">
+    </sample-info-inline>
 </div>

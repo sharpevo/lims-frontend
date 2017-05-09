@@ -1,16 +1,16 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'workcenter-sample-completed',
   templateUrl: './sample.completed.component.html',
 })
 export class WorkcenterSampleCompletedComponent{
-  @Input() workcenter
+  @Input() sampleList
   @Input() callback
-  @Input() checkedEntityList
 
-  sampleList: any[] = []
+  completedSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -21,21 +21,16 @@ export class WorkcenterSampleCompletedComponent{
   }
 
   getSampleList(){
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
-      this.sampleList = data
-      .filter(d => {
-        return (d['SYS_DATE_COMPLETED'] &&
-                !d['SYS_DATE_TERMINATED'])
-      })
-      .filter(d => {
-        if (this.callback) {
-          return this.callback(d)
-        } else {
-          return true
-        }
-      })
+
+    this.completedSampleList = []
+    if (!this.sampleList){
+      return
+    }
+    this.sampleList.forEach(sample => {
+      if (sample['SYS_DATE_COMPLETED'] &&
+          !sample['SYS_DATE_TERMINATED']) {
+        this.completedSampleList.push(sample)
+      }
     })
   }
-
 }

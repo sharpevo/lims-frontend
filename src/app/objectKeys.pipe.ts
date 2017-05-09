@@ -4,9 +4,7 @@ import { PipeTransform, Pipe } from '@angular/core';
 export class ObjectKeysPipe implements PipeTransform {
   transform(value: any, args:string[]) : any {
     if (!value) return value
-      console.log(value)
-    for (let key in value){console.log(key)}
-    return Object.keys(value)
+      return Object.keys(value)
   }
 }
 

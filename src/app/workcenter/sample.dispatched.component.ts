@@ -1,97 +1,69 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {SampleService} from '../models/sample'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'workcenter-sample-dispatched',
   templateUrl: './sample.dispatched.component.html',
 })
 export class WorkcenterSampleDispatchedComponent{
-  @Input() workcenter
+  @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
 
-  sampleList: any[] = []
+  dispatchedSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
+    private sampleService: SampleService,
   ){}
 
   ngOnInit(){
     this.getSampleList()
   }
 
-  getSampleListCurrent(){
-    let operatorCode = 'SYS_WORKCENTER_OPERATOR'
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
-      this.sampleList = data
-      .filter(d => {
-        return (d[operatorCode] &&
-                d[operatorCode] != '' &&
-                !d['SYS_DATE_COMPLETED'])
-      })
-      .filter(d => {
-        if (this.callback) {
-          return this.callback(d)
-        } else {
-          return true
-        }
-      })
-    })
-  }
-
   getSampleList(){
-    this.sampleList = []
+    this.dispatchedSampleList = []
+    if (!this.sampleList){
+      return
+    }
+
     let operatorCode = 'SYS_WORKCENTER_OPERATOR'
-    this.entityService.retrieveEntity(this.workcenter.id, 'collection')
-    .subscribe(data => {
+    let chainedSampleObs = []
 
-      //let dispatchedSampleList = []
-      data.forEach(d => {
-        // retrieve chained samples by the same SYS_TARGET
-        this.entityService.retrieveChainedSamples(d['SYS_TARGET'])
-        .subscribe(samples => {
-
-          // get previous sample
-          let index = -1
-          let previousSample = {}
-
-          for (let i=0; i < samples.length; i ++){
-            if (samples[i].id == d.id){
-              index = i
-              break
-            }
-          }
-
-          if (index > -1){
-            if (index > 0){
-              previousSample = samples[index-1]
-              // clear samples without operator in current workcenter
-              if (d[operatorCode] &&
-                  !d['SYS_DATE_COMPLETED']) {
-                previousSample['TMP_NEXT_SAMPLE_ID'] = d.id
-              this.sampleList.push(previousSample)
-              }
-
-            } else {
-              // d is the first sample in the chain and should be removed out
-              // of the scheduled list and moved into the activated list
-              previousSample = {}
-              if (d[operatorCode] &&
-                  !d['SYS_DATE_COMPLETED']) {
-                d['TMP_NEXT_SAMPLE_ID'] = d.id
-              this.sampleList.push(d)
-              }
-            }
-
-          } else {
-            console.log("samples no in the chain.")
-          }
-
-        })
-      })
-      //this.sampleList = dispatchedSampleList
+    this.sampleList.forEach(d => {
+      chainedSampleObs.push(
+        this.entityService.retrieveBy({
+          'SYS_TARGET': d['SYS_TARGET'],
+          'sort': 'SYS_ORDER'})
+      )
     })
+
+    Observable
+    .forkJoin(chainedSampleObs)
+    .subscribe((data: any[][]) => {
+
+      for (let i=0; i<data.length; i++){
+        let currentSample = this.sampleList[i]
+        let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
+
+        if (currentSample[operatorCode] &&
+            !currentSample['SYS_DATE_COMPLETED']) {
+          if (previousSample.id == currentSample.id){
+            currentSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+            currentSample['TMP_NEXT_SAMPLE_INDEX'] = i
+            this.dispatchedSampleList.push(currentSample)
+          } else {
+            previousSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+            previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
+            this.dispatchedSampleList.push(previousSample)
+          }
+        }
+      }
+
+    })
+
   }
 
 }

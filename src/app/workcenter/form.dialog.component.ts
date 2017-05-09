@@ -115,7 +115,8 @@ export class SampleFormDialog {
       // - for the attributes starts with SYS, use current workcenter
       this.config.sampleList.forEach(sample => {
         console.log('processing candidate sample', sample)
-        this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+        //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+        this.entityService.retrieveById(sample.id)
         .subscribe(data => {
           console.log("processing sample:", data)
           this.submitSample(data)
