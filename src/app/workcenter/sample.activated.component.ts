@@ -24,6 +24,7 @@ export class WorkcenterSampleActivatedComponent{
   }
 
   getSampleList(){
+    this.activatedSampleList = []
     if (!this.sampleList){
       return
     }

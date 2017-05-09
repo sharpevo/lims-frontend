@@ -24,6 +24,7 @@ export class WorkcenterSampleDispatchedComponent{
   }
 
   getSampleList(){
+    this.dispatchedSampleList = []
     if (!this.sampleList){
       return
     }
@@ -62,5 +63,7 @@ export class WorkcenterSampleDispatchedComponent{
       }
 
     })
+
   }
+
 }
