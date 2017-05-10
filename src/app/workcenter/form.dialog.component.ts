@@ -137,10 +137,23 @@ export class SampleFormDialog {
         let previousSample = this.sampleService.parsePreviousSample(selectedSample, data)
         this.entityService.retrieveAttribute(previousSample.id)
         .subscribe(data => {
-          data.forEach(attribute => {
-            sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
-          })
+          //data.forEach(attribute => {
+          //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+          //})
 
+          // Copy capture/lane/run code manually
+          let captureCode = 'SYS_CAPTURE_CODE'
+          let laneCode = 'SYS_LANE_CODE'
+          let runCode = 'SYS_RUN_CODE'
+          if (previousSample[captureCode]) {
+            sample[captureCode] = previousSample[captureCode]
+          }
+          if (previousSample[laneCode]) {
+            sample[laneCode] = previousSample[laneCode]
+          }
+          if (previousSample[runCode]) {
+            sample[runCode] = previousSample[runCode]
+          }
 
           // Copy attributes from object to sample
           Object.keys(this.object).forEach(key => {
@@ -152,7 +165,7 @@ export class SampleFormDialog {
             '/' +
             selectedSample['SYS_CODE']
 
-          // Add default label
+          // Add default label, including SYS_SAMPLE_CODE
           sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
           sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
@@ -160,8 +173,8 @@ export class SampleFormDialog {
           sample['SYS_ENTITY_TYPE'] = 'collection'
           this.createObject(sample)
         })
-
       })
+
     }
 
     createObject(object: any){
