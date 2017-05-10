@@ -6,6 +6,7 @@ import {MdSnackBar} from '@angular/material'
 import {AttributeService} from '../attribute/service'
 import {GenreService} from '../genre/service'
 import {EntityService} from '../entity/service'
+import {SampleService} from '../models/sample'
 
 @Component({
   selector: 'sample-form-dialog',
@@ -30,6 +31,7 @@ export class SampleFormDialog {
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
+    private sampleService: SampleService,
     public dialogRef: MdDialogRef<SampleFormDialog>) {}
 
     ngOnInit(){
@@ -125,25 +127,41 @@ export class SampleFormDialog {
     }
 
     submitSample(selectedSample: any){
-      let sample = {}
 
-      // Copy attributes from object to sample
-      Object.keys(this.object).forEach(key => {
-        sample[key] = this.object[key]
+      this.entityService.retrieveBy({
+        'SYS_TARGET': selectedSample['SYS_TARGET'],
+        'sort': 'SYS_ORDER',
+      }).subscribe(data => {
+
+        let sample = {}
+        let previousSample = this.sampleService.parsePreviousSample(selectedSample, data)
+        this.entityService.retrieveAttribute(previousSample.id)
+        .subscribe(data => {
+          data.forEach(attribute => {
+            sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+          })
+
+
+          // Copy attributes from object to sample
+          Object.keys(this.object).forEach(key => {
+            sample[key] = this.object[key]
+          })
+
+          // Add customized sample attribute
+          sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
+            '/' +
+            selectedSample['SYS_CODE']
+
+          // Add default label
+          sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+          sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
+
+          sample['SYS_DATE_COMPLETED'] = new Date()
+          sample['SYS_ENTITY_TYPE'] = 'collection'
+          this.createObject(sample)
+        })
+
       })
-
-      // Add customized sample attribute
-      sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
-        '/' +
-        selectedSample['SYS_CODE']
-
-      // Add default label
-      sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
-      sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
-
-      sample['SYS_DATE_COMPLETED'] = new Date()
-      sample['SYS_ENTITY_TYPE'] = 'collection'
-      this.createObject(sample)
     }
 
     createObject(object: any){
