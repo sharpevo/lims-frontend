@@ -11,7 +11,7 @@ export class SampleService{
 
     for (let i = 0; i < sampleList.length; i++){
       let capCode = sampleList[i]['CAPTURE_CODE']
-      let laneCode = sampleList[i]['LANE_CODE']
+      let laneCode = sampleList[i]['POOLING_CODE']
       let runCode = sampleList[i]['RUN_CODE']
       if (runCode) {
         if (!resultList[runCode]){
