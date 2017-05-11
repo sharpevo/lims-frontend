@@ -1,9 +1,16 @@
 <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
     *ngFor="let key of (hybridSample | objectKeys);">
     <span *ngIf="key!='SAMPLES'">
-        <span
-            (click)="showElement = !showElement">
-            {{key}}
+        <span>
+            <md-checkbox
+                [(ngModel)]="hybridSampleChecked"
+                (click)="checkSample()"
+                color="primary">
+            </md-checkbox>
+            <span
+                (click)="showElement = !showElement">
+                {{key}}
+            </span>
         </span>
         <div
             *ngIf="showElement"
@@ -14,7 +21,13 @@
         </div>
     </span>
     <span *ngIf="key=='SAMPLES'">
-        <div *ngFor="let sample of hybridSample['SAMPLES']">
+        <div *ngFor="let sample of hybridSample[key]">
+            <md-checkbox
+                *ngIf="sample['TMP_CHECKED'] != 'blahblah'"
+                [(ngModel)]="sample['TMP_CHECKED']"
+                color="primary">
+                "{{sample['SYS_SAMPLE_CODE']}}"
+            </md-checkbox>
             <entity-info-inline
                 [entity]="sample">
             </entity-info-inline>
