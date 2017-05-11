@@ -6,7 +6,9 @@ import {Component, Input} from '@angular/core'
 })
 
 export class HybridSampleDestructorComponent {
-  @Input() hybridSample
+  @Input() hybridSampleList
+  @Input() shownSampleList
+  @Input() showCheckbox
   showElement: boolean = false
   hybridSampleChecked: boolean = false
   maxLoop: number = 5
@@ -15,6 +17,9 @@ export class HybridSampleDestructorComponent {
   }
 
   ngOnInit(){
+    if (!this.shownSampleList) {
+      this.shownSampleList = this.hybridSampleList
+    }
   }
 
   getSampleList(hybridSample: any){
@@ -23,7 +28,6 @@ export class HybridSampleDestructorComponent {
       return
     }
     let keys = Object.keys(hybridSample)
-    console.log(this.maxLoop)
     if (keys[0] != 'SAMPLES'){
       this.maxLoop -= 1
       keys.forEach(key => {
@@ -36,9 +40,14 @@ export class HybridSampleDestructorComponent {
   }
 
   checkSample(){
-    this.getSampleList(this.hybridSample)
+    this.getSampleList(this.shownSampleList)
     this.sampleList.forEach(sample => {
-      sample['TMP_CHECKED'] = !this.hybridSampleChecked
+      if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
+        console.log(sample)
+        this.hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.hybridSampleChecked
+      } else {
+        sample['TMP_CHECKED'] = !this.hybridSampleChecked
+      }
     })
 
   }
