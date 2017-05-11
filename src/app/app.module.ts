@@ -31,6 +31,7 @@ import {WorkcenterSampleTerminatedComponent} from './workcenter/sample.terminate
 import {WorkcenterSampleDispatchedComponent} from './workcenter/sample.dispatched.component';
 import {SampleFormDialog} from './workcenter/form.dialog.component';
 import {SampleInfoInlineComponent} from './workcenter/sample.inline.component';
+import {HybridSampleDestructorComponent} from './workcenter/hybrid.sample.destructor.component';
 
 import {ProjectManagementComponent} from './workcenter/project.management.component';
 
@@ -68,6 +69,7 @@ import {SampleService} from './models/sample';
     ProjectManagementComponent,
 
     SampleInfoInlineComponent,
+    HybridSampleDestructorComponent,
   ],
   entryComponents:[
     GenreFormDialog,

@@ -1,0 +1,23 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
+    *ngFor="let key of (hybridSample | objectKeys);">
+    <span *ngIf="key!='SAMPLES'">
+        <span
+            (click)="showElement = !showElement">
+            {{key}}
+        </span>
+        <div
+            *ngIf="showElement"
+            style="margin-left: 50px">
+            <hybrid-sample-destructor
+                [hybridSample]="hybridSample[key]">
+            </hybrid-sample-destructor>
+        </div>
+    </span>
+    <span *ngIf="key=='SAMPLES'">
+        <div *ngFor="let sample of hybridSample['SAMPLES']">
+            <entity-info-inline
+                [entity]="sample">
+            </entity-info-inline>
+        </div>
+    </span>
+</div>
