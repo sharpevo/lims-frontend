@@ -8,13 +8,13 @@
                 (click)="checkSample()"
                 color="primary">
             </md-checkbox>
-            <span
-                (click)="showElement = !showElement">
-                {{key}}
-            </span>
+        </span>
+        <span
+            (click)="item[key+'_TMP_CHECKED'] = !item[key+'_TMP_CHECKED']">
+            {{key}}
         </span>
         <div
-            *ngIf="showElement"
+            *ngIf="item[key+'_TMP_CHECKED']"
             style="margin-left: 50px">
             <hybrid-sample-destructor
                 [showCheckbox]="showCheckbox"
