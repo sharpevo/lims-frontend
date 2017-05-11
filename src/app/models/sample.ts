@@ -46,7 +46,7 @@ export class SampleService{
         sampleList[i]['TMP_CHECKED'] = false
         resultList[capCode][sampleCode].push(sampleList[i])
       } else {
-        if (resultList[sampleCode]) {
+        if (!resultList[sampleCode]) {
           resultList[sampleCode] = []
         }
         resultList[sampleCode].push(sampleList[i])
