@@ -9,7 +9,7 @@ export class HybridSampleDestructorComponent {
   @Input() hybridSampleList
   @Input() shownSampleList
   @Input() showCheckbox
-  showElement: boolean = false
+  item: any = {}
   hybridSampleChecked: boolean = false
   maxLoop: number = 5
   sampleList: any[]
