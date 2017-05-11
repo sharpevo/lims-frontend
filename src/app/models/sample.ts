@@ -53,7 +53,6 @@ export class SampleService{
       }
 
     }
-    console.log(resultList)
     return resultList
   }
 

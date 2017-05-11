@@ -43,7 +43,6 @@ export class HybridSampleDestructorComponent {
     this.getSampleList(this.shownSampleList)
     this.sampleList.forEach(sample => {
       if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
-        console.log(sample)
         this.hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.hybridSampleChecked
       } else {
         sample['TMP_CHECKED'] = !this.hybridSampleChecked
