@@ -10,7 +10,6 @@ export class HybridSampleDestructorComponent {
   @Input() shownSampleList
   @Input() showCheckbox
   item: any = {}
-  hybridSampleChecked: boolean = false
   maxLoop: number = 5
   sampleList: any[]
   constructor(){
@@ -39,13 +38,13 @@ export class HybridSampleDestructorComponent {
     }
   }
 
-  checkSample(){
-    this.getSampleList(this.shownSampleList)
+  checkSample(itemKey: string){
+    this.getSampleList(this.shownSampleList[itemKey])
     this.sampleList.forEach(sample => {
       if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
-        this.hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.hybridSampleChecked
+        this.hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED'] = !this.item[itemKey+'_TMP_CHECKED']
       } else {
-        sample['TMP_CHECKED'] = !this.hybridSampleChecked
+        sample['TMP_CHECKED'] = !this.item[itemKey+'_TMP_CHECKED']
       }
     })
 
