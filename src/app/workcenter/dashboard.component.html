@@ -1,6 +1,16 @@
 <h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
-<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
-    <h2>Scheduling</h2>
+<md-tab-group
+    [selectedIndex]="1"
+    [(selectedIndex)]="selectedIndex">
+    <md-tab label="Scheduled">
+    </md-tab>
+    <md-tab label="Processed">
+    </md-tab>
+    <md-tab label="Completed">
+    </md-tab>
+</md-tab-group>
+<br/>
+<section *ngIf="selectedIndex === 0">
     <md-card
         class="full-width">
         <md-card-subtitle>
@@ -18,7 +28,8 @@
             </div>
         </md-card-content>
     </md-card>
-    <h2>Dispatching</h2>
+</section>
+<section *ngIf="selectedIndex === 1">
     <md-card
         class="full-width">
         <md-card-subtitle>
@@ -76,7 +87,6 @@
                         fxLayout="row"
                         fxLayoutGap="10px"
                         fxLayoutAlign="start center">
-                        <h4>Dispatched</h4>
                         <button
                             md-button
                             (click)="undispatch()">
@@ -101,8 +111,8 @@
             </div>
         </md-card-content>
     </md-card>
-
-    <h2>History</h2>
+</section>
+<section *ngIf="selectedIndex === 2">
     <md-card
         class="full-width">
         <md-card-subtitle>
@@ -139,4 +149,4 @@
             </div>
         </md-card-content>
     </md-card>
-</div>
+</section>
