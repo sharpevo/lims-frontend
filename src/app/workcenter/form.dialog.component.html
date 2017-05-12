@@ -18,9 +18,17 @@
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
     {{config.sampleList.length}} samples:
-    <span *ngFor="let sample of config.sampleList">
-        {{sample['TMP_NEXT_SAMPLE_ID']}}
-    </span>
+    <ul>
+    <li *ngFor="let sample of config.sampleList">
+        {{sample['SYS_SAMPLE_CODE']}}
+        <span style="opacity:0.3">
+            ({{sample.id}} / {{sample['TMP_NEXT_SAMPLE_ID']}})
+        </span>
+    </li>
+    </ul>
+    <!--<span *ngFor="let sample of config.sampleList">-->
+        <!--{{sample['TMP_NEXT_SAMPLE_ID']}}-->
+    <!--</span>-->
     <br/>
     <br/>
     <div
