@@ -130,6 +130,7 @@ export class ProjectManagementComponent{
     dialogRef.componentInstance.config.issueSample = true
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample.TMP_CHECK)
     dialogRef.afterClosed().subscribe(result => {
+      this.sampleList = this.sampleList.filter(sample => !sample.TMP_CHECK)
     });
   }
 }
