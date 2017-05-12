@@ -11,6 +11,7 @@ export class WorkcenterSampleActivatedComponent{
   @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
+  sampleCount: number = 0
 
   activatedSampleList: any[] = []
 
@@ -60,6 +61,7 @@ export class WorkcenterSampleActivatedComponent{
           }
         }
       }
+      this.sampleCount = this.activatedSampleList.length
 
     })
   }
