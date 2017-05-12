@@ -152,9 +152,6 @@ export class WorkcenterDashboardComponent{
       .subscribe(data => {
         this.sampleList = data
         this.dispatchedComponent.getSampleList()
-        this.completedComponent.getSampleList()
-        this.checkedEntityList = []
-        this.checkedDispatchedEntityList = []
       })
     });
   }

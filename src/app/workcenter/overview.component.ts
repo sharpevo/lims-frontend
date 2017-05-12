@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core'
+import {Component, Input, ViewChild} from '@angular/core'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {GenreFormDialog} from '../genre/form.dialog.component'
 import {EntityFormDialog} from '../entity/form.dialog.component'
@@ -6,18 +6,25 @@ import {AttributeFormDialog} from '../attribute/form.dialog.component'
 
 import {EntityService} from '../entity/service'
 
+import {Observable} from 'rxjs/Observable'
+
 @Component({
   selector: 'workcenter-overview',
   templateUrl: './overview.component.html',
 })
 
 export class WorkcenterOverviewComponent {
+  @ViewChild('workcenterSampleScheduledComponent') workcenterSampleScheduledComponent
+  @ViewChild('workcenterSampleActivatedComponent') workcenterSampleActivatedComponent
+  @ViewChild('workcenterSampleDispatchedComponent') workcenterSampleDispatchedComponent
+
   @Input() hierarchy: any[]
   @Input() entityList: any[]
   @Input() identifierPrefix: string
   selectedOption: string
 
   workcenterList: any[] = []
+  sampleLists: any[] = []
 
   constructor(
     public dialog: MdDialog,
@@ -47,6 +54,23 @@ export class WorkcenterOverviewComponent {
     this.entityService.retrieveByIdentifierAndCategory('/PRODUCT_WORKCENTER', 'class')
     .subscribe(data => {
       this.workcenterList = data
+      this.getSampleList()
+    })
+  }
+
+  getSampleList(){
+    this.sampleLists = []
+    let sampleListObs = []
+    this.workcenterList.forEach(workcenter => {
+      sampleListObs.push(this.entityService.retrieveEntity(workcenter.id, 'collection'))
+    })
+
+    Observable
+    .forkJoin(sampleListObs)
+    .subscribe(sampleLists => {
+      for (let i=0; i<sampleLists.length; i++){
+        this.sampleLists.push(sampleLists[i])
+      }
     })
   }
 
