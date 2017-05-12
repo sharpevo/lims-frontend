@@ -10,6 +10,7 @@ export class WorkcenterSampleScheduledComponent{
   @Input() callback
   @Input() checkedEntityList
   scheduledSampleList: any[] = []
+  sampleCount: number = 0
 
   constructor(
     private entityService: EntityService,
