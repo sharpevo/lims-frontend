@@ -1,0 +1,58 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px"
+    *ngFor="let key of (shownSampleList | objectKeys);">
+    <span *ngIf="key!='SAMPLES'">
+        <span (click)="expandall = !expandall">
+            -
+        </span>
+        <span
+            *ngIf="showCheckbox">
+            <md-checkbox
+                [(ngModel)]="item[key+'_TMP_CHECKED']"
+                (click)="checkSample(key)"
+                color="primary">
+            </md-checkbox>
+        </span>
+        <span
+            (click)="item[key+'_TMP_EXPANDED'] = !item[key+'_TMP_EXPANDED']; expandall = false">
+            {{key}}
+        </span>
+        <div
+            *ngIf="item[key+'_TMP_EXPANDED'] || expandall"
+            style="margin-left: 50px">
+            <hybrid-sample-destructor
+                [expandall] = "expandall"
+                [showCheckbox]="showCheckbox"
+                [shownSampleList]="shownSampleList[key]"
+                [hybridSampleList]="hybridSampleList">
+            </hybrid-sample-destructor>
+        </div>
+    </span>
+    <span *ngIf="key=='SAMPLES'">
+        <div *ngFor="let sample of shownSampleList[key]">
+            <span (click)="expandall = !expandall">
+                -
+            </span>
+            <span
+                *ngIf="showCheckbox">
+                <span *ngIf="hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+                    <md-checkbox
+                        [(ngModel)]="hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['TMP_CHECKED']"
+                        color="primary">
+                        "{{hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]['SYS_SAMPLE_CODE']}}"
+                    </md-checkbox>
+                </span>
+                <span *ngIf="!hybridSampleList[sample['TMP_NEXT_SAMPLE_INDEX']]">
+                    <md-checkbox
+                        *ngIf="sample['TMP_CHECKED'] != 'blahblah'"
+                        [(ngModel)]="sample['TMP_CHECKED']"
+                        color="primary">
+                        {{sample['SYS_SAMPLE_CODE']}}
+                    </md-checkbox>
+                </span>
+            </span>
+            <entity-info-inline
+                [entity]="sample">
+            </entity-info-inline>
+        </div>
+    </span>
+</div>
