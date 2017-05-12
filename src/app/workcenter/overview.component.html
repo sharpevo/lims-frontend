@@ -1,7 +1,9 @@
-<ul style="list-style:none">
+<ul
+    *ngIf="sampleLists.length > 0"
+    style="list-style:none">
     <li
 		style="list-style:none"
-		*ngFor="let entity of workcenterList">
+		*ngFor="let entity of workcenterList;let i=index">
 		<md-menu #menu="mdMenu" style="font-size:9pt">
 			<button
 				md-menu-item
@@ -37,10 +39,11 @@
 				mdTooltip="{{entity.SYS_IDENTIFIER}}"
 				[mdTooltipPosition]="'above'"
 				[mdTooltipShowDelay]="2000"
-				[mdTooltipHideDelay]="0"
-				(click)="entity.tmp_open=!entity.tmp_open">
+                [mdTooltipHideDelay]="0">
 				<span
-					style="font-size:12pt">
+	                (click)="getSampleList()"
+                    style="font-size:12pt">
+                    <!--(click)="entity.tmp_open=!entity.tmp_open; getSampleListByWorkcenterId(entity.id)">-->
 					<!--<md-checkbox-->
 					<!--[checked]="d.tmp_checked"-->
 					<!--(change)="d.tmp_checked=!d.tmp_checked">-->
@@ -50,6 +53,9 @@
                     </entity-tostring>
 				</span>
 			</span>
+            <span class="lead" style="font-size:2.5em;font-weight:bold;opacity:0.5;">
+                {{workcenterSampleScheduledComponent.sampleCount}}/{{workcenterSampleActivatedComponent.sampleCount}}/{{workcenterSampleDispatchedComponent.sampleCount}}
+            </span>
 			<button
 				md-icon-button
 				style="opacity:0.5"
@@ -59,39 +65,30 @@
 		</span>
         <md-divider></md-divider>
         <ul 
-            *ngIf="entity.tmp_open"
             style="list-style:none">
             <li
-                style="list-style:none"
-                *ngIf="(workcenter | json) != '{}'">
+                style="list-style:none">
                 <h4>Scheduled</h4>
                 <workcenter-sample-scheduled
-                    [sampleList]="">
+                    #workcenterSampleScheduledComponent
+                    [sampleList]="sampleLists[i]">
                 </workcenter-sample-scheduled>
             </li>
             <li
-                style="list-style:none"
-                *ngIf="(workcenter | json) != '{}'">
+                style="list-style:none">
                 <h4>Activated</h4>
                 <workcenter-sample-activated
-                    [sampleList]="">
+                    #workcenterSampleActivatedComponent
+                    [sampleList]="sampleLists[i]">
                 </workcenter-sample-activated>
             </li>
             <li
-                style="list-style:none"
-                *ngIf="(workcenter | json) != '{}'">
-                <h4>Completed</h4>
-                <workcenter-sample-completed
-                    [sampleList]="">
-                </workcenter-sample-completed>
-            </li>
-            <li
-                style="list-style:none"
-                *ngIf="(workcenter | json) != '{}'">
-                <h4>Exceptional</h4>
-                <workcenter-sample-terminated
-                    [workcenter]="entity">
-                </workcenter-sample-terminated>
+                style="list-style:none">
+                <h4>Dispatched</h4>
+                <workcenter-sample-dispatched
+                    #workcenterSampleDispatchedComponent
+                    [sampleList]="sampleLists[i]">
+                </workcenter-sample-dispatched>
             </li>
         </ul>
     </li>
