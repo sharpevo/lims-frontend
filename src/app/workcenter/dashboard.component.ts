@@ -27,6 +27,9 @@ export class WorkcenterDashboardComponent{
 
   sampleList: any[] = []
 
+  // set the default tabs in order to remove animations manually
+  selectedIndex: number = 1
+
   constructor(
     public dialog: MdDialog,
     private route: ActivatedRoute,
