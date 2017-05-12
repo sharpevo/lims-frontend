@@ -38,7 +38,7 @@ export class HybridSampleDestructorComponent {
     }
   }
 
-  checkSample(){
+  checkSample(itemKey: string){
     this.getSampleList(this.shownSampleList[itemKey])
     this.sampleList.forEach(sample => {
       if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){

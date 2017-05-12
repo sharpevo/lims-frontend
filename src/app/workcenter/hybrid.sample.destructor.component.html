@@ -4,8 +4,8 @@
         <span
             *ngIf="showCheckbox">
             <md-checkbox
-                (click)="checkSample()"
                 [(ngModel)]="item[key+'_TMP_CHECKED']"
+                (click)="checkSample(key)"
                 color="primary">
             </md-checkbox>
         </span>
