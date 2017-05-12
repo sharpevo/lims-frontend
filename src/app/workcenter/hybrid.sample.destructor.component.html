@@ -4,17 +4,17 @@
         <span
             *ngIf="showCheckbox">
             <md-checkbox
-                [(ngModel)]="hybridSampleChecked"
                 (click)="checkSample()"
+                [(ngModel)]="item[key+'_TMP_CHECKED']"
                 color="primary">
             </md-checkbox>
         </span>
         <span
-            (click)="item[key+'_TMP_CHECKED'] = !item[key+'_TMP_CHECKED']">
+            (click)="item[key+'_TMP_EXPANDED'] = !item[key+'_TMP_EXPANDED']">
             {{key}}
         </span>
         <div
-            *ngIf="item[key+'_TMP_CHECKED']"
+            *ngIf="item[key+'_TMP_EXPANDED']"
             style="margin-left: 50px">
             <hybrid-sample-destructor
                 [showCheckbox]="showCheckbox"
