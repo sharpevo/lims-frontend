@@ -41,14 +41,16 @@
 				[mdTooltipShowDelay]="2000"
                 [mdTooltipHideDelay]="0">
 				<span
-	                (click)="getSampleList()"
+                    (click)="getSampleList()"
                     style="font-size:12pt">
 					<entity-tostring
                         [entity]="entity">
                     </entity-tostring>
 				</span>
 			</span>
-            <span class="lead" style="font-size:2.5em;font-weight:bold;opacity:0.5;">
+            <span
+                (click)="entity.tmp_open = !entity.tmp_open"
+                class="lead" style="font-size:2.5em;font-weight:bold;opacity:0.5;">
                 {{workcenterSampleScheduledComponent.sampleCount}}/{{workcenterSampleActivatedComponent.sampleCount}}/{{workcenterSampleDispatchedComponent.sampleCount}}
             </span>
 			<button
@@ -60,6 +62,7 @@
 		</span>
         <md-divider></md-divider>
         <ul 
+            [hidden]="!entity.tmp_open"
             style="list-style:none">
             <li
                 style="list-style:none">
