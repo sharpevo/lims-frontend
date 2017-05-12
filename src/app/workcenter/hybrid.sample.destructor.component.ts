@@ -34,11 +34,12 @@ export class HybridSampleDestructorComponent {
       })
     } else {
       this.maxLoop = 5
-      this.sampleList = hybridSample['SAMPLES']
+      this.sampleList = this.sampleList.concat(hybridSample['SAMPLES'])
     }
   }
 
   checkSample(itemKey: string){
+    this.sampleList = []
     this.getSampleList(this.shownSampleList[itemKey])
     this.sampleList.forEach(sample => {
       if (sample['TMP_NEXT_SAMPLE_INDEX'] >= 0){
