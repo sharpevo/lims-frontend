@@ -41,7 +41,7 @@
 				[mdTooltipShowDelay]="2000"
                 [mdTooltipHideDelay]="0">
 				<span
-                    (click)="getSampleList()"
+                    (click)="entity.tmp_open = !entity.tmp_open"
                     style="font-size:12pt">
 					<entity-tostring
                         [entity]="entity">
@@ -49,7 +49,7 @@
 				</span>
 			</span>
             <span
-                (click)="entity.tmp_open = !entity.tmp_open"
+                (click)="getSampleList()"
                 class="lead" style="font-size:2.5em;font-weight:bold;opacity:0.5;">
                 {{workcenterSampleScheduledComponent.sampleCount}}/{{workcenterSampleActivatedComponent.sampleCount}}/{{workcenterSampleDispatchedComponent.sampleCount}}
             </span>
