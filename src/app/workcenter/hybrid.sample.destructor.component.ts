@@ -9,6 +9,7 @@ export class HybridSampleDestructorComponent {
   @Input() hybridSampleList
   @Input() shownSampleList
   @Input() showCheckbox
+  @Input() expandall
   item: any = {}
   maxLoop: number = 5
   sampleList: any[]
@@ -48,6 +49,5 @@ export class HybridSampleDestructorComponent {
         sample['TMP_CHECKED'] = !this.item[itemKey+'_TMP_CHECKED']
       }
     })
-
   }
 }
