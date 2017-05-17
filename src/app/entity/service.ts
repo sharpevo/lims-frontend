@@ -51,6 +51,19 @@ export class EntityService {
     .map(res => res.json())
   }
 
+  retrieveBySortBy(args: any, sort: string){
+    let argString = ''
+    Object.keys(args).forEach(key => {
+      if (argString != '') {
+        argString += `&${key}=${args[key]}`
+      } else {
+        argString += `${key}=${args[key]}`
+      }
+    })
+    return this.http.get(`${this.url}?${argString}&sort=${sort}`)
+    .map(res => res.json())
+  }
+
   retrieveById(id: string){
     return this.http.get(`${this.url}/${id}`)
     .map(res => res.json())
