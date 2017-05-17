@@ -41,6 +41,8 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
 
 import {SampleService} from './models/sample';
 
+import {SampleHistoryComponent} from './sample/history.component'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -70,6 +72,8 @@ import {SampleService} from './models/sample';
 
     SampleInfoInlineComponent,
     HybridSampleDestructorComponent,
+
+    SampleHistoryComponent,
   ],
   entryComponents:[
     GenreFormDialog,

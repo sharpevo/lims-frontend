@@ -1,0 +1,14 @@
+<ul style="list-style:none">
+    <li
+        style="list-style:none">
+        <ul
+            style="list-style:none"
+            *ngFor="let targetId of getSampleKeys()">
+            <li
+                *ngFor="let sample of sampleMap[targetId]"
+                style="list-style:none">
+                {{sample['SYS_SAMPLE_CODE']}}
+            <li>
+        </ul>
+    </li>
+</ul>
