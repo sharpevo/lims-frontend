@@ -51,11 +51,15 @@ export class WorkcenterOverviewComponent {
   }
 
   getWorkcenterList(){
-    this.entityService.retrieveByIdentifierAndCategory('/PRODUCT_WORKCENTER', 'class')
-    .subscribe(data => {
-      this.workcenterList = data
-      this.getSampleList()
-    })
+    //this.entityService.retrieveByIdentifierAndCategory('/PRODUCT_WORKCENTER', 'class')
+    this.entityService.retrieveBySortBy(
+      {"where":'{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
+      },
+      "ORDER")
+      .subscribe(data => {
+        this.workcenterList = data
+        this.getSampleList()
+      })
   }
 
   getSampleList(){
