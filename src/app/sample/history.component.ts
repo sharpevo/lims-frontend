@@ -32,7 +32,6 @@ export class SampleHistoryComponent {
 
             if (!this.sampleMap[sample['SYS_TARGET']]) {
               this.sampleMap[sample['SYS_TARGET']] = []
-              console.log("---")
             }
             this.sampleMap[sample['SYS_TARGET']].push(sample)
           }
