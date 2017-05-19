@@ -68,6 +68,7 @@ export class ProjectManagementComponent{
       .subscribe(data => {
         this.entity = data[0]
       })
+      this.getSampleListByBatch("")
   }
 
   getClientList(){
