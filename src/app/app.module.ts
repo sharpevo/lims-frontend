@@ -43,6 +43,8 @@ import {SampleService} from './models/sample';
 
 import {SampleHistoryComponent} from './sample/history.component'
 
+import {ChartsModule} from 'ng2-charts';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -88,6 +90,7 @@ import {SampleHistoryComponent} from './sample/history.component'
     FlexLayoutModule,
     MaterialModule.forRoot(),
     routingModule,
+    ChartsModule,
 
   ],
   providers: [
