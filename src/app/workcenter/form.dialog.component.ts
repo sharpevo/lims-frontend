@@ -96,9 +96,13 @@ export class SampleFormDialog {
         sample['SYS_ENTITY_TYPE'] = 'collection'
         sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
           '/' +
-          sample['SYS_SAMPLE_CODE']
+          sample['SYS_SAMPLE_CODE'] + '.' + this.object.TMP_CODE
         sample['SYS_DATE_SCHEDULED'] = this.object['SYS_DATE_SCHEDULED']
         sample['SYS_GENRE'] = this.object['SYS_GENRE']
+        // delete id before creation if the sample is inside of LIMS
+        delete sample.id
+        delete sample._id
+        delete sample.SYS_TARGET
         this.createObject(sample)
       })
     }
