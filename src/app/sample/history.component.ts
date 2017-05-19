@@ -17,6 +17,8 @@ export class SampleHistoryComponent {
 
   entity: any = {}
 
+  sampleList: any[] = []
+
   public lineChartData: any[] = []
   public lineChartLabels:Array<any> = []
   public lineChartOptions:any = {
@@ -32,9 +34,9 @@ export class SampleHistoryComponent {
             stepSize: 1,
             callback: (label, index, labels) => {
 
-              if (label == index){
-                return this.sample['SYS_SAMPLE_CODE'] + '-' + label
-              }
+              //if (label == index){
+              return this.sample['SYS_SAMPLE_CODE'] + '-' + label
+              //}
             }
           },
           //scaleLabel:{
@@ -56,7 +58,6 @@ export class SampleHistoryComponent {
 
   ngOnInit(){
     this.getWorkcenterList()
-    this.getSampleMap()
     this.entityService.retrieveByIdentifierFull(
       "/PROJECT_MANAGEMENT/GENERAL_PROJECT")
       .subscribe(data => {
@@ -74,15 +75,18 @@ export class SampleHistoryComponent {
         this.workcenterList.forEach(workcenter => {
           this.lineChartLabels.push(workcenter[workcenter['SYS_LABEL']])
         })
+        // get sample after workcenter
+        this.getSampleMap()
       })
   }
 
   getSampleMap() {
-    this.lineChartData = []
+    //this.lineChartData = []
 
     this.entityService.retrieveBySortBy(
       {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE']},
-      "createdAt")
+      //"createdAt")
+      "SYS_DATE_SCHEDULED")
       .subscribe(data => {
 
         data.forEach(sample => {
@@ -92,6 +96,12 @@ export class SampleHistoryComponent {
             if (!this.sampleMatrix[sample['SYS_TARGET']]){
               this.sampleMatrix[sample['SYS_TARGET']] = {}
             }
+            if (!this.sampleMap[sample['SYS_TARGET']]){
+              this.sampleMap[sample['SYS_TARGET']] = []
+            }
+
+            //console.log("#", sample.SYS_IDENTIFIER, sample.SYS_TARGET)
+            this.sampleMap[sample['SYS_TARGET']].push(sample)
 
             if (!this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']]){
               this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']] = sample
@@ -106,7 +116,8 @@ export class SampleHistoryComponent {
         })
 
         let i=0
-        Object.keys(this.sampleMatrix).forEach(key => {
+        Object.keys(this.sampleMatrix).sort().forEach(key => {
+          console.log("-------",key)
           let chartData = {
             data:[],
             fill:false,
@@ -114,12 +125,64 @@ export class SampleHistoryComponent {
             pointHoverRadius: 7,
             label:key,
           }
-          i++
+          i += 1
 
-            Object.keys(this.sampleMatrix[key]).forEach(sampleKey => {
-            //chartData.data.push(this.sampleMatrix[key][sampleKey]['SYS_SAMPLE_CODE'])
-            chartData.data.push(i)
+          //Object.keys(this.sampleMatrix[key]).forEach(sampleKey => {
+          ////chartData.data.push(this.sampleMatrix[key][sampleKey]['SYS_SAMPLE_CODE'])
+          //console.log("---")
+          //console.log("s", sampleKey)
+
+          //if (this.workcenterList[chartData.data.length]){
+
+          //if (sampleKey == this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/'){
+          //chartData.data.push(i)
+          //} else {
+          //console.log("w", this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'])
+          //chartData.data.push(i-1)
+          //}
+          //}
+          //})
+
+          let j = 0
+
+          this.workcenterList.forEach(workcenter => {
+            if (!this.sampleMap[key][j]){
+              //console.log("xxx")
+              chartData.data.push(i-1)
+            } else {
+              //console.log("--- " + j + " ---", this.sampleMap[key][j].SYS_SAMPLE_CODE, ": ", this.sampleMap[key][j].SYS_TARGET)
+              let workcenterIdentifier = workcenter['SYS_IDENTIFIER']
+              let sampleGenreIdentifier = this.sampleMap[key][j]['SYS_GENRE_IDENTIFIER']
+              //console.log("S:", sampleGenreIdentifier)
+              //console.log("W:", workcenterIdentifier)
+              if (workcenterIdentifier + '/' == sampleGenreIdentifier){
+                j+=1
+                //console.log("==", i)
+                chartData.data.push(i)
+              } else {
+                //console.log("!=", i-1)
+                chartData.data.push(i-1)
+              }
+            }
+
           })
+
+          //this.sampleMap[key].forEach(sample => {
+          //j += 1
+          //console.log("--- " + j + " ---", sample.SYS_SAMPLE_CODE, ": ", sample.SYS_TARGET)
+          //if (this.workcenterList[chartData.data.length]){
+          //console.log("s '", sample['SYS_GENRE_IDENTIFIER'], "'")
+          //console.log("w '", this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/', "'")
+          //if (sample['SYS_GENRE_IDENTIFIER'] == this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/'){
+          //console.log("=", i)
+          //chartData.data.push(i)
+          //} else {
+          //console.log("!=", i-1)
+          //chartData.data.push(i-1)
+          //}
+          //}
+          //})
+
           this.lineChartData.push(chartData)
 
         })
@@ -142,17 +205,22 @@ export class SampleHistoryComponent {
 
     // only take the top line, as the latest sample
     if (e.active.length > 0){
+      let lastSampleIndex = e.active.length - 1
       // sampleIndex actually, since the workcenter may not be chose by the sample
-      let workcenterIndex = e.active[0]._index
-      let dataIndex = e.active[0]._chart.config.data.datasets[0].data[e.active[0]._index]
-      let workcenterLabel = e.active[0]._chart.config.data.labels[e.active[0]._index]
+      let sampleIndex = e.active[lastSampleIndex]._index
+      let dataIndex = e.active[lastSampleIndex]._chart.config.data.datasets[lastSampleIndex].data[sampleIndex]
+      let workcenterLabel = e.active[lastSampleIndex]._chart.config.data.labels[sampleIndex]
       let targetId = Object.keys(this.sampleMatrix)[dataIndex-1]
-      let sampleKey = Object.keys(this.sampleMatrix[targetId])[workcenterIndex]
+      let sampleKey = Object.keys(this.sampleMatrix[targetId])[sampleIndex]
+      console.log("index:", sampleIndex)
+      console.log("dataIndex:", dataIndex)
       console.log("label:", targetId)
-      console.log("workcenter:", this.workcenterList[workcenterIndex]['label'])
-      console.log("sample:", Object.keys(this.sampleMatrix[targetId])[workcenterIndex])
+      console.log("workcenter:", this.workcenterList[sampleIndex]['label'])
+      //console.log("sample:", Object.keys(this.sampleMatrix[targetId])[sampleIndex])
       console.log(this.sampleMatrix[targetId][sampleKey])
-      let sample = this.sampleMatrix[targetId][sampleKey]
+      //let sample = this.sampleMatrix[targetId][sampleKey]
+      let sample = this.sampleMap[targetId][this.sampleMap[targetId].length - this.workcenterList.length + sampleIndex]
+      console.log("sample:", sample['SYS_IDENTIFIER'], dataIndex)
       this.openNewEntityDialog(sample)
 
     }
