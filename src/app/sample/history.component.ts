@@ -10,15 +10,59 @@ export class SampleHistoryComponent {
   @Input() sample: any
   @Input() selectedSampleList: any[]
   sampleMap: any = {}
+  sampleMatrix: any = {}
+  workcenterList: any[] = []
+
+  public lineChartData: any[] = []
+  public lineChartLabels:Array<any> = []
+  public lineChartOptions:any = {
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          id: 'y-axis-1',
+          display: false,
+          position: 'left',
+          ticks: {
+            beginAtZero: false,
+            stepSize: 1,
+          },
+          scaleLabel:{
+            display: true,
+            labelString: 'Experiment Path',
+            fontColor: "#546372"
+          }
+        }
+      ]
+    }
+  };
+  public lineChartLegend:boolean = true;
+  public lineChartType:string = 'line';
+
   constructor(
     private entityService: EntityService
   ){}
 
   ngOnInit(){
+    this.getWorkcenterList()
     this.getSampleMap()
   }
 
+  getWorkcenterList(){
+    this.entityService.retrieveBySortBy(
+      {"where":'{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
+      },
+      "ORDER")
+      .subscribe(data => {
+        this.workcenterList = data
+        this.workcenterList.forEach(workcenter => {
+          this.lineChartLabels.push(workcenter[workcenter['SYS_LABEL']])
+        })
+      })
+  }
+
   getSampleMap() {
+    this.lineChartData = []
 
     this.entityService.retrieveBySortBy(
       {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE']},
@@ -29,21 +73,69 @@ export class SampleHistoryComponent {
 
           // only minions without the master
           if (sample['SYS_TARGET']){
-
-            if (!this.sampleMap[sample['SYS_TARGET']]) {
-              this.sampleMap[sample['SYS_TARGET']] = []
+            if (!this.sampleMatrix[sample['SYS_TARGET']]){
+              this.sampleMatrix[sample['SYS_TARGET']] = {}
             }
-            this.sampleMap[sample['SYS_TARGET']].push(sample)
+
+            if (!this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']]){
+              this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']] = sample
+            } else {
+              console.error("same sample treated more than one time.")
+            }
+
           }
+
+
+
+        })
+
+        let i=0
+        Object.keys(this.sampleMatrix).forEach(key => {
+          let chartData = {
+            data:[],
+            fill:false,
+            label:key,
+          }
+          i++
+
+            Object.keys(this.sampleMatrix[key]).forEach(sampleKey => {
+            //chartData.data.push(this.sampleMatrix[key][sampleKey]['SYS_SAMPLE_CODE'])
+            chartData.data.push(i)
+          })
+          this.lineChartData.push(chartData)
+
         })
 
       })
 
   }
 
+  getTargetSampleIds(){
+    return Object.keys(this.sampleMatrix)
+  }
+
   // what a pity solution
   getSampleKeys(){
     return Object.keys(this.sampleMap)
+  }
+
+  // events
+  public chartClicked(e:any):void {
+
+    // only take the top line, as the latest sample
+    if (e.active.length > 0){
+      let workcenterIndex = e.active[0]._index
+      let dataIndex = e.active[0]._chart.config.data.datasets[0].data[e.active[0]._index]
+      let workcenterLabel = e.active[0]._chart.config.data.labels[e.active[0]._index]
+      let targetId = Object.keys(this.sampleMatrix)[dataIndex-1]
+      console.log("label:", targetId)
+      console.log("workcenter:", this.workcenterList[workcenterIndex]['label'])
+
+    }
+  }
+
+  public chartHovered(e:any):void {
+    console.log(e);
   }
 
 }

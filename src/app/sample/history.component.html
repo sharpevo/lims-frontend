@@ -1,14 +1,35 @@
-<ul style="list-style:none">
-    <li
-        style="list-style:none">
-        <ul
-            style="list-style:none"
-            *ngFor="let targetId of getSampleKeys()">
-            <li
-                *ngFor="let sample of sampleMap[targetId]"
-                style="list-style:none">
-                {{sample['SYS_SAMPLE_CODE']}}
-            <li>
-        </ul>
-    </li>
-</ul>
+<!--<table style="margin-left: 50px; opacity: 0.5">-->
+    <!--<th-->
+        <!--*ngFor="let workcenter of workcenterList">-->
+        <!--<entity-tostring-->
+            <!--[entity]="workcenter">-->
+        <!--</entity-tostring>-->
+    <!--</th>-->
+    <!--<tr-->
+        <!--*ngFor="let targetId of getTargetSampleIds()">-->
+        <!--<td-->
+            <!--*ngFor="let workcenter of workcenterList">-->
+            <!--<md-checkbox-->
+                <!--color="primary"-->
+                <!--class="example-margin"-->
+                <!--[(ngModel)]="sample.TMP_CHECK">-->
+                <!--{{sample.SYS_SAMPLE_CODE}}-->
+            <!--</md-checkbox>-->
+            <!--<entity-tostring-->
+                <!--[entity]="sampleMatrix[targetId][workcenter['SYS_IDENTIFIER']+'/']">-->
+            <!--</entity-tostring>-->
+        <!--</td>-->
+    <!--</tr>-->
+<!--</table>-->
+<div
+    *ngIf="lineChartData.length > 0"
+    style="display: block;">
+    <canvas baseChart width="200" height="100"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+</div>
