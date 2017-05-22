@@ -45,7 +45,16 @@ export class SampleHistoryComponent {
           //fontColor: "#546372"
           //}
         }
-      ]
+      ],
+      xAxes: [{
+        type: 'linear',
+        position: 'bottom',
+        ticks:{
+          callback: (label, index, labels) => {
+            return this.lineChartLabels[label-1]
+          }
+        }
+      }]
     }
   };
   public lineChartLegend:boolean = true;
@@ -145,9 +154,10 @@ export class SampleHistoryComponent {
 
           let j = 0
 
+          let offset = 0
           this.workcenterList.forEach(workcenter => {
             if (!this.sampleMap[key][j]){
-              //console.log("xxx")
+              console.log("xxx")
               chartData.data.push(i-1)
             } else {
               //console.log("--- " + j + " ---", this.sampleMap[key][j].SYS_SAMPLE_CODE, ": ", this.sampleMap[key][j].SYS_TARGET)
@@ -157,11 +167,13 @@ export class SampleHistoryComponent {
               //console.log("W:", workcenterIdentifier)
               if (workcenterIdentifier + '/' == sampleGenreIdentifier){
                 j+=1
-                //console.log("==", i)
-                chartData.data.push(i)
+                console.log("==", j+offset, i)
+                chartData.data.push({x:j+offset,y:i})
               } else {
+                offset += 1
+                console.log("!=", offset)
                 //console.log("!=", i-1)
-                chartData.data.push(i-1)
+                //chartData.data.push(i-1)
               }
             }
 
@@ -183,6 +195,7 @@ export class SampleHistoryComponent {
           //}
           //})
 
+          console.log(chartData.data)
           this.lineChartData.push(chartData)
 
         })
@@ -203,12 +216,15 @@ export class SampleHistoryComponent {
   // events
   public chartClicked(e:any):void {
 
+    console.log(e)
     // only take the top line, as the latest sample
+    // TODO: but the previous sample does not exist for the later one
     if (e.active.length > 0){
+      console.log("^^", e.active)
       let lastSampleIndex = e.active.length - 1
       // sampleIndex actually, since the workcenter may not be chose by the sample
       let sampleIndex = e.active[lastSampleIndex]._index
-      let dataIndex = e.active[lastSampleIndex]._chart.config.data.datasets[lastSampleIndex].data[sampleIndex]
+      let dataIndex = e.active[lastSampleIndex]._chart.config.data.datasets[lastSampleIndex].data[sampleIndex].y
       let workcenterLabel = e.active[lastSampleIndex]._chart.config.data.labels[sampleIndex]
       let targetId = Object.keys(this.sampleMatrix)[dataIndex-1]
       let sampleKey = Object.keys(this.sampleMatrix[targetId])[sampleIndex]
@@ -217,9 +233,9 @@ export class SampleHistoryComponent {
       console.log("label:", targetId)
       console.log("workcenter:", this.workcenterList[sampleIndex]['label'])
       //console.log("sample:", Object.keys(this.sampleMatrix[targetId])[sampleIndex])
-      console.log(this.sampleMatrix[targetId][sampleKey])
-      //let sample = this.sampleMatrix[targetId][sampleKey]
-      let sample = this.sampleMap[targetId][this.sampleMap[targetId].length - this.workcenterList.length + sampleIndex]
+
+      //let sample = this.sampleMap[targetId][this.sampleMap[targetId].length - this.workcenterList.length + sampleIndex]
+      let sample = this.sampleMap[targetId][sampleIndex]
       console.log("sample:", sample['SYS_IDENTIFIER'], dataIndex)
       this.openNewEntityDialog(sample)
 
