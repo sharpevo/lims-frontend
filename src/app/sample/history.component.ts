@@ -22,7 +22,16 @@ export class SampleHistoryComponent {
   public lineChartData: any[] = []
   public lineChartLabels:Array<any> = []
   public lineChartOptions:any = {
+    labelFontColor : "#666",
+    scaleFontColor: "green",
     responsive: true,
+    hover: {
+      mode: "nearest",
+      intersec: true,
+    },
+    interaction: {
+      mode: "nearest",
+    },
     scales: {
       yAxes: [
         {
@@ -33,10 +42,7 @@ export class SampleHistoryComponent {
             beginAtZero: false,
             stepSize: 1,
             callback: (label, index, labels) => {
-
-              //if (label == index){
               return this.sample['SYS_SAMPLE_CODE'] + '-' + label
-              //}
             }
           },
           //scaleLabel:{
@@ -55,6 +61,35 @@ export class SampleHistoryComponent {
           }
         }
       }]
+    },
+    tooltips: {
+      callbacks: {
+        label: function(tooltipItem, data) {
+          let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
+          let scheduledDate = new Date(sample.SYS_DATE_SCHEDULED).toDateString()
+          let completedDate = new Date(sample.SYS_DATE_COMPLETED).toDateString()
+          return `id: ${sample.id} scheduled: ${scheduledDate} completed: ${completedDate?completedDate:'-'}`
+        }
+      }
+    },
+    animation: {
+      duration: 1,
+      onComplete: function () {
+        var chartInstance = this.chart,
+          ctx = chartInstance.ctx;
+        //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#aaa';
+
+        this.data.datasets.forEach(function (dataset, i) {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          meta.data.forEach(function (bar, index) {
+            var data = dataset.data[index]
+            ctx.fillText(data.scheduledDate, bar._model.x, bar._model.y - 5);
+          });
+        });
+      }
     }
   };
   public lineChartLegend:boolean = true;
@@ -92,6 +127,15 @@ export class SampleHistoryComponent {
   getSampleMap() {
     //this.lineChartData = []
 
+    //let colorList = [
+    //'#b58900',
+    //'#268bd2',
+    //'#d33682',
+    //'#2aa198',
+    //'#dc322f',
+    //'#859900',
+    //'#cb4b16',
+    //'#6c71c4']
     this.entityService.retrieveBySortBy(
       {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE']},
       //"createdAt")
@@ -127,14 +171,18 @@ export class SampleHistoryComponent {
         let i=0
         Object.keys(this.sampleMatrix).sort().forEach(key => {
           console.log("-------",key)
+          i += 1
+          let dataSetLabel = this.sampleMap[key][0][this.sampleMap[key][0]['SYS_LABEL']] + '-' + i
           let chartData = {
             data:[],
             fill:false,
             pointRadius: 5,
             pointHoverRadius: 7,
-            label:key,
+            //label:key,
+            label: dataSetLabel,
+            //backgroundColor: colorList[i % colorList.length]
+            //hoverBackgroundColor: "#FF6384",
           }
-          i += 1
 
           //Object.keys(this.sampleMatrix[key]).forEach(sampleKey => {
           ////chartData.data.push(this.sampleMatrix[key][sampleKey]['SYS_SAMPLE_CODE'])
@@ -168,7 +216,16 @@ export class SampleHistoryComponent {
               if (workcenterIdentifier + '/' == sampleGenreIdentifier){
                 j+=1
                 console.log("==", j+offset, i)
-                chartData.data.push({x:j+offset,y:i})
+                //chartData.data.push({x:j+offset,y:i, r:5})
+                let scheduledDate = new Date(this.sampleMap[key][j-1]['SYS_DATE_SCHEDULED'])
+                chartData.data.push({
+                  x:j+offset,
+                  y:i,
+                  sample: this.sampleMap[key][j-1],
+                  sampleId:this.sampleMap[key][j-1]['id'],
+                  //scheduledDate: scheduledDate.getFullYear() + '-' + scheduledDate.getMonth() + '-' + scheduledDate.getDate(),
+                  scheduledDate: (scheduledDate.getMonth()+1) + '月' + scheduledDate.getDate() + '日',
+                })
               } else {
                 offset += 1
                 console.log("!=", offset)
@@ -213,8 +270,15 @@ export class SampleHistoryComponent {
     return Object.keys(this.sampleMap)
   }
 
+  public chartClicked(eventObject: any){
+    let datasetIndex = eventObject.active[0]._datasetIndex
+    let sampleIndex = eventObject.active[0]._index
+    let sample = this.lineChartData[datasetIndex].data[sampleIndex].sample
+    console.log("__", sample)
+    this.openNewEntityDialog(sample)
+  }
   // events
-  public chartClicked(e:any):void {
+  public chartClicked2(e:any):void {
 
     console.log(e)
     // only take the top line, as the latest sample
@@ -235,7 +299,7 @@ export class SampleHistoryComponent {
       //console.log("sample:", Object.keys(this.sampleMatrix[targetId])[sampleIndex])
 
       //let sample = this.sampleMap[targetId][this.sampleMap[targetId].length - this.workcenterList.length + sampleIndex]
-      let sample = this.sampleMap[targetId][sampleIndex]
+      let sample = Object.keys(this.sampleMap)[targetId][sampleIndex]
       console.log("sample:", sample['SYS_IDENTIFIER'], dataIndex)
       this.openNewEntityDialog(sample)
 
