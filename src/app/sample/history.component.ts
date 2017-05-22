@@ -12,7 +12,6 @@ export class SampleHistoryComponent {
   @Input() sample: any
   @Input() selectedSampleList: any[]
   sampleMap: any = {}
-  sampleMatrix: any = {}
   workcenterList: any[] = []
 
   entity: any = {}
@@ -45,11 +44,6 @@ export class SampleHistoryComponent {
               return this.sample['SYS_SAMPLE_CODE'] + '-' + label
             }
           },
-          //scaleLabel:{
-          //display: true,
-          //labelString: 'Experiment Path',
-          //fontColor: "#546372"
-          //}
         }
       ],
       xAxes: [{
@@ -77,7 +71,6 @@ export class SampleHistoryComponent {
       onComplete: function () {
         var chartInstance = this.chart,
           ctx = chartInstance.ctx;
-        //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
         ctx.fillStyle = '#aaa';
@@ -125,17 +118,6 @@ export class SampleHistoryComponent {
   }
 
   getSampleMap() {
-    //this.lineChartData = []
-
-    //let colorList = [
-    //'#b58900',
-    //'#268bd2',
-    //'#d33682',
-    //'#2aa198',
-    //'#dc322f',
-    //'#859900',
-    //'#cb4b16',
-    //'#6c71c4']
     this.entityService.retrieveBySortBy(
       {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE']},
       //"createdAt")
@@ -146,31 +128,18 @@ export class SampleHistoryComponent {
 
           // only minions without the master
           if (sample['SYS_TARGET']){
-            if (!this.sampleMatrix[sample['SYS_TARGET']]){
-              this.sampleMatrix[sample['SYS_TARGET']] = {}
-            }
             if (!this.sampleMap[sample['SYS_TARGET']]){
               this.sampleMap[sample['SYS_TARGET']] = []
             }
 
             //console.log("#", sample.SYS_IDENTIFIER, sample.SYS_TARGET)
             this.sampleMap[sample['SYS_TARGET']].push(sample)
-
-            if (!this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']]){
-              this.sampleMatrix[sample['SYS_TARGET']][sample['SYS_GENRE_IDENTIFIER']] = sample
-            } else {
-              console.error("same sample treated more than one time.")
-            }
-
           }
-
-
 
         })
 
         let i=0
-        Object.keys(this.sampleMatrix).sort().forEach(key => {
-          console.log("-------",key)
+        Object.keys(this.sampleMap).sort().forEach(key => {
           i += 1
           let dataSetLabel = this.sampleMap[key][0][this.sampleMap[key][0]['SYS_LABEL']] + '-' + i
           let chartData = {
@@ -178,34 +147,15 @@ export class SampleHistoryComponent {
             fill:false,
             pointRadius: 5,
             pointHoverRadius: 7,
-            //label:key,
             label: dataSetLabel,
-            //backgroundColor: colorList[i % colorList.length]
             //hoverBackgroundColor: "#FF6384",
           }
-
-          //Object.keys(this.sampleMatrix[key]).forEach(sampleKey => {
-          ////chartData.data.push(this.sampleMatrix[key][sampleKey]['SYS_SAMPLE_CODE'])
-          //console.log("---")
-          //console.log("s", sampleKey)
-
-          //if (this.workcenterList[chartData.data.length]){
-
-          //if (sampleKey == this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/'){
-          //chartData.data.push(i)
-          //} else {
-          //console.log("w", this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'])
-          //chartData.data.push(i-1)
-          //}
-          //}
-          //})
 
           let j = 0
 
           let offset = 0
           this.workcenterList.forEach(workcenter => {
             if (!this.sampleMap[key][j]){
-              console.log("xxx")
               chartData.data.push(i-1)
             } else {
               //console.log("--- " + j + " ---", this.sampleMap[key][j].SYS_SAMPLE_CODE, ": ", this.sampleMap[key][j].SYS_TARGET)
@@ -215,7 +165,7 @@ export class SampleHistoryComponent {
               //console.log("W:", workcenterIdentifier)
               if (workcenterIdentifier + '/' == sampleGenreIdentifier){
                 j+=1
-                console.log("==", j+offset, i)
+                //console.log("==", j+offset, i)
                 //chartData.data.push({x:j+offset,y:i, r:5})
                 let scheduledDate = new Date(this.sampleMap[key][j-1]['SYS_DATE_SCHEDULED'])
                 chartData.data.push({
@@ -228,7 +178,7 @@ export class SampleHistoryComponent {
                 })
               } else {
                 offset += 1
-                console.log("!=", offset)
+                //console.log("!=", offset)
                 //console.log("!=", i-1)
                 //chartData.data.push(i-1)
               }
@@ -236,23 +186,7 @@ export class SampleHistoryComponent {
 
           })
 
-          //this.sampleMap[key].forEach(sample => {
-          //j += 1
-          //console.log("--- " + j + " ---", sample.SYS_SAMPLE_CODE, ": ", sample.SYS_TARGET)
-          //if (this.workcenterList[chartData.data.length]){
-          //console.log("s '", sample['SYS_GENRE_IDENTIFIER'], "'")
-          //console.log("w '", this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/', "'")
-          //if (sample['SYS_GENRE_IDENTIFIER'] == this.workcenterList[chartData.data.length]['SYS_IDENTIFIER'] + '/'){
-          //console.log("=", i)
-          //chartData.data.push(i)
-          //} else {
-          //console.log("!=", i-1)
-          //chartData.data.push(i-1)
-          //}
-          //}
-          //})
-
-          console.log(chartData.data)
+          //console.log(chartData.data)
           this.lineChartData.push(chartData)
 
         })
@@ -261,48 +195,17 @@ export class SampleHistoryComponent {
 
   }
 
-  getTargetSampleIds(){
-    return Object.keys(this.sampleMatrix)
-  }
-
   // what a pity solution
   getSampleKeys(){
     return Object.keys(this.sampleMap)
   }
 
   public chartClicked(eventObject: any){
-    let datasetIndex = eventObject.active[0]._datasetIndex
-    let sampleIndex = eventObject.active[0]._index
-    let sample = this.lineChartData[datasetIndex].data[sampleIndex].sample
-    console.log("__", sample)
-    this.openNewEntityDialog(sample)
-  }
-  // events
-  public chartClicked2(e:any):void {
-
-    console.log(e)
-    // only take the top line, as the latest sample
-    // TODO: but the previous sample does not exist for the later one
-    if (e.active.length > 0){
-      console.log("^^", e.active)
-      let lastSampleIndex = e.active.length - 1
-      // sampleIndex actually, since the workcenter may not be chose by the sample
-      let sampleIndex = e.active[lastSampleIndex]._index
-      let dataIndex = e.active[lastSampleIndex]._chart.config.data.datasets[lastSampleIndex].data[sampleIndex].y
-      let workcenterLabel = e.active[lastSampleIndex]._chart.config.data.labels[sampleIndex]
-      let targetId = Object.keys(this.sampleMatrix)[dataIndex-1]
-      let sampleKey = Object.keys(this.sampleMatrix[targetId])[sampleIndex]
-      console.log("index:", sampleIndex)
-      console.log("dataIndex:", dataIndex)
-      console.log("label:", targetId)
-      console.log("workcenter:", this.workcenterList[sampleIndex]['label'])
-      //console.log("sample:", Object.keys(this.sampleMatrix[targetId])[sampleIndex])
-
-      //let sample = this.sampleMap[targetId][this.sampleMap[targetId].length - this.workcenterList.length + sampleIndex]
-      let sample = Object.keys(this.sampleMap)[targetId][sampleIndex]
-      console.log("sample:", sample['SYS_IDENTIFIER'], dataIndex)
+    if (eventObject.active.length > 0){
+      let datasetIndex = eventObject.active[0]._datasetIndex
+      let sampleIndex = eventObject.active[0]._index
+      let sample = this.lineChartData[datasetIndex].data[sampleIndex].sample
       this.openNewEntityDialog(sample)
-
     }
   }
 
