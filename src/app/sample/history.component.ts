@@ -219,11 +219,14 @@ export class SampleHistoryComponent {
   }
 
   openNewEntityDialog(sample: any) {
-    let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
+    let dialogRef = this.dialog.open(SampleFormDialog, {height: '850px', width: '600px'});
     dialogRef.componentInstance.config.entity = this.entity
     dialogRef.componentInstance.config.issueSample = true
     dialogRef.componentInstance.config.sampleList = [sample]
     dialogRef.afterClosed().subscribe(result => {
+      this.sampleMap = {}
+      this.lineChartData = []
+      this.getSampleMap()
     });
   }
 }
