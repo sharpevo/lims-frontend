@@ -115,4 +115,26 @@ export class SampleService{
     previousSample['TMP_NEXT_SAMPLE_ID'] = sample.id
     return previousSample
   }
+
+  terminateSample(sample: any): any{
+    sample['SYS_DATE_TERMINATED'] = new Date()
+    return this.entityService.update(sample)
+  }
+
+  //terminateSamples(leadingSample: any): any[]{
+
+  //let terminateObs = []
+  //this.entityService.retrieveBy(
+  //{'SYS_SAMPLE_CODE': leadingSample['SYS_SAMPLE_CODE']})
+  //.subscribe(samples => {
+  //samples.forEach(sample => {
+  //console.log("-->", sample.id)
+  //sample['SYS_DATE_TERMINATED'] = new Date()
+  //terminateObs.push(
+  //this.entityService.update(sample))
+  //})
+  //})
+  //return terminateObs
+  //}
+
 }
