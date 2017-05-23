@@ -42,6 +42,9 @@
             [(ngModel)]="sample.TMP_CHECK">
             {{sample.SYS_SAMPLE_CODE}}
         </md-checkbox>
+        <sample-history
+            [sample]="sample">
+        </sample-history>
     </div>
     <div
         fxLayout="row"

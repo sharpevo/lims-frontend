@@ -48,7 +48,8 @@ export class WorkcenterSampleScheduledComponent{
         if (previousSample['SYS_DATE_SCHEDULED'] &&
             !previousSample['SYS_DATE_COMPLETED'] &&
               !previousSample['SYS_DATE_TERMINATED'] &&
-                !this.sampleList[i][operatorCode]) {
+                !this.sampleList[i]['SYS_DATE_TERMINATED'] &&
+                  !this.sampleList[i][operatorCode]) {
           this.scheduledSampleList.push(this.sampleList[i])
         }
       }

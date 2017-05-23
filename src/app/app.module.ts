@@ -41,6 +41,10 @@ import {AttributeFormDialog} from './attribute/form.dialog.component';
 
 import {SampleService} from './models/sample';
 
+import {SampleHistoryComponent} from './sample/history.component'
+
+import {ChartsModule} from 'ng2-charts';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -70,6 +74,8 @@ import {SampleService} from './models/sample';
 
     SampleInfoInlineComponent,
     HybridSampleDestructorComponent,
+
+    SampleHistoryComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -84,6 +90,7 @@ import {SampleService} from './models/sample';
     FlexLayoutModule,
     MaterialModule.forRoot(),
     routingModule,
+    ChartsModule,
 
   ],
   providers: [

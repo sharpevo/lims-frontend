@@ -8,6 +8,8 @@ import {GenreService} from '../genre/service'
 import {EntityService} from '../entity/service'
 import {SampleService} from '../models/sample'
 
+import {Observable} from 'rxjs/Observable'
+
 @Component({
   selector: 'sample-form-dialog',
   templateUrl: './form.dialog.component.html',
@@ -96,10 +98,57 @@ export class SampleFormDialog {
         sample['SYS_ENTITY_TYPE'] = 'collection'
         sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
           '/' +
-          sample['SYS_SAMPLE_CODE']
+          sample['SYS_SAMPLE_CODE'] + '.' + this.object.TMP_CODE
+
+        // retain the date for the sample
+        let originalSampleSchuduledDate = sample['SYS_DATE_SCHEDULED']
         sample['SYS_DATE_SCHEDULED'] = this.object['SYS_DATE_SCHEDULED']
         sample['SYS_GENRE'] = this.object['SYS_GENRE']
-        this.createObject(sample)
+
+        // process samples already in the LIMS
+        // delete id before creation if the sample is inside of LIMS
+        if (sample.id){
+
+          // terminate other uncompleted samples in the system
+
+          let terminateObs = []
+          this.entityService.retrieveBy(
+            {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
+              'sort': 'SYS_DATE_SCHEDULED'})
+              .subscribe(samples => {
+                samples.forEach(sampleItem => {
+                  // only process samples after the current sample
+                  // including other pathway
+
+                  let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
+                  let refSampleDate = new Date(originalSampleSchuduledDate)
+                  //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
+                  if (sampleDate > refSampleDate){
+                    console.log( sampleDate, ">", refSampleDate)
+                    //console.log("-->", sampleItem.id)
+                    sampleItem['SYS_DATE_TERMINATED'] = new Date()
+                    terminateObs.push(
+                      this.entityService.update(sampleItem))
+                  }
+                })
+
+                console.log(">>", terminateObs)
+                Observable
+                .forkJoin(terminateObs)
+                .subscribe((data: any[][]) => {
+                  console.log("---->", data)
+                  delete sample.id
+                  delete sample._id
+                  delete sample.SYS_TARGET
+                  // create object after terminating samples
+                  this.createObject(sample)
+                })
+              })
+
+
+        } else {
+          this.createObject(sample)
+        }
       })
     }
 
