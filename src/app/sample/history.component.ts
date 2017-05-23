@@ -60,9 +60,9 @@ export class SampleHistoryComponent {
       callbacks: {
         label: function(tooltipItem, data) {
           let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
-          let scheduledDate = new Date(sample.SYS_DATE_SCHEDULED).toDateString()
+          let terminatedDate = new Date(sample.SYS_DATE_TERMINATED).toDateString()
           let completedDate = new Date(sample.SYS_DATE_COMPLETED).toDateString()
-          return `id: ${sample.id} scheduled: ${scheduledDate} completed: ${completedDate?completedDate:'-'}`
+          return `id: ${sample.id} completed: ${completedDate} terminated: ${terminatedDate}`
         }
       }
     },
