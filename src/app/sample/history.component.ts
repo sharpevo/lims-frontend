@@ -145,10 +145,10 @@ export class SampleHistoryComponent {
           let chartData = {
             data:[],
             fill:false,
-            pointRadius: 5,
-            pointHoverRadius: 7,
+            pointRadius: 6,
+            pointHoverRadius: 10,
             label: dataSetLabel,
-            //hoverBackgroundColor: "#FF6384",
+            pointStyle:[],
           }
 
           let j = 0
@@ -176,6 +176,12 @@ export class SampleHistoryComponent {
                   //scheduledDate: scheduledDate.getFullYear() + '-' + scheduledDate.getMonth() + '-' + scheduledDate.getDate(),
                   scheduledDate: (scheduledDate.getMonth()+1) + '月' + scheduledDate.getDate() + '日',
                 })
+
+                if (this.sampleMap[key][j-1]['SYS_DATE_TERMINATED']){
+                  chartData.pointStyle.push('triangle')
+                } else {
+                  chartData.pointStyle.push('circle')
+                }
               } else {
                 offset += 1
                 //console.log("!=", offset)
@@ -188,7 +194,6 @@ export class SampleHistoryComponent {
 
           //console.log(chartData.data)
           this.lineChartData.push(chartData)
-
         })
 
       })
