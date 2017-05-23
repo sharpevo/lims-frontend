@@ -224,6 +224,9 @@ export class SampleHistoryComponent {
     dialogRef.componentInstance.config.issueSample = true
     dialogRef.componentInstance.config.sampleList = [sample]
     dialogRef.afterClosed().subscribe(result => {
+      this.sampleMap = {}
+      this.lineChartData = []
+      this.getSampleMap()
     });
   }
 }
