@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {Observable} from 'rxjs/Observable'
+import {SampleService} from '../models/sample'
+
 
 @Component({
   selector: 'workcenter-sample-completed',
@@ -11,9 +13,11 @@ export class WorkcenterSampleCompletedComponent{
   @Input() callback
 
   completedSampleList: any[] = []
+  builtSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
+    private sampleService: SampleService,
   ){}
 
   ngOnInit(){
@@ -32,5 +36,6 @@ export class WorkcenterSampleCompletedComponent{
         this.completedSampleList.push(sample)
       }
     })
+    this.builtSampleList = this.sampleService.buildSampleInlineList(this.completedSampleList)
   }
 }
