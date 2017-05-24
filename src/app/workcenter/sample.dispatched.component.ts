@@ -13,6 +13,7 @@ export class WorkcenterSampleDispatchedComponent{
   @Input() checkedEntityList
 
   dispatchedSampleList: any[] = []
+  builtSampleList: any[] = []
   sampleCount: number = 0
 
   constructor(
@@ -64,6 +65,7 @@ export class WorkcenterSampleDispatchedComponent{
       }
 
       this.sampleCount = this.dispatchedSampleList.length
+      this.builtSampleList = this.sampleService.buildSampleInlineList(this.dispatchedSampleList)
     })
 
   }

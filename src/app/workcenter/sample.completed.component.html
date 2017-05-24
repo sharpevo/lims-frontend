@@ -1,7 +1,14 @@
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-    <sample-info-inline
+    <hybrid-sample-destructor
         *ngIf="sampleList?.length > 0 && completedSampleList.length > 0"
-        [shownSampleList]="completedSampleList"
-        [sampleList]="sampleList">
-    </sample-info-inline>
+        [hybridSampleList]="sampleList"
+        [shownSampleList]="builtSampleList"
+        [showCheckbox]="false">
+    </hybrid-sample-destructor>
+
+    <!--<sample-info-inline-->
+        <!--*ngIf="sampleList?.length > 0 && completedSampleList.length > 0"-->
+        <!--[shownSampleList]="completedSampleList"-->
+        <!--[sampleList]="sampleList">-->
+    <!--</sample-info-inline>-->
 </div>
