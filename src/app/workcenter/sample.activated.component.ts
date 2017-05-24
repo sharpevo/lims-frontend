@@ -14,6 +14,7 @@ export class WorkcenterSampleActivatedComponent{
   sampleCount: number = 0
 
   activatedSampleList: any[] = []
+  builtSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -57,11 +58,13 @@ export class WorkcenterSampleActivatedComponent{
             previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
             // push previous sample in the avalable list to get attributes
             //previousSample['TMP_NEXT_SAMPLE_ID'] = this.sampleList[i].id
+
             this.activatedSampleList.push(previousSample)
           }
         }
       }
       this.sampleCount = this.activatedSampleList.length
+      this.builtSampleList = this.sampleService.buildSampleInlineList(this.activatedSampleList)
 
     })
   }
