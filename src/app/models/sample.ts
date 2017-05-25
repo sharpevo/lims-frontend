@@ -137,4 +137,18 @@ export class SampleService{
   //return terminateObs
   //}
 
+  retrieveRootTarget(sampleId: string): string{
+    this.entityService.retrieveBy({id: sampleId})
+    .subscribe(data => {
+      console.log("Analyze target:", data)
+      if (data['SYS_TARGET']){
+        this.retrieveRootTarget(data['SYS_TARGET']['id'])
+      } else {
+        return data['SYS_TARGET']
+      }
+    })
+
+    return ''
+  }
+
 }

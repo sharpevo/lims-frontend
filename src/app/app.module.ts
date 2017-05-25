@@ -44,6 +44,7 @@ import {SampleService} from './models/sample';
 import {SampleHistoryComponent} from './sample/history.component'
 
 import {ChartsModule} from 'ng2-charts';
+import {PluginIndexIndicatorComponent} from './plugins/index.indicator'
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import {ChartsModule} from 'ng2-charts';
     HybridSampleDestructorComponent,
 
     SampleHistoryComponent,
+    PluginIndexIndicatorComponent,
   ],
   entryComponents:[
     GenreFormDialog,

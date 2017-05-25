@@ -105,7 +105,7 @@ export class TreeViewComponent {
   }
 
   openNewGenreDialog(entity: any) {
-    let dialogRef = this.dialog.open(GenreFormDialog, {width: '600px'});
+    let dialogRef = this.dialog.open(GenreFormDialog, {height:'850px', width: '600px'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
@@ -113,7 +113,7 @@ export class TreeViewComponent {
   }
 
   openNewEntityDialog(entity: any) {
-    let dialogRef = this.dialog.open(EntityFormDialog, {width: '600px'});
+    let dialogRef = this.dialog.open(EntityFormDialog, {height:'850px', width: '600px'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
@@ -121,7 +121,7 @@ export class TreeViewComponent {
   }
 
   openNewAttributeDialog(entity: any) {
-    let dialogRef = this.dialog.open(AttributeFormDialog, {width:'600px'});
+    let dialogRef = this.dialog.open(AttributeFormDialog, {height:'850px', width:'600px'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.afterClosed().subscribe(result => {
       this.selectedOption = result;
