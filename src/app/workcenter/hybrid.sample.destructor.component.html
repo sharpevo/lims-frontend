@@ -50,9 +50,17 @@
                     </md-checkbox>
                 </span>
             </span>
-            <entity-info-inline
-                [entity]="sample">
-            </entity-info-inline>
+            <span
+                style="color: rgba(0, 0, 0, .54)">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+                <b>|</b>
+                <plugin-index-indicator
+                    *ngIf="sample"
+                    [sample]='sample'>
+                </plugin-index-indicator>
+            </span>
         </div>
     </span>
 </div>
