@@ -10,6 +10,7 @@ export class HybridSampleDestructorComponent {
   @Input() shownSampleList
   @Input() showCheckbox
   @Input() expandall
+  @Input() workcenter
   item: any = {}
   maxLoop: number = 5
   sampleList: any[]
