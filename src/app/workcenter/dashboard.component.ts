@@ -144,7 +144,7 @@ export class WorkcenterDashboardComponent{
   }
 
   openNewEntityDialog(entity: any) {
-    let dialogRef = this.dialog.open(SampleFormDialog, {width: '600px'});
+    let dialogRef = this.dialog.open(SampleFormDialog, {height: '850px', width: '600px'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
