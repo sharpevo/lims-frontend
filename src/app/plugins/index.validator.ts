@@ -67,7 +67,9 @@ export class PluginIndexValidatorComponent {
       //console.log(key)
       //console.log(seqMap[key])
       //if (seqMap[sample['SYS_INDEX_SEQUENCE']] === '') {
-      if (seqMap[key] == null) {
+
+      // key != null to treat blank index sequence as invalid one
+      if (seqMap[key] == null && key != null) {
         // id is more stable than SYS_SAMLPE_CODE
         // or index note that 0=='' returns true
         seqMap[key] = ''+i
