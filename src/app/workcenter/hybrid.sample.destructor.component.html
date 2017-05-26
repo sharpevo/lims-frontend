@@ -21,6 +21,7 @@
             style="margin-left: 50px">
             <hybrid-sample-destructor
                 [expandall] = "expandall"
+                [workcenter] = "workcenter"
                 [showCheckbox]="showCheckbox"
                 [shownSampleList]="shownSampleList[key]"
                 [hybridSampleList]="hybridSampleList">
@@ -50,9 +51,19 @@
                     </md-checkbox>
                 </span>
             </span>
-            <entity-info-inline
-                [entity]="sample">
-            </entity-info-inline>
+            <span
+                style="color: rgba(0, 0, 0, .54)">
+                <entity-info-inline
+                    [entity]="sample">
+                </entity-info-inline>
+                <span
+                    *ngIf="workcenter">
+                    <plugin-index-indicator
+                        *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR'] && sample"
+                        [sample]='sample'>
+                    </plugin-index-indicator>
+                </span>
+            </span>
         </div>
     </span>
 </div>

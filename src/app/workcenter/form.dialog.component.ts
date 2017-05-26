@@ -94,6 +94,18 @@ export class SampleFormDialog {
         if (!sample['SYS_SAMPLE_CODE']){
           console.log("invalid sample code")
         }
+
+        // Copy attributes from object to sample
+        // the object does not provide an id since the attributes are input in page
+        // Keys are including
+        // Assign key: TMP_CODE
+        // Assign key: SYS_ENTITY_TYPE
+        // Assign key: SYS_GENRE
+        // Assign key: SYS_LABEL
+        Object.keys(this.object).forEach(key => {
+          sample[key] = this.object[key]
+        })
+
         sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
         sample['SYS_ENTITY_TYPE'] = 'collection'
         sample['SYS_IDENTIFIER'] = this.config.entity['SYS_IDENTIFIER'] +
@@ -102,8 +114,6 @@ export class SampleFormDialog {
 
         // retain the date for the sample
         let originalSampleSchuduledDate = sample['SYS_DATE_SCHEDULED']
-        sample['SYS_DATE_SCHEDULED'] = this.object['SYS_DATE_SCHEDULED']
-        sample['SYS_GENRE'] = this.object['SYS_GENRE']
 
         // process samples already in the LIMS
         // delete id before creation if the sample is inside of LIMS
@@ -235,7 +245,7 @@ export class SampleFormDialog {
         this.entityService.create(object)
         .subscribe(data =>{
           this.makeConn(data, this.parentMap)
-          console.log('Add Entity:', data)
+          console.log('Issue sample:', data)
           this.showMessage("Added")
         })
       } else {
