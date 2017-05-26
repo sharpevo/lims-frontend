@@ -11,6 +11,7 @@ export class WorkcenterSampleDispatchedComponent{
   @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
+  @Input() workcenter
 
   dispatchedSampleList: any[] = []
   builtSampleList: any[] = []
