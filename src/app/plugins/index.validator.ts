@@ -57,6 +57,7 @@ export class PluginIndexValidatorComponent {
   validateIndices(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     this.resultList = []
+    let resultFlag = true
     if (this.selectedSampleList.length == 0){
       return
     }
@@ -76,12 +77,18 @@ export class PluginIndexValidatorComponent {
         this.resultList[i] = true
       } else {
         this.result = false
+        resultFlag = false
         this.resultList[i] = false
         this.resultList[Number(seqMap[key])] = false
-        return
+        // keep validating for all the left samples
+        // return
       }
     }
-    this.result = true
+    if (resultFlag){
+      this.result = true
+    } else {
+      this.result = false
+    }
 
   }
 
