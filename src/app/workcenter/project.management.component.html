@@ -41,6 +41,12 @@
             class="example-margin"
             [(ngModel)]="sample.TMP_CHECK">
             {{sample.SYS_SAMPLE_CODE}}
+            -
+            {{sample.SYS_PANEL_CODE}}
+            -
+            {{sample.SYS_INDEX_CODE}}
+            -
+            {{sample.SYS_INDEX_SEQUENCE}}
         </md-checkbox>
         <sample-history
             [sample]="sample">
