@@ -82,9 +82,19 @@
                             {{i+1}}
                         </td>
                         <td>
-                            <entity-tostring
-                                [entity]="sample">
-                            </entity-tostring>
+                            <span
+                                *ngIf="resultList[i]">
+                                <entity-tostring
+                                    [entity]="sample">
+                                </entity-tostring>
+                            </span>
+                            <span
+                                style="color:red"
+                                *ngIf="!resultList[i]">
+                                <entity-tostring
+                                    [entity]="sample">
+                                </entity-tostring>
+                            </span>
                         </td>
                         <td>
                             <span
