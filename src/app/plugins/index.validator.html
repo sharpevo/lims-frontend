@@ -1,7 +1,24 @@
 <br/>
 <md-card>
-    <md-card-subtitle>
-        INDEX VALIDATION PLUGIN
+    <md-card-subtitle style="width:100%">
+        <div
+            *ngIf="selectedSampleList.length == 0">
+            INDEX VALIDATION
+        </div>
+        <div
+            style="width:100%"
+            *ngIf="selectedSampleList.length > 0">
+            <span
+                *ngIf="result"
+                class="msg-success">
+                INDEX VALIDATION: Passed
+            </span>
+            <span
+                *ngIf="!result"
+                class="msg-fail">
+                INDEX VALIDATION: Failed
+            </span>
+        </div>
     </md-card-subtitle>
     <md-card-content>
         <p
@@ -9,20 +26,34 @@
             *ngIf="selectedSampleList.length == 0">
             No sample selected
         </p>
-        <md-chip-list
-            style="font:0.7em; text-align: center"
-            *ngIf="selectedSampleList.length > 0">
-            <md-chip
-                style="background:#859900; color: white;"
-                *ngIf="result">
-                Validation Passed
-            </md-chip>
-            <md-chip
-                style="background:#cb4b16; color: white"
-                *ngIf="!result">
-                Validation Failed
-            </md-chip>
-        </md-chip-list>
+        <!--<md-chip-list-->
+            <!--style="font:0.7em; text-align: center"-->
+            <!--*ngIf="selectedSampleList.length > 0">-->
+            <!--<md-chip-->
+                <!--style="background:#859900; color: white;"-->
+                <!--*ngIf="result">-->
+                <!--Validation Passed-->
+            <!--</md-chip>-->
+            <!--<md-chip-->
+                <!--style="background:#cb4b16; color: white"-->
+                <!--*ngIf="!result">-->
+                <!--Validation Failed-->
+            <!--</md-chip>-->
+
+        <!--</md-chip-list>-->
+        <!--<div-->
+            <!--*ngIf="selectedSampleList.length > 0">-->
+            <!--<div-->
+                <!--*ngIf="result"-->
+                <!--class="msg-success">-->
+                <!--Validation Passed-->
+            <!--</div>-->
+            <!--<div-->
+                <!--*ngIf="!result"-->
+                <!--class="msg-fail">-->
+                <!--Validation Failed-->
+            <!--</div>-->
+        <!--</div>-->
         <br/>
         <span
             *ngIf="selectedSampleList.length > 0">
