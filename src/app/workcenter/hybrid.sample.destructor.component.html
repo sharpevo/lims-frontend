@@ -58,6 +58,10 @@
                 </entity-info-inline>
                 <span
                     *ngIf="workcenter">
+                    <plugin-panel-indicator
+                        *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR'] && sample"
+                        [sample]='sample'>
+                    </plugin-panel-indicator>
                     <plugin-index-indicator
                         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR'] && sample"
                         [sample]='sample'>
