@@ -52,7 +52,8 @@ export class WorkcenterSampleDispatchedComponent{
         let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
 
         if (currentSample[operatorCode] &&
-            !currentSample['SYS_DATE_COMPLETED']) {
+            !currentSample['SYS_DATE_TERMINATED'] &&
+              !currentSample['SYS_DATE_COMPLETED']) {
           if (previousSample.id == currentSample.id){
             currentSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
             currentSample['TMP_NEXT_SAMPLE_INDEX'] = i
