@@ -28,6 +28,9 @@ export class SampleFormDialog {
     {value: "collection", title: "Collection"},
     {value: "object", title: "Object"},
   ]
+
+  excelResult: any[] = []
+
   constructor(
     private snackBar: MdSnackBar,
     private genreService: GenreService,
@@ -504,6 +507,20 @@ export class SampleFormDialog {
 
     showMessage(msg: string) {
       this.snackBar.open(msg, 'UNDO', {duration: 3000});
+    }
+
+    submitExcel(event){
+      let file = event.srcElement.files;
+      let postData = {field1:"field1", field2:"field2"}; // Put your form data variable. This is only example.
+      console.log(file)
+      this.entityService.postFile(file)
+      .subscribe(data => {
+        this.excelResult = data[0]
+      })
+
+      //this._service.postWithFile(this.baseUrl + "add-update",postData,file).then(result => {
+      //console.log(result);
+      //});
     }
 
 
