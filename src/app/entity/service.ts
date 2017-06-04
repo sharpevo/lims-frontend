@@ -213,6 +213,17 @@ export class EntityService {
     return this.http.get(`${this.url}?where={"genre": "${genre}", "identifier":{"contains":"${identifier}"}}`)
     .map(res => res.json())
   }
+
+  postFile(file: any){
+    let formData = new FormData()
+    let headers = new Headers();
+    //headers.set('Content-Type', 'multipart/form-data');
+    formData.append('sampleExcel', file[0], file[0].name)
+    console.log(file[0])
+    console.log(file[0].name)
+    return this.http.post('http://dell:3000/excel', formData, {headers: headers})
+    .map(res => res.json())
+  }
 }
 
 
