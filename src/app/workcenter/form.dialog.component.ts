@@ -472,7 +472,7 @@ export class SampleFormDialog {
       .subscribe(data => {
         this.entityList = data.sort(
           (a,b) => {
-            if (a.updatedAt > b.updatedAt) {
+            if (a.updatedAt < b.updatedAt) {
               return 1
             } else {
               return -1
