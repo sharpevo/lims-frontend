@@ -145,7 +145,9 @@ export class WorkcenterDashboardComponent{
 
   selectAllSamples(){
     this.sampleList.forEach(sample => {
-      sample.TMP_CHECKED = !sample.TMP_CHECKED
+      if (!sample['SYS_DATE_TERMINATED']){
+        sample.TMP_CHECKED = !sample.TMP_CHECKED
+      }
     })
   }
 
