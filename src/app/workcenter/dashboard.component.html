@@ -43,6 +43,11 @@
                     fxLayout="row"
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center">
+                    <button
+                        md-button
+                        (click)="selectAllSamples()">
+                        TOGGLE
+                    </button>
                     <md-select
                         [(ngModel)]="operator"
                         placeholder="Operator">
@@ -87,6 +92,11 @@
                         fxLayout="row"
                         fxLayoutGap="10px"
                         fxLayoutAlign="start center">
+                        <button
+                            md-button
+                            (click)="selectAllSamples()">
+                            TOGGLE
+                        </button>
                         <button
                             md-button
                             (click)="undispatch()">

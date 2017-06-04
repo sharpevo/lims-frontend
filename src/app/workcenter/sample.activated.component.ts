@@ -51,9 +51,10 @@ export class WorkcenterSampleActivatedComponent{
         if (!this.sampleList[i][operatorCode]) {
 
           // previous sample should have been completed in some form
-          if (previousSample['SYS_DATE_COMPLETED'] ||
-              previousSample['SYS_DATE_TERMINATED'] ||
-                previousSample.id == this.sampleList[i].id){
+          if ( !this.sampleList[i]['SYS_DATE_TERMINATED'] &&
+              (previousSample['SYS_DATE_COMPLETED'] ||
+               previousSample['SYS_DATE_TERMINATED'] ||
+                 previousSample.id == this.sampleList[i].id)){
             // location indicator for sampleList
             previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
             // push previous sample in the avalable list to get attributes

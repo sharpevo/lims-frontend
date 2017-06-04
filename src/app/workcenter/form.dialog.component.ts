@@ -133,7 +133,7 @@ export class SampleFormDialog {
                   let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
                   let refSampleDate = new Date(originalSampleSchuduledDate)
                   //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
-                  if (sampleDate > refSampleDate){
+                  if (sampleDate >= refSampleDate){
                     console.log( sampleDate, ">", refSampleDate)
                     //console.log("-->", sampleItem.id)
                     sampleItem['SYS_DATE_TERMINATED'] = new Date()
@@ -472,7 +472,7 @@ export class SampleFormDialog {
       .subscribe(data => {
         this.entityList = data.sort(
           (a,b) => {
-            if (a.updatedAt > b.updatedAt) {
+            if (a.updatedAt < b.updatedAt) {
               return 1
             } else {
               return -1

@@ -30,7 +30,7 @@ export class EntityCollectionExpansionComponent {
     this.entityService.retrieveEntity(this.entity.id, "")
     .subscribe(data => {
       //console.log(data)
-      this.entityList = data
+      this.entityList = data.sort((a,b) => a.SYS_ORDER > b.SYS_ORDER)
     })
   }
 

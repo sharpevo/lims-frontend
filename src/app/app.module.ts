@@ -46,6 +46,7 @@ import {SampleHistoryComponent} from './sample/history.component'
 import {ChartsModule} from 'ng2-charts';
 import {PluginIndexIndicatorComponent} from './plugins/index.indicator'
 import {PluginIndexValidatorComponent} from './plugins/index.validator'
+import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import {PluginIndexValidatorComponent} from './plugins/index.validator'
     SampleHistoryComponent,
     PluginIndexIndicatorComponent,
     PluginIndexValidatorComponent,
+    PluginPanelIndicatorComponent,
   ],
   entryComponents:[
     GenreFormDialog,

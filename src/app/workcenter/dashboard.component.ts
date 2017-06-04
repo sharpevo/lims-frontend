@@ -143,6 +143,14 @@ export class WorkcenterDashboardComponent{
     })
   }
 
+  selectAllSamples(){
+    this.sampleList.forEach(sample => {
+      if (!sample['SYS_DATE_TERMINATED']){
+        sample.TMP_CHECKED = !sample.TMP_CHECKED
+      }
+    })
+  }
+
   openNewEntityDialog(entity: any) {
     let dialogRef = this.dialog.open(SampleFormDialog, {height: '850px', width: '600px'});
     dialogRef.componentInstance.config.entity = entity
