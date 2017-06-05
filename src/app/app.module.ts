@@ -47,6 +47,7 @@ import {ChartsModule} from 'ng2-charts';
 import {PluginIndexIndicatorComponent} from './plugins/index.indicator'
 import {PluginIndexValidatorComponent} from './plugins/index.validator'
 import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
+import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
     PluginIndexIndicatorComponent,
     PluginIndexValidatorComponent,
     PluginPanelIndicatorComponent,
+    PluginExcelProcessorComponent,
   ],
   entryComponents:[
     GenreFormDialog,

@@ -1,0 +1,22 @@
+<br/>
+<md-card>
+    <md-card-subtitle style="width:100%">
+        <div>
+            EXCEL PROCESSOR
+        </div>
+    </md-card-subtitle>
+    <md-card-content>
+        <input type="file" name="excelFile" (change)="submitExcel($event)">
+        <div
+            *ngFor="let row of excelResult">
+            <span
+                style="margin-right: 10px"
+                *ngFor="let key of row|objectKeys">
+                <span style="opacity:0.3">
+                    {{key}}:
+                </span>
+                {{row[key]}}
+            </span>
+        </div>
+    </md-card-content>
+</md-card>
