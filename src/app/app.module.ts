@@ -14,6 +14,7 @@ import {ObjectKeysPipe} from './objectKeys.pipe'
 import {EntityService} from './entity/service';
 import {GenreService} from './genre/service';
 import {AttributeService} from './attribute/service';
+import {UtilService} from './util/service';
 
 import {EntityCollectionExpansionComponent} from './entity/collection.expansion.component';
 import {EntityFormInlineComponent} from './entity/form.inline.component';
@@ -106,6 +107,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
     GenreService,
     AttributeService,
     SampleService,
+    UtilService,
   ],
   bootstrap: [AppComponent]
 })
