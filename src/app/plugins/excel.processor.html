@@ -6,17 +6,42 @@
         </div>
     </md-card-subtitle>
     <md-card-content>
-        <input type="file" name="excelFile" (change)="submitExcel($event)">
         <div
-            *ngFor="let row of excelResult">
-            <span
-                style="margin-right: 10px"
-                *ngFor="let key of row|objectKeys">
-                <span style="opacity:0.3">
-                    {{key}}:
+            fxLayout="row"
+            fxLayoutGap="10px"
+            fxLayoutAlign="start center">
+            <button
+                md-button
+                (click)="exportSample()">
+                EXPORT
+            </button>
+            <button
+                md-button
+                (click)="importSample()">
+                IMPORT
+            </button>
+        </div>
+        <br/>
+        <input
+            type="file"
+            name="excelFile"
+            (change)="submitExcel($event)"/>
+        <br/>
+        <br/>
+        <div
+            fxLayout="column"
+            fxLayoutAlign="start stretch">
+            <div
+                *ngFor="let row of excelResult">
+                <span
+                    style="margin-right: 10px"
+                    *ngFor="let key of row|objectKeys">
+                    <span style="opacity:0.3">
+                        {{key}}:
+                    </span>
+                    {{row[key]}}
                 </span>
-                {{row[key]}}
-            </span>
+            </div>
         </div>
     </md-card-content>
 </md-card>
