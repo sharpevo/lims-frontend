@@ -14,6 +14,7 @@ import {ObjectKeysPipe} from './objectKeys.pipe'
 import {EntityService} from './entity/service';
 import {GenreService} from './genre/service';
 import {AttributeService} from './attribute/service';
+import {UtilService} from './util/service';
 
 import {EntityCollectionExpansionComponent} from './entity/collection.expansion.component';
 import {EntityFormInlineComponent} from './entity/form.inline.component';
@@ -47,6 +48,7 @@ import {ChartsModule} from 'ng2-charts';
 import {PluginIndexIndicatorComponent} from './plugins/index.indicator'
 import {PluginIndexValidatorComponent} from './plugins/index.validator'
 import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
+import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 
 @NgModule({
   declarations: [
@@ -82,6 +84,7 @@ import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
     PluginIndexIndicatorComponent,
     PluginIndexValidatorComponent,
     PluginPanelIndicatorComponent,
+    PluginExcelProcessorComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -104,6 +107,7 @@ import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
     GenreService,
     AttributeService,
     SampleService,
+    UtilService,
   ],
   bootstrap: [AppComponent]
 })

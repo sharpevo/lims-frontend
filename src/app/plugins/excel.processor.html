@@ -1,0 +1,86 @@
+<br/>
+<md-card>
+    <md-card-subtitle style="width:100%">
+        <div>
+            EXCEL PROCESSOR
+        </div>
+    </md-card-subtitle>
+    <md-card-content>
+        <button
+            md-button
+            (click)="exportSample()">
+            EXPORT
+        </button>
+        <div
+            *ngIf="selectedSampleList.length > 0">
+            <table
+                style="width: 100%; text-align: center; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th>
+                            No.
+                        </th>
+                        <th>
+                            Sample Code
+                        </th>
+                        <th>
+                            Index Sequence
+                        </th>
+                        <th>
+                            Index Code
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let sample of selectedSampleList; let i = index">
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            <entity-tostring
+                                [entity]="sample">
+                            </entity-tostring>
+                        </td>
+                        <td>
+                            {{sample.SYS_INDEX_SEQUENCE}}
+                        </td>
+                        <td>
+                            {{sample.SYS_INDEX_CODE}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <md-divider>
+        </md-divider>
+        <button
+            md-button
+            (click)="importSample()">
+            IMPORT
+        </button>
+        <br/>
+        <input
+            type="file"
+            name="excelFile"
+            (change)="submitExcel($event)"/>
+        <br/>
+        <br/>
+        <div
+            fxLayout="column"
+            fxLayoutAlign="start stretch">
+            <div
+                *ngFor="let row of excelResult">
+                <span
+                    style="margin-right: 10px"
+                    *ngFor="let key of row|objectKeys">
+                    <span style="opacity:0.3">
+                        {{key}}:
+                    </span>
+                    {{row[key]}}
+                </span>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>
