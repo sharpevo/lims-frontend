@@ -6,21 +6,60 @@
         </div>
     </md-card-subtitle>
     <md-card-content>
+        <button
+            md-button
+            (click)="exportSample()">
+            EXPORT
+        </button>
         <div
-            fxLayout="row"
-            fxLayoutGap="10px"
-            fxLayoutAlign="start center">
-            <button
-                md-button
-                (click)="exportSample()">
-                EXPORT
-            </button>
-            <button
-                md-button
-                (click)="importSample()">
-                IMPORT
-            </button>
+            *ngIf="selectedSampleList.length > 0">
+            <table
+                style="width: 100%; text-align: center; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th>
+                            No.
+                        </th>
+                        <th>
+                            Sample Code
+                        </th>
+                        <th>
+                            Index Sequence
+                        </th>
+                        <th>
+                            Index Code
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let sample of selectedSampleList; let i = index">
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            <entity-tostring
+                                [entity]="sample">
+                            </entity-tostring>
+                        </td>
+                        <td>
+                            {{sample.SYS_INDEX_SEQUENCE}}
+                        </td>
+                        <td>
+                            {{sample.SYS_INDEX_CODE}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
+        <md-divider>
+        </md-divider>
+        <button
+            md-button
+            (click)="importSample()">
+            IMPORT
+        </button>
         <br/>
         <input
             type="file"

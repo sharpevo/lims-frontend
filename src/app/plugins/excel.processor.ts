@@ -9,6 +9,8 @@ import {UtilService} from '../util/service'
 })
 export class PluginExcelProcessorComponent {
   @Input() workcenter
+  @Input() sampleList
+  selectedSampleList: any[] = []
   excelResult: any[] = []
   constructor(
     private utilService: UtilService,
@@ -24,6 +26,11 @@ export class PluginExcelProcessorComponent {
     .subscribe(data => {
       this.excelResult = data[0]
     })
+  }
+
+  exportSample(){
+    this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
+    window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.label))
   }
 
 }
