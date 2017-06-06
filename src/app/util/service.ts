@@ -21,4 +21,17 @@ export class UtilService{
       {})
       .map(res => res.json())
   }
+
+  getExcelUrl(sampleList: any, workcenterLabel: string){
+    let ids = ''
+    sampleList.forEach(sample => {
+      if (ids == ''){
+        ids = sample.id
+      } else {
+        ids += ',' + sample.id
+      }
+
+    })
+    return this.baseUrl + `/excel?ids=${ids}&workcenter=${workcenterLabel}`
+  }
 }
