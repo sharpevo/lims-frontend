@@ -13,10 +13,20 @@
         <!--[sampleList]="sampleList">-->
     <!--</sample-info-inline>-->
 </div>
+<br/>
 <span
     *ngIf="workcenter">
     <plugin-index-validator
         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR']"
         [sampleList]="sampleList">
     </plugin-index-validator>
+</span>
+<br/>
+<span
+    *ngIf="workcenter">
+    <plugin-excel-processor
+        *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR']"
+        [sampleList]="sampleList"
+        [workcenter]="workcenter">
+    </plugin-excel-processor>
 </span>
