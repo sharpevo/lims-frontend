@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core'
+import {Component, Input, ViewChild} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
@@ -10,6 +10,7 @@ import {UtilService} from '../util/service'
 export class PluginExcelProcessorComponent {
   @Input() workcenter
   @Input() sampleList
+  @ViewChild('excelUploader') excelUploader
   selectedSampleList: any[] = []
   excelResult: any[] = []
   constructor(
@@ -28,9 +29,22 @@ export class PluginExcelProcessorComponent {
     })
   }
 
+  clearExcel(){
+    this.excelResult = []
+    this.excelUploader.nativeElement.value = ''
+  }
+
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.label))
+  }
+
+  updateExcel(){
+    this.utilService.putExcel(this.excelResult)
+    .subscribe(data => {
+      console.log(data)
+      this.selectedSampleList.forEach(sample => sample.TMP_CHECKED = false)
+    })
   }
 
 }
