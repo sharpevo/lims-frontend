@@ -34,4 +34,13 @@ export class UtilService{
     })
     return this.baseUrl + `/excel?ids=${ids}&workcenter=${workcenterLabel}`
   }
+
+  putExcel(objectList: any[]){
+    return this.http.put(
+      this.baseUrl + '/excel',
+      JSON.stringify(objectList),
+      {headers: this.headers})
+      .map(res => res.json())
+  }
+
 }
