@@ -57,13 +57,15 @@
         </md-divider>
         <button
             md-button
-            (click)="importSample()">
+            (click)="updateExcel()">
             IMPORT
         </button>
         <br/>
         <input
+            #excelUploader
             type="file"
             name="excelFile"
+            (click)="clearExcel()"
             (change)="submitExcel($event)"/>
         <br/>
         <br/>
