@@ -159,6 +159,62 @@
             </div>
         </div>
     </div>
+    <div *ngIf="object['SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER']">
+		<br/>
+		<br/>
+		<div
+			fxLayout="row"
+			fxLayoutGap="20px"
+			fxLayoutAlign="space-between stretch">
+			<div class="full-width">
+				<md-select
+					class="full-width"
+					[(ngModel)]="genericWorkcenter"
+					placeholder="Workcenter">
+					<md-option
+						value="{{workcenter.id}}"
+						(click)="getGenericGenreList(workcenter.id)"
+						*ngFor="let workcenter of genericWorkcenterList">
+						{{workcenter[workcenter['SYS_LABEL']]}}
+					</md-option>
+				</md-select>
+			</div>
+			<div class="full-width">
+				<md-select
+					class="full-width"
+					[(ngModel)]="genericGenre"
+					placeholder="Attribute Group">
+					<md-option
+						value="{{genre.id}}"
+						(click)="getGenericAttributeList(genre.id)"
+						*ngFor="let genre of genericGenreList">
+						{{genre[genre['SYS_LABEL']]}}
+					</md-option>
+				</md-select>
+			</div>
+			<div class="full-width">
+				<md-select
+					class="full-width"
+					[(ngModel)]="genericAttribute"
+					placeholder="Attribute">
+					<md-option
+						value="{{attribute.id}}"
+						(click)="addGenericAttribute(attribute)"
+						*ngFor="let attribute of genericAttributeList">
+						{{attribute[attribute['SYS_LABEL']]}}
+					</md-option>
+				</md-select>
+			</div>
+		</div>
+		<br/>
+		<md-chip-list selectable="false">
+			<md-chip
+				(click)="removeGenericAttribute(i)"
+				*ngFor="let attribute of object['SYS_AUXILIARY_ATTRIBUTE_LIST']; let i=index">
+				{{attribute[attribute['SYS_LABEL']]}}
+			</md-chip>
+		</md-chip-list>
+    </div>
 </div>
 <div
     fxLayout="row"
