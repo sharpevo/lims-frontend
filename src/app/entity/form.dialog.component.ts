@@ -25,6 +25,18 @@ export class EntityFormDialog {
     {value: "collection", title: "Collection"},
     {value: "object", title: "Object"},
   ]
+
+  genericWorkcenterList: any[] = []
+  genericGenreList: any[] = []
+  genericAttributeList: any[]  = []
+
+  // fix undefined focus error
+  genericWorkcenter: any = {}
+  genericGenre: any = {}
+  genericAttribute: any = {}
+
+  auxiliaryAttributeList: any[] = []
+
   constructor(
     private snackBar: MdSnackBar,
     private genreService: GenreService,
@@ -36,6 +48,8 @@ export class EntityFormDialog {
       this.getGenreList()
       this.generateEntityCode()
       this.generateEntityType()
+
+      this.getGenericWorkcenterList()
     }
 
     clearForm(){
@@ -395,5 +409,49 @@ export class EntityFormDialog {
       this.snackBar.open(msg, 'UNDO', {duration: 3000});
     }
 
+    getGenericWorkcenterList(){
+      this.entityService.retrieveBy({
+        "SYS_IDENTIFIER":"/PRODUCT_WORKCENTER"
+      })
+      .subscribe(data => {
+        let productWorkcenter = data[0]
+        this.entityService.retrieveEntity(productWorkcenter.id, "class")
+        .subscribe(data => {
+          this.genericWorkcenterList = data
+        })
+      })
+    }
+
+    getGenericGenreList(workcenterId: string){
+
+      // fix undefined focus error
+      this.genericGenreList = []
+      this.genericAttributeList = []
+      this.genericGenre = {}
+      this.genericAttribute = {}
+
+      this.genreService.retrieveByEntityId(workcenterId)
+      .subscribe(data => {
+        this.genericGenreList = data
+      })
+    }
+
+    getGenericAttributeList(genreId: string){
+      this.attributeService.retrieveByGenreId(genreId)
+      .subscribe(data => {
+        this.genericAttributeList = data
+      })
+    }
+
+    addGenericAttribute(attribute: any){
+      if (!this.object['SYS_AUXILIARY_ATTRIBUTE_LIST']){
+        this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'] = []
+      }
+      this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'].push(attribute)
+    }
+
+    removeGenericAttribute(index: string){
+      this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'].splice(index, 1)
+    }
 
 }
