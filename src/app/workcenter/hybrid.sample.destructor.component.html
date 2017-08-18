@@ -29,6 +29,8 @@
         </div>
     </span>
     <span *ngIf="key=='SAMPLES'">
+        <simple-table [rawSampleList]="shownSampleList[key]">
+        </simple-table>
         <div *ngFor="let sample of shownSampleList[key]">
             <span (click)="expandall = !expandall">
                 -
