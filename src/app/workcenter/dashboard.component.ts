@@ -4,7 +4,8 @@ import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
 
-import {Observable} from 'rxjs/Observable'
+//import {Observable} from 'rxjs/Observable'
+import { Observable } from 'rxjs/Rx'
 
 @Component({
   selector: 'workcenter-dashboard',

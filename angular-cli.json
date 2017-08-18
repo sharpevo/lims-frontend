@@ -18,13 +18,14 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"
       ],
       "scripts": [
           "../node_modules/chart.js/dist/Chart.bundle.min.js"
       ],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }

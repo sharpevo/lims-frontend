@@ -50,6 +50,13 @@ import {PluginIndexValidatorComponent} from './plugins/index.validator'
 import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
 import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import 'hammerjs'
+
+import { CdkTableModule } from '@angular/cdk'
+
+import {TablifyComponent} from './util/tablify.component'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -85,6 +92,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
     PluginIndexValidatorComponent,
     PluginPanelIndicatorComponent,
     PluginExcelProcessorComponent,
+    TablifyComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -97,10 +105,12 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
     FormsModule,
     HttpModule,
     FlexLayoutModule,
-    MaterialModule.forRoot(),
+    MaterialModule,
     routingModule,
     ChartsModule,
 
+    BrowserAnimationsModule,
+    CdkTableModule,
   ],
   providers: [
     EntityService,
