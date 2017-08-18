@@ -50,6 +50,9 @@ import {PluginIndexValidatorComponent} from './plugins/index.validator'
 import {PluginPanelIndicatorComponent} from './plugins/panel.indicator'
 import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import 'hammerjs'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -97,10 +100,10 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
     FormsModule,
     HttpModule,
     FlexLayoutModule,
-    MaterialModule.forRoot(),
+    MaterialModule,
     routingModule,
     ChartsModule,
-
+    BrowserAnimationsModule,
   ],
   providers: [
     EntityService,
