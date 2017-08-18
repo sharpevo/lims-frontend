@@ -24,7 +24,7 @@ export class TablifyComponent{
 	constructor(){
 	}
 
-	displayedColumns = ['id', 'sn']
+	displayedColumns = ['id', 'SYS_CODE']
 	sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
 	sampleDataSource: SampleDataSource | null
 
@@ -108,8 +108,9 @@ export class SampleDataSource extends DataSource<any> {
 				let searchStr = (item.id + item.SYS_CODE).toLowerCase();
 				return searchStr.indexOf(this.filter.toLowerCase()) != -1;
 			})
+
+			// fix length bug
 			this.dataLength = data.length
-			console.log(this.dataLength)
 
 			const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
 			data = data.splice(startIndex, this._paginator.pageSize)

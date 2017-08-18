@@ -1,36 +1,32 @@
 <div class="simple-table-container">
 	<div class="simple-table-filter">
 		<md-input-container floatPlaceholder="never">
-			<input mdInput #filter placeholder="Filter users">
+			<input mdInput #filter placeholder="search...">
 		</md-input-container>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
-		<ng-container cdkColumnDef="id">
+
+		<ng-container
+			cdkColumnDef="{{column}}"
+			*ngFor="let column of displayedColumns">
 			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
-				Id
+				{{column}}
 			</md-header-cell>
 			<md-cell *cdkCellDef="let row" class="simple-table-cell">
-				{{row.id}}
+				{{row[column]}}
 			</md-cell>
 		</ng-container>
 
-		<ng-container cdkColumnDef="sn">
-			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
-				SN
-			</md-header-cell>
-			<md-cell *cdkCellDef="let row" class="simple-table-cell">
-				{{row.SYS_CODE}}
-			</md-cell>
-		</ng-container>
 		<md-header-row *cdkHeaderRowDef="displayedColumns" class="simple-table-header-row">
 		</md-header-row>
+
 		<md-row *cdkRowDef="let row; columns: displayedColumns;" class="simple-table-row">
 		</md-row>
 	</md-table>
 	<md-paginator #paginator
 		[length]="sampleDataSource.dataLength"
 		[pageIndex]="0"
-		[pageSize]="1"
+		[pageSize]="10"
 		[pageSizeOptions]="[1,2, 10, 25, 100]">
 	</md-paginator>
 </div>
