@@ -1,0 +1,40 @@
+.simple-table-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 300px;
+}
+
+.simple-table {
+  flex: 1 1 auto;
+  overflow: auto;
+  max-height: 500px;
+  min-width: 300px;
+}
+
+.simple-table-header-row, .simple-table-row {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+  height: 32px;
+  padding: 0 8px;
+}
+
+.simple-table-header-cell {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+  flex: 1;
+}
+
+.simple-table-cell {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
+  flex: 1;
+}
+
+.simple-table-filter {
+  display: flex;
+  align-items: baseline;
+  justify-content: right;
+}
