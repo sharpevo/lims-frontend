@@ -53,6 +53,10 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import 'hammerjs'
 
+import { CdkTableModule } from '@angular/cdk'
+
+import {TablifyComponent} from './util/tablify.component'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -88,6 +92,7 @@ import 'hammerjs'
     PluginIndexValidatorComponent,
     PluginPanelIndicatorComponent,
     PluginExcelProcessorComponent,
+    TablifyComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -103,7 +108,9 @@ import 'hammerjs'
     MaterialModule,
     routingModule,
     ChartsModule,
+
     BrowserAnimationsModule,
+    CdkTableModule,
   ],
   providers: [
     EntityService,

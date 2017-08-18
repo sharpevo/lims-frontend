@@ -1,0 +1,20 @@
+<div class="example-container mat-elevation-z8">
+  <cdk-table #table [dataSource]="sampleDataSource" class="example-table">
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- CompName Column -->
+    <ng-container cdkColumnDef="id">
+      <cdk-header-cell *cdkHeaderCellDef class="example-header-cell"> CompName </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="example-cell"> {{row.id}} </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="sn">
+      <cdk-header-cell *cdkHeaderCellDef class="example-header-cell"> CompName </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="example-cell"> {{row.sn}} </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="example-header-row"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="example-row"></cdk-row>
+  </cdk-table>
+</div>
