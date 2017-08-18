@@ -1,20 +1,36 @@
-<div class="example-container mat-elevation-z8">
-  <cdk-table #table [dataSource]="sampleDataSource" class="example-table">
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+<div class="simple-table-container">
+	<div class="simple-table-filter">
+		<md-input-container floatPlaceholder="never">
+			<input mdInput #filter placeholder="Filter users">
+		</md-input-container>
+	</div>
+	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
+		<ng-container cdkColumnDef="id">
+			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
+				Id
+			</md-header-cell>
+			<md-cell *cdkCellDef="let row" class="simple-table-cell">
+				{{row.id}}
+			</md-cell>
+		</ng-container>
 
-    <!-- CompName Column -->
-    <ng-container cdkColumnDef="id">
-      <cdk-header-cell *cdkHeaderCellDef class="example-header-cell"> CompName </cdk-header-cell>
-      <cdk-cell *cdkCellDef="let row" class="example-cell"> {{row.id}} </cdk-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="sn">
-      <cdk-header-cell *cdkHeaderCellDef class="example-header-cell"> CompName </cdk-header-cell>
-      <cdk-cell *cdkCellDef="let row" class="example-cell"> {{row.sn}} </cdk-cell>
-    </ng-container>
-
-    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="example-header-row"></cdk-header-row>
-    <cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="example-row"></cdk-row>
-  </cdk-table>
+		<ng-container cdkColumnDef="sn">
+			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
+				SN
+			</md-header-cell>
+			<md-cell *cdkCellDef="let row" class="simple-table-cell">
+				{{row.SYS_CODE}}
+			</md-cell>
+		</ng-container>
+		<md-header-row *cdkHeaderRowDef="displayedColumns" class="simple-table-header-row">
+		</md-header-row>
+		<md-row *cdkRowDef="let row; columns: displayedColumns;" class="simple-table-row">
+		</md-row>
+	</md-table>
+	<md-paginator #paginator
+		[length]="sampleDataSource.dataLength"
+		[pageIndex]="0"
+		[pageSize]="1"
+		[pageSizeOptions]="[1,2, 10, 25, 100]">
+	</md-paginator>
 </div>
