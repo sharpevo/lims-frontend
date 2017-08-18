@@ -6,7 +6,8 @@ import {AttributeFormDialog} from '../attribute/form.dialog.component'
 
 import {EntityService} from '../entity/service'
 
-import {Observable} from 'rxjs/Observable'
+//import {Observable} from 'rxjs/Observable'
+import { Observable } from 'rxjs/Rx'
 
 @Component({
   selector: 'workcenter-overview',
