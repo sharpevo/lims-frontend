@@ -10,28 +10,28 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map'
 
 @Component({
-	selector: 'simple-table',
-	styleUrls: ['./tablify.component.css'],
-	templateUrl: './tablify.component.html'
+  selector: 'simple-table',
+  styleUrls: ['./tablify.component.css'],
+  templateUrl: './tablify.component.html'
 })
 export class TablifyComponent{
 
-	@Input() rawSampleList
+  @Input() rawSampleList
   @Input() columnList
-	@ViewChild(MdPaginator) paginator: MdPaginator
-	@ViewChild(MdSort) sort: MdSort
-	@ViewChild('filter') filter: ElementRef
+  @ViewChild(MdPaginator) paginator: MdPaginator
+  @ViewChild(MdSort) sort: MdSort
+  @ViewChild('filter') filter: ElementRef
 
   columnMap: any = {}
   columnMapKeys: any[] = []
 
-	constructor(){
-	}
+  constructor(){
+  }
 
-	sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
-	sampleDataSource: SampleDataSource | null
+  sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
+  sampleDataSource: SampleDataSource | null
 
-	ngOnInit(){
+  ngOnInit(){
 
     if (!this.columnList){
       // fix undefined bug
@@ -47,16 +47,16 @@ export class TablifyComponent{
       })
     }
 
-		this.sampleDatabase = new SampleDatabase(this.rawSampleList)
+    this.sampleDatabase = new SampleDatabase(this.rawSampleList)
     this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
-		Observable.fromEvent(this.filter.nativeElement, 'keyup')
-		.debounceTime(150)
-		.distinctUntilChanged()
-		.subscribe(() => {
-			if (!this.sampleDataSource) { return; }
-			this.sampleDataSource.filter = this.filter.nativeElement.value;
-		})
-	}
+    Observable.fromEvent(this.filter.nativeElement, 'keyup')
+    .debounceTime(150)
+    .distinctUntilChanged()
+    .subscribe(() => {
+      if (!this.sampleDataSource) { return; }
+      this.sampleDataSource.filter = this.filter.nativeElement.value;
+    })
+  }
 
 }
 
@@ -66,107 +66,107 @@ export class TablifyComponent{
 //}
 
 export class SampleDatabase {
-	rawSampleList: any[]
-	constructor(private _rawSampleList: any[]){
-		this.rawSampleList = _rawSampleList
-		this.dataChange = new BehaviorSubject<any>([])
-		const cd = this.data.slice()
-		console.log("xx", this.data)
-		this.rawSampleList.forEach(sample => {
-			cd.push(sample)
-			//this.sampleList.push(sample)
-			this.dataChange.next(cd)
-		})
-		console.log("++", this.rawSampleList)
-	}
+  rawSampleList: any[]
+  constructor(private _rawSampleList: any[]){
+    this.rawSampleList = _rawSampleList
+    this.dataChange = new BehaviorSubject<any>([])
+    const cd = this.data.slice()
+    console.log("xx", this.data)
+    this.rawSampleList.forEach(sample => {
+      cd.push(sample)
+      //this.sampleList.push(sample)
+      this.dataChange.next(cd)
+    })
+    console.log("++", this.rawSampleList)
+  }
 
-	sampleList: any[]
-	dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
-	get data(): any[] {
-		//this.sampleList = this.rawSampleList
-		//this.rawSampleList.forEach(sample => {
-		//this.sampleList.push(sample)
-		//this.dataChange.next(this.sampleList)
-		//})
-		//console.log("--", this.dataChange.value)
-		//return this.sampleList
-		return this.dataChange.value
-	}
+  sampleList: any[]
+  dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
+  get data(): any[] {
+    //this.sampleList = this.rawSampleList
+    //this.rawSampleList.forEach(sample => {
+    //this.sampleList.push(sample)
+    //this.dataChange.next(this.sampleList)
+    //})
+    //console.log("--", this.dataChange.value)
+    //return this.sampleList
+    return this.dataChange.value
+  }
 
 
 }
 
 export class SampleDataSource extends DataSource<any> {
 
-	dataLength: number = 0
+  dataLength: number = 0
 
-	_filterChange = new BehaviorSubject('');
-	get filter(): string { return this._filterChange.value; }
-	set filter(filter: string) { this._filterChange.next(filter); }
+  _filterChange = new BehaviorSubject('');
+  get filter(): string { return this._filterChange.value; }
+  set filter(filter: string) { this._filterChange.next(filter); }
 
-	constructor(
-		private _exampleDatabase: SampleDatabase,
-		private _paginator: MdPaginator,
+  constructor(
+    private _exampleDatabase: SampleDatabase,
+    private _paginator: MdPaginator,
     private _sort: MdSort,
     private itemKeys: any[],
-	) {
-		super();
-	}
-	connect(): Observable<any[]> {
-		const displayDataChanges = [
-			this._exampleDatabase.dataChange,
-			this._paginator.page,
-			this._sort.mdSortChange,
-			this._filterChange,
-		]
+  ) {
+    super();
+  }
+  connect(): Observable<any[]> {
+    const displayDataChanges = [
+      this._exampleDatabase.dataChange,
+      this._paginator.page,
+      this._sort.mdSortChange,
+      this._filterChange,
+    ]
 
-		this.dataLength = this._exampleDatabase.data.length
+    this.dataLength = this._exampleDatabase.data.length
 
-		return Observable.merge(...displayDataChanges).map(() => {
-			let data = this._exampleDatabase.data.slice().filter((item) => {
+    return Observable.merge(...displayDataChanges).map(() => {
+      let data = this._exampleDatabase.data.slice().filter((item) => {
         let keyStr = ""
         this.itemKeys.forEach(key => {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
         //let searchStr = (item.id + item.SYS_CODE).toLowerCase();
-				return searchStr.indexOf(this.filter.toLowerCase()) != -1;
-			})
+        return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+      })
 
-			// fix length bug
-			this.dataLength = data.length
+      // fix length bug
+      this.dataLength = data.length
 
-			const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-			data = data.splice(startIndex, this._paginator.pageSize)
-			return this.getSortedData(data)
-		})
-		//console.log(">", this._exampleDatabase.dataChange)
-		//return this._exampleDatabase.dataChange;
-	}
-	disconnect() {}
-	getSortedData(data: any[]): any[] {
-		//console.log("s", this._sort)
-		//const data = this._exampleDatabase.data.slice();
-		//const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-		//const data = this._exampleDatabase.data.slice().splice(startIndex, this._paginator.pageSize)
-		if (!this._sort.active || this._sort.direction == '') { return data; }
+      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+      data = data.splice(startIndex, this._paginator.pageSize)
+      return this.getSortedData(data)
+    })
+    //console.log(">", this._exampleDatabase.dataChange)
+    //return this._exampleDatabase.dataChange;
+  }
+  disconnect() {}
+  getSortedData(data: any[]): any[] {
+    //console.log("s", this._sort)
+    //const data = this._exampleDatabase.data.slice();
+    //const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+    //const data = this._exampleDatabase.data.slice().splice(startIndex, this._paginator.pageSize)
+    if (!this._sort.active || this._sort.direction == '') { return data; }
 
-		data = data.sort((a, b) => {
-			let propertyA: number|string = '';
-			let propertyB: number|string = '';
+    data = data.sort((a, b) => {
+      let propertyA: number|string = '';
+      let propertyB: number|string = '';
 
-			switch (this._sort.active) {
-				case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
-				case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
-				case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
-				case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
-			}
+      switch (this._sort.active) {
+        case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
+        case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
+        case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
+        case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
+      }
 
-			let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-			let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
 
-			return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
-		});
-		return data
-	}
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+    });
+    return data
+  }
 }
