@@ -17,20 +17,38 @@ import 'rxjs/add/operator/map'
 export class TablifyComponent{
 
 	@Input() rawSampleList
+  @Input() columnList
 	@ViewChild(MdPaginator) paginator: MdPaginator
 	@ViewChild(MdSort) sort: MdSort
 	@ViewChild('filter') filter: ElementRef
 
+  columnMap: any = {}
+  columnMapKeys: any[] = []
+
 	constructor(){
 	}
 
-	displayedColumns = ['id', 'SYS_CODE']
 	sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
 	sampleDataSource: SampleDataSource | null
 
 	ngOnInit(){
+
+    if (!this.columnList){
+      // fix undefined bug
+      this.columnList = ['id']
+    } else {
+      // convert object to map
+      this.columnList.forEach(column => {
+        let key = column['SYS_CODE']
+        // get keys in a order
+        this.columnMapKeys.push(key)
+        this.columnMap[key] = {}
+        this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]
+      })
+    }
+
 		this.sampleDatabase = new SampleDatabase(this.rawSampleList)
-		this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort)
+    this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
 		Observable.fromEvent(this.filter.nativeElement, 'keyup')
 		.debounceTime(150)
 		.distinctUntilChanged()
@@ -89,7 +107,8 @@ export class SampleDataSource extends DataSource<any> {
 	constructor(
 		private _exampleDatabase: SampleDatabase,
 		private _paginator: MdPaginator,
-		private _sort: MdSort
+    private _sort: MdSort,
+    private itemKeys: any[],
 	) {
 		super();
 	}
@@ -105,7 +124,12 @@ export class SampleDataSource extends DataSource<any> {
 
 		return Observable.merge(...displayDataChanges).map(() => {
 			let data = this._exampleDatabase.data.slice().filter((item) => {
-				let searchStr = (item.id + item.SYS_CODE).toLowerCase();
+        let keyStr = ""
+        this.itemKeys.forEach(key => {
+          keyStr += item[key]
+        })
+        let searchStr = keyStr.toLowerCase()
+        //let searchStr = (item.id + item.SYS_CODE).toLowerCase();
 				return searchStr.indexOf(this.filter.toLowerCase()) != -1;
 			})
 
