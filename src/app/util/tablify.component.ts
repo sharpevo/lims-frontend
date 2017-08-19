@@ -71,13 +71,11 @@ export class SampleDatabase {
     this.rawSampleList = _rawSampleList
     this.dataChange = new BehaviorSubject<any>([])
     const cd = this.data.slice()
-    console.log("xx", this.data)
     this.rawSampleList.forEach(sample => {
       cd.push(sample)
       //this.sampleList.push(sample)
       this.dataChange.next(cd)
     })
-    console.log("++", this.rawSampleList)
   }
 
   sampleList: any[]
