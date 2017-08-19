@@ -7,20 +7,20 @@
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
 
 		<ng-container
-			cdkColumnDef="{{column}}"
-			*ngFor="let column of displayedColumns">
+			cdkColumnDef="{{columnKey}}"
+			*ngFor="let columnKey of columnMapKeys">
 			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
-				{{column}}
+				{{columnMap[columnKey]['SYS_LABEL']}}
 			</md-header-cell>
 			<md-cell *cdkCellDef="let row" class="simple-table-cell">
-				{{row[column]}}
+				{{row[columnKey]}}
 			</md-cell>
 		</ng-container>
 
-		<md-header-row *cdkHeaderRowDef="displayedColumns" class="simple-table-header-row">
+		<md-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
 		</md-header-row>
 
-		<md-row *cdkRowDef="let row; columns: displayedColumns;" class="simple-table-row">
+		<md-row *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
 		</md-row>
 	</md-table>
 	<md-paginator #paginator

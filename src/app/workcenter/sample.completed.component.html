@@ -1,6 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
     <hybrid-sample-destructor
         *ngIf="sampleList?.length > 0 && completedSampleList.length > 0"
+        [workcenter]="workcenter"
         [hybridSampleList]="sampleList"
         [shownSampleList]="builtSampleList"
         [showCheckbox]="false">

@@ -418,6 +418,19 @@ export class EntityFormDialog {
         this.entityService.retrieveEntity(productWorkcenter.id, "class")
         .subscribe(data => {
           this.genericWorkcenterList = data
+
+          // Get the default attribute from project management workcenter
+          this.entityService.retrieveBy({
+            "SYS_IDENTIFIER":"/PROJECT_MANAGEMENT"
+          })
+          .subscribe(data => {
+            let projectWorkcenter = data[0]
+            this.entityService.retrieveEntity(projectWorkcenter.id, "class")
+            .subscribe(data => {
+              this.genericWorkcenterList = this.genericWorkcenterList.concat(data)
+            })
+          })
+
         })
       })
     }
