@@ -27,12 +27,24 @@
   flex: 1;
 }
 
+.simple-table-header-cell-checkbox {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+  flex: 0.1;
+}
+
 .simple-table-cell {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
   flex: 1;
 }
 
+.simple-table-cell-checkbox {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
+  flex: 0.1;
+}
 .simple-table-filter {
   display: flex;
   align-items: baseline;
