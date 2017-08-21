@@ -1,8 +1,14 @@
+
 <div class="simple-table-container">
 	<div class="simple-table-filter">
 		<md-input-container floatPlaceholder="never">
 			<input mdInput #filter placeholder="search...">
 		</md-input-container>
+        <span
+            style="opacity:0.5; font-size: 0.7em;padding-left: 15px;"
+            *ngIf="selectedSampleIdList.length > 0">
+            selected: {{selectedSampleIdList|json}}
+        </span>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
 
