@@ -12,6 +12,7 @@ export class WorkcenterSampleActivatedComponent{
   @Input() sampleList
   @Input() callback
   @Input() checkedEntityList
+  @Input() workcenter
   sampleCount: number = 0
 
   activatedSampleList: any[] = []
