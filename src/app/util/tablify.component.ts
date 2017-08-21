@@ -35,17 +35,24 @@ export class TablifyComponent{
 
     if (!this.columnList){
       // fix undefined bug
-      this.columnList = ['id']
-    } else {
-      // convert object to map
-      this.columnList.forEach(column => {
-        let key = column['SYS_CODE']
-        // get keys in a order
-        this.columnMapKeys.push(key)
-        this.columnMap[key] = {}
-        this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]
-      })
+      this.columnList = []
     }
+    // Artificial column for checkbox
+    this.columnList.unshift({
+      "SYS_CODE": "id",
+      "SYS_LABEL": " ",
+      "SYS_TYPE": "checkbox",
+    })
+
+    // convert object to map
+    this.columnList.forEach(column => {
+      let key = column['SYS_CODE']
+      // get keys in a order
+      this.columnMapKeys.push(key)
+      this.columnMap[key] = {}
+      this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]
+      this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
+    })
 
     this.sampleDatabase = new SampleDatabase(this.rawSampleList)
     this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
