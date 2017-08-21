@@ -137,6 +137,7 @@
                     <workcenter-sample-completed
                         #completedComponent
                         *ngIf="sampleList.length > 0"
+                        [workcenter]="workcenter"
                         [sampleList]="sampleList">
                     </workcenter-sample-completed>
                 </div>
