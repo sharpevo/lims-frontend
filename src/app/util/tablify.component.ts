@@ -173,7 +173,7 @@ export class SampleDataSource extends DataSource<any> {
 
       // currentSampleList should be executed before pagination
       // in order to select all the samples under the specific filter.
-      this.currentSampleList = data
+      this.currentSampleList = data.slice()
 
       // fix length bug
       this.dataLength = data.length
