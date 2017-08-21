@@ -63,6 +63,10 @@ export class TablifyComponent{
     .debounceTime(150)
     .distinctUntilChanged()
     .subscribe(() => {
+
+      this.isSelectAll=false
+      this.clearSelectedSamples()
+
       if (!this.sampleDataSource) { return; }
       this.sampleDataSource.filter = this.filter.nativeElement.value;
     })
@@ -80,21 +84,23 @@ export class TablifyComponent{
     console.log(this.selectedSampleIdList)
   }
   selectAllSamples(){
-    this.selectedSampleIdList = []
     if (!this.isSelectAll){
+      this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
         this.selectedSampleIdList.push(sample.id)
-
-        // Weired "!" really
-        // maybe because the "click" execute before the value change
-        sample['TMP_CHECKED'] = !this.isSelectAll
+        sample['TMP_CHECKED'] = true
       })
     } else {
-      this.sampleDataSource.currentSampleList.forEach(sample => {
-        sample['TMP_CHECKED'] = !this.isSelectAll
-      })
+      this.clearSelectedSamples()
     }
     console.log(this.selectedSampleIdList)
+  }
+
+  clearSelectedSamples(){
+    this.selectedSampleIdList = []
+    this.sampleDataSource.currentSampleList.forEach(sample => {
+      sample['TMP_CHECKED'] = false
+    })
   }
 
 }
