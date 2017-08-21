@@ -171,13 +171,17 @@ export class SampleDataSource extends DataSource<any> {
         return searchStr.indexOf(this.filter.toLowerCase()) != -1;
       })
 
+      // currentSampleList should be executed before pagination
+      // in order to select all the samples under the specific filter.
+      this.currentSampleList = data
+
       // fix length bug
       this.dataLength = data.length
 
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
       data = data.splice(startIndex, this._paginator.pageSize)
-      this.currentSampleList = this.getSortedData(data)
-      return this.currentSampleList
+
+      return this.getSortedData(data)
     })
     //console.log(">", this._exampleDatabase.dataChange)
     //return this._exampleDatabase.dataChange;
