@@ -5,15 +5,51 @@
 		</md-input-container>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
+		<ng-container
+            cdkColumnDef="id">
+			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
+                <md-checkbox
+                    (click)="selectAllSamples()"
+                    color="primary">
+                </md-checkbox>
+			</md-header-cell>
+			<md-cell *cdkCellDef="let row" class="simple-table-cell">
+                <md-checkbox
+                    (click)="selectSample(row.id)"
+                    color="primary">
+                </md-checkbox>
+			</md-cell>
+		</ng-container>
+
 
 		<ng-container
 			cdkColumnDef="{{columnKey}}"
 			*ngFor="let columnKey of columnMapKeys">
-			<md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
-				{{columnMap[columnKey]['SYS_LABEL']}}
-			</md-header-cell>
+            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell">
+                    <md-checkbox
+                        [(ngModel)]="isSelectAll"
+                        (click)="selectAllSamples()"
+                        color="primary">
+                    </md-checkbox>
+                </md-header-cell>
+            </span>
+            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
+                    {{columnMap[columnKey]['SYS_LABEL']}}
+                </md-header-cell>
+            </span>
 			<md-cell *cdkCellDef="let row" class="simple-table-cell">
-				{{row[columnKey]}}
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+                    <md-checkbox
+                        [(ngModel)]="row['TMP_CHECKED']"
+                        (click)="selectSample(row)"
+                        color="primary">
+                    </md-checkbox>
+                </span>
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                    {{row[columnKey]}}
+                </span>
 			</md-cell>
 		</ng-container>
 
