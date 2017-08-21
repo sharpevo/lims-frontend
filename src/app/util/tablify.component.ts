@@ -25,6 +25,9 @@ export class TablifyComponent{
   columnMap: any = {}
   columnMapKeys: any[] = []
 
+  selectedSampleIdList: any[] = []
+  isSelectAll: boolean = false
+
   constructor(){
   }
 
@@ -63,6 +66,35 @@ export class TablifyComponent{
       if (!this.sampleDataSource) { return; }
       this.sampleDataSource.filter = this.filter.nativeElement.value;
     })
+  }
+
+  selectSample(sample: any){
+    let id = sample.id
+    let index = this.selectedSampleIdList.indexOf(id)
+
+    if (index != -1) {
+      this.selectedSampleIdList.splice(index, 1)
+    } else {
+      this.selectedSampleIdList.push(id)
+    }
+    console.log(this.selectedSampleIdList)
+  }
+  selectAllSamples(){
+    this.selectedSampleIdList = []
+    if (!this.isSelectAll){
+      this.sampleDataSource.currentSampleList.forEach(sample => {
+        this.selectedSampleIdList.push(sample.id)
+
+        // Weired "!" really
+        // maybe because the "click" execute before the value change
+        sample['TMP_CHECKED'] = !this.isSelectAll
+      })
+    } else {
+      this.sampleDataSource.currentSampleList.forEach(sample => {
+        sample['TMP_CHECKED'] = !this.isSelectAll
+      })
+    }
+    console.log(this.selectedSampleIdList)
   }
 
 }
@@ -104,6 +136,7 @@ export class SampleDatabase {
 export class SampleDataSource extends DataSource<any> {
 
   dataLength: number = 0
+  currentSampleList: any[] = []
 
   _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
@@ -143,7 +176,8 @@ export class SampleDataSource extends DataSource<any> {
 
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
       data = data.splice(startIndex, this._paginator.pageSize)
-      return this.getSortedData(data)
+      this.currentSampleList = this.getSortedData(data)
+      return this.currentSampleList
     })
     //console.log(">", this._exampleDatabase.dataChange)
     //return this._exampleDatabase.dataChange;
