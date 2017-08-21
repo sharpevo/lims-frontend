@@ -10,7 +10,7 @@
 			cdkColumnDef="{{columnKey}}"
 			*ngFor="let columnKey of columnMapKeys">
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell">
+                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
                     <md-checkbox
                         [(ngModel)]="isSelectAll"
                         (click)="selectAllSamples()"
@@ -23,18 +23,20 @@
                     {{columnMap[columnKey]['SYS_LABEL']}}
                 </md-header-cell>
             </span>
-			<md-cell *cdkCellDef="let row" class="simple-table-cell">
-                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+                <md-cell *cdkCellDef="let row" class="simple-table-cell-checkbox">
                     <md-checkbox
                         [(ngModel)]="row['TMP_CHECKED']"
                         (click)="selectSample(row)"
                         color="primary">
                     </md-checkbox>
-                </span>
-                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                </md-cell>
+            </span>
+            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                <md-cell *cdkCellDef="let row" class="simple-table-cell">
                     {{row[columnKey]}}
-                </span>
-			</md-cell>
+                </md-cell>
+            </span>
 		</ng-container>
 
 		<md-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
