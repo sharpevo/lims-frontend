@@ -105,11 +105,6 @@ export class TablifyComponent{
 
 }
 
-//export interface SampleData {
-//id: string
-//sn: string
-//}
-
 export class SampleDatabase {
   rawSampleList: any[]
   constructor(private _rawSampleList: any[]){
@@ -118,7 +113,6 @@ export class SampleDatabase {
     const cd = this.data.slice()
     this.rawSampleList.forEach(sample => {
       cd.push(sample)
-      //this.sampleList.push(sample)
       this.dataChange.next(cd)
     })
   }
@@ -126,16 +120,8 @@ export class SampleDatabase {
   sampleList: any[]
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
   get data(): any[] {
-    //this.sampleList = this.rawSampleList
-    //this.rawSampleList.forEach(sample => {
-    //this.sampleList.push(sample)
-    //this.dataChange.next(this.sampleList)
-    //})
-    //console.log("--", this.dataChange.value)
-    //return this.sampleList
     return this.dataChange.value
   }
-
 
 }
 
@@ -189,15 +175,9 @@ export class SampleDataSource extends DataSource<any> {
 
       return this.getSortedData(data)
     })
-    //console.log(">", this._exampleDatabase.dataChange)
-    //return this._exampleDatabase.dataChange;
   }
   disconnect() {}
   getSortedData(data: any[]): any[] {
-    //console.log("s", this._sort)
-    //const data = this._exampleDatabase.data.slice();
-    //const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-    //const data = this._exampleDatabase.data.slice().splice(startIndex, this._paginator.pageSize)
     if (!this._sort.active || this._sort.direction == '') { return data; }
 
     data = data.sort((a, b) => {
