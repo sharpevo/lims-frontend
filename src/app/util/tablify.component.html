@@ -7,7 +7,9 @@
         <span
             style="opacity:0.5; font-size: 0.7em;padding-left: 15px;"
             *ngIf="selectedSampleIdList.length > 0">
-            selected: {{selectedSampleIdList|json}}
+            Sample selected: {{selectedSampleIdList.length}}
+            <br/>
+            {{selectedSampleIdList|json}}
         </span>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
