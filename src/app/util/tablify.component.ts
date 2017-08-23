@@ -129,6 +129,7 @@ export class SampleDatabase {
     this.hybridMap['LANE'] = {}
     this.hybridMap['CAPTURE'] = {}
     this.rawSampleList.forEach(sample => {
+      sample['TMP_TABLE_ITEM'] = false
       let isNew = false
       let runCode = sample[runString]
       let lanCode = sample[lanString]
@@ -154,7 +155,9 @@ export class SampleDatabase {
         }
         this.hybridMap['CAPTURE'][capCode].push(sample)
       }
-      if (!isNew){
+
+      // New hybrid samples or pure samples
+      if (!isNew || (!runCode && !lanCode && !capCode)){
         cd.push(sample)
         this.dataChange.next(cd)
       }
@@ -162,7 +165,6 @@ export class SampleDatabase {
 
   }
 
-  sampleList: any[]
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
   get data(): any[] {
     return this.dataChange.value
@@ -217,8 +219,33 @@ export class SampleDataSource extends DataSource<any> {
 
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
       data = data.splice(startIndex, this._paginator.pageSize)
+      data = this.getSortedData(data)
+      let result = []
+      let hybridMap = this._exampleDatabase.hybridMap
+      data.forEach((item, index) => {
+        console.log("processing:", item.SYS_SAMPLE_CODE)
+        let sample = Object.assign({}, item)
+        sample['TMP_TABLE_ITEM'] = true
+        result.push(sample)
 
-      return this.getSortedData(data)
+        // Get the hybrid type
+        let hybridType = ""
+        let hybridCode = ""
+        if (sample['SYS_RUN_CODE']) {
+          hybridType = "RUN"
+        } else if (sample['SYS_LANE_CODE']) {
+          hybridType = "LANE"
+        } else if (sample['SYS_CAPTURE_CODE']){
+          hybridType = "CAPTURE"
+        }
+        //console.log(hybridMap[hybridType]['SYS_'+hybridType+'_CODE'])
+        //console.log(hybridMap)
+        result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+      })
+      console.log("d:", data)
+      console.log("r:", result)
+
+      return result
     })
   }
   disconnect() {}
