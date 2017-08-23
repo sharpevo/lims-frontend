@@ -43,19 +43,29 @@
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
                 <md-cell *cdkCellDef="let row" class="simple-table-cell">
                     <span *ngIf="!row['SYS_RUN_CODE'] || !row['SYS_LANE_CODE'] || !row['SYS_CAPTURE_CODE']">
-                        <button
-                            md-icon-button
-                            (click)="expandSample(row)">
-                            +
-                        </button>
                     </span>
                     <span *ngIf="row['SYS_RUN_CODE']">
+                        <button
+                            md-icon-button
+                            (click)="expandSample(row,'RUN')">
+                            +
+                        </button>
                         {{row['SYS_RUN_CODE']}}
                     </span>
                     <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
+                        <button
+                            md-icon-button
+                            (click)="expandSample(row, 'LANE')">
+                            +
+                        </button>
                         {{row['SYS_LANE_CODE']}}
                     </span>
                     <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
+                        <button
+                            md-icon-button
+                            (click)="expandSample(row, 'CAPTURE')">
+                            +
+                        </button>
                         {{row['SYS_CAPTURE_CODE']}}
                     </span>
                     <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE']">
