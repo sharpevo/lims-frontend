@@ -103,18 +103,63 @@ export class TablifyComponent{
     })
   }
 
+  expandSample(sample: any, hybridType: string){
+    let hybridCode = sample['SYS_'+hybridType+'_CODE']
+    console.log(hybridCode)
+    console.log(">>", this.sampleDatabase.hybridMap[hybridType][hybridCode])
+  }
+
 }
 
 export class SampleDatabase {
   rawSampleList: any[]
+  hybridMap: any = {}
   constructor(private _rawSampleList: any[]){
     this.rawSampleList = _rawSampleList
     this.dataChange = new BehaviorSubject<any>([])
     const cd = this.data.slice()
+
+    // Build sample list with only one sample for the same type of hybrid
+    // and push all the inner samples to the corresponding collections.
+    let runString = 'SYS_RUN_CODE'
+    let lanString = 'SYS_LANE_CODE'
+    let capString = 'SYS_CAPTURE_CODE'
+    let sampleString = 'SAMPLES'
+    this.hybridMap['RUN'] = {}
+    this.hybridMap['LANE'] = {}
+    this.hybridMap['CAPTURE'] = {}
     this.rawSampleList.forEach(sample => {
-      cd.push(sample)
-      this.dataChange.next(cd)
+      let isNew = false
+      let runCode = sample[runString]
+      let lanCode = sample[lanString]
+      let capCode = sample[capString]
+      if (runCode) {
+        if (!this.hybridMap['RUN'][runCode]){
+          isNew = true
+          this.hybridMap['RUN'][runCode] = []
+        }
+        this.hybridMap['RUN'][runCode].push(sample)
+      }
+      if (lanCode) {
+        if (!this.hybridMap['LANE'][lanCode]){
+          isNew = true
+          this.hybridMap['LANE'][lanCode] = []
+        }
+        this.hybridMap['LANE'][lanCode].push(sample)
+      }
+      if (capCode) {
+        if (!this.hybridMap['CAPTURE'][capCode]){
+          isNew = true
+          this.hybridMap['CAPTURE'][capCode] = []
+        }
+        this.hybridMap['CAPTURE'][capCode].push(sample)
+      }
+      if (!isNew){
+        cd.push(sample)
+        this.dataChange.next(cd)
+      }
     })
+
   }
 
   sampleList: any[]
