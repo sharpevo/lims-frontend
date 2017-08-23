@@ -104,10 +104,19 @@ export class TablifyComponent{
   }
 
   expandSample(sample: any, hybridType: string){
-    let hybridCode = sample['SYS_'+hybridType+'_CODE']
-    console.log(hybridCode)
-    console.log(">>", this.sampleDatabase.hybridMap[hybridType][hybridCode])
+    console.log(">>", sample.SYS_SAMPLE_CODE)
+    this.sampleDatabase.rawSampleList.forEach(rawSample => {
+      if (sample.SYS_SAMPLE_CODE == rawSample.SYS_SAMPLE_CODE) {
+        rawSample['TMP_LIST_SAMPLE'] = !rawSample['TMP_LIST_SAMPLE']
+      }
+    })
+    this.sampleDatabase.buildSampleList()
+    this.sampleDataSource.filter = this.filter.nativeElement.value
   }
+  //expandSample(sample: any, hybridType: string){
+  //sample['TMP_LIST_SAMPLE'] = !sample['TMP_LIST_SAMPLE']
+  //this.sampleDataSource.filter = this.filter.nativeElement.value
+  //}
 
 }
 
@@ -116,11 +125,18 @@ export class SampleDatabase {
   hybridMap: any = {}
   constructor(private _rawSampleList: any[]){
     this.rawSampleList = _rawSampleList
-    this.dataChange = new BehaviorSubject<any>([])
-    const cd = this.data.slice()
+    //this.dataChange = new BehaviorSubject<any>([])
+    this.buildSampleList()
+  }
 
-    // Build sample list with only one sample for the same type of hybrid
-    // and push all the inner samples to the corresponding collections.
+  // Build sample list with only one sample for the same type of hybrid
+  // and push all the inner samples to the corresponding collections.
+  buildSampleList(){
+
+    // Fix duplicated samples
+    this.dataChange = new BehaviorSubject<any>([])
+
+    const cd = this.data.slice()
     let runString = 'SYS_RUN_CODE'
     let lanString = 'SYS_LANE_CODE'
     let capString = 'SYS_CAPTURE_CODE'
@@ -129,6 +145,7 @@ export class SampleDatabase {
     this.hybridMap['LANE'] = {}
     this.hybridMap['CAPTURE'] = {}
     this.rawSampleList.forEach(sample => {
+      console.log("sample:", sample)
       sample['TMP_TABLE_ITEM'] = false
       let isNew = false
       let runCode = sample[runString]
@@ -162,7 +179,6 @@ export class SampleDatabase {
         this.dataChange.next(cd)
       }
     })
-
   }
 
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
@@ -223,7 +239,7 @@ export class SampleDataSource extends DataSource<any> {
       let result = []
       let hybridMap = this._exampleDatabase.hybridMap
       data.forEach((item, index) => {
-        console.log("processing:", item.SYS_SAMPLE_CODE)
+        console.log("processing:", item.SYS_SAMPLE_CODE, item)
         let sample = Object.assign({}, item)
         sample['TMP_TABLE_ITEM'] = true
         result.push(sample)
@@ -240,10 +256,12 @@ export class SampleDataSource extends DataSource<any> {
         }
         //console.log(hybridMap[hybridType]['SYS_'+hybridType+'_CODE'])
         //console.log(hybridMap)
-        result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        if (sample['TMP_LIST_SAMPLE']){
+          result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        }
       })
-      console.log("d:", data)
-      console.log("r:", result)
+      //console.log("d:", data)
+      //console.log("r:", result)
 
       return result
     })
