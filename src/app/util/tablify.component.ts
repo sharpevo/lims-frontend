@@ -84,7 +84,7 @@ export class TablifyComponent{
     //row['TMP_CHECKED'] = checked
     // Get samples for the selected hybrid sample
 
-    if (!row['TMP_TABLE_ITEM']){
+    if (row['TMP_TABLE_ITEM']){
       let hybridInfo = this.sampleService.getHybridInfo(row)
       let hybridType = hybridInfo['type']
       let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
