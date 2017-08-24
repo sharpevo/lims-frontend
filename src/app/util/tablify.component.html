@@ -21,7 +21,7 @@
                 <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
                     <md-checkbox
                         [(ngModel)]="isSelectAll"
-                        (click)="selectAllSamples()"
+                        (ngModelChange)="selectAllSamples()"
                         color="primary">
                     </md-checkbox>
                 </md-header-cell>
@@ -35,7 +35,7 @@
                 <md-cell *cdkCellDef="let row" class="simple-table-cell-checkbox">
                     <md-checkbox
                         [(ngModel)]="row['TMP_CHECKED']"
-                        (click)="selectSample(row)"
+                        (ngModelChange)="selectSample(row)"
                         color="primary">
                     </md-checkbox>
                 </md-cell>
