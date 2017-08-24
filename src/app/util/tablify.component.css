@@ -53,6 +53,14 @@
   padding-right: 10px;
 }
 
+.simple-table-cell-checkbox-indent {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.87);
+  flex: 0.1;
+  padding-right: 10px;
+  padding-left: 50px;
+}
+
 .simple-table-filter {
   display: flex;
   align-items: baseline;
