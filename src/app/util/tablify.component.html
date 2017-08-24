@@ -32,11 +32,14 @@
                 </md-header-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <md-cell *cdkCellDef="let row" class="simple-table-cell-checkbox">
+                <md-cell
+                    *cdkCellDef="let row"
+                    [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
                     <md-checkbox
                         [(ngModel)]="row['TMP_CHECKED']"
                         (ngModelChange)="selectSample(row)"
                         color="primary">
+                        <span style="font-size:0.5em;opacity:0.5">{{row.id}}</span>
                     </md-checkbox>
                 </md-cell>
             </span>
@@ -71,7 +74,7 @@
                             {{row[columnKey]}}
                         </span>
                     </span>
-                    <span *ngIf="!row['TMP_TABLE_ITEM']" style="padding-left: 80px;">
+                    <span *ngIf="!row['TMP_TABLE_ITEM']">
                         {{row[columnKey]}}
                     </span>
                 </md-cell>
