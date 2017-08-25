@@ -45,12 +45,15 @@ export class TablifyComponent{
       // fix undefined bug
       this.columnList = []
     }
-    // Artificial column for checkbox
-    this.columnList.unshift({
-      "SYS_CODE": "id",
-      "SYS_LABEL": " ",
-      "SYS_TYPE": "checkbox",
-    })
+
+    if (this.columnList[0].SYS_TYPE != "checkbox"){
+      // Artificial column for checkbox
+      this.columnList.unshift({
+        "SYS_CODE": "id",
+        "SYS_LABEL": " ",
+        "SYS_TYPE": "checkbox",
+      })
+    }
 
     // convert object to map
     this.columnList.forEach(column => {
