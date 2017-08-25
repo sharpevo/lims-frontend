@@ -9,6 +9,8 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map'
 
+import {SampleService} from '../models/sample'
+
 @Component({
   selector: 'simple-table',
   styleUrls: ['./tablify.component.css'],
@@ -28,7 +30,9 @@ export class TablifyComponent{
   selectedSampleIdList: any[] = []
   isSelectAll: boolean = false
 
-  constructor(){
+  constructor(
+    private sampleService: SampleService
+  ){
   }
 
   sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
@@ -72,43 +76,70 @@ export class TablifyComponent{
     })
   }
 
-  selectSample(sample: any){
-    let id = sample.id
-    let index = this.selectedSampleIdList.indexOf(id)
-
-    if (index != -1) {
-      this.selectedSampleIdList.splice(index, 1)
-    } else {
-      this.selectedSampleIdList.push(id)
-    }
-    console.log(this.selectedSampleIdList)
+  selectSample(row: any){
+    this.setSampleChecked(row, row['TMP_CHECKED'])
   }
-  selectAllSamples(){
-    if (!this.isSelectAll){
-      this.selectedSampleIdList = []
-      this.sampleDataSource.currentSampleList.forEach(sample => {
-        this.selectedSampleIdList.push(sample.id)
-        sample['TMP_CHECKED'] = true
+
+  setSampleChecked(row: any, checked: boolean){
+    if (row['TMP_TABLE_ITEM']){
+      // hybrid sample checking
+      let hybridInfo = this.sampleService.getHybridInfo(row)
+      let hybridType = hybridInfo['type']
+      let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
+
+      this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
+        sample['TMP_CHECKED'] = checked
+        let index = this.selectedSampleIdList.indexOf(sample.id)
+        if (index != -1 && !checked) {
+          this.selectedSampleIdList.splice(index, 1)
+        }
+        if (index == -1 && checked){
+          this.selectedSampleIdList.push(sample.id)
+        }
       })
     } else {
+      // internal sample checking
+      let index = this.selectedSampleIdList.indexOf(row.id)
+      if (index != -1) {
+        this.selectedSampleIdList.splice(index, 1)
+      } else {
+        this.selectedSampleIdList.push(row.id)
+      }
+    }
+  }
+
+  selectAllSamples(){
+    if (this.isSelectAll){
+      this.selectedSampleIdList = []
+      this.sampleDataSource.currentSampleList.forEach(sample => {
+        sample['TMP_CHECKED'] = true
+        this.setSampleChecked(sample, true)
+      })
+    } else {
+      this.sampleDataSource.currentSampleList.forEach(sample => {
+        sample['TMP_CHECKED'] = false
+      })
       this.clearSelectedSamples()
     }
-    console.log(this.selectedSampleIdList)
   }
 
   clearSelectedSamples(){
     this.selectedSampleIdList = []
     this.sampleDataSource.currentSampleList.forEach(sample => {
       sample['TMP_CHECKED'] = false
+      this.setSampleChecked(sample, false)
     })
   }
 
   expandSample(sample: any, hybridType: string){
-    let hybridCode = sample['SYS_'+hybridType+'_CODE']
-    console.log(hybridCode)
-    console.log(">>", this.sampleDatabase.hybridMap[hybridType][hybridCode])
+    this.sampleDatabase.rawSampleList.forEach(rawSample => {
+      if (sample.SYS_SAMPLE_CODE == rawSample.SYS_SAMPLE_CODE) {
+        rawSample['TMP_LIST_SAMPLE'] = !rawSample['TMP_LIST_SAMPLE']
+      }
+    })
+    this.sampleDatabase.buildSampleList()
+    this.sampleDataSource.filter = this.filter.nativeElement.value
   }
-
 }
 
 export class SampleDatabase {
@@ -116,11 +147,17 @@ export class SampleDatabase {
   hybridMap: any = {}
   constructor(private _rawSampleList: any[]){
     this.rawSampleList = _rawSampleList
-    this.dataChange = new BehaviorSubject<any>([])
-    const cd = this.data.slice()
+    this.buildSampleList()
+  }
 
-    // Build sample list with only one sample for the same type of hybrid
-    // and push all the inner samples to the corresponding collections.
+  // Build sample list with only one sample for the same type of hybrid
+  // and push all the inner samples to the corresponding collections.
+  buildSampleList(){
+
+    // Fix duplicated samples
+    this.dataChange = new BehaviorSubject<any>([])
+
+    const cd = this.data.slice()
     let runString = 'SYS_RUN_CODE'
     let lanString = 'SYS_LANE_CODE'
     let capString = 'SYS_CAPTURE_CODE'
@@ -128,41 +165,43 @@ export class SampleDatabase {
     this.hybridMap['RUN'] = {}
     this.hybridMap['LANE'] = {}
     this.hybridMap['CAPTURE'] = {}
-    this.rawSampleList.forEach(sample => {
-      sample['TMP_TABLE_ITEM'] = false
-      let isNew = false
+    this.rawSampleList.forEach(rawSample => {
+      let sample = Object.assign({}, rawSample)
+      let isHybrid = false
       let runCode = sample[runString]
       let lanCode = sample[lanString]
       let capCode = sample[capString]
       if (runCode) {
         if (!this.hybridMap['RUN'][runCode]){
-          isNew = true
+          isHybrid = true
           this.hybridMap['RUN'][runCode] = []
         }
-        this.hybridMap['RUN'][runCode].push(sample)
+        this.hybridMap['RUN'][runCode].push(rawSample)
       }
       if (lanCode) {
         if (!this.hybridMap['LANE'][lanCode]){
-          isNew = true
+          isHybrid = true
           this.hybridMap['LANE'][lanCode] = []
         }
-        this.hybridMap['LANE'][lanCode].push(sample)
+        this.hybridMap['LANE'][lanCode].push(rawSample)
       }
       if (capCode) {
         if (!this.hybridMap['CAPTURE'][capCode]){
-          isNew = true
+          isHybrid = true
           this.hybridMap['CAPTURE'][capCode] = []
         }
-        this.hybridMap['CAPTURE'][capCode].push(sample)
+        this.hybridMap['CAPTURE'][capCode].push(rawSample)
       }
 
+      sample['TMP_TABLE_ITEM'] = isHybrid
+
       // New hybrid samples or pure samples
-      if (!isNew || (!runCode && !lanCode && !capCode)){
+      if (isHybrid || (!runCode && !lanCode && !capCode)){
         cd.push(sample)
         this.dataChange.next(cd)
       }
-    })
 
+    })
   }
 
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
@@ -206,7 +245,6 @@ export class SampleDataSource extends DataSource<any> {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
-        //let searchStr = (item.id + item.SYS_CODE).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) != -1;
       })
 
@@ -222,10 +260,7 @@ export class SampleDataSource extends DataSource<any> {
       data = this.getSortedData(data)
       let result = []
       let hybridMap = this._exampleDatabase.hybridMap
-      data.forEach((item, index) => {
-        console.log("processing:", item.SYS_SAMPLE_CODE)
-        let sample = Object.assign({}, item)
-        sample['TMP_TABLE_ITEM'] = true
+      data.forEach((sample, index) => {
         result.push(sample)
 
         // Get the hybrid type
@@ -238,12 +273,10 @@ export class SampleDataSource extends DataSource<any> {
         } else if (sample['SYS_CAPTURE_CODE']){
           hybridType = "CAPTURE"
         }
-        //console.log(hybridMap[hybridType]['SYS_'+hybridType+'_CODE'])
-        //console.log(hybridMap)
-        result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        if (sample['TMP_LIST_SAMPLE']){
+          result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        }
       })
-      console.log("d:", data)
-      console.log("r:", result)
 
       return result
     })

@@ -151,4 +151,33 @@ export class SampleService{
     return ''
   }
 
+  getHybridInfo(sample: any): any{
+
+    let runString = 'SYS_RUN_CODE'
+    let lanString = 'SYS_LANE_CODE'
+    let capString = 'SYS_CAPTURE_CODE'
+    let runCode = sample[runString]
+    let lanCode = sample[lanString]
+    let capCode = sample[capString]
+
+    if (runCode){
+      return {
+        "type":"RUN",
+        [runString]: runCode
+      }
+    }
+    if (lanCode){
+      return {
+        "type":"LANE",
+        [lanString]: lanCode
+      }
+    }
+    if (capCode){
+      return {
+        "type":"CAPTURE",
+        [capString]: capCode
+      }
+    }
+  }
+
 }
