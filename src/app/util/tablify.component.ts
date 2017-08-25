@@ -85,6 +85,7 @@ export class TablifyComponent{
     // Get samples for the selected hybrid sample
 
     if (row['TMP_TABLE_ITEM']){
+      // hybrid sample checking
       let hybridInfo = this.sampleService.getHybridInfo(row)
       let hybridType = hybridInfo['type']
       let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
@@ -94,13 +95,22 @@ export class TablifyComponent{
 
         let index = this.selectedSampleIdList.indexOf(sample.id)
 
-        if (index != -1) {
+        if (index != -1 && !checked) {
           this.selectedSampleIdList.splice(index, 1)
-        } else {
+        }
+        if (index == -1 && checked){
           this.selectedSampleIdList.push(sample.id)
         }
-
       })
+    } else {
+      // internal sample checking
+      let index = this.selectedSampleIdList.indexOf(row.id)
+
+      if (index != -1) {
+        this.selectedSampleIdList.splice(index, 1)
+      } else {
+        this.selectedSampleIdList.push(row.id)
+      }
 
     }
 
