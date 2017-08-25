@@ -11,6 +11,14 @@
             <br/>
             {{selectedSampleIdList|json}}
         </span>
+        <span
+            style="opacity:0.7; font-size: 0.7em;padding-left: 15px;">
+            <span *ngFor="let sample of rawSampleList">
+                <span *ngIf="sample['TMP_CHECKED']">
+                "{{sample.id}}",
+                </span>
+            </span>
+        </span>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
 
@@ -21,7 +29,7 @@
                 <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
                     <md-checkbox
                         [(ngModel)]="isSelectAll"
-                        (click)="selectAllSamples()"
+                        (ngModelChange)="selectAllSamples()"
                         color="primary">
                     </md-checkbox>
                 </md-header-cell>
@@ -32,17 +40,54 @@
                 </md-header-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <md-cell *cdkCellDef="let row" class="simple-table-cell-checkbox">
+                <md-cell
+                    *cdkCellDef="let row"
+                    [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
                     <md-checkbox
                         [(ngModel)]="row['TMP_CHECKED']"
-                        (click)="selectSample(row)"
+                        (ngModelChange)="selectSample(row)"
                         color="primary">
+                        <span style="font-size:0.5em;opacity:0.5">
+                            <!--{{row.id}} -->
+                            ({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX].id}})
+                        </span>
                     </md-checkbox>
                 </md-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
                 <md-cell *cdkCellDef="let row" class="simple-table-cell">
-                    {{row[columnKey]}}
+                    <span *ngIf="row['TMP_TABLE_ITEM']">
+                        <span *ngIf="row['SYS_RUN_CODE']">
+                            <button
+                                md-icon-button
+                                (click)="expandSample(row,'RUN')">
+                                +
+                            </button>
+                            {{row['SYS_RUN_CODE']}}
+                        </span>
+                        <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
+                            <button
+                                md-icon-button
+                                (click)="expandSample(row, 'LANE')">
+                                +
+                            </button>
+                            {{row['SYS_LANE_CODE']}}
+                        </span>
+                        <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
+                            <button
+                                md-icon-button
+                                (click)="expandSample(row, 'CAPTURE')">
+                                +
+                            </button>
+                            {{row['SYS_CAPTURE_CODE']}}
+                        </span>
+                        <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
+                            {{row[columnKey]}}
+                        </span>
+                    </span>
+                    <span *ngIf="!row['TMP_TABLE_ITEM']">
+                        {{row[columnKey]}}
+                    </span>
                 </md-cell>
             </span>
 		</ng-container>
