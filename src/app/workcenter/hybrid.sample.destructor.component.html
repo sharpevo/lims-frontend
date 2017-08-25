@@ -29,10 +29,6 @@
         </div>
     </span>
     <span *ngIf="key=='SAMPLES'">
-        <simple-table
-            [rawSampleList]="shownSampleList[key]"
-            [columnList]="workcenter['SYS_AUXILIARY_ATTRIBUTE_LIST']">
-        </simple-table>
         <div *ngFor="let sample of shownSampleList[key]">
             <span (click)="expandall = !expandall">
                 -
