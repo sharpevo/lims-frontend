@@ -19,6 +19,7 @@ import {SampleService} from '../models/sample'
 export class TablifyComponent{
 
   @Input() rawSampleList
+  @Input() shownSampleList
   @Input() columnList
   @ViewChild(MdPaginator) paginator: MdPaginator
   @ViewChild(MdSort) sort: MdSort
@@ -61,7 +62,7 @@ export class TablifyComponent{
       this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
     })
 
-    this.sampleDatabase = new SampleDatabase(this.rawSampleList)
+    this.sampleDatabase = new SampleDatabase(this.shownSampleList)
     this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
     .debounceTime(150)
@@ -80,6 +81,19 @@ export class TablifyComponent{
     this.setSampleChecked(row, row['TMP_CHECKED'])
   }
 
+  // Normally, the operatable samples might be the processing stage meaning the
+  // value of checkboxes should be treated with the current sample id instead
+  // of the previous one as default.
+  checkCurrentSample(sample: any, checked: boolean){
+    let currentSampleIndex = sample['TMP_NEXT_SAMPLE_INDEX']
+    if (currentSampleIndex >= 0){
+      console.log("C", sample.id)
+      this.rawSampleList[currentSampleIndex]['TMP_CHECKED'] = checked
+    } else {
+      console.error("ATTENTION: todo")
+    }
+  }
+
   setSampleChecked(row: any, checked: boolean){
     if (row['TMP_TABLE_ITEM']){
       // hybrid sample checking
@@ -89,6 +103,7 @@ export class TablifyComponent{
 
       this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
         sample['TMP_CHECKED'] = checked
+        this.checkCurrentSample(sample, checked)
         let index = this.selectedSampleIdList.indexOf(sample.id)
         if (index != -1 && !checked) {
           this.selectedSampleIdList.splice(index, 1)
@@ -99,6 +114,7 @@ export class TablifyComponent{
       })
     } else {
       // internal sample checking
+      this.checkCurrentSample(row, checked)
       let index = this.selectedSampleIdList.indexOf(row.id)
       if (index != -1) {
         this.selectedSampleIdList.splice(index, 1)
@@ -107,6 +123,7 @@ export class TablifyComponent{
       }
     }
   }
+
 
   selectAllSamples(){
     if (this.isSelectAll){
@@ -118,6 +135,7 @@ export class TablifyComponent{
     } else {
       this.sampleDataSource.currentSampleList.forEach(sample => {
         sample['TMP_CHECKED'] = false
+        this.checkCurrentSample(sample, false)
       })
       this.clearSelectedSamples()
     }
