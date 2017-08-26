@@ -11,6 +11,7 @@ import {SampleService} from '../models/sample'
 export class WorkcenterSampleCompletedComponent{
   @Input() sampleList
   @Input() callback
+  @Input() workcenter
 
   completedSampleList: any[] = []
   builtSampleList: any[] = []

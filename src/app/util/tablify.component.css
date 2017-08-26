@@ -1,15 +1,11 @@
 .simple-table-container {
   display: flex;
   flex-direction: column;
-  max-height: 500px;
-  min-width: 300px;
 }
 
 .simple-table {
   flex: 1 1 auto;
   overflow: auto;
-  max-height: 500px;
-  min-width: 300px;
 }
 
 .simple-table-header-row, .simple-table-row {
@@ -20,6 +16,10 @@
   padding: 0 8px;
 }
 
+.simple-table-row:hover .simple-table-cell {
+    opacity:1;
+}
+
 .simple-table-header-cell {
   font-size: 12px;
   font-weight: bold;
@@ -27,10 +27,34 @@
   flex: 1;
 }
 
+.simple-table-header-cell-checkbox {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+  flex: 0.1;
+  padding-right: 10px;
+}
+
 .simple-table-cell {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
   flex: 1;
+  opacity: 0.7;
+}
+
+.simple-table-cell-checkbox {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
+  flex: 0.1;
+  padding-right: 10px;
+}
+
+.simple-table-cell-checkbox-indent {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.87);
+  flex: 0.1;
+  padding-right: 10px;
+  padding-left: 50px;
 }
 
 .simple-table-filter {

@@ -78,6 +78,7 @@
                 <h4>Activated</h4>
                 <workcenter-sample-activated
                     #workcenterSampleActivatedComponent
+                    [workcenter]="entity"
                     [sampleList]="sampleLists[i]">
                 </workcenter-sample-activated>
             </li>
@@ -86,6 +87,7 @@
                 <h4>Dispatched</h4>
                 <workcenter-sample-dispatched
                     #workcenterSampleDispatchedComponent
+                    [workcenter]="entity"
                     [sampleList]="sampleLists[i]">
                 </workcenter-sample-dispatched>
             </li>
