@@ -215,7 +215,7 @@ export class SampleDatabase {
         this.hybridMap['CAPTURE'][capCode].push(rawSample)
       }
 
-      sample['TMP_TABLE_ITEM'] = isHybrid
+      sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
 
       // New hybrid samples or pure samples
       if (isHybrid || (!runCode && !lanCode && !capCode)){
