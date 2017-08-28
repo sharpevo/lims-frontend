@@ -13,3 +13,9 @@
         <!--[sampleList]="sampleList">-->
     <!--</sample-info-inline>-->
 </div>
+<simple-table
+    *ngIf="completedSampleList.length > 0"
+    [rawSampleList]="sampleList"
+    [shownSampleList]="completedSampleList"
+    [columnList]="completedSampleList[0]['SYS_SCHEMA']">
+</simple-table>
