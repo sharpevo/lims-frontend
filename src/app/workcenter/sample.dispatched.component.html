@@ -6,6 +6,12 @@
         [shownSampleList]="builtSampleList"
         [showCheckbox]="true">
     </hybrid-sample-destructor>
+    <simple-table
+        *ngIf="dispatchedSampleList.length > 0"
+        [rawSampleList]="sampleList"
+        [shownSampleList]="dispatchedSampleList"
+        [columnList]="workcenter['SYS_AUXILIARY_ATTRIBUTE_LIST']">
+    </simple-table>
     <!--<sample-info-inline-->
         <!--*ngIf="sampleList?.length > 0 && dispatchedSampleList.length > 0"-->
         <!--[showCheckbox]="true"-->
