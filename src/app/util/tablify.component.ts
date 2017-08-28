@@ -46,6 +46,20 @@ export class TablifyComponent{
       this.columnList = []
     }
 
+    let hasSampleCode = false
+    this.columnList.forEach(column => {
+      if (column['SYS_CODE'] == 'SYS_SAMPLE_CODE'){
+        hasSampleCode = true
+      }
+    })
+    if (!hasSampleCode){
+      this.columnList.unshift({
+        "SYS_CODE": "SYS_SAMPLE_CODE",
+        "SYS_LABEL": "样品编码",
+        "SYS_TYPE": "string",
+      })
+    }
+
     if (!this.columnList[0] ||
         this.columnList[0].SYS_TYPE != "checkbox"){
       // Artificial column for checkbox
