@@ -46,7 +46,8 @@ export class TablifyComponent{
       this.columnList = []
     }
 
-    if (this.columnList[0].SYS_TYPE != "checkbox"){
+    if (!this.columnList[0] ||
+        this.columnList[0].SYS_TYPE != "checkbox"){
       // Artificial column for checkbox
       this.columnList.unshift({
         "SYS_CODE": "id",
