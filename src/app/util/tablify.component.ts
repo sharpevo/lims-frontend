@@ -62,7 +62,10 @@ export class TablifyComponent{
       // get keys in a order
       this.columnMapKeys.push(key)
       this.columnMap[key] = {}
-      this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]
+
+      // the choices are useful for the attributes retrieved from the
+      // SYS_SCHEMA instead of the attribute list.
+      this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]?column[column['SYS_LABEL']]:column['SYS_LABEL']
       this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
     })
 
@@ -94,7 +97,7 @@ export class TablifyComponent{
       console.log("C", sample.id)
       this.rawSampleList[currentSampleIndex]['TMP_CHECKED'] = checked
     } else {
-      console.error("ATTENTION: todo")
+      console.warn("Not valid next sample id.")
     }
   }
 

@@ -49,7 +49,11 @@
                         color="primary">
                         <span style="font-size:0.5em;opacity:0.5">
                             <!--{{row.id}} -->
-                            ({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX].id.substr(21)}})
+                            <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX].id.substr(21)}})-->
+
+                            <!--The question mark is used for the samples that do not have any next sample id-->
+                            <!--for example, samples in the scheduled/completed-->
+                            ({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX]?.id.substr(21)}})
                         </span>
                     </md-checkbox>
                 </md-cell>
