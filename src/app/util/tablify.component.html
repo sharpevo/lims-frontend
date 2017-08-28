@@ -56,7 +56,7 @@
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
                 <md-cell *cdkCellDef="let row" class="simple-table-cell">
-                    <span *ngIf="row['TMP_TABLE_ITEM']">
+                    <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
                         <span *ngIf="row['SYS_RUN_CODE']">
                             <button
                                 md-icon-button
@@ -85,7 +85,7 @@
                             {{row[columnKey]}}
                         </span>
                     </span>
-                    <span *ngIf="!row['TMP_TABLE_ITEM']">
+                    <span *ngIf="!row['TMP_TABLE_ITEM'] || columnKey != 'SYS_SAMPLE_CODE'">
                         {{row[columnKey]}}
                     </span>
                 </md-cell>
