@@ -221,14 +221,14 @@ export class SampleDatabase {
         }
         this.hybridMap['RUN'][runCode].push(rawSample)
       }
-      if (lanCode) {
+      if (!runCode && lanCode) {
         if (!this.hybridMap['LANE'][lanCode]){
           isHybrid = true
           this.hybridMap['LANE'][lanCode] = []
         }
         this.hybridMap['LANE'][lanCode].push(rawSample)
       }
-      if (capCode) {
+      if (!runCode && !lanCode && capCode) {
         if (!this.hybridMap['CAPTURE'][capCode]){
           isHybrid = true
           this.hybridMap['CAPTURE'][capCode] = []
@@ -243,7 +243,6 @@ export class SampleDatabase {
         cd.push(sample)
         this.dataChange.next(cd)
       }
-
     })
   }
 
