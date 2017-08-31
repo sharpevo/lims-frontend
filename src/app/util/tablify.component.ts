@@ -193,7 +193,7 @@ export class TablifyComponent{
     console.log(sample)
     let hybridType = sample['TMP_HYBRID_TYPE']
     let hybridCode = sample['SYS_'+hybridType+'_CODE']
-    let dialogRef = this.dialog.open(SimpleTableDialog, {height: '500px', width: '600px'});
+    let dialogRef = this.dialog.open(SimpleTableDialog, {height: '500px', width: '800px'});
     dialogRef.componentInstance.config.sampleList = this.sampleDatabase.hybridMap[hybridType][hybridCode]
     dialogRef.componentInstance.config.hybridType = hybridType
     dialogRef.componentInstance.config.hybridCode = hybridCode
