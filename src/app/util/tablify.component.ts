@@ -44,6 +44,7 @@ export class TablifyComponent{
   sampleDataSource: SampleDataSource | null
 
   ngOnInit(){
+    console.log("..", this.targetHybridType)
 
     if (!this.columnList){
       // fix undefined bug
@@ -354,19 +355,19 @@ export class SampleDataSource extends DataSource<any> {
       data.forEach((sample, index) => {
         result.push(sample)
 
-        // Get the hybrid type
-        let hybridType = ""
-        let hybridCode = ""
-        if (sample['SYS_RUN_CODE']) {
-          hybridType = "RUN"
-        } else if (sample['SYS_LANE_CODE']) {
-          hybridType = "LANE"
-        } else if (sample['SYS_CAPTURE_CODE']){
-          hybridType = "CAPTURE"
-        }
-        if (sample['TMP_LIST_SAMPLE']){
-          result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
-        }
+        //// Get the hybrid type
+        //let hybridType = ""
+        //let hybridCode = ""
+        //if (sample['SYS_RUN_CODE']) {
+        //hybridType = "RUN"
+        //} else if (sample['SYS_LANE_CODE']) {
+        //hybridType = "LANE"
+        //} else if (sample['SYS_CAPTURE_CODE']){
+        //hybridType = "CAPTURE"
+        //}
+        //if (sample['TMP_LIST_SAMPLE']){
+        //result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        //}
       })
 
       return result
