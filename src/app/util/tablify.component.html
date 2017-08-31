@@ -67,7 +67,10 @@
                                 (click)="expandSample(row,'RUN')">
                                 +
                             </button>
-                            {{row['SYS_RUN_CODE']}}
+                            <span
+                                (click)="openInternalSampleDialog(row)">
+                                {{row['SYS_RUN_CODE']}}
+                            </span>
                         </span>
                         <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
                             <button
@@ -75,7 +78,10 @@
                                 (click)="expandSample(row, 'LANE')">
                                 +
                             </button>
-                            {{row['SYS_LANE_CODE']}}
+                            <span
+                                (click)="openInternalSampleDialog(row)">
+                                {{row['SYS_LANE_CODE']}}
+                            </span>
                         </span>
                         <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
                             <button
@@ -83,7 +89,10 @@
                                 (click)="expandSample(row, 'CAPTURE')">
                                 +
                             </button>
-                            {{row['SYS_CAPTURE_CODE']}}
+                            <span
+                                (click)="openInternalSampleDialog(row)">
+                                {{row['SYS_CAPTURE_CODE']}}
+                            </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
                             {{row[columnKey]}}
