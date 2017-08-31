@@ -9,6 +9,7 @@ import {MdSnackBar} from '@angular/material'
 export class SimpleTableDialog {
 
   config: any = {}
+  targetHybridType: string = ''
   constructor(
     private snackBar: MdSnackBar,
     public dialogRef: MdDialogRef<SimpleTableDialog>
@@ -16,6 +17,19 @@ export class SimpleTableDialog {
 
   ngOnInit(){
     console.log(this.config)
+    switch (this.config.hybridType){
+      case "RUN":
+        this.targetHybridType = "LANE"
+      break
+      case "LANE":
+        this.targetHybridType = "CAPTURE"
+      break
+      case "CAPTURE":
+        this.targetHybridType = "SAMPLE"
+      break
+      default:
+        console.error("Invalid hybrid type")
+    }
   }
 
   showMessage(msg: string) {
