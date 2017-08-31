@@ -89,6 +89,7 @@
                         </span>
                         <span *ngIf="targetHybridType">
                             <button
+                                *ngIf="targetHybridType != 'SAMPLE'"
                                 md-icon-button
                                 (click)="openInternalSampleDialog(row)">
                                 +
