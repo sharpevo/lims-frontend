@@ -1,6 +1,7 @@
 import {Component, Input, ViewChild, ElementRef} from '@angular/core'
 import {MdPaginator} from '@angular/material'
 import {MdSort} from '@angular/material'
+import {MdDialog, MdDialogRef} from '@angular/material'
 
 import { DataSource } from '@angular/cdk';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -10,6 +11,7 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map'
 
 import {SampleService} from '../models/sample'
+import {SimpleTableDialog} from './simple.table.dialog'
 
 @Component({
   selector: 'simple-table',
@@ -32,6 +34,7 @@ export class TablifyComponent{
   isSelectAll: boolean = false
 
   constructor(
+    public dialog: MdDialog,
     private sampleService: SampleService
   ){
   }
@@ -183,6 +186,20 @@ export class TablifyComponent{
     this.sampleDatabase.buildSampleList()
     this.sampleDataSource.filter = this.filter.nativeElement.value
   }
+
+  openInternalSampleDialog(sample: any){
+    console.log(sample)
+    let hybridType = sample['TMP_HYBRID_TYPE']
+    let hybridCode = sample['SYS_'+hybridType+'_CODE']
+    let dialogRef = this.dialog.open(SimpleTableDialog, {height: '500px', width: '600px'});
+    dialogRef.componentInstance.config.sampleList = this.sampleDatabase.hybridMap[hybridType][hybridCode]
+    dialogRef.componentInstance.config.hybridType = hybridType
+    dialogRef.componentInstance.config.hybridCode = hybridCode
+    dialogRef.afterClosed().subscribe(result => {
+      //
+    });
+  }
+
 }
 
 export class SampleDatabase {
