@@ -23,6 +23,7 @@ export class TablifyComponent{
   @Input() rawSampleList
   @Input() shownSampleList
   @Input() columnList
+  @Input() targetHybridType
   @ViewChild(MdPaginator) paginator: MdPaginator
   @ViewChild(MdSort) sort: MdSort
   @ViewChild('filter') filter: ElementRef
@@ -86,7 +87,7 @@ export class TablifyComponent{
       this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
     })
 
-    this.sampleDatabase = new SampleDatabase(this.shownSampleList)
+    this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
     this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
     .debounceTime(150)
@@ -205,7 +206,11 @@ export class TablifyComponent{
 export class SampleDatabase {
   rawSampleList: any[]
   hybridMap: any = {}
-  constructor(private _rawSampleList: any[]){
+  constructor(
+    private _rawSampleList: any[],
+    private targetHybridType: string
+  ){
+    console.log(">>", this.targetHybridType)
     this.rawSampleList = _rawSampleList
     this.buildSampleList()
   }
@@ -225,45 +230,69 @@ export class SampleDatabase {
     this.hybridMap['RUN'] = {}
     this.hybridMap['LANE'] = {}
     this.hybridMap['CAPTURE'] = {}
+    this.hybridMap['SAMPLE'] = {}
     this.rawSampleList.forEach(rawSample => {
       let sample = Object.assign({}, rawSample)
       let isHybrid = false
       let runCode = sample[runString]
       let lanCode = sample[lanString]
       let capCode = sample[capString]
-      if (runCode) {
-        if (!this.hybridMap['RUN'][runCode]){
-          isHybrid = true
-          this.hybridMap['RUN'][runCode] = []
+
+
+      if (!this.targetHybridType){
+        if (runCode) {
+          if (!this.hybridMap['RUN'][runCode]){
+            isHybrid = true
+            this.hybridMap['RUN'][runCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'RUN'
+          this.hybridMap['RUN'][runCode].push(rawSample)
         }
-        sample['TMP_HYBRID_TYPE'] = 'RUN'
-        this.hybridMap['RUN'][runCode].push(rawSample)
-      }
-      if (!runCode && lanCode) {
-        if (!this.hybridMap['LANE'][lanCode]){
-          isHybrid = true
-          this.hybridMap['LANE'][lanCode] = []
+        if (!runCode && lanCode) {
+          if (!this.hybridMap['LANE'][lanCode]){
+            isHybrid = true
+            this.hybridMap['LANE'][lanCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'LANE'
+          this.hybridMap['LANE'][lanCode].push(rawSample)
         }
-        sample['TMP_HYBRID_TYPE'] = 'LANE'
-        this.hybridMap['LANE'][lanCode].push(rawSample)
-      }
-      if (!runCode && !lanCode && capCode) {
-        if (!this.hybridMap['CAPTURE'][capCode]){
-          isHybrid = true
-          this.hybridMap['CAPTURE'][capCode] = []
+        if (!runCode && !lanCode && capCode) {
+          if (!this.hybridMap['CAPTURE'][capCode]){
+            isHybrid = true
+            this.hybridMap['CAPTURE'][capCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'CAPTURE'
+          this.hybridMap['CAPTURE'][capCode].push(rawSample)
         }
-        sample['TMP_HYBRID_TYPE'] = 'CAPTURE'
-        this.hybridMap['CAPTURE'][capCode].push(rawSample)
+
+        sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
+
+        // New hybrid samples or pure samples
+        if (isHybrid || (!runCode && !lanCode && !capCode)){
+          cd.push(sample)
+          this.dataChange.next(cd)
+        }
+      } else {
+
+        let hybridCode = sample['SYS_'+this.targetHybridType+'_CODE']
+
+        if (!this.hybridMap[this.targetHybridType][hybridCode]){
+          isHybrid = true
+          this.hybridMap[this.targetHybridType][hybridCode] = []
+        }
+        this.hybridMap[this.targetHybridType][hybridCode].push(rawSample)
+        sample['TMP_HYBRID_TYPE'] = this.targetHybridType
+
+        sample['TMP_TABLE_ITEM'] = isHybrid
+        // New hybrid samples or pure samples
+        if (isHybrid || (!runCode && !lanCode && !capCode)){
+          cd.push(sample)
+          this.dataChange.next(cd)
+        }
       }
 
-      sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
-
-      // New hybrid samples or pure samples
-      if (isHybrid || (!runCode && !lanCode && !capCode)){
-        cd.push(sample)
-        this.dataChange.next(cd)
-      }
     })
+    console.log(this.hybridMap)
   }
 
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
