@@ -236,6 +236,7 @@ export class SampleDatabase {
           isHybrid = true
           this.hybridMap['RUN'][runCode] = []
         }
+        sample['TMP_HYBRID_TYPE'] = 'RUN'
         this.hybridMap['RUN'][runCode].push(rawSample)
       }
       if (!runCode && lanCode) {
@@ -243,6 +244,7 @@ export class SampleDatabase {
           isHybrid = true
           this.hybridMap['LANE'][lanCode] = []
         }
+        sample['TMP_HYBRID_TYPE'] = 'LANE'
         this.hybridMap['LANE'][lanCode].push(rawSample)
       }
       if (!runCode && !lanCode && capCode) {
@@ -250,6 +252,7 @@ export class SampleDatabase {
           isHybrid = true
           this.hybridMap['CAPTURE'][capCode] = []
         }
+        sample['TMP_HYBRID_TYPE'] = 'CAPTURE'
         this.hybridMap['CAPTURE'][capCode].push(rawSample)
       }
 
@@ -362,4 +365,5 @@ export class SampleDataSource extends DataSource<any> {
     });
     return data
   }
+
 }
