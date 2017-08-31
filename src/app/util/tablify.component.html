@@ -1,4 +1,3 @@
-
 <div class="simple-table-container">
 	<div class="simple-table-filter">
 		<md-input-container floatPlaceholder="never">
@@ -61,6 +60,8 @@
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
                 <md-cell *cdkCellDef="let row" class="simple-table-cell">
                     <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
+                        <span *ngIf="!targetHybridType">
+
                         <span *ngIf="row['SYS_RUN_CODE']">
                             <button
                                 md-icon-button
@@ -92,6 +93,18 @@
                             <span
                                 (click)="openInternalSampleDialog(row)">
                                 {{row['SYS_CAPTURE_CODE']}}
+                            </span>
+                        </span>
+                        </span>
+                        <span *ngIf="targetHybridType">
+                            <button
+                                md-icon-button
+                                (click)="expandSample(row, 'CAPTURE')">
+                                +
+                            </button>
+                            <span
+                                (click)="openInternalSampleDialog(row)">
+                                {{row['SYS_'+targetHybridType+'_CODE']}}
                             </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
