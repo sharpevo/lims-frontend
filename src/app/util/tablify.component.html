@@ -61,40 +61,35 @@
                 <md-cell *cdkCellDef="let row" class="simple-table-cell">
                     <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
                         <span *ngIf="!targetHybridType">
-
-                        <span *ngIf="row['SYS_RUN_CODE']">
-                            <button
-                                md-icon-button
-                                (click)="openInternalSampleDialog(row)">
-                                +
-                            </button>
-                            {{row['SYS_RUN_CODE']}}
-                        </span>
-                        <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
-                            <button
-                                md-icon-button
-                                (click)="openInternalSampleDialog(row)">
-                                +
-                            </button>
-                            {{row['SYS_LANE_CODE']}}
-                        </span>
-                        <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
-                            <button
-                                md-icon-button
-                                (click)="openInternalSampleDialog(row)">
-                                +
-                            </button>
-                            {{row['SYS_CAPTURE_CODE']}}
-                        </span>
+                            <span *ngIf="row['SYS_RUN_CODE']">
+                                <span
+                                    (click)="openInternalSampleDialog(row)">
+                                    {{row['SYS_RUN_CODE']}}
+                                </span>
+                            </span>
+                            <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
+                                <span
+                                    (click)="openInternalSampleDialog(row)">
+                                    {{row['SYS_LANE_CODE']}}
+                                </span>
+                            </span>
+                            <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
+                                <span
+                                    (click)="openInternalSampleDialog(row)">
+                                    {{row['SYS_CAPTURE_CODE']}}
+                                </span>
+                            </span>
                         </span>
                         <span *ngIf="targetHybridType">
-                            <button
+                            <span
+                                *ngIf="targetHybridType == 'SAMPLE'">
+                                {{row['SYS_'+targetHybridType+'_CODE']}}
+                            </span>
+                            <span
                                 *ngIf="targetHybridType != 'SAMPLE'"
-                                md-icon-button
                                 (click)="openInternalSampleDialog(row)">
-                                +
-                            </button>
-                            {{row['SYS_'+targetHybridType+'_CODE']}}
+                                {{row['SYS_'+targetHybridType+'_CODE']}}
+                            </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
                             {{row[columnKey]}}
