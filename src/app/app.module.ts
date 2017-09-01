@@ -57,6 +57,7 @@ import { CdkTableModule } from '@angular/cdk'
 
 import {TablifyComponent} from './util/tablify.component'
 
+import {SimpleTableDialog} from './util/simple.table.dialog';
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -93,12 +94,14 @@ import {TablifyComponent} from './util/tablify.component'
     PluginPanelIndicatorComponent,
     PluginExcelProcessorComponent,
     TablifyComponent,
+    SimpleTableDialog,
   ],
   entryComponents:[
     GenreFormDialog,
     EntityFormDialog,
     AttributeFormDialog,
     SampleFormDialog,
+    SimpleTableDialog,
   ],
   imports: [
     BrowserModule,
