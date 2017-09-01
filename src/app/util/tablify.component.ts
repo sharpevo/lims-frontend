@@ -130,17 +130,19 @@ export class TablifyComponent{
         let hybridType = hybridInfo['type']
         let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
 
-        this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
-          sample['TMP_CHECKED'] = checked
-          this.checkCurrentSample(sample, checked)
-          let index = this.selectedSampleIdList.indexOf(sample.id)
-          if (index != -1 && !checked) {
-            this.selectedSampleIdList.splice(index, 1)
-          }
-          if (index == -1 && checked){
-            this.selectedSampleIdList.push(sample.id)
-          }
-        })
+        if (this.sampleDatabase.hybridMap[hybridType][hybridCode]){
+          this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
+            sample['TMP_CHECKED'] = checked
+            this.checkCurrentSample(sample, checked)
+            let index = this.selectedSampleIdList.indexOf(sample.id)
+            if (index != -1 && !checked) {
+              this.selectedSampleIdList.splice(index, 1)
+            }
+            if (index == -1 && checked){
+              this.selectedSampleIdList.push(sample.id)
+            }
+          })
+        }
       }
     } else {
       // internal sample checking
