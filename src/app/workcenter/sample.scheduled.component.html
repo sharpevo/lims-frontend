@@ -7,3 +7,9 @@
         </entity-info-inline>
     </span>
 </div>
+<simple-table
+    *ngIf="scheduledSampleList.length > 0"
+    [rawSampleList]="sampleList"
+    [shownSampleList]="scheduledSampleList"
+    [columnList]="scheduledSampleList[0]['SYS_SCHEMA']">
+</simple-table>
