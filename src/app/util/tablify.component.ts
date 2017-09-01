@@ -1,6 +1,7 @@
 import {Component, Input, ViewChild, ElementRef} from '@angular/core'
 import {MdPaginator} from '@angular/material'
 import {MdSort} from '@angular/material'
+import {MdDialog, MdDialogRef} from '@angular/material'
 
 import { DataSource } from '@angular/cdk';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -10,6 +11,7 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map'
 
 import {SampleService} from '../models/sample'
+import {SimpleTableDialog} from './simple.table.dialog'
 
 @Component({
   selector: 'simple-table',
@@ -21,6 +23,7 @@ export class TablifyComponent{
   @Input() rawSampleList
   @Input() shownSampleList
   @Input() columnList
+  @Input() targetHybridType
   @ViewChild(MdPaginator) paginator: MdPaginator
   @ViewChild(MdSort) sort: MdSort
   @ViewChild('filter') filter: ElementRef
@@ -32,6 +35,7 @@ export class TablifyComponent{
   isSelectAll: boolean = false
 
   constructor(
+    public dialog: MdDialog,
     private sampleService: SampleService
   ){
   }
@@ -40,6 +44,7 @@ export class TablifyComponent{
   sampleDataSource: SampleDataSource | null
 
   ngOnInit(){
+    console.log("..", this.targetHybridType)
 
     if (!this.columnList){
       // fix undefined bug
@@ -83,7 +88,7 @@ export class TablifyComponent{
       this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
     })
 
-    this.sampleDatabase = new SampleDatabase(this.shownSampleList)
+    this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
     this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
     .debounceTime(150)
@@ -125,17 +130,19 @@ export class TablifyComponent{
         let hybridType = hybridInfo['type']
         let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
 
-        this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
-          sample['TMP_CHECKED'] = checked
-          this.checkCurrentSample(sample, checked)
-          let index = this.selectedSampleIdList.indexOf(sample.id)
-          if (index != -1 && !checked) {
-            this.selectedSampleIdList.splice(index, 1)
-          }
-          if (index == -1 && checked){
-            this.selectedSampleIdList.push(sample.id)
-          }
-        })
+        if (this.sampleDatabase.hybridMap[hybridType][hybridCode]){
+          this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
+            sample['TMP_CHECKED'] = checked
+            this.checkCurrentSample(sample, checked)
+            let index = this.selectedSampleIdList.indexOf(sample.id)
+            if (index != -1 && !checked) {
+              this.selectedSampleIdList.splice(index, 1)
+            }
+            if (index == -1 && checked){
+              this.selectedSampleIdList.push(sample.id)
+            }
+          })
+        }
       }
     } else {
       // internal sample checking
@@ -183,12 +190,30 @@ export class TablifyComponent{
     this.sampleDatabase.buildSampleList()
     this.sampleDataSource.filter = this.filter.nativeElement.value
   }
+
+  openInternalSampleDialog(sample: any){
+    console.log(sample)
+    let hybridType = sample['TMP_HYBRID_TYPE']
+    let hybridCode = sample['SYS_'+hybridType+'_CODE']
+    let dialogRef = this.dialog.open(SimpleTableDialog, {height: '500px', width: '800px'});
+    dialogRef.componentInstance.config.sampleList = this.sampleDatabase.hybridMap[hybridType][hybridCode]
+    dialogRef.componentInstance.config.hybridType = hybridType
+    dialogRef.componentInstance.config.hybridCode = hybridCode
+    dialogRef.afterClosed().subscribe(result => {
+      //
+    });
+  }
+
 }
 
 export class SampleDatabase {
   rawSampleList: any[]
   hybridMap: any = {}
-  constructor(private _rawSampleList: any[]){
+  constructor(
+    private _rawSampleList: any[],
+    private targetHybridType: string
+  ){
+    console.log(">>", this.targetHybridType)
     this.rawSampleList = _rawSampleList
     this.buildSampleList()
   }
@@ -208,42 +233,69 @@ export class SampleDatabase {
     this.hybridMap['RUN'] = {}
     this.hybridMap['LANE'] = {}
     this.hybridMap['CAPTURE'] = {}
+    this.hybridMap['SAMPLE'] = {}
     this.rawSampleList.forEach(rawSample => {
       let sample = Object.assign({}, rawSample)
       let isHybrid = false
       let runCode = sample[runString]
       let lanCode = sample[lanString]
       let capCode = sample[capString]
-      if (runCode) {
-        if (!this.hybridMap['RUN'][runCode]){
-          isHybrid = true
-          this.hybridMap['RUN'][runCode] = []
+
+
+      if (!this.targetHybridType){
+        if (runCode) {
+          if (!this.hybridMap['RUN'][runCode]){
+            isHybrid = true
+            this.hybridMap['RUN'][runCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'RUN'
+          this.hybridMap['RUN'][runCode].push(rawSample)
         }
-        this.hybridMap['RUN'][runCode].push(rawSample)
-      }
-      if (!runCode && lanCode) {
-        if (!this.hybridMap['LANE'][lanCode]){
-          isHybrid = true
-          this.hybridMap['LANE'][lanCode] = []
+        if (!runCode && lanCode) {
+          if (!this.hybridMap['LANE'][lanCode]){
+            isHybrid = true
+            this.hybridMap['LANE'][lanCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'LANE'
+          this.hybridMap['LANE'][lanCode].push(rawSample)
         }
-        this.hybridMap['LANE'][lanCode].push(rawSample)
-      }
-      if (!runCode && !lanCode && capCode) {
-        if (!this.hybridMap['CAPTURE'][capCode]){
-          isHybrid = true
-          this.hybridMap['CAPTURE'][capCode] = []
+        if (!runCode && !lanCode && capCode) {
+          if (!this.hybridMap['CAPTURE'][capCode]){
+            isHybrid = true
+            this.hybridMap['CAPTURE'][capCode] = []
+          }
+          sample['TMP_HYBRID_TYPE'] = 'CAPTURE'
+          this.hybridMap['CAPTURE'][capCode].push(rawSample)
         }
-        this.hybridMap['CAPTURE'][capCode].push(rawSample)
+
+        sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
+
+        // New hybrid samples or pure samples
+        if (isHybrid || (!runCode && !lanCode && !capCode)){
+          cd.push(sample)
+          this.dataChange.next(cd)
+        }
+      } else {
+
+        let hybridCode = sample['SYS_'+this.targetHybridType+'_CODE']
+
+        if (!this.hybridMap[this.targetHybridType][hybridCode]){
+          isHybrid = true
+          this.hybridMap[this.targetHybridType][hybridCode] = []
+        }
+        this.hybridMap[this.targetHybridType][hybridCode].push(rawSample)
+        sample['TMP_HYBRID_TYPE'] = this.targetHybridType
+
+        sample['TMP_TABLE_ITEM'] = isHybrid
+        // New hybrid samples or pure samples
+        if (isHybrid || (!runCode && !lanCode && !capCode)){
+          cd.push(sample)
+          this.dataChange.next(cd)
+        }
       }
 
-      sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
-
-      // New hybrid samples or pure samples
-      if (isHybrid || (!runCode && !lanCode && !capCode)){
-        cd.push(sample)
-        this.dataChange.next(cd)
-      }
     })
+    console.log(this.hybridMap)
   }
 
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
@@ -305,19 +357,19 @@ export class SampleDataSource extends DataSource<any> {
       data.forEach((sample, index) => {
         result.push(sample)
 
-        // Get the hybrid type
-        let hybridType = ""
-        let hybridCode = ""
-        if (sample['SYS_RUN_CODE']) {
-          hybridType = "RUN"
-        } else if (sample['SYS_LANE_CODE']) {
-          hybridType = "LANE"
-        } else if (sample['SYS_CAPTURE_CODE']){
-          hybridType = "CAPTURE"
-        }
-        if (sample['TMP_LIST_SAMPLE']){
-          result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
-        }
+        //// Get the hybrid type
+        //let hybridType = ""
+        //let hybridCode = ""
+        //if (sample['SYS_RUN_CODE']) {
+        //hybridType = "RUN"
+        //} else if (sample['SYS_LANE_CODE']) {
+        //hybridType = "LANE"
+        //} else if (sample['SYS_CAPTURE_CODE']){
+        //hybridType = "CAPTURE"
+        //}
+        //if (sample['TMP_LIST_SAMPLE']){
+        //result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
+        //}
       })
 
       return result
@@ -345,4 +397,5 @@ export class SampleDataSource extends DataSource<any> {
     });
     return data
   }
+
 }
