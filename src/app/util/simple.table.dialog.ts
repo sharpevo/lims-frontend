@@ -12,7 +12,10 @@ export class SimpleTableDialog {
 
   config: any = {}
   targetHybridType: string = ''
+  attributeList: any[] = []
   constructor(
+    private genreService: GenreService,
+    private attributeService: AttributeService,
     private snackBar: MdSnackBar,
     public dialogRef: MdDialogRef<SimpleTableDialog>
   ){}
@@ -22,12 +25,15 @@ export class SimpleTableDialog {
     switch (this.config.hybridType){
       case "RUN":
         this.targetHybridType = "LANE"
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/LANE_PREPARE/")
       break
       case "LANE":
         this.targetHybridType = "CAPTURE"
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/CAPTURE_RESULT/")
       break
       case "CAPTURE":
         this.targetHybridType = "SAMPLE"
+      this.getAttributeByIdentifier("/PROJECT_MANAGEMENT/GENERAL_PROJECT/")
       break
       default:
         console.error("Invalid hybrid type")
