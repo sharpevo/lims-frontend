@@ -7,11 +7,21 @@ import {EntityService} from './service'
 })
 export class EntityToStringComponent {
   @Input('entity') entity
+  @Input('entityId') entityId
   label: string = ""
   constructor(private entityService: EntityService) {}
 
   ngOnInit(){
-    this.getEntityLabel()
+    if (this.entityId){
+      this.entityService.retrieveBy({
+        "_id": this.entityId, // "id" does not exist in database
+      }).subscribe(data => {
+        this.entity = data[0]
+        this.getEntityLabel()
+      })
+    } else {
+      this.getEntityLabel()
+    }
   }
 
   getEntityLabel(){
