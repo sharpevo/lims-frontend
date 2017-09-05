@@ -165,8 +165,16 @@ export class SampleFormDialog {
         }
       })
     }
-
     submitObject(){
+      this.sampleService.submitObject(
+        this.config.entity,
+        this.config.sampleList,
+        this.config.issueSample,
+        this.object
+      )
+    }
+
+    submitObject_orginal(){
       if (this.config.issueSample){
         console.log("issueSample")
         this.issueSample()
