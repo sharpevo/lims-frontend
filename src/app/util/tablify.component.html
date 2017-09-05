@@ -101,7 +101,9 @@
                                 {{row[columnKey] | date: 'yyyy.MM.dd'}}
                             </span>
                             <span *ngSwitchCase="'entity'">
-                                {{row[columnKey]?.substr(20)}}
+                                <entity-tostring
+                                    [entityId]="row[columnKey]">
+                                </entity-tostring>
                             </span>
                             <span *ngSwitchCaseDefault>
                                 {{row[columnKey]}}
