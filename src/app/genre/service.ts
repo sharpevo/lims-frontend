@@ -46,6 +46,19 @@ export class GenreService {
     .map(res => res.json())
   }
 
+  retrieveBy(args: any){
+    let argString = ''
+    Object.keys(args).forEach(key => {
+      if (argString != '') {
+        argString += `&${key}=${args[key]}`
+      } else {
+        argString += `${key}=${args[key]}`
+      }
+    })
+    return this.http.get(`${this.url}?${argString}`)
+    .map(res => res.json())
+  }
+
   retrieveByEntityId(entityId: string){
     return this.http.get(`${this.url}?SYS_ENTITY=${entityId}`)
     .map(res => res.json())

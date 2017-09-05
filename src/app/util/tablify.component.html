@@ -96,7 +96,19 @@
                         </span>
                     </span>
                     <span *ngIf="!row['TMP_TABLE_ITEM'] || columnKey != 'SYS_SAMPLE_CODE'">
-                        {{row[columnKey]}}
+                        <span [ngSwitch]="columnMap[columnKey]['SYS_TYPE']">
+                            <span *ngSwitchCase="'date'">
+                                {{row[columnKey] | date: 'yyyy.MM.dd'}}
+                            </span>
+                            <span *ngSwitchCase="'entity'">
+                                <entity-tostring
+                                    [entityId]="row[columnKey]">
+                                </entity-tostring>
+                            </span>
+                            <span *ngSwitchDefault>
+                                {{row[columnKey]}}
+                            </span>
+                        </span>
                     </span>
                 </md-cell>
             </span>
