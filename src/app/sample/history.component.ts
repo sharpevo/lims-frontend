@@ -50,6 +50,7 @@ export class SampleHistoryComponent {
         type: 'linear',
         position: 'bottom',
         ticks:{
+          autoSkip: false,
           callback: (label, index, labels) => {
             return this.lineChartLabels[label-1]
           }

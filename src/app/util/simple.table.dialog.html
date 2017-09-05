@@ -15,9 +15,9 @@
 <br/>
 <br/>
 <simple-table
-    *ngIf="(config.sampleList |json) != '{}'"
+    *ngIf="(config.sampleList |json) != '{}' && attributeList.length > 0"
     [rawSampleList]="config.sampleList"
     [shownSampleList]="config.sampleList"
     [targetHybridType]="targetHybridType"
-    [columnList]="config.sampleList[0]['SYS_SCHEMA']">
+    [columnList]="attributeList">
 </simple-table>
