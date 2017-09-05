@@ -19,8 +19,10 @@ export class EntityToStringComponent {
         this.entity = data[0]
         this.getEntityLabel()
       })
-    } else {
+    } else if (this.entity){
       this.getEntityLabel()
+    } else {
+      this.label = "---"
     }
   }
 
