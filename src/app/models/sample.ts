@@ -195,26 +195,72 @@ export class SampleService{
     this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
       // Take the first genre as default
-      let attributeInfo = this.getAttributesByGenreId(data[0].id)
+      this.genreService.retrieveAttribute(data[0].id)
+      .subscribe(data => {
+        let parentMap = {}
+        data.forEach(attribute => {
+          switch (attribute.SYS_TYPE){
+            case "entity":
+              //if (attribute.SYS_TYPE_ENTITY_REF){
+              //// get the identifier of the entity
+              //// TODO: save SYS_IDENTIFIER instead of ID seems better
+              //// or automate populate
+              //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
+              //.subscribe(data => {
+              //// get the entity list
+              //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
+              //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
+              //}
+              //this.entityService.retrieveByIdentifierAndCategory(
+              //data.SYS_IDENTIFIER,
+              //attribute.SYS_FLOOR_ENTITY_TYPE)
+              //.subscribe(data => {
+              //// compose a new key
+              //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
+              //})
+              //})
+              //}else {
+              //}
+              if (!attribute.SYS_TYPE_ENTITY_REF) {
+              parentMap[attribute.SYS_CODE] = {}
+            }
+            break
+            default:
+          }
 
-      if (issueSample){
-        console.log("issueSample")
-        this.issueSample(sampleList, object, workcenter, attributeInfo)
-        return
-      }
-      console.log("submitObject")
-      // samples from the previous workcenter or the current one in the first
-      // workcenter with workcenter-specific attributes:
-      // - for the attributes defined by administrator, if they are same, use
-      //   the previous one
-      // - for the attributes starts with SYS, use current workcenter
-      sampleList.forEach(sample => {
-        console.log('processing candidate sample', sample)
-        //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
-        this.entityService.retrieveById(sample.id)
-        .subscribe(data => {
-          console.log("processing sample:", data)
-          this.submitSample(workcenter, object, data, attributeInfo)
+        })
+        let attributeList = data.sort((a,b) => {
+          if (a.SYS_ORDER > b.SYS_ORDER) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+        let attributeInfo = {
+          "attributeList": attributeList,
+          "parentMap": parentMap
+        }
+        console.log("aaa", attributeInfo)
+
+        if (issueSample){
+          console.log("issueSample")
+          this.issueSample(sampleList, object, workcenter, attributeInfo)
+          return
+        }
+        console.log("submitObject")
+        // samples from the previous workcenter or the current one in the first
+        // workcenter with workcenter-specific attributes:
+        // - for the attributes defined by administrator, if they are same, use
+        //   the previous one
+        // - for the attributes starts with SYS, use current workcenter
+        sampleList.forEach(sample => {
+          console.log('processing candidate sample', sample)
+          //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+          this.entityService.retrieveById(sample.id)
+          .subscribe(data => {
+            console.log("processing sample:", data)
+            this.submitSample(workcenter, object, data, attributeInfo)
+          })
         })
       })
     })
@@ -477,7 +523,7 @@ export class SampleService{
   }
 
   // Get parentMap and attributeList
-  getAttributesByGenreId(genreId: string): any{
+  getAttributesByGenreId(genreId: string, callback): any{
     this.genreService.retrieveAttribute(genreId)
     .subscribe(data => {
       let parentMap = {}
