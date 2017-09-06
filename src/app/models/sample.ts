@@ -190,45 +190,45 @@ export class SampleService{
   // submition
   //
 
-  submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any){
+  submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
 
     this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
       // Take the first genre as default
       this.genreService.retrieveAttribute(data[0].id)
       .subscribe(data => {
-        let parentMap = {}
-        data.forEach(attribute => {
-          switch (attribute.SYS_TYPE){
-            case "entity":
-              //if (attribute.SYS_TYPE_ENTITY_REF){
-              //// get the identifier of the entity
-              //// TODO: save SYS_IDENTIFIER instead of ID seems better
-              //// or automate populate
-              //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-              //.subscribe(data => {
-              //// get the entity list
-              //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-              //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-              //}
-              //this.entityService.retrieveByIdentifierAndCategory(
-              //data.SYS_IDENTIFIER,
-              //attribute.SYS_FLOOR_ENTITY_TYPE)
-              //.subscribe(data => {
-              //// compose a new key
-              //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-              //})
-              //})
-              //}else {
-              //}
-              if (!attribute.SYS_TYPE_ENTITY_REF) {
-              parentMap[attribute.SYS_CODE] = {}
-            }
-            break
-            default:
-          }
+        //data.forEach(attribute => {
+        //switch (attribute.SYS_TYPE){
+        //case "entity":
+        //if (attribute.SYS_TYPE_ENTITY_REF){
+        //// get the identifier of the entity
+        //// TODO: save SYS_IDENTIFIER instead of ID seems better
+        //// or automate populate
+        //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
+        //.subscribe(data => {
+        //// get the entity list
+        //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
+        //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
+        //}
+        //this.entityService.retrieveByIdentifierAndCategory(
+        //data.SYS_IDENTIFIER,
+        //attribute.SYS_FLOOR_ENTITY_TYPE)
+        //.subscribe(data => {
+        //// compose a new key
+        //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
+        //})
+        //})
+        //}else {
+        //}
+        //console.log(">-", attribute.SYS_CODE)
+        //if (!attribute.SYS_TYPE_ENTITY_REF) {
+        //parentMap[attribute.SYS_CODE] = {}
+        //}
+        //break
+        //default:
+        //}
 
-        })
+        //})
         let attributeList = data.sort((a,b) => {
           if (a.SYS_ORDER > b.SYS_ORDER) {
             return 1

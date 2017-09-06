@@ -170,7 +170,8 @@ export class SampleFormDialog {
         this.config.entity,
         this.config.sampleList,
         this.config.issueSample,
-        this.object
+        this.object,
+        this.parentMap
       )
     }
 
