@@ -1,5 +1,6 @@
 import {Component, Input, ViewChild} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
 
@@ -16,6 +17,7 @@ export class PluginExcelProcessorComponent {
   constructor(
     private utilService: UtilService,
     private entityService: EntityService,
+    private genreService: GenreService,
     private sampleService: SampleService,
   ){}
 
@@ -40,6 +42,24 @@ export class PluginExcelProcessorComponent {
   }
 
   updateExcel(){
+    this.entityService.retrieveGenre(this.workcenter.id)
+    .subscribe(data => {
+      this.genreService.retrieveAttribute(data[0].id)
+      .subscribe(data => {
+        data.forEach(attr => {
+          console.log(attr.SYS_TYPE)
+          if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
+            console.log("!!", attr.SYS_TYPE_ENTITY)
+          }
+        })
+
+      })
+    })
+
+
+  }
+
+  updateExcel2(){
     this.utilService.putExcel(this.excelResult)
     .subscribe(data => {
       console.log(data)
