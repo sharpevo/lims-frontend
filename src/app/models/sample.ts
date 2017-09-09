@@ -390,7 +390,6 @@ export class SampleService{
 
   }
 
-
   createObject(object: any, attributeInfo: any, issueSample: boolean){
 
     if (issueSample){
@@ -502,8 +501,11 @@ export class SampleService{
               // Customize attributes for new entity. It's not necessary to
               // save workcenter incidentally coz there's already a link
               // between the SYS_TARGET and the workcenter
+              //
+              // Note that the SYS_IDENTIFIER will be duplicated if the sample
+              // is involved in the same experiment more than one time.
               subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                sourceObject['SYS_CODE']
+                sourceObject['SYS_CODE'] + '.' + new Date().getTime()
               subMaterial['SYS_TARGET'] = sourceObject.id
 
               // Assign new values to the new material object
