@@ -42,17 +42,61 @@ export class PluginExcelProcessorComponent {
   }
 
   updateExcel(){
+
+    // Get the genre of given workcenter
     this.entityService.retrieveGenre(this.workcenter.id)
     .subscribe(data => {
+
+      // Get the attributes from the first genre
       this.genreService.retrieveAttribute(data[0].id)
-      .subscribe(data => {
-        data.forEach(attr => {
-          console.log(attr.SYS_TYPE)
+      .subscribe(workcenterAttributeList => {
+        workcenterAttributeList.forEach(attr => {
+
+          console.log("..")
+          let parentMap = {}
           if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
-            console.log("!!", attr.SYS_TYPE_ENTITY)
+            parentMap[attr.SYS_CODE] = {}
+
+            // Get the entities under the BoM, note that the empty string indicates
+            // the "object" entity type which is implemented in the entityService.
+            this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
+            .subscribe(data => {
+              data.forEach(material => {
+                parentMap[attr.SYS_CODE][material.id] = {}
+                material['SYS_SCHEMA'].forEach(materialAttr => {
+                  parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] = material[materialAttr.SYS_CODE]
+                })
+              })
+              console.log("xx", workcenterAttributeList)
+              this.excelResult.forEach(sample =>{
+
+                // Convert excel-style object to database-style object.
+                // The excel-style object is formed as:
+                // 'LABEL': 'Value'
+                this.entityService.retrieveBy({
+                  "_id": sample.IDENTIFIER
+                })
+                .subscribe(data => {
+                  let mergedSample = data[0]
+
+                  mergedSample.SYS_SCHEMA.forEach(schema => {
+                    if (sample[schema.SYS_LABEL]){
+                      mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+                    }
+                  })
+                  this.sampleService.submitSample(
+                    this.workcenter,
+                    mergedSample,
+                    data[0],
+                    {
+                      "attributeList": workcenterAttributeList,
+                      "parentMap": parentMap
+                    })
+                })
+              })
+            })
           }
         })
-
       })
     })
 
