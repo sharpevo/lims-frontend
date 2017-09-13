@@ -22,7 +22,7 @@ export class UtilService{
       .map(res => res.json())
   }
 
-  getExcelUrl(sampleList: any, workcenterLabel: string){
+  getExcelUrl(sampleList: any, workcenterId: string){
     let ids = ''
     sampleList.forEach(sample => {
       if (ids == ''){
@@ -32,7 +32,7 @@ export class UtilService{
       }
 
     })
-    return this.baseUrl + `/excel?ids=${ids}&workcenter=${workcenterLabel}`
+    return this.baseUrl + `/excel?ids=${ids}&workcenter=${workcenterId}`
   }
 
   putExcel(objectList: any[]){
