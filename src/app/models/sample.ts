@@ -466,8 +466,15 @@ export class SampleService{
           //console.log("Next date: ", SYS_DATE_SCHEDULED)
 
           // Get the material collection from the SYS_SOURCE
-          this.entityService.retrieveById(usage['SYS_SOURCE'])
-          .subscribe(material => {
+          //this.entityService.retrieveById(usage['SYS_SOURCE'])
+          //.subscribe(material => {
+
+          // Get the LOTs of materials and get the first one as the default
+          // For routing, of which SYS_FLOOR_ENTITY_TYPE = 'class', will return the routing directly?
+          this.entityService.retrieveEntity(usage['SYS_SOURCE'], parentObjects[key][entityId]['SYS_FLOOR_ENTITY_TYPE'])
+          .subscribe(data => {
+            let material = data[0]
+            console.log("---------Retrieve entries in BoM or Routing:", data, material)
             //console.log("merge from entity:", material)
 
             // Get attributes of the material then assign them to the
