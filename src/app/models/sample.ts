@@ -466,67 +466,81 @@ export class SampleService{
           //console.log("Next date: ", SYS_DATE_SCHEDULED)
 
           // Get the material collection from the SYS_SOURCE
-          //this.entityService.retrieveById(usage['SYS_SOURCE'])
-          //.subscribe(material => {
+          this.entityService.retrieveById(usage['SYS_SOURCE'])
+          .subscribe(material => {
 
-          // Get the LOTs of materials and get the first one as the default
-          // For routing, of which SYS_FLOOR_ENTITY_TYPE = 'class', will return the routing directly?
-          this.entityService.retrieveEntity(usage['SYS_SOURCE'], parentObjects[key][entityId]['SYS_FLOOR_ENTITY_TYPE'])
-          .subscribe(data => {
-            let material = data[0]
-            console.log("---------Retrieve entries in BoM or Routing:", data, material)
-            //console.log("merge from entity:", material)
+            // SYS_SOURCE has been specified manually
+            if (material.SYS_ENTITY_TYPE == usage['SYS_FLOOR_ENTITY_TYPE']) {
+              console.log("---------Entries has been specified:", material)
+              this.connectMaterial(sourceObject, material, attributeList, usage)
 
-            // Get attributes of the material then assign them to the
-            // material object. Note that it's recommended to merge entities
-            // by this way, instead of the object deep copy for the reason
-            // of attributes undefined in frontend
-            this.entityService.retrieveAttribute(material.id)
-            .subscribe(attributes => {
+            } else {
+              // SYS_SORUCE is nill in select
+              // Get the LOTs of materials and get the first one as the default
+              // For routing, of which SYS_FLOOR_ENTITY_TYPE = 'class', will return the routing directly?
+              this.entityService.retrieveEntity(usage['SYS_SOURCE'], parentObjects[key][entityId]['SYS_FLOOR_ENTITY_TYPE'])
+              .subscribe(data => {
+                console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                //console.log("merge from entity:", material)
+                this.connectMaterial(sourceObject, data[0], attributeList, usage)
 
-              // subMaterial is the material object under the corresponding
-              // collection
-              let subMaterial = {}
-              attributes.forEach(attribute => {
-                subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
               })
 
-              // Get default label from the source entity
-              subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
-              subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
-
-              if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
-                subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
-                subMaterial['SYS_ENTITY_TYPE'] = 'collection'
-                attributeList.forEach(attribute => {
-                  subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
-                })
-              } else {
-                subMaterial['SYS_GENRE'] = material['SYS_GENRE']
-                subMaterial['SYS_ENTITY_TYPE'] = 'object'
-              }
-              // Customize attributes for new entity. It's not necessary to
-              // save workcenter incidentally coz there's already a link
-              // between the SYS_TARGET and the workcenter
-              //
-              // Note that the SYS_IDENTIFIER will be duplicated if the sample
-              // is involved in the same experiment more than one time.
-              subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                sourceObject['SYS_CODE'] + '.' + new Date().getTime()
-              subMaterial['SYS_TARGET'] = sourceObject.id
-
-              // Assign new values to the new material object
-              Object.keys(usage).forEach(usageKey => {
-                subMaterial[usageKey] = usage[usageKey]
-              })
-
-              this.entityService.create(subMaterial)
-              .subscribe(data =>{
-                console.log("merged entity:", data)
-              })
-            })
+            }
           })
         }
+      })
+    })
+  }
+
+  connectMaterial(sourceObject:any, material:any, attributeList: any[], usage: any){
+
+    // Get attributes of the material then assign them to the
+    // material object. Note that it's recommended to merge entities
+    // by this way, instead of the object deep copy for the reason
+    // of attributes undefined in frontend
+    this.entityService.retrieveAttribute(material.id)
+    .subscribe(attributes => {
+
+      // subMaterial is the material object under the corresponding
+      // collection
+      let subMaterial = {}
+      attributes.forEach(attribute => {
+        subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+      })
+
+      // Get default label from the source entity
+      subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
+      subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
+
+      if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
+        subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
+        subMaterial['SYS_ENTITY_TYPE'] = 'collection'
+        attributeList.forEach(attribute => {
+          subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
+        })
+      } else {
+        subMaterial['SYS_GENRE'] = material['SYS_GENRE']
+        subMaterial['SYS_ENTITY_TYPE'] = 'object'
+      }
+      // Customize attributes for new entity. It's not necessary to
+      // save workcenter incidentally coz there's already a link
+      // between the SYS_TARGET and the workcenter
+      //
+      // Note that the SYS_IDENTIFIER will be duplicated if the sample
+      // is involved in the same experiment more than one time.
+      subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
+        sourceObject['SYS_CODE'] + '.' + new Date().getTime()
+      subMaterial['SYS_TARGET'] = sourceObject.id
+
+      // Assign new values to the new material object
+      Object.keys(usage).forEach(usageKey => {
+        subMaterial[usageKey] = usage[usageKey]
+      })
+
+      this.entityService.create(subMaterial)
+      .subscribe(data =>{
+        console.log("merged entity:", data)
       })
     })
   }
