@@ -66,6 +66,9 @@ export class PluginExcelProcessorComponent {
                 material['SYS_SCHEMA'].forEach(materialAttr => {
                   parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] = material[materialAttr.SYS_CODE]
                 })
+                // Manually append the SYS_FLOOR_ENTITY_TYPE in BoM/Routing entry
+                parentMap[attr.SYS_CODE][material.id]['SYS_FLOOR_ENTITY_TYPE'] =
+                  attr.SYS_FLOOR_ENTITY_TYPE
               })
               console.log("xx", workcenterAttributeList)
               this.excelResult.forEach(sample =>{
