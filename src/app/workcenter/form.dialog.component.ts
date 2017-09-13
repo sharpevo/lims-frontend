@@ -41,6 +41,7 @@ export class SampleFormDialog {
     public dialogRef: MdDialogRef<SampleFormDialog>) {}
 
     ngOnInit(){
+      console.log(this.parentMap)
       this.getGenreList()
       this.generateEntityCode()
       this.generateEntityType()

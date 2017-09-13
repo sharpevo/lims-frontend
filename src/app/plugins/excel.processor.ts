@@ -64,7 +64,8 @@ export class PluginExcelProcessorComponent {
               data.forEach(material => {
                 parentMap[attr.SYS_CODE][material.id] = {}
                 material['SYS_SCHEMA'].forEach(materialAttr => {
-                  parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] = material[materialAttr.SYS_CODE]
+                  parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] =
+                    material[materialAttr.SYS_CODE]
                 })
                 // Manually append the SYS_FLOOR_ENTITY_TYPE in BoM/Routing entry
                 parentMap[attr.SYS_CODE][material.id]['SYS_FLOOR_ENTITY_TYPE'] =
