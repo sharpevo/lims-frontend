@@ -395,7 +395,7 @@ export class SampleService{
     if (issueSample){
       this.entityService.create(object)
       .subscribe(data =>{
-        this.makeConn(data, attributeInfo)
+        this.buildRelationship(data, attributeInfo)
         console.log('Issue sample:', data)
       })
     } else {
@@ -408,7 +408,7 @@ export class SampleService{
         // has been assigned to the scheduled sample
         this.entityService.update(object)
         .subscribe(data => {
-          this.makeConn(data, attributeInfo)
+          this.buildRelationship(data, attributeInfo)
           console.log('Add Entity:', data)
         },
         err => {
@@ -419,7 +419,15 @@ export class SampleService{
   }
 
 
-  makeConn(sourceEntity: any, attributeInfo: any){
+  /**
+   * buildRelationship is designed for planning in routing or records usage of
+   * material in BoM, from sourceEntity to the targetEntity.
+   *
+   * @param sourceEntity The manipulated entity.
+   * @param attributeInfo argument map
+   *
+   */
+  buildRelationship(sourceEntity: any, attributeInfo: any){
 
     let attributeList = attributeInfo['attributeList']
     let parentMap = attributeInfo['parentMap']
