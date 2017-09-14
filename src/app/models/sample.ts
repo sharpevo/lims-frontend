@@ -419,73 +419,77 @@ export class SampleService{
   }
 
 
-  makeConn(sourceObject: any, attributeInfo: any){
+  makeConn(sourceEntity: any, attributeInfo: any){
 
     let attributeList = attributeInfo['attributeList']
-    let parentObjects = attributeInfo['parentMap']
-    // Get the keys for each kind of BoM/Routing
-    // e.g. "bom", "bill_of_material"
-    Object.keys(parentObjects).forEach(key => {
-      //console.log("processing key:", key)
+    let parentMap = attributeInfo['parentMap']
+
+    // Get the keys for each kind of BoM/Routing, e.g., "bom", "bill_of_material".
+    Object.keys(parentMap).forEach(key => {
+
+      let targetEntityMap = parentMap[key]
 
       let SYS_DATE_SCHEDULED = new Date()
       let DATE_EXISTS = false
 
-      // Get the bom object id, which is used as the key of the actual
-      // usage, e.g., <bom object id>
-      Object.keys(parentObjects[key]).forEach((entityId, index) =>{
-        //console.log("processing id:", entityId)
+      // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
+      Object.keys(targetEntityMap).forEach((entityId, index) =>{
 
-        // `usage` is the inputs from user and contains SYS_QUANT,
-        // SYS_SOURCE, etc.
-        let usage = parentObjects[key][entityId]
-        //console.log("processing usage:", usage)
+        // usage is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
+        let targetEntityInput = targetEntityMap[entityId]
 
         // only process checked Material or Workcenter
-        if (usage['SYS_CHECKED']){
-          //console.log('process checked entry:', usage)
+        if (targetEntityInput['SYS_CHECKED']){
+          //console.log('process checked entry:', targetEntityInput)
 
           // Calculate SYS_DATE_SCHEDULED
           if (!DATE_EXISTS){
-            if (sourceObject['SYS_DATE_SCHEDULED']){
-              SYS_DATE_SCHEDULED = new Date(sourceObject['SYS_DATE_SCHEDULED'])
+            if (sourceEntity['SYS_DATE_SCHEDULED']){
+              SYS_DATE_SCHEDULED = new Date(sourceEntity['SYS_DATE_SCHEDULED'])
               //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
             }
             DATE_EXISTS = true
           }
 
-          // The date object is address-reference, so that if not
-          // assigned with "new Date", all the usage date is the final
-          // one
-          usage['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-          SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() +
-                                     (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+          // The date object is address-reference, so that if not assigned with
+          // "new Date", all the targetEntityInput date is the final one
+          targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
+          SYS_DATE_SCHEDULED.setDate(
+            SYS_DATE_SCHEDULED.getDate() +
+              (targetEntityInput['SYS_DURATION']?targetEntityInput['SYS_DURATION']:0)
+          )
           if (index == 0){
-            usage['SYS_DATE_ARRIVED'] = usage['SYS_DATE_SCHEDULED']
+            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
           }
-          //console.log("Next date: ", SYS_DATE_SCHEDULED)
 
-          // Get the material collection from the SYS_SOURCE
-          this.entityService.retrieveById(usage['SYS_SOURCE'])
-          .subscribe(material => {
+          // Get the target entity from the SYS_SOURCE
+          this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+          .subscribe(targetEntity => {
 
-            // SYS_SOURCE has been specified manually
-            if (material.SYS_ENTITY_TYPE == usage['SYS_FLOOR_ENTITY_TYPE']) {
-              //console.log("---------Entries has been specified:", material)
-              // material is workcenter in issueSample
-              this.createSubEntity(sourceObject, material, attributeList, usage)
+            // check whether SYS_SOURCE has been specified manually
+            // BoM: 'class' == 'collection'
+            // Routing: 'class' == 'class', since it's only one option and the
+            // checkbox is another way to detect checked or not
+            if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+              // SYS_SOURCE has been specified manually
+
+              //console.log("---------Entries has been specified:", targetEntity)
+              this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
 
             } else {
-              // SYS_SORUCE is nill in select
-              // Get the LOTs of materials and get the first one as the default
-              // For routing, of which SYS_FLOOR_ENTITY_TYPE = 'class', will return the routing directly?
-              this.entityService.retrieveEntity(usage['SYS_SOURCE'], parentObjects[key][entityId]['SYS_FLOOR_ENTITY_TYPE'])
-              .subscribe(data => {
-                //console.log("---------Retrieve entries in BoM or Routing:", data[0])
-                //console.log("merge from entity:", material)
-                this.createSubEntity(sourceObject, data[0], attributeList, usage)
+              // SYS_SORUCE is not selected, and it happens only when BoM
+              // (checked but not selected)
 
-              })
+              // Get the LOTs of targetEntity and take the first one as the default
+              this.entityService.retrieveEntity(
+                targetEntityInput['SYS_SOURCE'],
+                targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                .subscribe(data => {
+                  //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                  //console.log("merge from entity:", targetEntity)
+                  this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+
+                })
 
             }
           })
@@ -505,46 +509,51 @@ export class SampleService{
    * etc.; BoM copies "attrbiutes" from the target material to the subEntity
    * for the target Material(Kapa Hifi for example).
    *
-   * @param sourceObject The SYS_SOURCE object under the Project Management.
-   * @param material Material(collection) or Workcenter(class).
-   * @param attributeList Attributes of the sub entity of the current workcenter.
+   * @param sourceEntity The SYS_SOURCE object under the Project Management.
+   * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
+   * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
    * @param usage The BoM/Routing entry generated by entity/form.inline.component.
    * @return nill
    */
-  createSubEntity(sourceObject:any, material:any, attributeList: any[], usage: any){
+  createSubEntity(
+    sourceEntity:any,
+    targetEntity:any,
+    workcenterAttributeList: any[],
+    usage: any
+  ){
 
     let subEntity = {}
 
     // Get default label from the source entity
-    subEntity['SYS_LABEL'] = sourceObject['SYS_LABEL']
-    subEntity[subEntity['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
+    subEntity['SYS_LABEL'] = sourceEntity['SYS_LABEL']
+    subEntity[subEntity['SYS_LABEL']] = sourceEntity[sourceEntity['SYS_LABEL']]
 
-    subEntity['SYS_TARGET'] = sourceObject.id
+    subEntity['SYS_TARGET'] = sourceEntity.id
 
     // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
     // samples involved more than one time in the same workcenter
-    subEntity['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-      sourceObject['SYS_CODE'] + '.' + new Date().getTime()
+    subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
+      sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
 
-    if (material['SYS_IDENTIFIER'] == 'class'){
+    if (targetEntity['SYS_IDENTIFIER'] == 'class'){
       // Routing specific operations
 
       subEntity['SYS_ENTITY_TYPE'] = 'collection'
-      attributeList.forEach(attribute => {
-        subEntity[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
+      workcenterAttributeList.forEach(attribute => {
+        subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
       })
-      this.submitSubEntity(subEntity, material, usage)
+      this.submitSubEntity(subEntity, targetEntity, usage)
 
     } else { // == 'collection'
       // BoM specific operations
 
       subEntity['SYS_ENTITY_TYPE'] = 'object'
-      this.entityService.retrieveAttribute(material.id)
+      this.entityService.retrieveAttribute(targetEntity.id)
       .subscribe(attributes => {
         attributes.forEach(attribute => {
-          subEntity[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+          subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
         })
-        this.submitSubEntity(subEntity, material, usage)
+        this.submitSubEntity(subEntity, targetEntity, usage)
       })
     }
   }
@@ -553,21 +562,21 @@ export class SampleService{
    * submitSubEntity is created only for reusing logics and avoid to introduce async for BoM and Routing
    *
    */
-  submitSubEntity(subEntity: any, material:any, usage: any){
+  submitSubEntity(subEntity: any, targetEntity:any, usage: any){
 
     // SYS_GENRE should be the default genre of the workcenter/material instead of 
-    // - material['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/"
-    // - sourceObject['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
+    // - targetEntity['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/"
+    // - sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
     // for both of BoM and Routing
     this.genreService.retrieveBy({
-      "SYS_ENTITY": material.id
+      "SYS_ENTITY": targetEntity.id
     })
     .subscribe(data => {
       if (data[0]) {
         subEntity['SYS_GENRE'] = data[0].id
       } else {
         // collection of materials
-        subEntity['SYS_GENRE'] = material['SYS_GENRE']
+        subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
       }
 
       // Assign new values to the new material object
