@@ -471,7 +471,8 @@ export class SampleService{
 
             // SYS_SOURCE has been specified manually
             if (material.SYS_ENTITY_TYPE == usage['SYS_FLOOR_ENTITY_TYPE']) {
-              console.log("---------Entries has been specified:", material)
+              //console.log("---------Entries has been specified:", material)
+              // material is workcenter in issueSample
               this.connectMaterial(sourceObject, material, attributeList, usage)
 
             } else {
@@ -480,7 +481,7 @@ export class SampleService{
               // For routing, of which SYS_FLOOR_ENTITY_TYPE = 'class', will return the routing directly?
               this.entityService.retrieveEntity(usage['SYS_SOURCE'], parentObjects[key][entityId]['SYS_FLOOR_ENTITY_TYPE'])
               .subscribe(data => {
-                console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                //console.log("---------Retrieve entries in BoM or Routing:", data[0])
                 //console.log("merge from entity:", material)
                 this.connectMaterial(sourceObject, data[0], attributeList, usage)
 
@@ -529,6 +530,13 @@ export class SampleService{
         attributeList.forEach(attribute => {
           subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
         })
+        Object.keys(usage).forEach(usageKey => {
+          subMaterial[usageKey] = usage[usageKey]
+        })
+        this.entityService.create(subMaterial)
+        .subscribe(data =>{
+          console.log("merged entity:", data)
+        })
       } else {
         //subMaterial['SYS_GENRE'] = material['SYS_GENRE']
         subMaterial['SYS_ENTITY_TYPE'] = 'object'
@@ -541,7 +549,6 @@ export class SampleService{
           if (data[0]) {
             subMaterial['SYS_GENRE'] = data[0].id
           } else {
-
             // collection of materials
             subMaterial['SYS_GENRE'] = material['SYS_GENRE']
           }
