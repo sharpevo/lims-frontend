@@ -513,16 +513,6 @@ export class SampleService{
       subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
       subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
 
-      if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
-        subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
-        subMaterial['SYS_ENTITY_TYPE'] = 'collection'
-        attributeList.forEach(attribute => {
-          subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
-        })
-      } else {
-        subMaterial['SYS_GENRE'] = material['SYS_GENRE']
-        subMaterial['SYS_ENTITY_TYPE'] = 'object'
-      }
       // Customize attributes for new entity. It's not necessary to
       // save workcenter incidentally coz there's already a link
       // between the SYS_TARGET and the workcenter
@@ -533,15 +523,40 @@ export class SampleService{
         sourceObject['SYS_CODE'] + '.' + new Date().getTime()
       subMaterial['SYS_TARGET'] = sourceObject.id
 
-      // Assign new values to the new material object
-      Object.keys(usage).forEach(usageKey => {
-        subMaterial[usageKey] = usage[usageKey]
-      })
+      if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
+        subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
+        subMaterial['SYS_ENTITY_TYPE'] = 'collection'
+        attributeList.forEach(attribute => {
+          subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
+        })
+      } else {
+        //subMaterial['SYS_GENRE'] = material['SYS_GENRE']
+        subMaterial['SYS_ENTITY_TYPE'] = 'object'
+        // material is /PRODUCT_WORKCENTER
+        // or material collection which may have the SYS_GENRE
+        this.genreService.retrieveBy({
+          "SYS_ENTITY": material.id
+        })
+        .subscribe(data => {
+          if (data[0]) {
+            subMaterial['SYS_GENRE'] = data[0].id
+          } else {
 
-      this.entityService.create(subMaterial)
-      .subscribe(data =>{
-        console.log("merged entity:", data)
-      })
+            // collection of materials
+            subMaterial['SYS_GENRE'] = material['SYS_GENRE']
+          }
+
+          // Assign new values to the new material object
+          Object.keys(usage).forEach(usageKey => {
+            subMaterial[usageKey] = usage[usageKey]
+          })
+
+          this.entityService.create(subMaterial)
+          .subscribe(data =>{
+            console.log("merged entity:", data)
+          })
+        })
+      }
     })
   }
 
