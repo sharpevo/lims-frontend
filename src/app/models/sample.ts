@@ -496,74 +496,72 @@ export class SampleService{
 
   connectMaterial(sourceObject:any, material:any, attributeList: any[], usage: any){
 
-    // Get attributes of the material then assign them to the
-    // material object. Note that it's recommended to merge entities
-    // by this way, instead of the object deep copy for the reason
-    // of attributes undefined in frontend
-    this.entityService.retrieveAttribute(material.id)
-    .subscribe(attributes => {
+    let subEntity = {}
 
-      // subMaterial is the material object under the corresponding
-      // collection
-      let subMaterial = {}
-      attributes.forEach(attribute => {
-        subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+    // Get default label from the source entity
+    subEntity['SYS_LABEL'] = sourceObject['SYS_LABEL']
+    subEntity[subEntity['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
+
+    subEntity['SYS_TARGET'] = sourceObject.id
+
+    // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
+    // samples involved more than one time in the same workcenter
+    subEntity['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
+      sourceObject['SYS_CODE'] + '.' + new Date().getTime()
+
+    if (material['SYS_IDENTIFIER'] == 'class'){
+      // Routing specific operations
+
+      subEntity['SYS_ENTITY_TYPE'] = 'collection'
+      attributeList.forEach(attribute => {
+        subEntity[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
+      })
+      this.submitSubEntity(subEntity, material, usage)
+
+    } else { // == 'collection'
+      // BoM specific operations
+
+      subEntity['SYS_ENTITY_TYPE'] = 'object'
+      this.entityService.retrieveAttribute(material.id)
+      .subscribe(attributes => {
+        attributes.forEach(attribute => {
+          subEntity[attribute.SYS_CODE] = material[attribute.SYS_CODE]
+        })
+        this.submitSubEntity(subEntity, material, usage)
+      })
+    }
+  }
+
+  /**
+   * submitSubEntity is created only for reusing logics and avoid to introduce async for BoM and Routing
+   *
+   */
+  submitSubEntity(subEntity: any, material:any, usage: any){
+
+    // SYS_GENRE should be the default genre of the workcenter/material instead of 
+    // - material['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/"
+    // - sourceObject['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
+    // for both of BoM and Routing
+    this.genreService.retrieveBy({
+      "SYS_ENTITY": material.id
+    })
+    .subscribe(data => {
+      if (data[0]) {
+        subEntity['SYS_GENRE'] = data[0].id
+      } else {
+        // collection of materials
+        subEntity['SYS_GENRE'] = material['SYS_GENRE']
+      }
+
+      // Assign new values to the new material object
+      Object.keys(usage).forEach(usageKey => {
+        subEntity[usageKey] = usage[usageKey]
       })
 
-      // Get default label from the source entity
-      subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
-      subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
-
-      // Customize attributes for new entity. It's not necessary to
-      // save workcenter incidentally coz there's already a link
-      // between the SYS_TARGET and the workcenter
-      //
-      // Note that the SYS_IDENTIFIER will be duplicated if the sample
-      // is involved in the same experiment more than one time.
-      subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-        sourceObject['SYS_CODE'] + '.' + new Date().getTime()
-      subMaterial['SYS_TARGET'] = sourceObject.id
-
-      if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
-        subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
-        subMaterial['SYS_ENTITY_TYPE'] = 'collection'
-        attributeList.forEach(attribute => {
-          subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
-        })
-        Object.keys(usage).forEach(usageKey => {
-          subMaterial[usageKey] = usage[usageKey]
-        })
-        this.entityService.create(subMaterial)
-        .subscribe(data =>{
-          console.log("merged entity:", data)
-        })
-      } else {
-        //subMaterial['SYS_GENRE'] = material['SYS_GENRE']
-        subMaterial['SYS_ENTITY_TYPE'] = 'object'
-        // material is /PRODUCT_WORKCENTER
-        // or material collection which may have the SYS_GENRE
-        this.genreService.retrieveBy({
-          "SYS_ENTITY": material.id
-        })
-        .subscribe(data => {
-          if (data[0]) {
-            subMaterial['SYS_GENRE'] = data[0].id
-          } else {
-            // collection of materials
-            subMaterial['SYS_GENRE'] = material['SYS_GENRE']
-          }
-
-          // Assign new values to the new material object
-          Object.keys(usage).forEach(usageKey => {
-            subMaterial[usageKey] = usage[usageKey]
-          })
-
-          this.entityService.create(subMaterial)
-          .subscribe(data =>{
-            console.log("merged entity:", data)
-          })
-        })
-      }
+      this.entityService.create(subEntity)
+      .subscribe(data =>{
+        console.log("merged entity:", data)
+      })
     })
   }
 
