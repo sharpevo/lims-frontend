@@ -186,10 +186,21 @@ export class SampleService{
     }
   }
 
-  //
-  // submition
-  //
 
+  /**
+   * Submit samples in the form for both of issueSample of Project Manager and
+   * submitSample of Product Operator, and issueSample and submitSample will
+   * call createObject latter.
+   *
+   * @param workcenter Current workcenter, or "General Project" for issueSample
+   * @param sampleList Selected samples, the sample list should belongs to the
+   * current workcenter rather the previous one.
+   * @param issueSample Boolean tag to indicate whether it's called from
+   * Project Manager or not.
+   * @param object Object manipulated in the form of web page.
+   * @param parentMap BoM/Routing object.
+   *
+   */
   submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
 
     this.entityService.retrieveGenre(workcenter.id)
@@ -418,7 +429,6 @@ export class SampleService{
     }
   }
 
-
   /**
    * buildRelationship is designed for planning in routing or records usage of
    * material in BoM, from sourceEntity to the targetEntity.
@@ -598,55 +608,4 @@ export class SampleService{
       })
     })
   }
-
-  // Get parentMap and attributeList
-  getAttributesByGenreId(genreId: string, callback): any{
-    this.genreService.retrieveAttribute(genreId)
-    .subscribe(data => {
-      let parentMap = {}
-      data.forEach(attribute => {
-        switch (attribute.SYS_TYPE){
-          case "entity":
-            //if (attribute.SYS_TYPE_ENTITY_REF){
-            //// get the identifier of the entity
-            //// TODO: save SYS_IDENTIFIER instead of ID seems better
-            //// or automate populate
-            //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-            //.subscribe(data => {
-            //// get the entity list
-            //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-            //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-            //}
-            //this.entityService.retrieveByIdentifierAndCategory(
-            //data.SYS_IDENTIFIER,
-            //attribute.SYS_FLOOR_ENTITY_TYPE)
-            //.subscribe(data => {
-            //// compose a new key
-            //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-            //})
-            //})
-            //}else {
-            //}
-            if (!attribute.SYS_TYPE_ENTITY_REF) {
-            parentMap[attribute.SYS_CODE] = {}
-          }
-          break
-          default:
-        }
-
-      })
-      let attributeList = data.sort((a,b) => {
-        if (a.SYS_ORDER > b.SYS_ORDER) {
-          return 1
-        } else {
-          return -1
-        }
-      })
-      return {
-        "attributeList": attributeList,
-        "parentMap": parentMap
-      }
-    })
-  }
-
 }
