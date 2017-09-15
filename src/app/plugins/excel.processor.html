@@ -53,21 +53,30 @@
             </table>
         </div>
 
-        <md-divider>
-        </md-divider>
-        <button
-            md-button
-            (click)="updateExcel()">
-            IMPORT
-        </button>
         <br/>
         <input
+            [hidden]="true"
+            id="upload-file-input"
             #excelUploader
             type="file"
             name="excelFile"
             (click)="clearExcel()"
             (change)="submitExcel($event)"/>
-        <br/>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center"
+            style="height: 100%; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)">
+            <label for="upload-file-input" style="margin-left: 10px" fxFlex>
+                Choose File:
+                <b>
+                    {{excelUploader.value.split('\\').pop()}}
+                </b>
+            </label>
+            <button
+                md-button
+                (click)="updateExcel()">
+                IMPORT
+            </button>
+        </div>
         <br/>
         <div
             fxLayout="column"
