@@ -106,25 +106,25 @@ export class PluginExcelProcessorComponent {
         // 2. sample: from excel, like operator, id, exactly the workcenter
         //
         mergedSample.SYS_SCHEMA.forEach(schema => {
-          console.log("!!!", sample, schema.SYS_LABEL)
+          console.log("!!!", sample, schema)
           if (sample[schema.SYS_LABEL]){
             if (schema.SYS_TYPE != 'entity'){
               mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
             } else {
+              mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
 
-              // Convert SYS_LABEL to id before commit to the database
-              let queryObject = {}
-              queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
-              this.entityService.retrieveBy(queryObject)
-              .subscribe(data => {
-                console.log("&&&", data)
-                if (data[0]){
-                  console.log("Entity:", data[0])
-                  mergedSample[schema.SYS_CODE] = data[0].id
-                } else {
-                  console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
-                }
-              })
+              // TODO: Convert SYS_LABEL to id before commit to the database
+              //let queryObject = {}
+              //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
+              //this.entityService.retrieveBy(queryObject)
+              //.subscribe(data => {
+              //if (data[0]){
+              //console.log("Entity:", data[0])
+              //mergedSample[schema.SYS_CODE] = data[0].id
+              //} else {
+              //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
+              //}
+              //})
             }
           }
         })
