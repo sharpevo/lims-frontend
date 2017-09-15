@@ -574,7 +574,7 @@ export class SampleService{
     subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
       sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
 
-    if (targetEntity['SYS_IDENTIFIER'] == 'class'){
+    if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
       // Routing specific operations
 
       subEntity['SYS_ENTITY_TYPE'] = 'collection'
