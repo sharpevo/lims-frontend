@@ -83,7 +83,9 @@ export class PluginExcelProcessorComponent {
 
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
-    window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.id))
+    if (this.selectedSampleList.length > 0){
+      window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.id))
+    }
   }
 
   updateExcel(){
