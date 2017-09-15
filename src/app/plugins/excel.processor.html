@@ -91,19 +91,25 @@
         </div>
         <br/>
         <div
-            fxLayout="column"
-            fxLayoutAlign="start stretch">
-            <div
-                *ngFor="let row of excelResult">
-                <span
-                    style="margin-right: 10px"
-                    *ngFor="let key of row|objectKeys">
-                    <span style="opacity:0.3">
-                        {{key}}:
-                    </span>
-                    {{row[key]}}
-                </span>
-            </div>
+            *ngIf="excelResult.length > 0">
+            <table
+                style="width: 100%; text-align: center; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th *ngFor="let key of (excelResult[0] | objectKeys)">
+                            {{key}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let sample of excelResult">
+                        <td *ngFor="let key of (sample | objectKeys)">
+                            {{sample[key]}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </md-card-content>
 </md-card>
