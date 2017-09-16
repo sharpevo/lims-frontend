@@ -3,6 +3,7 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
+import 'rxjs/Rx' ;
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -84,7 +85,12 @@ export class PluginExcelProcessorComponent {
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     if (this.selectedSampleList.length > 0){
-      window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.id))
+      this.utilService.getExcelFile(this.selectedSampleList, this.workcenter.id)
+      .subscribe(data => {
+        var blob = new Blob([data], { type: 'text/csv' });
+        var url= window.URL.createObjectURL(blob)
+        window.open(url);
+      })
     }
   }
 
