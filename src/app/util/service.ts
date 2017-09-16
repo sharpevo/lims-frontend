@@ -16,10 +16,37 @@ export class UtilService{
     let formData = new FormData()
     formData.append('excelFile', file[0], file[0].name)
     return this.http.post(
-      this.baseUrl + '/excel',
+      this.baseUrl + '/excelparse',
       formData,
       {})
       .map(res => res.json())
+  }
+
+  getExcelFile(sampleList: any, workcenterId: string){
+    let data = {}
+    data['workcenterId'] = workcenterId
+    data['sampleIdList'] = {}
+    sampleList.forEach(sample => {
+      //SYS_HYBRID_INFO:{
+      //  HYBRID_CODE:"SYS_CAPTURE_CODE"
+      //  SYS_CAPTURE_CODE:"cap-01"
+      //  type:"CAPTURE"
+      //}
+      let hybridCodeKey = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
+      let hybridCode = sample['SYS_HYBRID_INFO'][hybridCodeKey]
+      if (!data['sampleIdList'][hybridCode]){
+        data['sampleIdList'][hybridCode] = []
+      }
+      data['sampleIdList'][hybridCode].push(sample.id)
+    })
+    let headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    headers.append('Accept', '*')
+    return this.http.post(
+      this.baseUrl + '/excel',
+      data,
+      {headers: headers})
+      //.map(res => res.json())
   }
 
   getExcelUrl(sampleList: any, workcenterId: string){
