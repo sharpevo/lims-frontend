@@ -87,9 +87,18 @@ export class PluginExcelProcessorComponent {
     if (this.selectedSampleList.length > 0){
       this.utilService.getExcelFile(this.selectedSampleList, this.workcenter.id)
       .subscribe(data => {
-        var blob = new Blob([data], { type: 'text/csv' });
-        var url= window.URL.createObjectURL(blob)
-        window.open(url);
+        console.log(data)
+        var blob = new Blob([data['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'} )
+        //var file = new File([blob], 'report.xlsx',{ type: 'application/vnd.ms-excel' } )
+        //var url= window.URL.createObjectURL(file)
+        //window.open(url, '_blank');
+        //window.open(url);
+
+        const pdfUrl = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'test.xlsx';
+        anchor.href = pdfUrl;
+        anchor.click()
       })
     }
   }
