@@ -186,10 +186,21 @@ export class SampleService{
     }
   }
 
-  //
-  // submition
-  //
 
+  /**
+   * Submit samples in the form for both of issueSample of Project Manager and
+   * submitSample of Product Operator, and issueSample and submitSample will
+   * call createObject latter.
+   *
+   * @param workcenter Current workcenter, or "General Project" for issueSample
+   * @param sampleList Selected samples, the sample list should belongs to the
+   * current workcenter rather the previous one.
+   * @param issueSample Boolean tag to indicate whether it's called from
+   * Project Manager or not.
+   * @param object Object manipulated in the form of web page.
+   * @param parentMap BoM/Routing object.
+   *
+   */
   submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
 
     this.entityService.retrieveGenre(workcenter.id)
@@ -197,6 +208,7 @@ export class SampleService{
       // Take the first genre as default
       this.genreService.retrieveAttribute(data[0].id)
       .subscribe(data => {
+
         //data.forEach(attribute => {
         //switch (attribute.SYS_TYPE){
         //case "entity":
@@ -229,6 +241,7 @@ export class SampleService{
         //}
 
         //})
+
         let attributeList = data.sort((a,b) => {
           if (a.SYS_ORDER > b.SYS_ORDER) {
             return 1
@@ -244,7 +257,7 @@ export class SampleService{
 
         if (issueSample){
           console.log("issueSample")
-          this.issueSample(sampleList, object, workcenter, attributeInfo)
+          this.issueSample(workcenter, object, sampleList, attributeInfo)
           return
         }
         console.log("submitObject")
@@ -267,7 +280,18 @@ export class SampleService{
 
   }
 
-  issueSample(sampleList: any[], object: any, entity: any, attributeInfo: any){
+  /**
+   * issueSample will build samples for the General Project workcenter,
+   * manipulated by product manager
+   *
+   * @param entity workcenter
+   * @param object ngModel in the form
+   * @param sampleList selected samples
+   * @param attributeInfo argument map
+   *
+   */
+
+  issueSample(entity: any, object: any, sampleList: any[], attributeInfo: any){
     sampleList.forEach(sample => {
       if (!sample['SYS_SAMPLE_CODE']){
         console.log("invalid sample code")
@@ -293,12 +317,11 @@ export class SampleService{
       // retain the date for the sample
       let originalSampleSchuduledDate = sample['SYS_DATE_SCHEDULED']
 
-      // process samples already in the LIMS
-      // delete id before creation if the sample is inside of LIMS
+      // process samples already in the LIMS delete id before creation if the
+      // sample is inside of LIMS
       if (sample.id){
 
         // terminate other uncompleted samples in the system
-
         let terminateObs = []
         this.entityService.retrieveBy(
           {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
@@ -340,7 +363,16 @@ export class SampleService{
     })
   }
 
-
+  /**
+   * submitSample will build samples for the specific workcenter, manipulated
+   * by operators
+   *
+   * @param entity workcenter
+   * @param object ngModel in the form
+   * @param selectedSample seleted samples
+   * @param attributeInfo argument map
+   *
+   */
   submitSample(entity: any, object: any, selectedSample: any, attributeInfo: any){
 
     this.entityService.retrieveBy({
@@ -395,7 +427,7 @@ export class SampleService{
     if (issueSample){
       this.entityService.create(object)
       .subscribe(data =>{
-        this.makeConn(data, attributeInfo)
+        this.buildRelationship(data, attributeInfo)
         console.log('Issue sample:', data)
       })
     } else {
@@ -408,7 +440,7 @@ export class SampleService{
         // has been assigned to the scheduled sample
         this.entityService.update(object)
         .subscribe(data => {
-          this.makeConn(data, attributeInfo)
+          this.buildRelationship(data, attributeInfo)
           console.log('Add Entity:', data)
         },
         err => {
@@ -418,160 +450,188 @@ export class SampleService{
     }
   }
 
-
-  makeConn(sourceObject: any, attributeInfo: any){
+  /**
+   * buildRelationship is designed for planning in routing or records usage of
+   * material in BoM, from sourceEntity to the targetEntity.
+   *
+   * @param sourceEntity The manipulated entity.
+   * @param attributeInfo argument map
+   *
+   */
+  buildRelationship(sourceEntity: any, attributeInfo: any){
 
     let attributeList = attributeInfo['attributeList']
-    let parentObjects = attributeInfo['parentMap']
-    // Get the keys for each kind of BoM/Routing
-    // e.g. "bom", "bill_of_material"
-    Object.keys(parentObjects).forEach(key => {
-      //console.log("processing key:", key)
+    let parentMap = attributeInfo['parentMap']
+
+    // Get the keys for each kind of BoM/Routing, e.g., "bom", "bill_of_material".
+    Object.keys(parentMap).forEach(key => {
+
+      let targetEntityMap = parentMap[key]
 
       let SYS_DATE_SCHEDULED = new Date()
       let DATE_EXISTS = false
 
-      // Get the bom object id, which is used as the key of the actual
-      // usage, e.g., <bom object id>
-      Object.keys(parentObjects[key]).forEach((entityId, index) =>{
-        //console.log("processing id:", entityId)
+      // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
+      Object.keys(targetEntityMap).forEach((entityId, index) =>{
 
-        // `usage` is the inputs from user and contains SYS_QUANT,
-        // SYS_SOURCE, etc.
-        let usage = parentObjects[key][entityId]
-        //console.log("processing usage:", usage)
+        // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
+        let targetEntityInput = targetEntityMap[entityId]
 
         // only process checked Material or Workcenter
-        if (usage['SYS_CHECKED']){
-          //console.log('process checked entry:', usage)
+        if (targetEntityInput['SYS_CHECKED']){
+          //console.log('process checked entry:', targetEntityInput)
 
           // Calculate SYS_DATE_SCHEDULED
           if (!DATE_EXISTS){
-            if (sourceObject['SYS_DATE_SCHEDULED']){
-              SYS_DATE_SCHEDULED = new Date(sourceObject['SYS_DATE_SCHEDULED'])
+            if (sourceEntity['SYS_DATE_SCHEDULED']){
+              SYS_DATE_SCHEDULED = new Date(sourceEntity['SYS_DATE_SCHEDULED'])
               //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
             }
             DATE_EXISTS = true
           }
 
-          // The date object is address-reference, so that if not
-          // assigned with "new Date", all the usage date is the final
-          // one
-          usage['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-          SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() +
-                                     (usage['SYS_DURATION']?usage['SYS_DURATION']:0))
+          // The date object is address-reference, so that if not assigned with
+          // "new Date", all the targetEntityInput date is the final one
+          targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
+          SYS_DATE_SCHEDULED.setDate(
+            SYS_DATE_SCHEDULED.getDate() +
+              (targetEntityInput['SYS_DURATION']?targetEntityInput['SYS_DURATION']:0)
+          )
           if (index == 0){
-            usage['SYS_DATE_ARRIVED'] = usage['SYS_DATE_SCHEDULED']
+            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
           }
-          //console.log("Next date: ", SYS_DATE_SCHEDULED)
 
-          // Get the material collection from the SYS_SOURCE
-          this.entityService.retrieveById(usage['SYS_SOURCE'])
-          .subscribe(material => {
-            //console.log("merge from entity:", material)
+          // Get the target entity from the SYS_SOURCE
+          this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+          .subscribe(targetEntity => {
 
-            // Get attributes of the material then assign them to the
-            // material object. Note that it's recommended to merge entities
-            // by this way, instead of the object deep copy for the reason
-            // of attributes undefined in frontend
-            this.entityService.retrieveAttribute(material.id)
-            .subscribe(attributes => {
+            // check whether SYS_SOURCE has been specified manually
+            // BoM: 'class' == 'collection'
+            // Routing: 'class' == 'class', since it's only one option and the
+            // checkbox is another way to detect checked or not
+            if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+              // SYS_SOURCE has been specified manually
 
-              // subMaterial is the material object under the corresponding
-              // collection
-              let subMaterial = {}
-              attributes.forEach(attribute => {
-                subMaterial[attribute.SYS_CODE] = material[attribute.SYS_CODE]
-              })
+              //console.log("---------Entries has been specified:", targetEntity)
+              this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
 
-              // Get default label from the source entity
-              subMaterial['SYS_LABEL'] = sourceObject['SYS_LABEL']
-              subMaterial[subMaterial['SYS_LABEL']] = sourceObject[sourceObject['SYS_LABEL']]
+            } else {
+              // SYS_SORUCE is not selected, and it happens only when BoM
+              // (checked but not selected)
 
-              if (material['SYS_ENTITY_TYPE'] == 'class'){ // Routing
-                subMaterial['SYS_GENRE'] = sourceObject['SYS_GENRE']
-                subMaterial['SYS_ENTITY_TYPE'] = 'collection'
-                attributeList.forEach(attribute => {
-                  subMaterial[attribute['SYS_CODE']] = sourceObject[attribute['SYS_CODE']]
+              // Get the LOTs of targetEntity and take the first one as the default
+              this.entityService.retrieveEntity(
+                targetEntityInput['SYS_SOURCE'],
+                targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                .subscribe(data => {
+                  //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                  //console.log("merge from entity:", targetEntity)
+                  this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+
                 })
-              } else {
-                subMaterial['SYS_GENRE'] = material['SYS_GENRE']
-                subMaterial['SYS_ENTITY_TYPE'] = 'object'
-              }
-              // Customize attributes for new entity. It's not necessary to
-              // save workcenter incidentally coz there's already a link
-              // between the SYS_TARGET and the workcenter
-              //
-              // Note that the SYS_IDENTIFIER will be duplicated if the sample
-              // is involved in the same experiment more than one time.
-              subMaterial['SYS_IDENTIFIER'] = material.SYS_IDENTIFIER + "/" +
-                sourceObject['SYS_CODE'] + '.' + new Date().getTime()
-              subMaterial['SYS_TARGET'] = sourceObject.id
 
-              // Assign new values to the new material object
-              Object.keys(usage).forEach(usageKey => {
-                subMaterial[usageKey] = usage[usageKey]
-              })
-
-              this.entityService.create(subMaterial)
-              .subscribe(data =>{
-                console.log("merged entity:", data)
-              })
-            })
+            }
           })
         }
       })
     })
   }
 
-  // Get parentMap and attributeList
-  getAttributesByGenreId(genreId: string, callback): any{
-    this.genreService.retrieveAttribute(genreId)
-    .subscribe(data => {
-      let parentMap = {}
-      data.forEach(attribute => {
-        switch (attribute.SYS_TYPE){
-          case "entity":
-            //if (attribute.SYS_TYPE_ENTITY_REF){
-            //// get the identifier of the entity
-            //// TODO: save SYS_IDENTIFIER instead of ID seems better
-            //// or automate populate
-            //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-            //.subscribe(data => {
-            //// get the entity list
-            //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-            //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-            //}
-            //this.entityService.retrieveByIdentifierAndCategory(
-            //data.SYS_IDENTIFIER,
-            //attribute.SYS_FLOOR_ENTITY_TYPE)
-            //.subscribe(data => {
-            //// compose a new key
-            //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-            //})
-            //})
-            //}else {
-            //}
-            if (!attribute.SYS_TYPE_ENTITY_REF) {
-            parentMap[attribute.SYS_CODE] = {}
-          }
-          break
-          default:
-        }
+  /**
+   * Create subentities for the given entity. For the BoM, it's used to create
+   * the droplet(object entity) under the Material, and for the routing, to
+   * create the sample(collection entity) under the Workcenter.
+   *
+   * For the creation of subEntity, Routing copies "attributeList" from the
+   * current workcenter(Project Management) to the subEntity for the target
+   * workcenter(Sample Extraction for example), e.g., index, panel, routing,
+   * etc.; BoM copies "attrbiutes" from the target material to the subEntity
+   * for the target Material(Kapa Hifi for example).
+   *
+   * @param sourceEntity The SYS_SOURCE object under the Project Management.
+   * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
+   * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
+   * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
+   * @return nill
+   */
+  createSubEntity(
+    sourceEntity:any,
+    targetEntity:any,
+    workcenterAttributeList: any[],
+    targetEntityInput: any
+  ){
 
+    let subEntity = {}
+
+    // Get default label from the source entity
+    subEntity['SYS_LABEL'] = sourceEntity['SYS_LABEL']
+    subEntity[subEntity['SYS_LABEL']] = sourceEntity[sourceEntity['SYS_LABEL']]
+
+    subEntity['SYS_TARGET'] = sourceEntity.id
+
+    // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
+    // samples involved more than one time in the same workcenter
+    subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
+      sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
+
+    if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
+      // Routing specific operations
+
+      subEntity['SYS_ENTITY_TYPE'] = 'collection'
+      workcenterAttributeList.forEach(attribute => {
+        subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
       })
-      let attributeList = data.sort((a,b) => {
-        if (a.SYS_ORDER > b.SYS_ORDER) {
-          return 1
-        } else {
-          return -1
-        }
+      this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+
+    } else { // == 'collection'
+      // BoM specific operations
+
+      subEntity['SYS_ENTITY_TYPE'] = 'object'
+      this.entityService.retrieveAttribute(targetEntity.id)
+      .subscribe(attributes => {
+        attributes.forEach(attribute => {
+          subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
+        })
+        this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
       })
-      return {
-        "attributeList": attributeList,
-        "parentMap": parentMap
-      }
-    })
+    }
   }
 
+  /**
+   * submitSubEntity is created only for reusing logics and avoid to introduce
+   * async for BoM and Routing
+   *
+   * The SYS_GENRE should be the default genre of the workcenter/material
+   * instead of targetEntity['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/", and
+   * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
+   *
+   */
+  submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any){
+
+    //for both of BoM and Routing
+    this.genreService.retrieveBy({
+      "SYS_ENTITY": targetEntity.id
+    })
+    .subscribe(data => {
+      if (data[0]) {
+        // Get SYS_GENRE from the workcenter
+
+        subEntity['SYS_GENRE'] = data[0].id
+      } else {
+        // Collection of materials may not contains any SYS_GENRE defaultly
+
+        subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
+      }
+
+      // Assign new values to the new material object
+      Object.keys(targetEntityInput).forEach(key => {
+        subEntity[key] = targetEntityInput[key]
+      })
+
+      this.entityService.create(subEntity)
+      .subscribe(data =>{
+        console.log("merged entity:", data)
+      })
+    })
+  }
 }
