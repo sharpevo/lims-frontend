@@ -84,8 +84,10 @@ export class PluginExcelProcessorComponent {
 
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
+    let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList)
+
     if (this.selectedSampleList.length > 0){
-      this.utilService.getExcelFile(this.selectedSampleList, this.workcenter.id)
+      this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
       .subscribe(data => {
         console.log(data)
         var blob = new Blob([data['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'} )

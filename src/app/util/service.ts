@@ -25,19 +25,7 @@ export class UtilService{
   getExcelFile(sampleList: any, workcenterId: string){
     let data = {}
     data['workcenterId'] = workcenterId
-    data['sampleIdList'] = {}
-    sampleList.forEach(sample => {
-      //SYS_HYBRID_INFO:{
-      //  HYBRID_KEY:"SYS_CAPTURE_CODE"
-      //  HYBRID_CODE:"cap-01"
-      //  HYBRID_TYPE:"CAPTURE"
-      //}
-      let hybridCode = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
-      if (!data['sampleIdList'][hybridCode]){
-        data['sampleIdList'][hybridCode] = []
-      }
-      data['sampleIdList'][hybridCode].push(sample.id)
-    })
+    data['sampleIdList'] = sampleList
     let headers = new Headers()
     headers.append('Content-Type', 'application/json')
     //headers.append('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
