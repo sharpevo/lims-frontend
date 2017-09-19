@@ -28,12 +28,11 @@ export class UtilService{
     data['sampleIdList'] = {}
     sampleList.forEach(sample => {
       //SYS_HYBRID_INFO:{
-      //  HYBRID_CODE:"SYS_CAPTURE_CODE"
-      //  SYS_CAPTURE_CODE:"cap-01"
-      //  type:"CAPTURE"
+      //  HYBRID_KEY:"SYS_CAPTURE_CODE"
+      //  HYBRID_CODE:"cap-01"
+      //  HYBRID_TYPE:"CAPTURE"
       //}
-      let hybridCodeKey = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
-      let hybridCode = sample['SYS_HYBRID_INFO'][hybridCodeKey]
+      let hybridCode = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
       if (!data['sampleIdList'][hybridCode]){
         data['sampleIdList'][hybridCode] = []
       }
