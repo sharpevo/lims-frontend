@@ -62,6 +62,33 @@ export class SampleService{
     return resultList
   }
 
+  /**
+   * Build samples in backend-friendly hybrid structure.
+   *
+   * With the help of the backend, each of the sample will be returned with an attribute "SYS_HYBRID_INFO" which is formed like,
+   *
+   * SYS_HYBRID_INFO: {
+   *    HYBRID_CODE: "SYS_CAPTURE_CODE"
+   *    SYS_CAPTURE_CODE:"cap-aa"
+   *    type:"CAPTURE"
+   * }
+   *
+   * @param sampleList samples to build
+   *
+   */
+  buildHybridSampleList(sampleList: any): any{
+
+    let hybridSampleList = {}
+    sampleList.forEach(sample => {
+      let hybridCode = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
+      if (!hybridSampleList[hybridCode]){
+        hybridSampleList[hybridCode] = []
+      }
+      hybridSampleList[hybridCode].push(sample.id)
+    })
+    return hybridSampleList
+  }
+
   getPreviousChainedSample(sample: any, callback){
     this.entityService.retrieveBy({
       'SYS_TARGET': sample['SYS_TARGET'],
