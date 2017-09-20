@@ -3,6 +3,7 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
+import 'rxjs/Rx' ;
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -83,8 +84,24 @@ export class PluginExcelProcessorComponent {
 
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
+    let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList)
+
     if (this.selectedSampleList.length > 0){
-      window.open(this.utilService.getExcelUrl(this.selectedSampleList, this.workcenter.id))
+      this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
+      .subscribe(data => {
+        console.log(data)
+        var blob = new Blob([data['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'} )
+        //var file = new File([blob], 'report.xlsx',{ type: 'application/vnd.ms-excel' } )
+        //var url= window.URL.createObjectURL(file)
+        //window.open(url, '_blank');
+        //window.open(url);
+
+        const pdfUrl = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'test.xlsx';
+        anchor.href = pdfUrl;
+        anchor.click()
+      })
     }
   }
 
@@ -92,52 +109,55 @@ export class PluginExcelProcessorComponent {
 
     this.excelResult.forEach(sample =>{
 
-      // Convert excel-style object to database-style object.
-      // The excel-style object is formed as:
-      // 'LABEL': 'Value'
-      this.entityService.retrieveBy({
-        "_id": sample.IDENTIFIER
-      })
-      .subscribe(data => {
-        let mergedSample = data[0]
+      sample['IDENTIFIER'].split(",").forEach(sampleId => {
 
-        //
-        // For the reason of SYS_GENRE is defined from General project instead
-        // of the current workcenter in the legacy database:
-        // 1. schema: from workcenter, like sample sn
-        // 2. sample: from excel, like operator, id, exactly the workcenter
-        //
-        mergedSample.SYS_SCHEMA.forEach(schema => {
-          console.log("!!!", sample, schema)
-          if (sample[schema.SYS_LABEL]){
-            if (schema.SYS_TYPE != 'entity'){
-              mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-            } else {
-              mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-
-              // TODO: Convert SYS_LABEL to id before commit to the database
-              //let queryObject = {}
-              //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
-              //this.entityService.retrieveBy(queryObject)
-              //.subscribe(data => {
-              //if (data[0]){
-              //console.log("Entity:", data[0])
-              //mergedSample[schema.SYS_CODE] = data[0].id
-              //} else {
-              //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
-              //}
-              //})
-            }
-          }
+        // Convert excel-style object to database-style object.
+        // The excel-style object is formed as:
+        // 'LABEL': 'Value'
+        this.entityService.retrieveBy({
+          "_id": sampleId
         })
-        this.sampleService.submitSample(
-          this.workcenter,
-          mergedSample,
-          data[0],
-          {
-            "attributeList": this.workcenterAttributeList,
-            "parentMap": this.parentMap
+        .subscribe(data => {
+          let mergedSample = data[0]
+
+          //
+          // For the reason of SYS_GENRE is defined from General project instead
+          // of the current workcenter in the legacy database:
+          // 1. schema: from workcenter, like sample sn
+          // 2. sample: from excel, like operator, id, exactly the workcenter
+          //
+          mergedSample.SYS_SCHEMA.forEach(schema => {
+            console.log("!!!", sample, schema)
+            if (sample[schema.SYS_LABEL]){
+              if (schema.SYS_TYPE != 'entity'){
+                mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+              } else {
+                mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+
+                // TODO: Convert SYS_LABEL to id before commit to the database
+                //let queryObject = {}
+                //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
+                //this.entityService.retrieveBy(queryObject)
+                //.subscribe(data => {
+                //if (data[0]){
+                //console.log("Entity:", data[0])
+                //mergedSample[schema.SYS_CODE] = data[0].id
+                //} else {
+                //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
+                //}
+                //})
+              }
+            }
           })
+          this.sampleService.submitSample(
+            this.workcenter,
+            mergedSample,
+            data[0],
+            {
+              "attributeList": this.workcenterAttributeList,
+              "parentMap": this.parentMap
+            })
+        })
       })
     })
   }

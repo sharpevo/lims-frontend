@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {Http, Headers} from '@angular/http'
+import {Http, Headers, ResponseContentType} from '@angular/http'
 import 'rxjs/add/operator/map'
 
 @Injectable()
@@ -16,10 +16,26 @@ export class UtilService{
     let formData = new FormData()
     formData.append('excelFile', file[0], file[0].name)
     return this.http.post(
-      this.baseUrl + '/excel',
+      this.baseUrl + '/excelparse',
       formData,
       {})
       .map(res => res.json())
+  }
+
+  getExcelFile(sampleList: any, workcenterId: string){
+    let data = {}
+    data['workcenterId'] = workcenterId
+    data['sampleIdList'] = sampleList
+    let headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    //headers.append('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    return this.http.post(
+      this.baseUrl + '/excel',
+      data,
+      {headers: headers,
+        responseType: ResponseContentType.Blob
+      })
+      //.map(response => new Blob([response['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}))
   }
 
   getExcelUrl(sampleList: any, workcenterId: string){
