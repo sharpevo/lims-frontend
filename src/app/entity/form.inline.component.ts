@@ -34,6 +34,7 @@ export class EntityFormInlineComponent {
         data.forEach(attribute => {
           this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
         })
+        this.object["SYS_FLOOR_ENTITY_TYPE"] = this.optionLevel
         this.attributeList = data
       })
     }
