@@ -115,6 +115,7 @@ export class TablifyComponent{
     if (currentSampleIndex >= 0){
       console.log("C", sample.id)
       this.rawSampleList[currentSampleIndex]['TMP_CHECKED'] = checked
+      this.rawSampleList[currentSampleIndex]['SYS_HYBRID_INFO'] = sample['SYS_HYBRID_INFO']
     } else {
       console.warn("Not valid next sample id.")
     }
