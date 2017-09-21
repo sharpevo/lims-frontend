@@ -59,6 +59,7 @@ import {TablifyComponent} from './util/tablify.component'
 
 import {SimpleTableDialog} from './util/simple.table.dialog';
 import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component';
+import {ShowAuxiliaryAttributeDialog} from './util/auxiliary.attribute.dialog';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component'
     TablifyComponent,
     SimpleTableDialog,
     AuxiliaryAttributeComponent,
+    ShowAuxiliaryAttributeDialog,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -105,6 +107,7 @@ import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component'
     AttributeFormDialog,
     SampleFormDialog,
     SimpleTableDialog,
+    ShowAuxiliaryAttributeDialog,
   ],
   imports: [
     BrowserModule,
