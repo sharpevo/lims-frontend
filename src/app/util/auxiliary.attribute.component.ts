@@ -1,5 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {SampleService} from '../models/sample'
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
 
 @Component({
   selector: 'show-auxiliary-attribute',
@@ -11,6 +13,7 @@ export class AuxiliaryAttributeComponent{
   attributeObjectList: any = []
 
   constructor(
+    public dialog: MdDialog,
     private sampleService: SampleService
   ){}
 
@@ -22,8 +25,13 @@ export class AuxiliaryAttributeComponent{
   }
 
   openAttributeHistoryDialog(){
-    console.log(this.attributeObjectList)
+    let dialogRef = this.dialog.open(ShowAuxiliaryAttributeDialog, {height: '600px', width: '300px'});
+    dialogRef.componentInstance.config.attributeList = this.attributeObjectList
+    dialogRef.afterClosed().subscribe(result => {
+      // pass
+    })
   }
+
 
 
 }
