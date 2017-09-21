@@ -1,0 +1,10 @@
+<span *ngIf="attributeObjectList.length > 0">
+    <span>
+        {{attributeObjectList[0]['VALUE']}}
+    </span>
+    <span
+        (click)="openAttributeHistoryDialog()">
+        <i style="font-size:1.2em"
+            class="material-icons">history</i>
+    </span>
+</span>
