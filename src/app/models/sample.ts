@@ -95,10 +95,10 @@ export class SampleService{
         if (sample[attributeCode]){
 
           attributeObjectList.push({
-            "ID": sample.id,
-            "DATE": sample['SYS_COMPLETED_DATE'],
-            "VALUE": sample[attributeCode]
-
+            "id": sample.id,
+            "dateCompleted": sample['SYS_COMPLETED_DATE'],
+            "dateUpdated": sample['updatedAt'],
+            "value": sample[attributeCode]
           })
         }
 
