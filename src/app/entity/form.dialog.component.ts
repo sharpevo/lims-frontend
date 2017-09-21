@@ -460,7 +460,7 @@ export class EntityFormDialog {
       if (!this.object['SYS_AUXILIARY_ATTRIBUTE_LIST']){
         this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'] = []
       }
-      this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'].push(attribute)
+      this.object['SYS_AUXILIARY_ATTRIBUTE_LIST'].push(attribute.id)
     }
 
     removeGenericAttribute(index: string){
