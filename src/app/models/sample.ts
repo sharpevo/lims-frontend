@@ -85,7 +85,8 @@ export class SampleService{
       .filter(sample => sample['SYS_DATE_COMPLETED'] &&
               !sample['SYS_DATE_TERMINATED'])
       .sort((a,b) => {
-        if (a['SYS_DATE_COMPLETED'] > b['SYS_DATE_COMPLETED']){
+        //if (a['SYS_DATE_COMPLETED'] > b['SYS_DATE_COMPLETED']){
+        if (a['updatedAt'] < b['updatedAt']){
           return 1
         } else {
           return -1
