@@ -1,8 +1,9 @@
 <span *ngIf="attributeObjectList.length > 0">
     <span>
-        {{attributeObjectList[0]['VALUE']}}
+        {{attributeObjectList[0]['value']}}
     </span>
     <span
+        *ngIf="attributeObjectList.length > 1"
         (click)="openAttributeHistoryDialog()">
         <i style="font-size:1.2em"
             class="material-icons">history</i>

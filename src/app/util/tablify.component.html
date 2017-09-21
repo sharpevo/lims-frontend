@@ -92,7 +92,6 @@
                             </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
-                            {{row[columnKey]}}
                             <show-auxiliary-attribute
                                 [sample]="row"
                                 [attributeCode]="columnKey">
@@ -110,7 +109,6 @@
                                 </entity-tostring>
                             </span>
                             <span *ngSwitchDefault>
-                                {{row[columnKey]}}
                                 <show-auxiliary-attribute
                                     [sample]="row"
                                     [attributeCode]="columnKey">

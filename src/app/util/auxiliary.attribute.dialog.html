@@ -15,20 +15,22 @@
 <br/>
 
 <!--Division of all the attributes with left alignment-->
-<div fxLayout="column" fxLayoutAlign="center center" >
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
 
     <!--Division of one attribute-->
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px"
         *ngFor="let attribute of config.attributeList">
 
             <div>
-                {{attribute['dateCompleted']|date: 'yyyy-MM-dd hh:mm'}}/{{attribute['dateUpdated']|date: 'yyyy-MM-dd hh:mm'}}
+                <a href="#{{attribute['id']}}">
+                    {{attribute['dateUpdated']|date: 'yyyy-MM-dd hh:mm'}}
+                </a>
             </div>
 
             <div>
-                <a href="#{{attribute['id']}}">
+                <b>
                     {{attribute['value']}}
-                </a>
+                </b>
             </div>
     </div>
 </div>
