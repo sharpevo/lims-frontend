@@ -25,7 +25,7 @@ export class AuxiliaryAttributeComponent{
   }
 
   openAttributeHistoryDialog(){
-    let dialogRef = this.dialog.open(ShowAuxiliaryAttributeDialog, {height: '600px', width: '300px'});
+    let dialogRef = this.dialog.open(ShowAuxiliaryAttributeDialog, {height: '400px', width: '300px'});
     dialogRef.componentInstance.config.attributeList = this.attributeObjectList
     dialogRef.afterClosed().subscribe(result => {
       // pass
