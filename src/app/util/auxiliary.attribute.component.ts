@@ -52,7 +52,4 @@ export class AuxiliaryAttributeComponent{
       // pass
     })
   }
-
-
-
 }

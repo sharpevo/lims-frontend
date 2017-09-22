@@ -41,8 +41,6 @@ export class PluginExcelProcessorComponent {
         this.workcenterAttributeList = attributeList
         this.workcenterAttributeList.forEach(attr => {
 
-          console.log("..")
-
           // Process BoM or Routing
           if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
             this.parentMap[attr.SYS_CODE] = {}

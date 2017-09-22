@@ -77,33 +77,46 @@ export class SampleService{
     this.entityService.retrieveBy({
       "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
     })
-    .subscribe(sampleList => {
+    .subscribe(_sampleList => {
 
-      let attributeObjectList = []
-
-      sampleList
-      .filter(sample => sample['SYS_DATE_COMPLETED'] &&
-              !sample['SYS_DATE_TERMINATED'])
+      let sampleList = _sampleList
       .sort((a,b) => {
-        //if (a['SYS_DATE_COMPLETED'] > b['SYS_DATE_COMPLETED']){
         if (a['updatedAt'] < b['updatedAt']){
           return 1
         } else {
           return -1
         }
       })
-      .forEach(sample => {
-        if (sample[attributeCode]){
+      let attributeObjectList = []
 
-          attributeObjectList.push({
-            "id": sample.id,
-            "dateCompleted": sample['SYS_COMPLETED_DATE'],
-            "dateUpdated": sample['updatedAt'],
-            "value": sample[attributeCode]
-          })
-        }
+      let activatedSampleList = sampleList
+      .filter(sample => sample['SYS_DATE_COMPLETED'] &&
+              !sample['SYS_DATE_TERMINATED'])
+      if (activatedSampleList.length > 0){
+        activatedSampleList
+        .forEach(sample => {
+          if (sample[attributeCode]){
 
-      })
+            attributeObjectList.push({
+              "id": sample.id,
+              "dateCompleted": sample['SYS_COMPLETED_DATE'],
+              "dateUpdated": sample['updatedAt'],
+              "value": sample[attributeCode]
+            })
+          }
+
+        })
+      } else {
+        // For samples that are just submitted, none of which satisfied the
+        // date condition, so push the attributes of the first sample.
+        let firstSample = sampleList[0]
+        attributeObjectList.push({
+          "id": firstSample.id,
+          "dateCompleted": firstSample['SYS_COMPLETED_DATE'],
+          "dateUpdated": firstSample['updatedAt'],
+          "value": firstSample[attributeCode]
+        })
+      }
 
       callback(attributeObjectList)
     })

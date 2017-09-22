@@ -214,7 +214,6 @@ export class SampleDatabase {
     private _rawSampleList: any[],
     private targetHybridType: string
   ){
-    console.log(">>", this.targetHybridType)
     this.rawSampleList = _rawSampleList
     this.buildSampleList()
   }
@@ -296,7 +295,6 @@ export class SampleDatabase {
       }
 
     })
-    console.log(this.hybridMap)
   }
 
   dataChange: BehaviorSubject<any>// = new BehaviorSubject([])
