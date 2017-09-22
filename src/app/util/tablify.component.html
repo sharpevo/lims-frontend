@@ -93,7 +93,10 @@
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
                             <show-auxiliary-attribute
+                                [hybridObject]="hybridObjectMap"
                                 [sample]="row"
+                                [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
+                                [attributeType]="columnMap[columnKey]['SYS_TYPE']"
                                 [attributeCode]="columnKey">
                             </show-auxiliary-attribute>
                         </span>
@@ -110,7 +113,10 @@
                             </span>
                             <span *ngSwitchDefault>
                                 <show-auxiliary-attribute
+                                    [hybridObject]="hybridObjectMap"
                                     [sample]="row"
+                                    [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
+                                    [attributeType]="columnMap[columnKey]['SYS_TYPE']"
                                     [attributeCode]="columnKey">
                                 </show-auxiliary-attribute>
                             </span>
