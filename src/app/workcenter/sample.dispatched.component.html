@@ -1,6 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="space-between stretch" >
     <simple-table
         *ngIf="dispatchedSampleList.length > 0"
+        [hybridObjectMap]="hybridObjectMap"
         [rawSampleList]="sampleList"
         [shownSampleList]="dispatchedSampleList"
         [columnList]="workcenter['SYS_AUXILIARY_ATTRIBUTE_LIST']">
@@ -25,6 +26,7 @@
     *ngIf="workcenter">
     <plugin-excel-processor
         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR']"
+        [hybridObjectMap]="hybridObjectMap"
         [sampleList]="sampleList"
         [workcenter]="workcenter">
     </plugin-excel-processor>
