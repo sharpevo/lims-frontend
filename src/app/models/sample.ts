@@ -682,7 +682,12 @@ export class SampleService{
                 .subscribe(data => {
                   //console.log("---------Retrieve entries in BoM or Routing:", data[0])
                   //console.log("merge from entity:", targetEntity)
-                  this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                  if (!data[0]) {
+                    console.warn("None of LOT under the " +
+                                 targetEntityInput['SYS_SOURCE'])
+                  } else {
+                    this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                  }
 
                 })
 
