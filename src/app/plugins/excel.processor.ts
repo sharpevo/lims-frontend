@@ -12,6 +12,7 @@ import 'rxjs/Rx' ;
 export class PluginExcelProcessorComponent {
   @Input() workcenter
   @Input() sampleList
+  @Input() hybridObjectMap
   @ViewChild('excelUploader') excelUploader
   selectedSampleList: any[] = []
   excelResult: any[] = []
@@ -84,7 +85,8 @@ export class PluginExcelProcessorComponent {
 
   exportSample(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
-    let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList)
+    let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList, this.hybridObjectMap)
+    console.log("hybridSampleList:", hybridSampleList)
 
     if (this.selectedSampleList.length > 0){
       this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
