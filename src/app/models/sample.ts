@@ -186,17 +186,23 @@ export class SampleService{
    * @param sampleList samples to build
    *
    */
-  buildHybridSampleList(sampleList: any): any{
-
-    let hybridSampleList = {}
+  buildHybridSampleList(sampleList: any, hybridAttributeMap: any): any{
+    let hybridObjectMap = {}
     sampleList.forEach(sample => {
-      let hybridCode = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
-      if (!hybridSampleList[hybridCode]){
-        hybridSampleList[hybridCode] = []
+      console.log(sample)
+      if(!hybridObjectMap[sample.id]) {
+        hybridObjectMap[sample.id] = {}
       }
-      hybridSampleList[hybridCode].push(sample.id)
+      if (!hybridObjectMap[sample.id]['attributeObject']) {
+        hybridObjectMap[sample.id]['attributeObject'] = {}
+      }
+      hybridObjectMap[sample.id]['attributeObject'] = hybridAttributeMap[sample['SYS_SAMPLE_CODE']]
+      if (!hybridObjectMap[sample.id]['sampleIdList']) {
+        hybridObjectMap[sample.id]['sampleIdList'] = []
+      }
+      hybridObjectMap[sample.id]['sampleIdList'].push(sample.id)
     })
-    return hybridSampleList
+    return hybridObjectMap
   }
 
   getPreviousChainedSample(sample: any, callback){
