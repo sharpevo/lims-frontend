@@ -90,21 +90,27 @@ export class SampleService{
       let attributeObjectList = []
 
       let activatedSampleList = sampleList
-      .filter(sample => sample['SYS_DATE_COMPLETED'] &&
-              !sample['SYS_DATE_TERMINATED'])
+      .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+      //!sample['SYS_DATE_TERMINATED'])
       if (activatedSampleList.length > 0){
-        activatedSampleList
-        .forEach(sample => {
-          if (sample[attributeCode]){
-
-            attributeObjectList.push({
-              "id": sample.id,
-              "dateCompleted": sample['SYS_COMPLETED_DATE'],
-              "dateUpdated": sample['updatedAt'],
-              "value": sample[attributeCode]
-            })
+        let uniqueSampleList = []
+        let seen = {}
+        activatedSampleList.forEach(sample => {
+          let key = attributeCode + "|" + sample[attributeCode]
+          if (!seen[key]) {
+            seen[key] = true
+            uniqueSampleList.push(sample)
           }
+        })
 
+        uniqueSampleList
+        .forEach(sample => {
+          attributeObjectList.push({
+            "id": sample.id,
+            "dateCompleted": sample['SYS_COMPLETED_DATE'],
+            "dateUpdated": sample['updatedAt'],
+            "value": sample[attributeCode]?sample[attributeCode]:"---"
+          })
         })
       } else {
         // For samples that are just submitted, none of which satisfied the
@@ -114,7 +120,7 @@ export class SampleService{
           "id": firstSample.id,
           "dateCompleted": firstSample['SYS_COMPLETED_DATE'],
           "dateUpdated": firstSample['updatedAt'],
-          "value": firstSample[attributeCode]
+          "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
         })
       }
 
