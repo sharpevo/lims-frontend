@@ -8,7 +8,10 @@ import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
   templateUrl: './auxiliary.attribute.component.html',
 })
 export class AuxiliaryAttributeComponent{
+  @Input('hybridObject') hybridObject: any
   @Input('sample') sample: any
+  @Input('attributeLabel') attributeLabel: string
+  @Input('attributeType') attributeType: string
   @Input('attributeCode') attributeCode: string
   attributeObjectList: any = []
 
@@ -20,7 +23,25 @@ export class AuxiliaryAttributeComponent{
   ngOnInit(){
     this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, attributeObjectList => {
       this.attributeObjectList = attributeObjectList
-      console.log("---", this.attributeObjectList)
+
+      // Pass the latest value of the given attribute to the top of the
+      // component structure, e.g. workcenter/sample.dispatched.component
+      if (this.attributeObjectList.length > 0){
+        let key = this.sample['SYS_SAMPLE_CODE']
+        if (!this.hybridObject) {
+          this.hybridObject = {}
+        }
+        if (!this.hybridObject[key]) {
+          this.hybridObject[key] = {}
+        }
+        this.hybridObject[key][this.attributeCode] = {
+          'value': attributeObjectList[0]['value'],
+          'SYS_LABEL': this.attributeLabel,
+          'SYS_CODE': this.attributeCode,
+          'SYS_TYPE': this.attributeType,
+        }
+      }
+
     })
   }
 
