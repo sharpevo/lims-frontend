@@ -211,7 +211,7 @@
 			<md-chip
 				(click)="removeGenericAttribute(i)"
 				*ngFor="let attribute of object['SYS_AUXILIARY_ATTRIBUTE_LIST']; let i=index">
-				{{attribute[attribute['SYS_LABEL']]}}
+				{{attribute['SYS_LABEL']?attribute[attribute['SYS_LABEL']]:attribute}}
 			</md-chip>
 		</md-chip-list>
     </div>

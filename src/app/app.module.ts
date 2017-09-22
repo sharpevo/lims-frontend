@@ -58,6 +58,9 @@ import { CdkTableModule } from '@angular/cdk'
 import {TablifyComponent} from './util/tablify.component'
 
 import {SimpleTableDialog} from './util/simple.table.dialog';
+import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component';
+import {ShowAuxiliaryAttributeDialog} from './util/auxiliary.attribute.dialog';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -95,6 +98,8 @@ import {SimpleTableDialog} from './util/simple.table.dialog';
     PluginExcelProcessorComponent,
     TablifyComponent,
     SimpleTableDialog,
+    AuxiliaryAttributeComponent,
+    ShowAuxiliaryAttributeDialog,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -102,6 +107,7 @@ import {SimpleTableDialog} from './util/simple.table.dialog';
     AttributeFormDialog,
     SampleFormDialog,
     SimpleTableDialog,
+    ShowAuxiliaryAttributeDialog,
   ],
   imports: [
     BrowserModule,

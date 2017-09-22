@@ -24,6 +24,7 @@ export class TablifyComponent{
   @Input() shownSampleList
   @Input() columnList
   @Input() targetHybridType
+  @Input() hybridObjectMap
   @ViewChild(MdPaginator) paginator: MdPaginator
   @ViewChild(MdSort) sort: MdSort
   @ViewChild('filter') filter: ElementRef
@@ -44,7 +45,6 @@ export class TablifyComponent{
   sampleDataSource: SampleDataSource | null
 
   ngOnInit(){
-    console.log("..", this.targetHybridType)
 
     if (!this.columnList){
       // fix undefined bug

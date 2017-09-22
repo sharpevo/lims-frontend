@@ -1,0 +1,36 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between start">
+    <h3>
+        Attribute History
+    </h3>
+    <button
+        tabindex="-1"
+        md-icon-button
+        md-dialog-close>
+        x 
+    </button>
+</div>
+<br/>
+<br/>
+
+<!--Division of all the attributes with left alignment-->
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+
+    <!--Division of one attribute-->
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px"
+        *ngFor="let attribute of config.attributeList">
+
+            <div>
+                <a href="#{{attribute['id']}}">
+                    {{attribute['dateUpdated']|date: 'yyyy-MM-dd hh:mm'}}
+                </a>
+            </div>
+
+            <div>
+                <b>
+                    {{attribute['value']}}
+                </b>
+            </div>
+    </div>
+</div>

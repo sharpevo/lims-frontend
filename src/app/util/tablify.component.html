@@ -92,7 +92,13 @@
                             </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
-                            {{row[columnKey]}}
+                            <show-auxiliary-attribute
+                                [hybridObject]="hybridObjectMap"
+                                [sample]="row"
+                                [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
+                                [attributeType]="columnMap[columnKey]['SYS_TYPE']"
+                                [attributeCode]="columnKey">
+                            </show-auxiliary-attribute>
                         </span>
                     </span>
                     <span *ngIf="!row['TMP_TABLE_ITEM'] || columnKey != 'SYS_SAMPLE_CODE'">
@@ -106,7 +112,13 @@
                                 </entity-tostring>
                             </span>
                             <span *ngSwitchDefault>
-                                {{row[columnKey]}}
+                                <show-auxiliary-attribute
+                                    [hybridObject]="hybridObjectMap"
+                                    [sample]="row"
+                                    [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
+                                    [attributeType]="columnMap[columnKey]['SYS_TYPE']"
+                                    [attributeCode]="columnKey">
+                                </show-auxiliary-attribute>
                             </span>
                         </span>
                     </span>
