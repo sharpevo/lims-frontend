@@ -22,10 +22,10 @@ export class UtilService{
       .map(res => res.json())
   }
 
-  getExcelFile(sampleList: any, workcenterId: string){
+  getExcelFile(hybridObjectMap: any, workcenterId: string){
     let data = {}
     data['workcenterId'] = workcenterId
-    data['sampleIdList'] = sampleList
+    data['hybridObjectMap'] = hybridObjectMap
     let headers = new Headers()
     headers.append('Content-Type', 'application/json')
     //headers.append('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
