@@ -81,7 +81,8 @@ export class SampleService{
 
       let sampleList = _sampleList
       .sort((a,b) => {
-        if (a['updatedAt'] < b['updatedAt']){
+        //if (a['updatedAt'] < b['updatedAt']){
+        if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
           return 1
         } else {
           return -1
@@ -107,7 +108,7 @@ export class SampleService{
         .forEach(sample => {
           attributeObjectList.push({
             "id": sample.id,
-            "dateCompleted": sample['SYS_COMPLETED_DATE'],
+            "dateCompleted": sample['SYS_DATE_COMPLETED'],
             "dateUpdated": sample['updatedAt'],
             "value": sample[attributeCode]?sample[attributeCode]:"---"
           })
@@ -118,7 +119,7 @@ export class SampleService{
         let firstSample = sampleList[0]
         attributeObjectList.push({
           "id": firstSample.id,
-          "dateCompleted": firstSample['SYS_COMPLETED_DATE'],
+          "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
           "dateUpdated": firstSample['updatedAt'],
           "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
         })
