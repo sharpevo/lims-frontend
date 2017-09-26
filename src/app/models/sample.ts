@@ -3,12 +3,15 @@ import {EntityService} from '../entity/service'
 
 import { Observable } from 'rxjs/Rx'
 import {GenreService} from '../genre/service'
+import {UtilService} from '../util/service'
+
 
 @Injectable()
 export class SampleService{
 
   constructor(
     private genreService: GenreService,
+    private utilService: UtilService,
     private entityService: EntityService
   ){}
 
@@ -424,12 +427,17 @@ export class SampleService{
           return
         }
         console.log("submitObject")
+
+        let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
+        let msg_sampleCount = sampleList.length
+        let msg_sampleList = ""
         // samples from the previous workcenter or the current one in the first
         // workcenter with workcenter-specific attributes:
         // - for the attributes defined by administrator, if they are same, use
         //   the previous one
         // - for the attributes starts with SYS, use current workcenter
         sampleList.forEach(sample => {
+          msg_sampleList += ">-" + sample['SYS_SAMPLE_CODE'] + "\n\n"
           console.log('processing candidate sample', sample)
           //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
           this.entityService.retrieveById(sample.id)
@@ -438,7 +446,25 @@ export class SampleService{
             this.submitSample(workcenter, object, data, attributeInfo)
           })
         })
+
+        // Send notification to Dingtalk
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+          (date.getMonth() + 1) + '-' +
+          date.getDate() + ' ' +
+          date.getHours() + ':' +
+          date.getMinutes()
+
+        this.utilService.sendNotif(
+          "actionCard",
+          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n>Operator XXX\n\n>${msg_date}`,
+          "/workcenter-dashboard/" + workcenter.id
+        )
+        .subscribe(data => {
+          console.log("Sending notification:", data)
+        })
       })
+
     })
 
   }
