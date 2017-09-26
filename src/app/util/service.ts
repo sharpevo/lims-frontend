@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map'
 @Injectable()
 export class UtilService{
   private baseUrl: string = 'http://dell:3000'
+  private notifUrl: string = 'http://dell:8060/send'
   private headers: Headers
   constructor(private http: Http){
     this.headers = new Headers()
@@ -57,6 +58,30 @@ export class UtilService{
       JSON.stringify(objectList),
       {headers: this.headers})
       .map(res => res.json())
+  }
+
+  /**
+   * Send message to dingtalk
+   *
+   * @param msgtype "text", "actionCard", "actionsCard".
+   * @param content The content of the message
+   * @param sourceUrl The URL of the message
+   *
+   */
+  sendNotif(msgtype: string, content: string, sourceUrl: string) {
+    let data = {
+      "msgtype": msgtype,
+      "title": "LIMS Notification",
+      "content": content,
+      "actionurl": "http://localhost:8000" + sourceUrl
+    }
+
+    return this.http.post(
+      this.notifUrl,
+      data,
+      {headers: this.headers}
+    )
+    //.map(res => res.json())
   }
 
 }
