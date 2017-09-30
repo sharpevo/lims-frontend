@@ -86,6 +86,7 @@ export class TablifyComponent{
       // SYS_SCHEMA instead of the attribute list.
       this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]?column[column['SYS_LABEL']]:column['SYS_LABEL']
       this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
+      this.columnMap[key]['SYS_GENRE'] = column['SYS_GENRE']?column['SYS_GENRE']:'--' // to analyze auxiliary attribute
     })
 
     this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)

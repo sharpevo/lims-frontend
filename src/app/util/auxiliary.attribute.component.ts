@@ -12,6 +12,7 @@ export class AuxiliaryAttributeComponent{
   @Input('sample') sample: any
   @Input('attributeLabel') attributeLabel: string
   @Input('attributeType') attributeType: string
+  @Input('attributeGenre') attributeGenre: string
   @Input('attributeCode') attributeCode: string
   attributeObjectList: any = []
 
