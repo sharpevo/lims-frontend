@@ -102,8 +102,13 @@ export class SampleService{
         activatedSampleList.forEach(sample => {
           let key = attributeCode + "|" + sample[attributeCode]
           if (!seen[key]) {
-            seen[key] = true
-            uniqueSampleList.push(sample)
+            if (sample[attributeCode]){
+              seen[key] = true
+            }
+
+            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+              uniqueSampleList.push(sample)
+            }
           }
         })
 
