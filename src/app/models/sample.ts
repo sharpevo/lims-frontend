@@ -74,7 +74,7 @@ export class SampleService{
    * @param callback assignment usually
    *
    */
-  getAuxiliaryAttributeList(sample: any, attributeCode: string, callback){
+  getAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string, callback){
 
     // Get the latest sample
     this.entityService.retrieveBy({

@@ -22,7 +22,7 @@ export class AuxiliaryAttributeComponent{
   ){}
 
   ngOnInit(){
-    this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, attributeObjectList => {
+    this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, this.attributeGenre, attributeObjectList => {
       this.attributeObjectList = attributeObjectList
 
       // Pass the latest value of the given attribute to the top of the
