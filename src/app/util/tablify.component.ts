@@ -159,7 +159,9 @@ export class TablifyComponent{
 
 
   selectAllSamples(){
-    this.sampleDataSource.changePageSize(this.sampleDataSource.currentSampleList.length)
+    this.sampleDataSource.changePageSize(
+      this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
+    )
     this.sampleDataSource.filter = this.filter.nativeElement.value
     if (this.isSelectAll){
       this.selectedSampleIdList = []
