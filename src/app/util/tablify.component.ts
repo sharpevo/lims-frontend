@@ -159,6 +159,10 @@ export class TablifyComponent{
 
 
   selectAllSamples(){
+    this.sampleDataSource.changePageSize(
+      this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
+    )
+    this.sampleDataSource.filter = this.filter.nativeElement.value
     if (this.isSelectAll){
       this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
@@ -207,7 +211,7 @@ export class TablifyComponent{
 
 }
 
-export class SampleDatabase {
+export class SampleDatabase {// {{{
   rawSampleList: any[]
   hybridMap: any = {}
   constructor(
@@ -302,7 +306,7 @@ export class SampleDatabase {
     return this.dataChange.value
   }
 
-}
+}// }}}
 
 export class SampleDataSource extends DataSource<any> {
 
@@ -321,6 +325,12 @@ export class SampleDataSource extends DataSource<any> {
   ) {
     super();
   }
+
+  changePageSize(pageSize: number){
+    console.log("change page size", this._paginator.pageSize, pageSize)
+    this._paginator.pageSize = pageSize
+  }
+
   connect(): Observable<any[]> {
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
