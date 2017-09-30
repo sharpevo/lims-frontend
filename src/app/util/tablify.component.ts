@@ -209,7 +209,7 @@ export class TablifyComponent{
 
 }
 
-export class SampleDatabase {
+export class SampleDatabase {// {{{
   rawSampleList: any[]
   hybridMap: any = {}
   constructor(
@@ -304,7 +304,7 @@ export class SampleDatabase {
     return this.dataChange.value
   }
 
-}
+}// }}}
 
 export class SampleDataSource extends DataSource<any> {
 
