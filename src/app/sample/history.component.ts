@@ -120,7 +120,7 @@ export class SampleHistoryComponent {
 
   getSampleMap() {
     this.entityService.retrieveBySortBy(
-      {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE']},
+      {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE'], 'SYS_ENTITY_TYPE':'collection'},
       //"createdAt")
       "SYS_DATE_SCHEDULED")
       .subscribe(data => {
@@ -193,7 +193,6 @@ export class SampleHistoryComponent {
 
           })
 
-          //console.log(chartData.data)
           this.lineChartData.push(chartData)
         })
 
