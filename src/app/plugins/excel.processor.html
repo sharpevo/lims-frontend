@@ -1,121 +1,121 @@
 <md-expansion-panel>
-  <md-expansion-panel-header>
-    <md-panel-title>
-      Plugin: Excel Processor
-    </md-panel-title>
-    <md-panel-description>
-    </md-panel-description>
-  </md-expansion-panel-header>
+    <md-expansion-panel-header>
+        <md-panel-title>
+            Plugin: Excel Processor
+        </md-panel-title>
+        <md-panel-description>
+        </md-panel-description>
+    </md-expansion-panel-header>
+    <div fxLayout="column" fxLayoutAlign="space-between stretch" >
+        <br/>
+        <div fxFlex="49">
+            <div fxLayout="row" fxLayoutAlign="space-between center"
+                style="height: 100%; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)">
+                <label
+                    style="margin-left:10px"
+                    fxFlex>
+                    <span *ngIf="selectedSampleList.length > 0"
+                        style="opacity: 0.5">
+                        Export: <b>{{selectedSampleList.length}}</b> Sample
+                    </span>
+                </label>
+                <button
+                    md-button
+                    (click)="exportSample()">
+                    EXPORT
+                </button>
+            </div>
+            <br/>
+            <div
+                *ngIf="selectedSampleList.length > 0">
+                <table
+                    style="width: 100%; text-align: center; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th>
+                                No.
+                            </th>
+                            <th>
+                                Sample Code
+                            </th>
+                            <th>
+                                Index Sequence
+                            </th>
+                            <th>
+                                Index Code
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let sample of selectedSampleList; let i = index">
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td>
+                                <entity-tostring
+                                    [entity]="sample">
+                                </entity-tostring>
+                            </td>
+                            <td>
+                                {{sample.SYS_INDEX_SEQUENCE}}
+                            </td>
+                            <td>
+                                {{sample.SYS_INDEX_CODE}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div fxLayout="column" fxLayoutAlign="space-between stretch" >
-            <div fxFlex="49">
-        <div fxLayout="row" fxLayoutAlign="space-between center"
-            style="height: 100%; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)">
-            <label
-                style="margin-left:10px"
-                fxFlex>
-                <span *ngIf="selectedSampleList.length > 0"
-                    style="opacity: 0.5">
-                    Export: <b>{{selectedSampleList.length}}</b> Sample
-                </span>
-            </label>
-            <button
-                md-button
-                (click)="exportSample()">
-                EXPORT
-            </button>
         </div>
         <br/>
-        <div
-            *ngIf="selectedSampleList.length > 0">
-            <table
-                style="width: 100%; text-align: center; border-collapse:collapse;">
-                <thead>
-                    <tr>
-                        <th>
-                            No.
-                        </th>
-                        <th>
-                            Sample Code
-                        </th>
-                        <th>
-                            Index Sequence
-                        </th>
-                        <th>
-                            Index Code
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        *ngFor="let sample of selectedSampleList; let i = index">
-                        <td>
-                            {{i+1}}
-                        </td>
-                        <td>
-                            <entity-tostring
-                                [entity]="sample">
-                            </entity-tostring>
-                        </td>
-                        <td>
-                            {{sample.SYS_INDEX_SEQUENCE}}
-                        </td>
-                        <td>
-                            {{sample.SYS_INDEX_CODE}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div fxFlex="49">
+            <input
+                [hidden]="true"
+                id="upload-file-input"
+                #excelUploader
+                type="file"
+                name="excelFile"
+                (click)="clearExcel()"
+                (change)="submitExcel($event)"/>
 
+            <div fxLayout="row" fxLayoutAlign="space-between center"
+                style="height: 100%; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)">
+                <label for="upload-file-input" style="margin-left: 10px; opacity: 0.5;" fxFlex>
+                    Choose File:
+                    <b>
+                        {{excelUploader.value.split('\\').pop()}}
+                    </b>
+                </label>
+                <button
+                    md-button
+                    (click)="updateExcel()">
+                    IMPORT
+                </button>
             </div>
-        <br/>
-            <div fxFlex="49">
-        <input
-            [hidden]="true"
-            id="upload-file-input"
-            #excelUploader
-            type="file"
-            name="excelFile"
-            (click)="clearExcel()"
-            (change)="submitExcel($event)"/>
-
-        <div fxLayout="row" fxLayoutAlign="space-between center"
-            style="height: 100%; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)">
-            <label for="upload-file-input" style="margin-left: 10px; opacity: 0.5;" fxFlex>
-                Choose File:
-                <b>
-                    {{excelUploader.value.split('\\').pop()}}
-                </b>
-            </label>
-            <button
-                md-button
-                (click)="updateExcel()">
-                IMPORT
-            </button>
+            <br/>
+            <div
+                *ngIf="excelResult.length > 0">
+                <table
+                    style="width: 100%; text-align: center; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let key of (excelResult[0] | objectKeys)">
+                                {{key}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let sample of excelResult">
+                            <td *ngFor="let key of (sample | objectKeys)">
+                                {{sample[key]}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <br/>
-        <div
-            *ngIf="excelResult.length > 0">
-            <table
-                style="width: 100%; text-align: center; border-collapse:collapse;">
-                <thead>
-                    <tr>
-                        <th *ngFor="let key of (excelResult[0] | objectKeys)">
-                            {{key}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        *ngFor="let sample of excelResult">
-                        <td *ngFor="let key of (sample | objectKeys)">
-                            {{sample[key]}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-            </div>
-            </div>
+    </div>
 </md-expansion-panel>
