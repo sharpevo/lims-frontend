@@ -1,0 +1,41 @@
+<div fxLayout="row" fxLayoutAlign="space-between center"
+    (window:resize)="onSizeChanged($event)">
+    <div fxFlex=10>
+    </div>
+    <div fxFlex>
+        <md-grid-list
+            cols="{{gridCols}}"
+            gutterSize="5em"
+            rowHeight="1:1">
+            <md-grid-tile *ngFor="let app of appList">
+                <div
+                    fxLayout="column"
+                    fxLayoutAlign="space-between center">
+                    <div
+                        fxFlex.gt-sm="70"
+                        fxFlex.lt-sm="30">
+                        <a
+                         href="{{app.url}}"
+                            class="appIcon"
+                            md-raised-button>
+                            icon
+                        </a>
+                    </div>
+                    <div
+                        fxFlex.gt-sm="10"
+                        fxFlex.lt-sm="30">
+                    </div>
+                    <div
+                        fxFlex.gt-sm="20"
+                        fxFlex.lt-sm="30">
+                        <label>
+                            {{app.label}}
+                        </label>
+                    </div>
+                </div>
+            </md-grid-tile>
+        </md-grid-list>
+    </div>
+    <div fxFlex=10>
+    </div>
+</div>
