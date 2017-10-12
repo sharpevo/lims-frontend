@@ -96,6 +96,7 @@
         </md-sidenav>
         <md-toolbar>
             <button md-icon-button checked="true" (click)="sidenav.toggle()">N</button>
+            <button md-icon-button checked="true" [routerLink]="['apps']">H</button>
         </md-toolbar>
         <div class="central-content">
             <router-outlet></router-outlet>
