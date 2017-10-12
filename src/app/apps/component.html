@@ -5,7 +5,6 @@
     <div fxFlex>
         <md-grid-list
             cols="{{gridCols}}"
-            gutterSize="5em"
             rowHeight="1:1">
             <md-grid-tile *ngFor="let app of appList">
                 <div
@@ -16,9 +15,9 @@
                         fxFlex.lt-sm="30">
                         <a
                          href="{{app.url}}"
-                            class="appIcon"
+                            class="appButton"
                             md-raised-button>
-                            icon
+                            <!--<md-icon class="appIcon">extension</md-icon>-->
                         </a>
                     </div>
                     <div
@@ -28,7 +27,8 @@
                     <div
                         fxFlex.gt-sm="20"
                         fxFlex.lt-sm="30">
-                        <label>
+                        <br/>
+                        <label class="appLabel">
                             {{app.label}}
                         </label>
                     </div>
