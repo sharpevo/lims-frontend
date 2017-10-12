@@ -56,7 +56,7 @@ export class AppsComponent {
         data.forEach(workcenter => {
           this.appList.push({
             "label":workcenter[workcenter['SYS_LABEL']],
-            "url":"/entity/" + workcenter.id,
+            "url":"/workcenter-dashboard/" + workcenter.id,
             "icon": "",
           })
         })
