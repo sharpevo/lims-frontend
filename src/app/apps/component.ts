@@ -16,7 +16,28 @@ export class AppsComponent {
   ){}
 
   ngOnInit(){
-    this.getProductWorkcenterList()
+    this.getWorkcenterList("/PRODUCT_WORKCENTER")
+    //this.getWorkcenterList("/PROJECT_MANAGEMENT")
+    this.appList.push({
+      "label": "样品管理",
+      "url":"http://192.168.1.90:8080",
+      "icon":"primary",
+    })
+    this.appList.push({
+      "label": "客户管理",
+      "url":"http://192.168.1.90:8080",
+      "icon":"primary",
+    })
+    this.appList.push({
+      "label": "任务下达*",
+      "url":"/project-management",
+      "icon":"accent",
+    })
+    this.appList.push({
+      "label": "项目进度*",
+      "url":"/apps",
+      "icon":"accent",
+    })
   }
 
   onSizeChanged(event){
@@ -47,9 +68,9 @@ export class AppsComponent {
     }
   }
 
-  getProductWorkcenterList(){
+  getWorkcenterList(workcenterIdentifier: string){
     this.entityService.retrieveBy({
-      "SYS_IDENTIFIER":"/PRODUCT_WORKCENTER",
+      "SYS_IDENTIFIER":workcenterIdentifier,
     }).subscribe(data => {
       this.entityService.retrieveEntity(data[0].id, "class")
       .subscribe(data => {
@@ -57,7 +78,7 @@ export class AppsComponent {
           this.appList.push({
             "label":workcenter[workcenter['SYS_LABEL']],
             "url":"/workcenter-dashboard/" + workcenter.id,
-            "icon": "",
+            "icon": "warn",
           })
         })
       })
