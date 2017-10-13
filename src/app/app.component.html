@@ -1,6 +1,6 @@
 <section layout="row" flex>
     <md-sidenav-container fullscreen>
-        <md-sidenav #sidenav mode="side" class="app-sidenav" opened="true">
+        <md-sidenav #sidenav mode="side" class="app-sidenav" opened="false">
             <md-list>
                 <!--<h1 style="text-align:center;font-size:1.5em;">Entities</h1>-->
                 <!--<md-divider></md-divider>-->
@@ -96,6 +96,7 @@
         </md-sidenav>
         <md-toolbar>
             <button md-icon-button checked="true" (click)="sidenav.toggle()">N</button>
+            <button md-icon-button checked="true" [routerLink]="['apps']">H</button>
         </md-toolbar>
         <div class="central-content">
             <router-outlet></router-outlet>
