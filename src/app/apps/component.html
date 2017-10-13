@@ -6,33 +6,22 @@
         <md-grid-list
             cols="{{gridCols}}"
             rowHeight="1:1">
-            <md-grid-tile *ngFor="let app of appList">
-                <div
+            <md-grid-tile
+                *ngFor="let app of appList">
+                <a
+                    class="appButton"
+                    href="{{app.url}}"
                     fxLayout="column"
                     fxLayoutAlign="space-between center">
-                    <div
-                        fxFlex.gt-sm="70"
-                        fxFlex.lt-sm="30">
-                        <a
-                         href="{{app.url}}"
-                            class="appButton"
-                            md-raised-button>
-                            <!--<md-icon class="appIcon">extension</md-icon>-->
-                        </a>
+                    <div>
+                        <md-icon class="appIcon">{{app.icon}}</md-icon>
                     </div>
-                    <div
-                        fxFlex.gt-sm="10"
-                        fxFlex.lt-sm="30">
-                    </div>
-                    <div
-                        fxFlex.gt-sm="20"
-                        fxFlex.lt-sm="30">
-                        <br/>
+                    <div>
                         <label class="appLabel">
                             {{app.label}}
                         </label>
                     </div>
-                </div>
+                </a>
             </md-grid-tile>
         </md-grid-list>
     </div>

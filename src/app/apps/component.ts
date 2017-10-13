@@ -21,22 +21,27 @@ export class AppsComponent {
     this.appList.push({
       "label": "样品管理",
       "url":"http://192.168.1.90:8080",
-      "icon":"primary",
+      "icon":"extension",
     })
     this.appList.push({
       "label": "客户管理",
       "url":"http://192.168.1.90:8080",
-      "icon":"primary",
+      "icon":"extension",
     })
     this.appList.push({
       "label": "任务下达*",
       "url":"/project-management",
-      "icon":"accent",
+      "icon":"extension",
     })
     this.appList.push({
-      "label": "项目进度*",
-      "url":"/apps",
-      "icon":"accent",
+      "label": "Dashboard",
+      "url":"/workcenter-overview",
+      "icon":"extension",
+    })
+    this.appList.push({
+      "label": "Settings",
+      "url":"/tree",
+      "icon":"settings",
     })
   }
 
@@ -78,7 +83,7 @@ export class AppsComponent {
           this.appList.push({
             "label":workcenter[workcenter['SYS_LABEL']],
             "url":"/workcenter-dashboard/" + workcenter.id,
-            "icon": "warn",
+            "icon": "group_work",
           })
         })
       })
