@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {EntityService} from './entity/service'
+import {environment} from '../environments/environment'
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import {EntityService} from './entity/service'
 })
 export class AppComponent {
   serviceList: any[] = []
+  environment = environment
 
   constructor(
     private entityService: EntityService
