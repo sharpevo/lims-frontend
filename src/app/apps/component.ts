@@ -20,12 +20,12 @@ export class AppsComponent {
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
     this.appList.push({
       "label": "样品管理",
-      "url":"http://192.168.1.90:8080",
+      "url":"http://192.168.1.90:8085",
       "icon":"extension",
     })
     this.appList.push({
       "label": "客户管理",
-      "url":"http://192.168.1.90:8080",
+      "url":"http://192.168.1.90:8088",
       "icon":"extension",
     })
     this.appList.push({

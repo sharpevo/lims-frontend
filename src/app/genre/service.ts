@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers} from '@angular/http'
+import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class GenreService {
-  private url: string = 'http://dell:3000/genre'
+  private url: string = environment.apiUrl + '/genre'
   private headers: Headers
   constructor(private http: Http){
     this.headers = new Headers()

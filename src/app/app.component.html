@@ -95,8 +95,14 @@
             </md-list>
         </md-sidenav>
         <md-toolbar>
-            <button md-icon-button checked="true" (click)="sidenav.toggle()">N</button>
-            <button md-icon-button checked="true" [routerLink]="['apps']">H</button>
+            <button md-icon-button checked="true" (click)="sidenav.toggle()">
+                <md-icon class="toolbar-icon">menu</md-icon>
+            </button>
+            <button md-icon-button checked="true" [routerLink]="['apps']">
+                <md-icon class="toolbar-icon">apps</md-icon>
+            </button>
+            <span class="toolbar-spacer"></span>
+            <span class="toolbar-version">{{environment.version}}</span>
         </md-toolbar>
         <div class="central-content">
             <router-outlet></router-outlet>

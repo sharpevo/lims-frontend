@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers, ResponseContentType} from '@angular/http'
+import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class UtilService{
-  private baseUrl: string = 'http://dell:3000'
+  private baseUrl: string = environment.apiUrl
   private notifUrl: string = 'http://dell:8060/send'
   private headers: Headers
   constructor(private http: Http){

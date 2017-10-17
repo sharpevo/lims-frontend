@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers} from '@angular/http'
+import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class EntityService {
-  private url: string = 'http://dell:3000/entity'
+  private url: string = environment.apiUrl + '/entity'
   private headers: Headers
   constructor(private http: Http){
     this.headers = new Headers()
@@ -221,7 +222,7 @@ export class EntityService {
     formData.append('sampleExcel', file[0], file[0].name)
     console.log(file[0])
     console.log(file[0].name)
-    return this.http.post('http://dell:3000/excel', formData, {headers: headers})
+    return this.http.post(environment.apiUrl + '/excel', formData, {headers: headers})
     .map(res => res.json())
   }
 }

@@ -200,4 +200,8 @@ export class ProjectManagementComponent{
       this.getSampleListByBatch('')
     });
   }
+
+  clearForm(){
+    console.log("clear form")
+  }
 }
