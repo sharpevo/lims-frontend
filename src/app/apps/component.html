@@ -9,8 +9,25 @@
             <md-grid-tile
                 *ngFor="let app of appList">
                 <a
+                    *ngIf="!app.isInternal"
                     class="appButton"
                     href="{{app.url}}"
+                    target="_self"
+                    fxLayout="column"
+                    fxLayoutAlign="space-between center">
+                    <div>
+                        <md-icon class="appIcon">{{app.icon}}</md-icon>
+                    </div>
+                    <div>
+                        <label class="appLabel">
+                            {{app.label}}
+                        </label>
+                    </div>
+                </a>
+                <a
+                    *ngIf="app.isInternal"
+                    class="appButton"
+                    routerLink="{{app.url}}"
                     fxLayout="column"
                     fxLayoutAlign="space-between center">
                     <div>
