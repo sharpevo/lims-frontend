@@ -805,13 +805,13 @@ export class SampleService{
    * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
    *
    */
-  submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any){
+  submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
 
     //for both of BoM and Routing
-    this.genreService.retrieveBy({
+    return this.genreService.retrieveBy({
       "SYS_ENTITY": targetEntity.id
     })
-    .subscribe(data => {
+    .mergeMap(data => {
       if (data[0]) {
         // Get SYS_GENRE from the workcenter
 
@@ -826,11 +826,7 @@ export class SampleService{
       Object.keys(targetEntityInput).forEach(key => {
         subEntity[key] = targetEntityInput[key]
       })
-
-      this.entityService.create(subEntity)
-      .subscribe(data =>{
-        console.log("merged entity:", data)
-      })
+      return this.entityService.create(subEntity)
     })
   }
 }
