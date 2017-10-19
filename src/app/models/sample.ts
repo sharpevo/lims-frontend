@@ -758,7 +758,7 @@ export class SampleService{
     targetEntity:any,
     workcenterAttributeList: any[],
     targetEntityInput: any
-  ){
+  ): Observable<any> {
 
     let subEntity = {}
 
@@ -780,18 +780,18 @@ export class SampleService{
       workcenterAttributeList.forEach(attribute => {
         subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
       })
-      this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+      return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
     } else { // == 'collection'
       // BoM specific operations
 
       subEntity['SYS_ENTITY_TYPE'] = 'object'
-      this.entityService.retrieveAttribute(targetEntity.id)
-      .subscribe(attributes => {
+      return this.entityService.retrieveAttribute(targetEntity.id)
+      .mergeMap(attributes => {
         attributes.forEach(attribute => {
           subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
         })
-        this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+        return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
       })
     }
   }
