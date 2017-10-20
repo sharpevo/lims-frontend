@@ -5,11 +5,14 @@ import { Observable } from 'rxjs/Rx'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
+import {MdSnackBar} from '@angular/material'
+
 
 @Injectable()
 export class SampleService{
 
   constructor(
+    public snackBar: MdSnackBar,
     private genreService: GenreService,
     private utilService: UtilService,
     private entityService: EntityService
@@ -843,5 +846,8 @@ export class SampleService{
       return error.delay(1000)
     })
     .delay(1000)
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action)
   }
 }
