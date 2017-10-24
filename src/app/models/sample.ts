@@ -5,11 +5,14 @@ import { Observable } from 'rxjs/Rx'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
+import {MdSnackBar} from '@angular/material'
+
 
 @Injectable()
 export class SampleService{
 
   constructor(
+    public snackBar: MdSnackBar,
     private genreService: GenreService,
     private utilService: UtilService,
     private entityService: EntityService
@@ -654,6 +657,8 @@ export class SampleService{
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
 
+    let observableList = []
+
     let attributeList = attributeInfo['attributeList']
     let parentMap = attributeInfo['parentMap']
 
@@ -696,43 +701,52 @@ export class SampleService{
           }
 
           // Get the target entity from the SYS_SOURCE
-          this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
-          .subscribe(targetEntity => {
+          observableList.push(
+            this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+            .mergeMap(targetEntity => {
+              //.subscribe(targetEntity => {
 
-            // check whether SYS_SOURCE has been specified manually
-            // BoM: 'class' == 'collection'
-            // Routing: 'class' == 'class', since it's only one option and the
-            // checkbox is another way to detect checked or not
-            if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
-              // SYS_SOURCE has been specified manually
+              // check whether SYS_SOURCE has been specified manually
+              // BoM: 'class' == 'collection'
+              // Routing: 'class' == 'class', since it's only one option and the
+              // checkbox is another way to detect checked or not
+              if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+                // SYS_SOURCE has been specified manually
 
-              //console.log("---------Entries has been specified:", targetEntity)
-              this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
+                //console.log("---------Entries has been specified:", targetEntity)
+                return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
 
-            } else {
-              // SYS_SORUCE is not selected, and it happens only when BoM
-              // (checked but not selected)
+              } else {
+                // SYS_SORUCE is not selected, and it happens only when BoM
+                // (checked but not selected)
 
-              // Get the LOTs of targetEntity and take the first one as the default
-              this.entityService.retrieveEntity(
-                targetEntityInput['SYS_SOURCE'],
-                targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
-                .subscribe(data => {
-                  //console.log("---------Retrieve entries in BoM or Routing:", data[0])
-                  //console.log("merge from entity:", targetEntity)
-                  if (!data[0]) {
-                    console.warn("None of LOT under the " +
-                                 targetEntityInput['SYS_SOURCE'])
-                  } else {
-                    this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
-                  }
+                // Get the LOTs of targetEntity and take the first one as the default
+                return this.entityService.retrieveEntity(
+                  targetEntityInput['SYS_SOURCE'],
+                  targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                  .mergeMap(data => {
+                    //.subscribe(data => {
+                    //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                    //console.log("merge from entity:", targetEntity)
+                    if (!data[0]) {
+                      console.warn("None of LOT under the " +
+                                   targetEntityInput['SYS_SOURCE'])
+                    } else {
+                      return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                    }
 
-                })
+                  })
 
-            }
-          })
+              }
+            })
+          )
         }
       })
+
+    })
+
+    Observable.concat(...observableList).subscribe(data => {
+      console.log("data: ", data)
     })
   }
 
@@ -758,7 +772,7 @@ export class SampleService{
     targetEntity:any,
     workcenterAttributeList: any[],
     targetEntityInput: any
-  ){
+  ): Observable<any> {
 
     let subEntity = {}
 
@@ -780,18 +794,18 @@ export class SampleService{
       workcenterAttributeList.forEach(attribute => {
         subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
       })
-      this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+      return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
     } else { // == 'collection'
       // BoM specific operations
 
       subEntity['SYS_ENTITY_TYPE'] = 'object'
-      this.entityService.retrieveAttribute(targetEntity.id)
-      .subscribe(attributes => {
+      return this.entityService.retrieveAttribute(targetEntity.id)
+      .mergeMap(attributes => {
         attributes.forEach(attribute => {
           subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
         })
-        this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+        return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
       })
     }
   }
@@ -805,13 +819,13 @@ export class SampleService{
    * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
    *
    */
-  submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any){
+  submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
 
     //for both of BoM and Routing
-    this.genreService.retrieveBy({
+    return this.genreService.retrieveBy({
       "SYS_ENTITY": targetEntity.id
     })
-    .subscribe(data => {
+    .mergeMap(data => {
       if (data[0]) {
         // Get SYS_GENRE from the workcenter
 
@@ -826,11 +840,14 @@ export class SampleService{
       Object.keys(targetEntityInput).forEach(key => {
         subEntity[key] = targetEntityInput[key]
       })
-
-      this.entityService.create(subEntity)
-      .subscribe(data =>{
-        console.log("merged entity:", data)
-      })
+      return this.entityService.create(subEntity)
     })
+    .retryWhen(error => {
+      return error.delay(1000)
+    })
+    .delay(1000)
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action)
   }
 }
