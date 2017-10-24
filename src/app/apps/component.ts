@@ -38,13 +38,13 @@ export class AppsComponent {
     })
     this.appList.push({
       "isInternal": true,
-      "label": "Dashboard",
+      "label": "工作中心",
       "url":"/workcenter-overview",
       "icon":"extension",
     })
     this.appList.push({
       "isInternal": true,
-      "label": "Settings",
+      "label": "配置",
       "url":"/tree",
       "icon":"settings",
     })
