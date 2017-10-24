@@ -33,21 +33,12 @@
     <md-card
         class="full-width">
         <md-card-subtitle i18n="@@dashboard-activated-samples">
-            ACTIVATED SAMPLES
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
+            <div fxLayoutAlign="space-between center">
+                <div>
+                    ACTIVATED SAMPLES
+                </div>
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="start center">
-                    <!--<button-->
-                        <!--md-button-->
-                        <!--(click)="selectAllSamples()">-->
-                        <!--TOGGLE-->
-                    <!--</button>-->
                     <md-select
                         i18n-placeholder="@@dashboard-operator"
                         [(ngModel)]="operator"
@@ -62,16 +53,22 @@
                     </md-select>
                     <button
                         i18n="@@dashboard-btn-dispatch"
-                        md-button
+                        md-raised-button
                         (click)="dispatch()">
                         DISPATCH
                     </button>
                     <button
                         i18n="@@dashboard-btn-terminate"
-                        md-button>
+                        md-raised-button>
                         TERMINATE
                     </button>
                 </div>
+            </div>
+        </md-card-subtitle>
+        <md-card-content>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-activated
                         #activatedComponent
                         *ngIf="sampleList.length > 0"
@@ -86,39 +83,36 @@
     <md-card
         class="full-width">
         <md-card-subtitle i18n="@@dashboard-dispateched-samples">
-            DISPATCHED SAMPLES
+            <div fxLayoutAlign="space-between center">
+                <div>
+                    DISPATCHED SAMPLES
+                </div>
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <button
+                        i18n="@@dashboard-btn-release"
+                        md-raised-button
+                        (click)="undispatch()">
+                        RELEASE
+                    </button>
+                    <button
+                        i18n="@@dashboard-btn-process"
+                        md-raised-button
+                        (click)="openNewEntityDialog(workcenter)">
+                        PROCESS
+                    </button>
+                    <button
+                        i18n="@@dashboard-btn-terminate"
+                        md-raised-button>
+                        TERMINATED
+                    </button>
+                </div>
+            </div>
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center">
-                        <!--<button-->
-                            <!--md-button-->
-                            <!--(click)="selectAllSamples()">-->
-                            <!--TOGGLE-->
-                        <!--</button>-->
-                        <button
-                            i18n="@@dashboard-btn-release"
-                            md-button
-                            (click)="undispatch()">
-                            RELEASE
-                        </button>
-                        <button
-                            i18n="@@dashboard-btn-process"
-                            md-button
-                            (click)="openNewEntityDialog(workcenter)">
-                            <span>PROCESS</span>
-                        </button>
-                        <button
-                            i18n="@@dashboard-btn-terminate"
-                            md-button>
-                            TERMINATED
-                        </button>
-                    </div>
                     <workcenter-sample-dispatched
                         *ngIf="sampleList.length > 0"
                         #dispatchedComponent
