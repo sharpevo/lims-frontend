@@ -38,13 +38,13 @@ export class AppsComponent {
     })
     this.appList.push({
       "isInternal": true,
-      "label": "Dashboard",
+      "label": "工作中心",
       "url":"/workcenter-overview",
       "icon":"extension",
     })
     this.appList.push({
       "isInternal": true,
-      "label": "Settings",
+      "label": "配置",
       "url":"/tree",
       "icon":"settings",
     })
@@ -84,12 +84,20 @@ export class AppsComponent {
     }).subscribe(data => {
       this.entityService.retrieveEntity(data[0].id, "class")
       .subscribe(data => {
-        data.forEach(workcenter => {
+        data
+        .sort((a,b) => {
+          if (a.SYS_ORDER > b.SYS_ORDER) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+        .forEach(workcenter => {
           this.appList.push({
             "isInternal": true,
             "label":workcenter[workcenter['SYS_LABEL']],
             "url":"/workcenter-dashboard/" + workcenter.id,
-            "icon": "group_work",
+            "icon": "format_color_fill",
           })
         })
       })
