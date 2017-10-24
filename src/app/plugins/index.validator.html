@@ -1,118 +1,83 @@
-<br/>
-<md-card>
-    <md-card-subtitle style="width:100%">
-        <div
-            *ngIf="selectedSampleList.length == 0">
-            INDEX VALIDATION
-        </div>
-        <div
-            style="width:100%"
-            *ngIf="selectedSampleList.length > 0">
-            <span
-                *ngIf="result"
-                class="msg-success">
-                INDEX VALIDATION: Passed
-            </span>
-            <span
-                *ngIf="!result"
-                class="msg-fail">
-                INDEX VALIDATION: Failed
-            </span>
-        </div>
-    </md-card-subtitle>
-    <md-card-content>
-        <p
-            style="opacity: 0.5; font-style: italic; font:0.7em; text-align: center"
+
+<md-expansion-panel>
+    <md-expansion-panel-header
+        [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+        <md-panel-title
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            Plugin: Index Validator
+        </md-panel-title>
+        <md-panel-description
+            *ngIf="selectedSampleList.length > 0 && result"
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            PASS
+        </md-panel-description>
+        <md-panel-description
+            *ngIf="selectedSampleList.length > 0 && !result"
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            FAIL
+        </md-panel-description>
+        <md-panel-description
             *ngIf="selectedSampleList.length == 0">
             No sample selected
-        </p>
-        <!--<md-chip-list-->
-            <!--style="font:0.7em; text-align: center"-->
-            <!--*ngIf="selectedSampleList.length > 0">-->
-            <!--<md-chip-->
-                <!--style="background:#859900; color: white;"-->
-                <!--*ngIf="result">-->
-                <!--Validation Passed-->
-            <!--</md-chip>-->
-            <!--<md-chip-->
-                <!--style="background:#cb4b16; color: white"-->
-                <!--*ngIf="!result">-->
-                <!--Validation Failed-->
-            <!--</md-chip>-->
-
-        <!--</md-chip-list>-->
-        <!--<div-->
-            <!--*ngIf="selectedSampleList.length > 0">-->
-            <!--<div-->
-                <!--*ngIf="result"-->
-                <!--class="msg-success">-->
-                <!--Validation Passed-->
-            <!--</div>-->
-            <!--<div-->
-                <!--*ngIf="!result"-->
-                <!--class="msg-fail">-->
-                <!--Validation Failed-->
-            <!--</div>-->
-        <!--</div>-->
-        <br/>
-        <span
-            *ngIf="selectedSampleList.length > 0">
-            <table
-                style="width: 100%; text-align: center; border-collapse:collapse;">
-                <thead>
-                    <tr>
-                        <th>
-                            No.
-                        </th>
-                        <th>
-                            Sample Code
-                        </th>
-                        <th>
-                            Index Sequence
-                        </th>
-                        <th>
-                            Index Code
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        *ngFor="let sample of selectedSampleList; let i = index">
-                        <td>
-                            {{i+1}}
-                        </td>
-                        <td>
-                            <span
-                                *ngIf="resultList[i]">
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </span>
-                            <span
-                                style="color:red"
-                                *ngIf="!resultList[i]">
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </span>
-                        </td>
-                        <td>
-                            <span
-                                *ngIf="resultList[i]">
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </span>
-                            <span
-                                style="color:red"
-                                *ngIf="!resultList[i]">
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </span>
-                        </td>
-                        <td>
-                            {{sample.SYS_INDEX_CODE}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </span>
-    </md-card-content>
-</md-card>
+        </md-panel-description>
+    </md-expansion-panel-header>
+    <span
+        *ngIf="selectedSampleList.length > 0">
+        <table
+            style="width: 100%; text-align: center; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>
+                        No.
+                    </th>
+                    <th>
+                        Sample Code
+                    </th>
+                    <th>
+                        Index Sequence
+                    </th>
+                    <th>
+                        Index Code
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let sample of selectedSampleList; let i = index">
+                    <td>
+                        {{i+1}}
+                    </td>
+                    <td>
+                        <span
+                            *ngIf="resultList[i]">
+                            <entity-tostring
+                                [entity]="sample">
+                            </entity-tostring>
+                        </span>
+                        <span
+                            style="color:red"
+                            *ngIf="!resultList[i]">
+                            <entity-tostring
+                                [entity]="sample">
+                            </entity-tostring>
+                        </span>
+                    </td>
+                    <td>
+                        <span
+                            *ngIf="resultList[i]">
+                            {{sample.SYS_INDEX_SEQUENCE}}
+                        </span>
+                        <span
+                            style="color:red"
+                            *ngIf="!resultList[i]">
+                            {{sample.SYS_INDEX_SEQUENCE}}
+                        </span>
+                    </td>
+                    <td>
+                        {{sample.SYS_INDEX_CODE}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+</md-expansion-panel>
