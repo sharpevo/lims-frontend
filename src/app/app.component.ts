@@ -26,4 +26,9 @@ export class AppComponent {
       }
     )
   }
+
+  setLanguage(language: string) {
+    localStorage.setItem('locale', language)
+    location.reload(true)
+  }
 }
