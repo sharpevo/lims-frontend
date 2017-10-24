@@ -2,18 +2,18 @@
 <md-tab-group
     [selectedIndex]="1"
     [(selectedIndex)]="selectedIndex">
-    <md-tab label="Scheduled">
+    <md-tab i18n-label="@@dashboard-tab-scheduled" label="Scheduled">
     </md-tab>
-    <md-tab label="Processing">
+    <md-tab i18n-label="@@dashboard-tab-processing" label="Processing">
     </md-tab>
-    <md-tab label="Completed">
+    <md-tab i18n-label="@@dashboard-tab-completed" label="Completed">
     </md-tab>
 </md-tab-group>
 <br/>
 <section *ngIf="selectedIndex === 0">
     <md-card
         class="full-width">
-        <md-card-subtitle>
+        <md-card-subtitle i18n="@@dashboard-scheduled-samples">
             SCHEDULED SAMPLES
         </md-card-subtitle>
         <md-card-content>
@@ -32,7 +32,7 @@
 <section *ngIf="selectedIndex === 1">
     <md-card
         class="full-width">
-        <md-card-subtitle>
+        <md-card-subtitle i18n="@@dashboard-activated-samples">
             ACTIVATED SAMPLES
         </md-card-subtitle>
         <md-card-content>
@@ -43,12 +43,13 @@
                     fxLayout="row"
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center">
-                    <button
-                        md-button
-                        (click)="selectAllSamples()">
-                        TOGGLE
-                    </button>
+                    <!--<button-->
+                        <!--md-button-->
+                        <!--(click)="selectAllSamples()">-->
+                        <!--TOGGLE-->
+                    <!--</button>-->
                     <md-select
+                        i18n-placeholder="@@dashboard-operator"
                         [(ngModel)]="operator"
                         placeholder="Operator">
                         <md-option
@@ -60,13 +61,15 @@
                         </md-option>
                     </md-select>
                     <button
+                        i18n="@@dashboard-btn-dispatch"
                         md-button
                         (click)="dispatch()">
                         DISPATCH
                     </button>
                     <button
+                        i18n="@@dashboard-btn-terminate"
                         md-button>
-                        TERMINATED
+                        TERMINATE
                     </button>
                 </div>
                     <workcenter-sample-activated
@@ -82,7 +85,7 @@
     <br/>
     <md-card
         class="full-width">
-        <md-card-subtitle>
+        <md-card-subtitle i18n="@@dashboard-dispateched-samples">
             DISPATCHED SAMPLES
         </md-card-subtitle>
         <md-card-content>
@@ -93,22 +96,25 @@
                         fxLayout="row"
                         fxLayoutGap="10px"
                         fxLayoutAlign="start center">
+                        <!--<button-->
+                            <!--md-button-->
+                            <!--(click)="selectAllSamples()">-->
+                            <!--TOGGLE-->
+                        <!--</button>-->
                         <button
-                            md-button
-                            (click)="selectAllSamples()">
-                            TOGGLE
-                        </button>
-                        <button
+                            i18n="@@dashboard-btn-release"
                             md-button
                             (click)="undispatch()">
                             RELEASE
                         </button>
                         <button
+                            i18n="@@dashboard-btn-process"
                             md-button
                             (click)="openNewEntityDialog(workcenter)">
                             <span>PROCESS</span>
                         </button>
                         <button
+                            i18n="@@dashboard-btn-terminate"
                             md-button>
                             TERMINATED
                         </button>
@@ -127,7 +133,7 @@
 <section *ngIf="selectedIndex === 2">
     <md-card
         class="full-width">
-        <md-card-subtitle>
+        <md-card-subtitle i18n="@@dashboard-completed-samples">
             COMPLETED SAMPLES
         </md-card-subtitle>
         <md-card-content>
@@ -147,7 +153,7 @@
     <br/>
     <md-card
         class="full-width">
-        <md-card-subtitle>
+        <md-card-subtitle i18n="@@dashboard-terminated-samples">
             TERMINATED SAMPLES
         </md-card-subtitle>
         <md-card-content>
