@@ -8,6 +8,7 @@ import 'rxjs/Rx' ;
 @Component({
   selector: 'plugin-excel-processor',
   templateUrl: './excel.processor.html',
+  styleUrls: ['./excel.processor.css']
 })
 export class PluginExcelProcessorComponent {
   @Input() workcenter

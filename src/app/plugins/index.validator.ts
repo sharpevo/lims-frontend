@@ -5,6 +5,7 @@ import {SampleService} from '../models/sample'
 @Component({
   selector: 'plugin-index-validator',
   templateUrl: './index.validator.html',
+  styleUrls: ['./index.validator.css']
 })
 export class PluginIndexValidatorComponent {
   @Input() sampleList
