@@ -97,7 +97,7 @@ export class AppsComponent {
             "isInternal": true,
             "label":workcenter[workcenter['SYS_LABEL']],
             "url":"/workcenter-dashboard/" + workcenter.id,
-            "icon": "group_work",
+            "icon": "format_color_fill",
           })
         })
       })
