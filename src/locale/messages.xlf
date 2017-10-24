@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="dashboard-tab-scheduled" datatype="html">
+        <source>Scheduled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-tab-processing" datatype="html">
+        <source>Processing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-tab-completed" datatype="html">
+        <source>Completed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-scheduled-samples" datatype="html">
+        <source>
+            SCHEDULED SAMPLES
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-activated-samples" datatype="html">
+        <source>
+                    ACTIVATED SAMPLES
+                </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-operator" datatype="html">
+        <source>Operator</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-btn-dispatch" datatype="html">
+        <source>
+                        DISPATCH
+                    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-btn-terminate" datatype="html">
+        <source>
+                        TERMINATE
+                    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-dispateched-samples" datatype="html">
+        <source>
+                    DISPATCHED SAMPLES
+                </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-btn-release" datatype="html">
+        <source>
+                        RELEASE
+                    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-btn-process" datatype="html">
+        <source>
+                        PROCESS
+                    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-completed-samples" datatype="html">
+        <source>
+            COMPLETED SAMPLES
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard-terminated-samples" datatype="html">
+        <source>
+            TERMINATED SAMPLES
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
