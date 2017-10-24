@@ -84,7 +84,15 @@ export class AppsComponent {
     }).subscribe(data => {
       this.entityService.retrieveEntity(data[0].id, "class")
       .subscribe(data => {
-        data.forEach(workcenter => {
+        data
+        .sort((a,b) => {
+          if (a.SYS_ORDER > b.SYS_ORDER) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+        .forEach(workcenter => {
           this.appList.push({
             "isInternal": true,
             "label":workcenter[workcenter['SYS_LABEL']],
