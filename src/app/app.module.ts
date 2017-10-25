@@ -62,6 +62,9 @@ import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component'
 import {ShowAuxiliaryAttributeDialog} from './util/auxiliary.attribute.dialog';
 import {AppsComponent} from './apps/component';
 
+import {SpinnerService} from './util/spinner.service';
+import {SpinnerComponent} from './util/spinner.component';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -102,6 +105,7 @@ import {AppsComponent} from './apps/component';
     AuxiliaryAttributeComponent,
     ShowAuxiliaryAttributeDialog,
     AppsComponent,
+    SpinnerComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -129,6 +133,7 @@ import {AppsComponent} from './apps/component';
     AttributeService,
     SampleService,
     UtilService,
+    SpinnerService,
   ],
   bootstrap: [AppComponent]
 })
