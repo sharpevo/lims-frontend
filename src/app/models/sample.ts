@@ -745,9 +745,17 @@ export class SampleService{
 
     })
 
-    Observable.concat(...observableList).subscribe(data => {
-      console.log("data: ", data)
-    })
+    Observable.concat(...observableList).subscribe(
+      data => {
+        console.log("data: ", data)
+      },
+      err => {
+        console.log("err: ", err)
+      },
+      () => {
+        this.showMessage("Completed", "OK")
+      }
+    )
   }
 
   /**
@@ -849,5 +857,9 @@ export class SampleService{
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action)
+  }
+
+  showMessage(message: string, action: string) {
+    this.snackBar.open(message, action, {duration: 3000})
   }
 }
