@@ -6,6 +6,7 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
+import {SpinnerService} from '../util/spinner.service'
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class SampleService{
 
   constructor(
     public snackBar: MdSnackBar,
+    public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
     private entityService: EntityService
@@ -745,6 +747,7 @@ export class SampleService{
 
     })
 
+    this.spinner.start()
     Observable.concat(...observableList).subscribe(
       data => {
         console.log("data: ", data)
@@ -753,6 +756,7 @@ export class SampleService{
         console.log("err: ", err)
       },
       () => {
+        this.spinner.stop()
         this.showMessage("Completed", "OK")
       }
     )
