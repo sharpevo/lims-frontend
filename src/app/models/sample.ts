@@ -658,6 +658,7 @@ export class SampleService{
    *
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
+    this.spinner.start()
 
     let observableList = []
 
@@ -747,7 +748,6 @@ export class SampleService{
 
     })
 
-    this.spinner.start()
     Observable.concat(...observableList).subscribe(
       data => {
         console.log("data: ", data)
@@ -756,10 +756,13 @@ export class SampleService{
         console.log("err: ", err)
       },
       () => {
+        //setTimeout(() => {
         this.spinner.stop()
         this.showMessage("Completed", "OK")
+        //}, 3000)
       }
     )
+
   }
 
   /**
