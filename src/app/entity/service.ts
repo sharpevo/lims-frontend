@@ -1,13 +1,16 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers} from '@angular/http'
+import {CustomHttpService} from '../util/custom.http.service'
 import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class EntityService {
-  private url: string = environment.apiUrl + '/entity'
+  private url: string = '/entity'
   private headers: Headers
-  constructor(private http: Http){
+  constructor(
+    private http: CustomHttpService
+  ){
     this.headers = new Headers()
     this.headers.append('Content-Type', 'application/json')
     this.headers.append('Accept', 'application/json')

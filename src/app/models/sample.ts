@@ -6,6 +6,7 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
+import {SpinnerService} from '../util/spinner.service'
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class SampleService{
 
   constructor(
     public snackBar: MdSnackBar,
+    public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
     private entityService: EntityService
@@ -656,6 +658,7 @@ export class SampleService{
    *
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
+    this.spinner.start()
 
     let observableList = []
 
@@ -745,9 +748,21 @@ export class SampleService{
 
     })
 
-    Observable.concat(...observableList).subscribe(data => {
-      console.log("data: ", data)
-    })
+    Observable.concat(...observableList).subscribe(
+      data => {
+        console.log("data: ", data)
+      },
+      err => {
+        console.log("err: ", err)
+      },
+      () => {
+        //setTimeout(() => {
+        this.spinner.stop()
+        this.showMessage("Completed", "OK")
+        //}, 3000)
+      }
+    )
+
   }
 
   /**
@@ -849,5 +864,9 @@ export class SampleService{
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action)
+  }
+
+  showMessage(message: string, action: string) {
+    this.snackBar.open(message, action, {duration: 3000})
   }
 }
