@@ -1,5 +1,8 @@
 import {Component, NgModule, trigger, transition, style, animate, state} from '@angular/core'
 import { SpinnerService} from './spinner.service'
+import { Subscription } from 'rxjs/Subscription';
+
+const scheduleMicrotask = Promise.resolve(null);
 
 @Component({
   selector: 'spinner-component',
@@ -19,10 +22,13 @@ import { SpinnerService} from './spinner.service'
 })
 export class SpinnerComponent {
   public active: boolean
+  subscription: Subscription
 
-  public constructor(spinner: SpinnerService) {
+  constructor(private spinner: SpinnerService) {
     spinner.status.subscribe((status: boolean) => {
-      this.active = status
+      scheduleMicrotask.then(() => {
+        this.active = status
+      })
     })
   }
 }
