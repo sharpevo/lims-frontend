@@ -65,6 +65,9 @@ import {AppsComponent} from './apps/component';
 import {SpinnerService} from './util/spinner.service';
 import {SpinnerComponent} from './util/spinner.component';
 
+import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
+import {XHRBackend, RequestOptions} from '@angular/http';
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -134,6 +137,11 @@ import {SpinnerComponent} from './util/spinner.component';
     SampleService,
     UtilService,
     SpinnerService,
+    {
+      provide: CustomHttpService,
+      useFactory: customHttpFactory,
+      deps: [ XHRBackend, RequestOptions, SpinnerService]
+    }
   ],
   bootstrap: [AppComponent]
 })
