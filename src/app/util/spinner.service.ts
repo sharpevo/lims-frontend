@@ -6,6 +6,7 @@ import 'rxjs/add/operator/share'
 export class SpinnerService {
   public status: Subject<boolean> = new Subject()
   private _active: boolean = false
+  private _count: number = 0
 
   public get active(): boolean {
     return this._active
@@ -17,10 +18,16 @@ export class SpinnerService {
   }
 
   public start() {
-    this.active = true
+    if (this._count == 0){
+      this.active = true
+    }
+    this._count += 1
   }
 
   public stop() {
-    this.active = false
+    this._count -= 1
+    if (this._count == 0) {
+      this.active = false
+    }
   }
 }
