@@ -470,7 +470,7 @@ export class SampleService{
           `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n>Operator XXX\n\n>${msg_date}`,
           "/workcenter-dashboard/" + workcenter.id
         )
-        .subscribe(data => {
+        .subscribe(() => {
           console.log("Sending notification:", data)
         })
       })
@@ -858,9 +858,8 @@ export class SampleService{
       return this.entityService.create(subEntity)
     })
     .retryWhen(error => {
-      return error.delay(1000)
+      return error
     })
-    .delay(1000)
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action)

@@ -6,7 +6,8 @@ import 'rxjs/add/operator/map'
 @Injectable()
 export class UtilService{
   private baseUrl: string = environment.apiUrl
-  private notifUrl: string = 'http://dell:8060/send'
+  private notifUrl: string = environment.limsbotUrl
+  private limsUrl: string = environment.limsUrl
   private headers: Headers
   constructor(private http: Http){
     this.headers = new Headers()
@@ -74,7 +75,7 @@ export class UtilService{
       "msgtype": msgtype,
       "title": "LIMS Notification",
       "content": content,
-      "actionurl": "http://localhost:8000" + sourceUrl
+      "actionurl": this.limsUrl + sourceUrl
     }
 
     return this.http.post(
