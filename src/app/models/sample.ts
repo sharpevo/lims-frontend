@@ -470,7 +470,7 @@ export class SampleService{
           `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n>Operator XXX\n\n>${msg_date}`,
           "/workcenter-dashboard/" + workcenter.id
         )
-        .subscribe(data => {
+        .subscribe(() => {
           console.log("Sending notification:", data)
         })
       })
