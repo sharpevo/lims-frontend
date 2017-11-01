@@ -105,6 +105,7 @@ export class CustomHttpService extends Http {
         //'X-Auth-Token': localStorage.getItem('access_token')
       })
     }
+    options.withCredentials = true
     return options
   }
 }
