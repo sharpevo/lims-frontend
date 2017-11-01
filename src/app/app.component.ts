@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import {EntityService} from './entity/service'
+import {UtilService} from './util/service'
 import {environment} from '../environments/environment'
 import {URLSearchParams} from "@angular/http"
+import {MdSnackBar} from '@angular/material'
+import {SpinnerService} from './util/spinner.service'
 
 @Component({
   selector: 'app-root',
@@ -11,14 +14,35 @@ import {URLSearchParams} from "@angular/http"
 export class AppComponent {
   serviceList: any[] = []
   environment = environment
+  userInfo: any
 
   constructor(
+    public snackBar: MdSnackBar,
+    private utilService: UtilService,
+    private spinnerService: SpinnerService,
     private entityService: EntityService
   ){}
 
   ngOnInit(){
-    this.getServiceList()
-    this.getParams()
+    this.utilService.getUserInfo()
+    .subscribe(userInfo =>{
+      this.userInfo = userInfo
+      this.getServiceList()
+      this.getParams()
+    },
+    err => {
+      console.log("invalid user")
+      this.spinnerService.start()
+      this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
+      .afterDismissed().subscribe(() => {
+        this.spinnerService.stop()
+        window.location.href = environment.uicUrl +
+          "/login?return_to=" +
+          environment.limsUrl.replace(/^https?:\/\//,'')
+      });
+    },
+    () => {
+    })
   }
 
   getParams() {
