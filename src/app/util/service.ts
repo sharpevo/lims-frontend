@@ -90,4 +90,9 @@ export class UtilService{
     //.map(res => res.json())
   }
 
+  getUserInfo(){
+    return this.http.get("/userinfo")
+    .map(res => res.json())
+  }
+
 }
