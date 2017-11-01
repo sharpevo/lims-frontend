@@ -7,8 +7,35 @@
         <button md-icon-button checked="true" [routerLink]="['apps']">
             <md-icon class="toolbar-icon">apps</md-icon>
         </button>
+        <span class="toolbar-version">
+            {{environment.version}}
+        </span>
         <span class="toolbar-spacer"></span>
-        <span class="toolbar-version">{{environment.version}}</span>
+        <span class="toolbar-version">
+            <span *ngIf="userInfo">
+                <button md-icon-button [mdMenuTriggerFor]="menu">
+                    {{userInfo.name}}
+                </button>
+                <md-menu #menu="mdMenu">
+                    <a
+                        href="{{environment.uicUrl}}/profile"
+                        md-menu-item>
+                        <md-icon>account_circle</md-icon>
+                        <span>Profile</span>
+                    </a>
+                    <button md-menu-item disabled>
+                        <md-icon>email</md-icon>
+                        <span>{{userInfo.email}}</span>
+                    </button>
+                    <a
+                        href="{{environment.uicUrl}}/logout"
+                        md-menu-item>
+                        <md-icon>exit_to_app</md-icon>
+                        <span>Logout</span>
+                    </a>
+                </md-menu>
+            </span>
+        </span>
     </md-toolbar>
     <md-sidenav-container fullscreen>
         <md-sidenav #sidenav mode="side" class="app-sidenav" opened="false">
