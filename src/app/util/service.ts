@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core'
 import {Http, Headers, ResponseContentType} from '@angular/http'
 import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
+import {CustomHttpService} from '../util/custom.http.service'
 
 @Injectable()
 export class UtilService{
@@ -9,7 +10,10 @@ export class UtilService{
   private notifUrl: string = environment.limsbotUrl
   private limsUrl: string = environment.limsUrl
   private headers: Headers
-  constructor(private http: Http){
+  constructor(
+    private http: CustomHttpService,
+    private rawHttp: Http
+  ){
     this.headers = new Headers()
     this.headers.append('Content-Type', 'application/json')
     this.headers.append('Accept', 'application/json')
@@ -19,7 +23,7 @@ export class UtilService{
     let formData = new FormData()
     formData.append('excelFile', file[0], file[0].name)
     return this.http.post(
-      this.baseUrl + '/excelparse',
+      '/excelparse',
       formData,
       {})
       .map(res => res.json())
@@ -33,7 +37,7 @@ export class UtilService{
     headers.append('Content-Type', 'application/json')
     //headers.append('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     return this.http.post(
-      this.baseUrl + '/excel',
+      '/excel',
       data,
       {headers: headers,
         responseType: ResponseContentType.Blob
@@ -56,7 +60,7 @@ export class UtilService{
 
   putExcel(objectList: any[]){
     return this.http.put(
-      this.baseUrl + '/excel',
+      '/excel',
       JSON.stringify(objectList),
       {headers: this.headers})
       .map(res => res.json())
@@ -78,12 +82,17 @@ export class UtilService{
       "actionurl": this.limsUrl + sourceUrl
     }
 
-    return this.http.post(
+    return this.rawHttp.post(
       this.notifUrl,
       data,
       {headers: this.headers}
     )
     //.map(res => res.json())
+  }
+
+  getUserInfo(){
+    return this.http.get("/userinfo")
+    .map(res => res.json())
   }
 
 }
