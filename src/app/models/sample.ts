@@ -473,7 +473,7 @@ export class SampleService{
         //   the previous one
         // - for the attributes starts with SYS, use current workcenter
         sampleList.forEach(sample => {
-          msg_sampleList += ">-" + sample['SYS_SAMPLE_CODE'] + "\n\n"
+          msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
           console.log('processing candidate sample', sample)
           //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
           this.entityService.retrieveById(sample.id)
@@ -493,7 +493,7 @@ export class SampleService{
 
         this.utilService.sendNotif(
           "actionCard",
-          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n>Operator XXX\n\n>${msg_date}`,
+          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
           "/workcenter-dashboard/" + workcenter.id
         )
         .subscribe(() => {
@@ -502,6 +502,7 @@ export class SampleService{
       })
 
     })
+
 
   }
 
