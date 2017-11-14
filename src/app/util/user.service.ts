@@ -21,6 +21,7 @@ export class UserService {
   retrieveUserInfo(){
     this.utilService.getUserInfo()
     .subscribe(userInfo =>{
+      userInfo['role'] = JSON.parse(userInfo['role'])
       this.userInfo.next(userInfo)
     },
     err => {
