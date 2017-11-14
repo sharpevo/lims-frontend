@@ -7,18 +7,29 @@ import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from '../util/spinner.service'
+import {UserService} from '../util/user.service'
 
 
 @Injectable()
 export class SampleService{
+
+  userInfo: any = {}
+  operator: any
 
   constructor(
     public snackBar: MdSnackBar,
     public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
+    private userService: UserService,
     private entityService: EntityService
-  ){}
+  ){
+
+    this.userService.retrieveUserInfo()
+    this.userService.getUserInfo().subscribe(data => {
+      this.userInfo = data
+    })
+  }
 
   buildSampleInlineList(sampleList: any[]): any[]{
     let resultList: any = {}
