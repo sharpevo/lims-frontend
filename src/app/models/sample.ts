@@ -388,7 +388,22 @@ export class SampleService{
    * @param parentMap BoM/Routing object.
    *
    */
-  submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
+  async submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
+
+    // Find the user in the lims by the user email.
+    // For the mismatched user, they are illegal to submit any samples.
+    await this.entityService.retrieveBy({
+      "SYS_USER_EMAIL": this.userInfo.email
+    })
+    .subscribe(data => {
+      this.operator = data[0]
+    })
+
+    if (typeof this.operator === 'undefined'){
+      console.log("illegal user", this.userInfo)
+      this.showMessage("Invalid user: " + this.userInfo.email, "OK")
+      return
+    }
 
     this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
@@ -633,6 +648,8 @@ export class SampleService{
   }
 
   createObject(object: any, attributeInfo: any, issueSample: boolean){
+
+    object['SYS_WORKCENTER_OPERATOR'] = this.operator.id
 
     if (issueSample){
       this.entityService.create(object)
