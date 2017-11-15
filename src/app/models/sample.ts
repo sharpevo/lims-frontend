@@ -396,14 +396,12 @@ export class SampleService{
       "SYS_USER_EMAIL": this.userInfo.email
     })
     .subscribe(data => {
-      this.operator = data[0]
-    })
-
-    if (typeof this.operator === 'undefined'){
+      if (data.length == 0){
       console.log("illegal user", this.userInfo)
       this.showMessage("Invalid user: " + this.userInfo.email, "OK")
       return
     }
+      this.operator = data[0]
 
     this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
@@ -501,6 +499,7 @@ export class SampleService{
         })
       })
 
+    })
     })
 
 
