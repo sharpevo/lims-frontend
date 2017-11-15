@@ -14,7 +14,6 @@ import {UserService} from '../util/user.service'
 export class SampleService{
 
   userInfo: any = {}
-  operator: any
 
   constructor(
     public snackBar: MdSnackBar,
@@ -388,118 +387,112 @@ export class SampleService{
    * @param parentMap BoM/Routing object.
    *
    */
-  async submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
+  submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
 
     // Find the user in the lims by the user email.
     // For the mismatched user, they are illegal to submit any samples.
-    await this.entityService.retrieveBy({
-      "SYS_USER_EMAIL": this.userInfo.email
-    })
+    if (!this.userInfo.limsid){
+      console.log("illegal user", this.userInfo)
+      this.showMessage("Invalid user: " + this.userInfo.email, "OK")
+      return
+    }
+
+    this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
-      if (data.length == 0){
-        console.log("illegal user", this.userInfo)
-        this.showMessage("Invalid user: " + this.userInfo.email, "OK")
-        return
-      }
-      this.operator = data[0]
-
-      this.entityService.retrieveGenre(workcenter.id)
+      // Take the first genre as default
+      this.genreService.retrieveAttribute(data[0].id)
       .subscribe(data => {
-        // Take the first genre as default
-        this.genreService.retrieveAttribute(data[0].id)
-        .subscribe(data => {
 
-          //data.forEach(attribute => {
-          //switch (attribute.SYS_TYPE){
-          //case "entity":
-          //if (attribute.SYS_TYPE_ENTITY_REF){
-          //// get the identifier of the entity
-          //// TODO: save SYS_IDENTIFIER instead of ID seems better
-          //// or automate populate
-          //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-          //.subscribe(data => {
-          //// get the entity list
-          //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-          //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-          //}
-          //this.entityService.retrieveByIdentifierAndCategory(
-          //data.SYS_IDENTIFIER,
-          //attribute.SYS_FLOOR_ENTITY_TYPE)
-          //.subscribe(data => {
-          //// compose a new key
-          //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-          //})
-          //})
-          //}else {
-          //}
-          //console.log(">-", attribute.SYS_CODE)
-          //if (!attribute.SYS_TYPE_ENTITY_REF) {
-          //parentMap[attribute.SYS_CODE] = {}
-          //}
-          //break
-          //default:
-          //}
+        //data.forEach(attribute => {
+        //switch (attribute.SYS_TYPE){
+        //case "entity":
+        //if (attribute.SYS_TYPE_ENTITY_REF){
+        //// get the identifier of the entity
+        //// TODO: save SYS_IDENTIFIER instead of ID seems better
+        //// or automate populate
+        //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
+        //.subscribe(data => {
+        //// get the entity list
+        //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
+        //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
+        //}
+        //this.entityService.retrieveByIdentifierAndCategory(
+        //data.SYS_IDENTIFIER,
+        //attribute.SYS_FLOOR_ENTITY_TYPE)
+        //.subscribe(data => {
+        //// compose a new key
+        //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
+        //})
+        //})
+        //}else {
+        //}
+        //console.log(">-", attribute.SYS_CODE)
+        //if (!attribute.SYS_TYPE_ENTITY_REF) {
+        //parentMap[attribute.SYS_CODE] = {}
+        //}
+        //break
+        //default:
+        //}
 
-          //})
+        //})
 
-          let attributeList = data.sort((a,b) => {
-            if (a.SYS_ORDER > b.SYS_ORDER) {
-              return 1
-            } else {
-              return -1
-            }
-          })
-          let attributeInfo = {
-            "attributeList": attributeList,
-            "parentMap": parentMap
+        let attributeList = data.sort((a,b) => {
+          if (a.SYS_ORDER > b.SYS_ORDER) {
+            return 1
+          } else {
+            return -1
           }
-          console.log("aaa", attributeInfo)
+        })
+        let attributeInfo = {
+          "attributeList": attributeList,
+          "parentMap": parentMap
+        }
+        console.log("aaa", attributeInfo)
 
-          if (issueSample){
-            console.log("issueSample")
-            this.issueSample(workcenter, object, sampleList, attributeInfo)
-            return
-          }
-          console.log("submitObject")
+        if (issueSample){
+          console.log("issueSample")
+          this.issueSample(workcenter, object, sampleList, attributeInfo)
+          return
+        }
+        console.log("submitObject")
 
-          let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
-          let msg_sampleCount = sampleList.length
-          let msg_sampleList = ""
-          // samples from the previous workcenter or the current one in the first
-          // workcenter with workcenter-specific attributes:
-          // - for the attributes defined by administrator, if they are same, use
-          //   the previous one
-          // - for the attributes starts with SYS, use current workcenter
-          sampleList.forEach(sample => {
-            msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
-            console.log('processing candidate sample', sample)
-            //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
-            this.entityService.retrieveById(sample.id)
-            .subscribe(data => {
-              console.log("processing sample:", data)
-              this.submitSample(workcenter, object, data, attributeInfo)
-            })
-          })
-
-          // Send notification to Dingtalk
-          let date = new Date()
-          let msg_date = date.getFullYear() + '-' +
-            (date.getMonth() + 1) + '-' +
-            date.getDate() + ' ' +
-            date.getHours() + ':' +
-            date.getMinutes()
-
-          this.utilService.sendNotif(
-            "actionCard",
-            `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
-            "/workcenter-dashboard/" + workcenter.id
-          )
-          .subscribe(() => {
-            console.log("Sending notification:", data)
+        let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
+        let msg_sampleCount = sampleList.length
+        let msg_sampleList = ""
+        // samples from the previous workcenter or the current one in the first
+        // workcenter with workcenter-specific attributes:
+        // - for the attributes defined by administrator, if they are same, use
+        //   the previous one
+        // - for the attributes starts with SYS, use current workcenter
+        sampleList.forEach(sample => {
+          msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
+          console.log('processing candidate sample', sample)
+          //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+          this.entityService.retrieveById(sample.id)
+          .subscribe(data => {
+            console.log("processing sample:", data)
+            this.submitSample(workcenter, object, data, attributeInfo)
           })
         })
 
+        // Send notification to Dingtalk
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+          (date.getMonth() + 1) + '-' +
+          date.getDate() + ' ' +
+          date.getHours() + ':' +
+          date.getMinutes()
+
+        this.utilService.sendNotif(
+          "actionCard",
+          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
+          "/workcenter-dashboard/" + workcenter.id
+        )
+        .subscribe(() => {
+          console.log("Sending notification:", data)
+        })
       })
+
     })
 
 
@@ -649,7 +642,7 @@ export class SampleService{
 
   createObject(object: any, attributeInfo: any, issueSample: boolean){
 
-    object['SYS_WORKCENTER_OPERATOR'] = this.operator.id
+    object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
     if (issueSample){
       this.entityService.create(object)
