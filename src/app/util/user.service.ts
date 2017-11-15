@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core'
 import {Subject} from 'rxjs/Subject'
 import 'rxjs/add/operator/share'
 import {UtilService} from './service'
+import {EntityService} from '../entity/service'
 import {SpinnerService} from './spinner.service'
 import {MdSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
@@ -13,6 +14,7 @@ export class UserService {
   constructor(
     private spinnerService: SpinnerService,
     private utilService: UtilService,
+    private entityService: EntityService,
     public snackBar: MdSnackBar,
   ){
     this.retrieveUserInfo()
@@ -22,7 +24,16 @@ export class UserService {
     this.utilService.getUserInfo()
     .subscribe(userInfo =>{
       userInfo['role'] = JSON.parse(userInfo['role'])
-      this.userInfo.next(userInfo)
+
+      this.entityService.retrieveBy({
+        "SYS_USER_EMAIL": userInfo.email
+      })
+      .subscribe(data => {
+        if (data.length > 0){
+          userInfo['limsid'] = data[0]['id']
+        }
+        this.userInfo.next(userInfo)
+      })
     },
     err => {
       console.log("invalid user")
