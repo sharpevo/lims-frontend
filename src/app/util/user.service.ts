@@ -41,13 +41,13 @@ export class UserService {
       } else if (!expectedRole) {
         console.log("undefined permission")
         return true
+      } else if (expectedRole == "lims-workcenter-") {
+        console.log("transfer the perm checking to the dashboard")
+        return true
       } else if (!this.userInfo.role[expectedRole]) {
         console.log("denied", expectedRole)
-        this.snackBar.open("Invalid permission", "OK", {duration: 3000})
-        .afterDismissed().subscribe(() => {
-          this.router.navigate([''])
-          return false
-        })
+        this.permFail()
+        return false
       }
       console.log("auth successfully")
       return true

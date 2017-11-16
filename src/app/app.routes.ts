@@ -40,6 +40,9 @@ const routes: Routes = [
     path: 'workcenter-dashboard/:id',
     component: WorkcenterDashboardComponent,
     canActivate: [UserService],
+    data: {
+      expectedRole: 'lims-workcenter-',
+    },
   },
   {
     path: 'project-management',
