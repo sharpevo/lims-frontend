@@ -9,6 +9,11 @@ import {EntityService} from '../entity/service'
 import {SpinnerService} from './spinner.service'
 import {MdSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
+import { 
+  Router,
+  CanActivate,
+  ActivatedRouteSnapshot
+} from '@angular/router'
 
 @Injectable()
 export class UserService {
@@ -20,9 +25,12 @@ export class UserService {
     private utilService: UtilService,
     private entityService: EntityService,
     public snackBar: MdSnackBar,
+    public router: Router,
   ){}
 
-  canActivate() {
+  canActivate(route: ActivatedRouteSnapshot) {
+    const expectedRole = route.data.expectedRole
+    console.log("expectedRole", expectedRole)
     return this.getUserInfo()
     .map(data => {
       this.userInfo = data
@@ -30,6 +38,16 @@ export class UserService {
         console.log("auth failed")
         this.authFail()
         return false
+      } else if (!expectedRole) {
+        console.log("undefined permission")
+        return true
+      } else if (!this.userInfo.role[expectedRole]) {
+        console.log("denied", expectedRole)
+        this.snackBar.open("Invalid permission", "OK", {duration: 3000})
+        .afterDismissed().subscribe(() => {
+          this.router.navigate([''])
+          return false
+        })
       }
       console.log("auth successfully")
       return true
