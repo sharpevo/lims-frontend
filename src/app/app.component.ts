@@ -24,18 +24,13 @@ export class AppComponent {
     private userService: UserService,
     private spinnerService: SpinnerService,
     private entityService: EntityService
-  ){
-    this.subscription = this.userService.getUserInfo().subscribe(data => {
-      this.userInfo = data
-    })
-  }
-
-  ngOnDestroy(){
-    this.subscription.unsubscribe()
-  }
+  ){}
 
   ngOnInit(){
-    this.getServiceList()
+    this.userInfo = this.userService.getUserInfo()
+    .subscribe(data => {
+      this.userInfo = data
+    })
     this.getParams()
   }
 
