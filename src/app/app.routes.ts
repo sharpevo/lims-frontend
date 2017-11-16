@@ -27,6 +27,9 @@ const routes: Routes = [
     path: 'tree',
     component: TreeViewComponent,
     canActivate: [UserService],
+    data: {
+      expectedRole: 'lims-admin',
+    },
   },
   {
     path: 'workcenter-overview',
