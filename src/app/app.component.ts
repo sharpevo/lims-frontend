@@ -44,15 +44,6 @@ export class AppComponent {
     }
   }
 
-  getServiceList(){
-    this.entityService.retrieveByType("domain")
-    .subscribe(
-      data => {
-        this.serviceList = data
-      }
-    )
-  }
-
   setLanguage(language: string) {
     localStorage.setItem('locale', language)
     location.reload(true)
