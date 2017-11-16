@@ -23,19 +23,16 @@ export class UserService {
   ){}
 
   canActivate() {
-    console.log("Can activate", this.userInfo)
-
     return this.getUserInfo()
     .map(data => {
       this.userInfo = data
-      if (this.userInfo) {
-        console.log("Can activate: true")
-        return true
-      } else {
-        console.log("Can activate: false")
+      if (!this.userInfo) {
+        console.log("auth failed")
         this.authFail()
         return false
       }
+      console.log("auth successfully")
+      return true
     }, error => {
       console.log("error in canActivate")
       this.authFail()
