@@ -17,7 +17,6 @@ export class EntitySelectListComponent {
   placeholder: string = ""
   floorEntityType: string = ""
 
-  subscription: Subscription
   userInfo: any
 
   constructor(
@@ -34,18 +33,12 @@ export class EntitySelectListComponent {
     this.floorEntityType = this.optionLevel
     this.getEntityList()
 
-    this.userService.retrieveUserInfo()
-    this.subscription = this.userService.getUserInfo().subscribe(data => {
+    this.userService.getUserInfo().subscribe(data => {
       this.userInfo = data
       if (this.attribute.SYS_CODE == "SYS_WORKCENTER_OPERATOR") {
         this.object[this.attribute.SYS_CODE] = this.userInfo.limsid
       }
     })
-
-  }
-
-  ngOnDestroy(){
-    this.subscription.unsubscribe()
   }
 
   getEntityList(){
