@@ -23,8 +23,6 @@ export class SampleService{
     private userService: UserService,
     private entityService: EntityService
   ){
-
-    this.userService.retrieveUserInfo()
     this.userService.getUserInfo().subscribe(data => {
       this.userInfo = data
     })
