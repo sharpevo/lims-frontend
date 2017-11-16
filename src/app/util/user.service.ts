@@ -22,7 +22,25 @@ export class UserService {
     public snackBar: MdSnackBar,
   ){}
 
+  canActivate() {
+    console.log("Can activate", this.userInfo)
 
+    return this.getUserInfo()
+    .map(data => {
+      this.userInfo = data
+      if (this.userInfo) {
+        console.log("Can activate: true")
+        return true
+      } else {
+        console.log("Can activate: false")
+        this.authFail()
+        return false
+      }
+    }, error => {
+      console.log("error in canActivate")
+      this.authFail()
+    }).first()
+  }
 
   // never process auth fail in it
   getUserInfo(){
