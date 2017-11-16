@@ -107,4 +107,14 @@ export class UserService {
         environment.limsUrl.replace(/^https?:\/\//,'')
     })
   }
+
+  permFail() {
+    this.spinnerService.start()
+    this.snackBar.open("Invalid permission", "OK", {duration: 3000})
+    .afterDismissed().subscribe(() => {
+      this.spinnerService.stop()
+      this.router.navigate(['apps'])
+      return false
+    })
+  }
 }
