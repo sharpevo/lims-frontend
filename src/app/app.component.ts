@@ -5,6 +5,8 @@ import {environment} from '../environments/environment'
 import {URLSearchParams} from "@angular/http"
 import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
+import {UserService} from './util/user.service'
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-root',
@@ -15,34 +17,21 @@ export class AppComponent {
   serviceList: any[] = []
   environment = environment
   userInfo: any
-
+  subscription: Subscription
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
+    private userService: UserService,
     private spinnerService: SpinnerService,
     private entityService: EntityService
   ){}
 
   ngOnInit(){
-    this.utilService.getUserInfo()
-    .subscribe(userInfo =>{
-      this.userInfo = userInfo
-      this.getServiceList()
-      this.getParams()
-    },
-    err => {
-      console.log("invalid user")
-      this.spinnerService.start()
-      this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
-      .afterDismissed().subscribe(() => {
-        this.spinnerService.stop()
-        window.location.href = environment.uicUrl +
-          "/login?return_to=" +
-          environment.limsUrl.replace(/^https?:\/\//,'')
-      });
-    },
-    () => {
+    this.userInfo = this.userService.getUserInfo()
+    .subscribe(data => {
+      this.userInfo = data
     })
+    this.getParams()
   }
 
   getParams() {
@@ -53,15 +42,6 @@ export class AppComponent {
     if (token) {
       this.setCookie("token", token, remember)
     }
-  }
-
-  getServiceList(){
-    this.entityService.retrieveByType("domain")
-    .subscribe(
-      data => {
-        this.serviceList = data
-      }
-    )
   }
 
   setLanguage(language: string) {

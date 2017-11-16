@@ -67,6 +67,7 @@ import {SpinnerComponent} from './util/spinner.component';
 
 import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
+import {UserService} from './util/user.service'
 
 @NgModule({
   declarations: [
@@ -137,6 +138,7 @@ import {XHRBackend, RequestOptions} from '@angular/http';
     SampleService,
     UtilService,
     SpinnerService,
+    UserService,
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,

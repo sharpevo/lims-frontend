@@ -1,4 +1,5 @@
 <md-select
+    [disabled]="attribute['SYS_CODE'] === 'SYS_WORKCENTER_OPERATOR'"
     class="full-width"
     [(ngModel)]="object[attribute.SYS_CODE]"
     placeholder="{{placeholder}}">

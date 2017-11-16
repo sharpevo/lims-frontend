@@ -7,18 +7,26 @@ import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from '../util/spinner.service'
+import {UserService} from '../util/user.service'
 
 
 @Injectable()
 export class SampleService{
+
+  userInfo: any = {}
 
   constructor(
     public snackBar: MdSnackBar,
     public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
+    private userService: UserService,
     private entityService: EntityService
-  ){}
+  ){
+    this.userService.getUserInfo().subscribe(data => {
+      this.userInfo = data
+    })
+  }
 
   buildSampleInlineList(sampleList: any[]): any[]{
     let resultList: any = {}
@@ -379,6 +387,14 @@ export class SampleService{
    */
   submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
 
+    // Find the user in the lims by the user email.
+    // For the mismatched user, they are illegal to submit any samples.
+    if (!this.userInfo.limsid){
+      console.log("illegal user", this.userInfo)
+      this.showMessage("Invalid user: " + this.userInfo.email, "OK")
+      return
+    }
+
     this.entityService.retrieveGenre(workcenter.id)
     .subscribe(data => {
       // Take the first genre as default
@@ -447,7 +463,7 @@ export class SampleService{
         //   the previous one
         // - for the attributes starts with SYS, use current workcenter
         sampleList.forEach(sample => {
-          msg_sampleList += ">-" + sample['SYS_SAMPLE_CODE'] + "\n\n"
+          msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
           console.log('processing candidate sample', sample)
           //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
           this.entityService.retrieveById(sample.id)
@@ -467,7 +483,7 @@ export class SampleService{
 
         this.utilService.sendNotif(
           "actionCard",
-          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n>Operator XXX\n\n>${msg_date}`,
+          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
           "/workcenter-dashboard/" + workcenter.id
         )
         .subscribe(() => {
@@ -476,6 +492,7 @@ export class SampleService{
       })
 
     })
+
 
   }
 
@@ -622,6 +639,8 @@ export class SampleService{
   }
 
   createObject(object: any, attributeInfo: any, issueSample: boolean){
+
+    object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
     if (issueSample){
       this.entityService.create(object)
@@ -866,6 +885,6 @@ export class SampleService{
   }
 
   showMessage(message: string, action: string) {
-    this.snackBar.open(message, action, {duration: 3000})
+    this.snackBar.open(message, action, {duration: 4000})
   }
 }
