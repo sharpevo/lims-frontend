@@ -41,7 +41,7 @@ export class UserService {
 
   // never process auth fail in it
   getUserInfo(){
-    console.log("get user info")
+    console.log("get user info", this.observable)
     if (this.userInfo) {
       return Observable.of(this.userInfo)
     } else if (this.observable) {
@@ -49,7 +49,7 @@ export class UserService {
       return this.observable
     } else {
       console.log("retrieve")
-      return this.utilService.getUserInfo()
+      this.observable = this.utilService.getUserInfo()
       .catch(error => {
         console.log("invalid user login")
         return Observable.of(false) // avid the empty error for `take(1)`
@@ -75,6 +75,7 @@ export class UserService {
         console.log("illegal user")
         return Observable.of(false)
       })
+      return this.observable
     }
   }
 
