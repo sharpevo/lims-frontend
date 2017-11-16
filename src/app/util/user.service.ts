@@ -16,41 +16,12 @@ export class UserService {
     private utilService: UtilService,
     private entityService: EntityService,
     public snackBar: MdSnackBar,
-  ){
-    this.retrieveUserInfo()
+  ){}
+
+
+      })
+      })
   }
 
-  retrieveUserInfo(){
-    this.utilService.getUserInfo()
-    .subscribe(userInfo =>{
-      userInfo['role'] = JSON.parse(userInfo['role'])
-
-      this.entityService.retrieveBy({
-        "SYS_USER_EMAIL": userInfo.email
-      })
-      .subscribe(data => {
-        if (data.length > 0){
-          userInfo['limsid'] = data[0]['id']
-        }
-        this.userInfo.next(userInfo)
-      })
-    },
-    err => {
-      console.log("invalid user")
-      this.spinnerService.start()
-      this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
-      .afterDismissed().subscribe(() => {
-        this.spinnerService.stop()
-        window.location.href = environment.uicUrl +
-          "/login?return_to=" +
-          environment.limsUrl.replace(/^https?:\/\//,'')
-      });
-    },
-    () => {
-    })
-  }
-
-  getUserInfo() {
-    return this.userInfo.asObservable()
   }
 }
