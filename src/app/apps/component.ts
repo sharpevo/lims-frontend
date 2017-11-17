@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {UserService} from '../util/user.service'
 
 @Component({
   selector: 'apps-view',
@@ -10,12 +11,15 @@ import {EntityService} from '../entity/service'
 export class AppsComponent {
   appList = []
   gridCols: number = 5
+  userInfo: any
 
   constructor(
     private entityService: EntityService,
+    private userService: UserService,
   ){}
 
   ngOnInit(){
+    this.userService.getUserInfo().subscribe(userInfo => this.userInfo = userInfo)
     this.getWorkcenterList("/PRODUCT_WORKCENTER")
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
     this.appList.push({
@@ -93,12 +97,16 @@ export class AppsComponent {
           }
         })
         .forEach(workcenter => {
-          this.appList.push({
-            "isInternal": true,
-            "label":workcenter[workcenter['SYS_LABEL']],
-            "url":"/workcenter-dashboard/" + workcenter.id,
-            "icon": "format_color_fill",
-          })
+          if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
+            this.appList.push({
+              "isInternal": true,
+              "label":workcenter[workcenter['SYS_LABEL']],
+              "url":"/workcenter-dashboard/" + workcenter.id,
+              "icon": "format_color_fill",
+            })
+
+          }
+
         })
       })
     })
