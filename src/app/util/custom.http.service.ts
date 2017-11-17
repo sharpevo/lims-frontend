@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable'
 //import 'rxjs/Rx'
 import {environment} from '../../environments/environment'
 import {SpinnerService} from "./spinner.service"
+import {MdSnackBar} from '@angular/material'
 
 @Injectable()
 export class CustomHttpService extends Http {
@@ -20,6 +21,7 @@ export class CustomHttpService extends Http {
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
+    private snackBar: MdSnackBar,
     private spinnerService: SpinnerService
   ) {
     super(backend, defaultOptions)
@@ -80,6 +82,17 @@ export class CustomHttpService extends Http {
   }
 
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    console.log("ERROR", error)
+    if (error.statusText == "") {
+      this.spinnerService.start()
+      this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
+      .afterDismissed().subscribe(() => {
+        this.spinnerService.stop()
+        window.location.href = environment.uicUrl +
+          "/login?return_to=" +
+          environment.limsUrl.replace(/^https?:\/\//,'')
+      })
+    }
     return Observable.throw(error)
   }
 
@@ -110,6 +123,6 @@ export class CustomHttpService extends Http {
   }
 }
 
-export function customHttpFactory(backend: XHRBackend, defaultOptions: RequestOptions, spinnerService: SpinnerService) {
-  return new CustomHttpService(backend, defaultOptions, spinnerService)
+export function customHttpFactory(backend: XHRBackend, defaultOptions: RequestOptions, snackBar: MdSnackBar, spinnerService: SpinnerService) {
+  return new CustomHttpService(backend, defaultOptions, snackBar, spinnerService)
 }
