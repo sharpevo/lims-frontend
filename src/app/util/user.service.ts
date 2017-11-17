@@ -44,7 +44,7 @@ export class UserService {
       } else if (expectedRole == "lims-workcenter-") {
         console.log("transfer the perm checking to the dashboard")
         return true
-      } else if (!this.userInfo.role[expectedRole]) {
+      } else if (!this.hasRole(expectedRole)) {
         console.log("denied", expectedRole)
         this.permFail()
         return false
