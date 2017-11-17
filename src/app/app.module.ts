@@ -69,6 +69,8 @@ import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
 import {UserService} from './util/user.service'
 
+import {MdSnackBar} from '@angular/material'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -142,7 +144,7 @@ import {UserService} from './util/user.service'
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,
-      deps: [ XHRBackend, RequestOptions, SpinnerService]
+      deps: [ XHRBackend, RequestOptions, MdSnackBar, SpinnerService]
     }
   ],
   bootstrap: [AppComponent]
