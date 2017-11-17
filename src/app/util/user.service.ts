@@ -97,6 +97,10 @@ export class UserService {
     }
   }
 
+  hasRole(role: string): boolean{
+    return this.userInfo.role[role]
+  }
+
   authFail(){
     this.spinnerService.start()
     this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
