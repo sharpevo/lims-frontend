@@ -144,7 +144,13 @@ import {MdSnackBar} from '@angular/material'
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,
-      deps: [ XHRBackend, RequestOptions, MdSnackBar, SpinnerService]
+      deps: [
+        XHRBackend,
+        RequestOptions,
+        MdSnackBar,
+        SpinnerService,
+        UserService,
+      ]
     }
   ],
   bootstrap: [AppComponent]
