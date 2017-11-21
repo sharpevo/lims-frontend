@@ -23,9 +23,7 @@ export class SampleService{
     private userService: UserService,
     private entityService: EntityService
   ){
-    this.userService.getUserInfo().subscribe(data => {
-      this.userInfo = data
-    })
+    this.userInfo = this.userService.getUserInfo()
   }
 
   buildSampleInlineList(sampleList: any[]): any[]{

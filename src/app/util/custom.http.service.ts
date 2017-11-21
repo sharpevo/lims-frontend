@@ -13,6 +13,8 @@ import {Observable} from 'rxjs/Observable'
 //import 'rxjs/Rx'
 import {environment} from '../../environments/environment'
 import {SpinnerService} from "./spinner.service"
+import {MdSnackBar} from '@angular/material'
+import {UserService} from '../util/user.service'
 
 @Injectable()
 export class CustomHttpService extends Http {
@@ -20,7 +22,9 @@ export class CustomHttpService extends Http {
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
-    private spinnerService: SpinnerService
+    private snackBar: MdSnackBar,
+    private spinnerService: SpinnerService,
+    private userService: UserService,
   ) {
     super(backend, defaultOptions)
   }
@@ -80,10 +84,22 @@ export class CustomHttpService extends Http {
   }
 
   private onCatch(error: any, caught: Observable<any>): Observable<any> {
+    console.log("ERROR", error)
+    if (error.statusText == "") {
+      this.spinnerService.start()
+      this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
+      .afterDismissed().subscribe(() => {
+        this.spinnerService.stop()
+        window.location.href = environment.uicUrl +
+          "/login?return_to=" +
+          environment.limsUrl.replace(/^https?:\/\//,'')
+      })
+    }
     return Observable.throw(error)
   }
 
   private onSuccess(res: Response): void {
+    this.parseUserInfo(res)
   }
 
   private onError(error: any): void {
@@ -108,8 +124,35 @@ export class CustomHttpService extends Http {
     options.withCredentials = true
     return options
   }
+
+  // move it from UserService in order to avoid the circular dependency
+  parseUserInfo(res: Response) {
+    if (res.headers.get('igenetech-user-id') == 'undefined'){
+      console.log("checked")
+      return
+    }
+    let userInfo = {
+      'id':res.headers.get('igenetech-user-id'),
+      'email':res.headers.get('igenetech-user-email'),
+      'name':res.headers.get('igenetech-user-name'),
+      'roles':res.headers.get('igenetech-user-roles'),
+      'role':JSON.parse(res.headers.get('igenetech-user-role')),
+    }
+    this.userService.setUserInfo(userInfo)
+  }
 }
 
-export function customHttpFactory(backend: XHRBackend, defaultOptions: RequestOptions, spinnerService: SpinnerService) {
-  return new CustomHttpService(backend, defaultOptions, spinnerService)
-}
+export function customHttpFactory(
+  backend: XHRBackend,
+  defaultOptions: RequestOptions,
+  snackBar: MdSnackBar,
+  spinnerService: SpinnerService,
+  userService: UserService) {
+    return new CustomHttpService(
+      backend,
+      defaultOptions,
+      snackBar,
+      spinnerService,
+      userService,
+    )
+  }
