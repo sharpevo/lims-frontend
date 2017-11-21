@@ -18,6 +18,7 @@ export class AppComponent {
   environment = environment
   userInfo: any
   subscription: Subscription
+  interval: any
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
@@ -27,15 +28,24 @@ export class AppComponent {
   ){}
 
   ngOnInit(){
-    this.utilService.checkBackend()
-    .subscribe(data => {
-      console.log("check")
-    },
-    error => {
-      console.log(error)
-    })
+    this.interval = setInterval(() => {
+      this.utilService.checkAvailability()
+      .subscribe(data => {
+      },
+      error => {
+        console.log("backend failded")
+        this.userService.authFail()
+      })
+    }, 1000 * 60)
     this.userInfo = this.userService.getUserInfo()
     this.getParams()
+  }
+
+  ngOnDestroy() {
+    if (this.interval) {
+      console.log("clear jobs")
+      clearInterval(this.interval)
+    }
   }
 
   getParams() {
