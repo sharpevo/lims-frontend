@@ -90,7 +90,7 @@ export class UtilService{
     //.map(res => res.json())
   }
 
-  checkBackend() {
+  checkAvailability() {
     return this.http.get("/userinfo")
     .map(res => res.json())
   }

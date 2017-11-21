@@ -29,7 +29,7 @@ export class AppComponent {
 
   ngOnInit(){
     this.interval = setInterval(() => {
-      this.utilService.checkBackend()
+      this.utilService.checkAvailability()
       .subscribe(data => {
       },
       error => {
