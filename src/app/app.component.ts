@@ -27,10 +27,14 @@ export class AppComponent {
   ){}
 
   ngOnInit(){
-    this.userInfo = this.userService.getUserInfo()
+    this.utilService.checkBackend()
     .subscribe(data => {
-      this.userInfo = data
+      console.log("check")
+    },
+    error => {
+      console.log(error)
     })
+    this.userInfo = this.userService.getUserInfo()
     this.getParams()
   }
 

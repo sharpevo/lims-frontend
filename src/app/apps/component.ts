@@ -19,7 +19,7 @@ export class AppsComponent {
   ){}
 
   ngOnInit(){
-    this.userService.getUserInfo().subscribe(userInfo => this.userInfo = userInfo)
+    this.userInfo = this.userService.getUserInfo()
     this.getWorkcenterList("/PRODUCT_WORKCENTER")
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
     this.appList.push({

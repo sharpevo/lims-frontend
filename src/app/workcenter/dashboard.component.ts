@@ -63,11 +63,9 @@ export class WorkcenterDashboardComponent{
     .subscribe(data => {
       this.workcenter = data
       let roleName = "lims-workcenter-" + data['SYS_CODE'].toLowerCase()
-      this.userService.getUserInfo().subscribe(userInfo => {
-        if (!this.userService.hasRole(roleName)){
-          this.userService.permFail()
-        }
-      })
+      if (!this.userService.hasRole(roleName)){
+        this.userService.permFail()
+      }
 
     })
   }
