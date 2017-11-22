@@ -13,8 +13,8 @@
         <span class="toolbar-spacer"></span>
         <span class="toolbar-version">
             <span *ngIf="userInfo">
-                <button md-icon-button [mdMenuTriggerFor]="menu">
-                    {{userInfo.name}}
+                <button md-button [mdMenuTriggerFor]="menu">
+                    {{userInfo.email}}
                 </button>
                 <md-menu #menu="mdMenu">
                     <a
