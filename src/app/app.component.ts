@@ -28,14 +28,10 @@ export class AppComponent {
   ){}
 
   ngOnInit(){
+
+    this.checking()
     this.interval = setInterval(() => {
-      this.utilService.checkAvailability()
-      .subscribe(data => {
-      },
-      error => {
-        console.log("backend failded")
-        this.userService.authFail()
-      })
+      this.checking()
     }, 1000 * 60)
     this.userInfo = this.userService.getUserInfo()
     this.getParams()
@@ -46,6 +42,17 @@ export class AppComponent {
       console.log("clear jobs")
       clearInterval(this.interval)
     }
+  }
+
+  checking() {
+    this.utilService.checkAvailability()
+    .subscribe(data => {
+      console.log("check", data)
+    },
+    error => {
+      console.log("backend failded", error)
+      this.userService.authFail()
+    })
   }
 
   getParams() {
