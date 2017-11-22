@@ -33,7 +33,6 @@ export class AppComponent {
     this.interval = setInterval(() => {
       this.checking()
     }, 1000 * 60)
-    this.userInfo = this.userService.getUserInfo()
     this.getParams()
   }
 
@@ -48,6 +47,7 @@ export class AppComponent {
     this.utilService.checkAvailability()
     .subscribe(data => {
       console.log("check", data)
+      this.userInfo = this.userService.getUserInfo()
     },
     error => {
       console.log("backend failded", error)
