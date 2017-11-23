@@ -113,7 +113,7 @@
                         RELEASE
                     </source>
         <target state="translated">
-                释放
+                重新分派
             </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
