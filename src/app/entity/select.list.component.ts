@@ -33,12 +33,10 @@ export class EntitySelectListComponent {
     this.floorEntityType = this.optionLevel
     this.getEntityList()
 
-    this.userService.getUserInfo().subscribe(data => {
-      this.userInfo = data
-      if (this.attribute.SYS_CODE == "SYS_WORKCENTER_OPERATOR") {
-        this.object[this.attribute.SYS_CODE] = this.userInfo.limsid
-      }
-    })
+    this.userInfo = this.userService.getUserInfo()
+    if (this.attribute.SYS_CODE == "SYS_WORKCENTER_OPERATOR") {
+      this.object[this.attribute.SYS_CODE] = this.userInfo.limsid
+    }
   }
 
   getEntityList(){

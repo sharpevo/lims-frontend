@@ -23,18 +23,6 @@ export class AppsComponent {
     this.getWorkcenterList("/PRODUCT_WORKCENTER")
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
     this.appList.push({
-      "isInternal": false,
-      "label": "样品管理",
-      "url":"http://192.168.1.90:8085",
-      "icon":"extension",
-    })
-    this.appList.push({
-      "isInternal": false,
-      "label": "客户管理",
-      "url":"http://192.168.1.90:8088",
-      "icon":"extension",
-    })
-    this.appList.push({
       "isInternal": true,
       "label": "任务下达*",
       "url":"/project-management",
