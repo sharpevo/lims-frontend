@@ -22,3 +22,5 @@ docker build \
     .
 echo ">>> saving images: $image_file"
 docker save -o $image_file $image_tag
+scp $image_file 192.168.1.99:~/
+ssh 192.168.1.99 "docker load -i ~/$app.${version}_${timestamp}"
