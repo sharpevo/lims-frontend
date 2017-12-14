@@ -71,7 +71,7 @@ export class PluginIndexValidatorComponent {
         i5 = sample['SYS_INDEX_SEQUENCE_I5']
       }
       let key = sample['SYS_INDEX_SEQUENCE_I7'] + i5
-      console.log("Sequence": key)
+      console.log("Sequence", key)
       //console.log(key)
       //console.log(seqMap[key])
       //if (seqMap[sample['SYS_INDEX_SEQUENCE']] === '') {
