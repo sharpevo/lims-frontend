@@ -65,7 +65,13 @@ export class PluginIndexValidatorComponent {
     let seqMap = {}
     //for (let sample of this.selectedSampleList; let i = index){
     for (let i=0; i<this.selectedSampleList.length; i++){
-      let key = this.selectedSampleList[i]['SYS_INDEX_SEQUENCE']
+      let sample = this.selectedSampleList[i]
+      let i5 = ''
+      if (sample['SYS_INDEX_SEQUENCE_I5']) {
+        i5 = sample['SYS_INDEX_SEQUENCE_I5']
+      }
+      let key = sample['SYS_INDEX_SEQUENCE_I7'] + i5
+      console.log("Sequence": key)
       //console.log(key)
       //console.log(seqMap[key])
       //if (seqMap[sample['SYS_INDEX_SEQUENCE']] === '') {
