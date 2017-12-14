@@ -34,10 +34,16 @@
                         Sample Code
                     </th>
                     <th>
-                        Index Sequence
+                        Index Sequence #1 I7
                     </th>
                     <th>
-                        Index Code
+                        Index Code #1 I7
+                    </th>
+                    <th>
+                        Index Sequence #2 I5
+                    </th>
+                    <th>
+                        Index Code #2 I5
                     </th>
                 </tr>
             </thead>
@@ -65,16 +71,30 @@
                     <td>
                         <span
                             *ngIf="resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE}}
+                            {{sample.SYS_INDEX_SEQUENCE_I7}}
                         </span>
                         <span
                             style="color:red"
                             *ngIf="!resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE}}
+                            {{sample.SYS_INDEX_SEQUENCE_I7}}
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_INDEX_CODE}}
+                        {{sample.SYS_INDEX_CODE_I7}}
+                    </td>
+                    <td>
+                        <span
+                            *ngIf="resultList[i]">
+                            {{sample.SYS_INDEX_SEQUENCE_I5}}
+                        </span>
+                        <span
+                            style="color:red"
+                            *ngIf="!resultList[i]">
+                            {{sample.SYS_INDEX_SEQUENCE_I5}}
+                        </span>
+                    </td>
+                    <td>
+                        {{sample.SYS_INDEX_CODE_I5}}
                     </td>
                 </tr>
             </tbody>
