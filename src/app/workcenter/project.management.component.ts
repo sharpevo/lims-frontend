@@ -16,6 +16,7 @@ export class ProjectManagementComponent{
   contractList: any[] = []
   batchList: any[] = []
   sampleList: any[] = []
+  skip = 0
 
   constructor(
     public dialog: MdDialog,
@@ -32,7 +33,11 @@ export class ProjectManagementComponent{
   }
 
   getSampleList(){
-    this.entityService.retrieveEntity(this.entity.id, "collection", "&limit=10")
+    this.entityService.retrieveEntity(
+      this.entity.id,
+      "collection",
+      "&limit=10&skip=" + this.skip
+    )
     .subscribe(data => {
       this.sampleList = data.sort(
         (a,b) => {
@@ -43,6 +48,19 @@ export class ProjectManagementComponent{
           }
         })
     })
+  }
+
+  nextPage(){
+    this.skip += 10
+    this.getSampleList()
+  }
+
+  prevPage(){
+    this.skip -= 10
+    if (this.skip <= 0) {
+      this.skip = 0
+    }
+    this.getSampleList()
   }
 
   openNewEntityDialog(entity: any) {
@@ -57,7 +75,4 @@ export class ProjectManagementComponent{
     });
   }
 
-  clearForm(){
-    console.log("clear form")
-  }
 }

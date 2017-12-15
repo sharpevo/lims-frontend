@@ -1,3 +1,24 @@
+<div fxLayout="row" fxLayoutAlign="space-between stretch" >
+    <div>
+        <button
+            md-button
+            (click)="openNewEntityDialog(entity)">
+            NEW
+        </button>
+    </div>
+    <div>
+        <button
+            md-button
+            (click)="prevPage()">
+            <md-icon>keyboard_arrow_left</md-icon>
+        </button>
+        <button
+            md-button
+            (click)="nextPage()">
+            <md-icon>keyboard_arrow_right</md-icon>
+        </button>
+    </div>
+</div>
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
@@ -32,19 +53,5 @@
                 </div>
             </div>
         </md-expansion-panel>
-    </div>
-    <div
-        fxLayout="row"
-        fxLayoutAlign="end end">
-        <button 
-            md-button
-            (click)="openNewEntityDialog(entity)">
-            SUBMIT
-        </button>
-        <button 
-            md-button
-            (click)="clearForm()">
-            CLEAR
-        </button>
     </div>
 </div>
