@@ -44,6 +44,9 @@ export class CustomHttpService extends Http {
   }
 
   post(url: string, data: any, options?: RequestOptionsArgs): Observable<any> {
+    if (!options) {
+      options = {headers: new Headers()}
+    }
     this.beforeRequest()
     return super.post(this.getFullUrl(url), data, this.requestOptions(options))
     .catch(this.onCatch)
