@@ -1,56 +1,37 @@
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
-    <div
-        fxLayout="row"
-        fxLayoutAlign="space-between stretch">
-        <md-select
-            class="full-width"
-            placeholder="Client">
-            <md-option
-                *ngFor="let client of clientList"
-                (click)="getContractListByClient(client)"
-                [value]="client.id">
-                {{client.name}}
-            </md-option>
-        </md-select>
-        <md-select
-            class="full-width"
-            placeholder="Contract">
-            <md-option
-                *ngFor="let contract of contractList"
-                (click)="getBatchListByContract(contract)"
-                [value]="contract.id">
-                {{contract.name}}
-            </md-option>
-        </md-select>
-        <md-select
-            class="full-width"
-            placeholder="Batch">
-            <md-option
-                *ngFor="let batch of batchList"
-                (click)="getSampleListByBatch(batch)"
-                [value]="batch">
-                {{batch}}
-            </md-option>
-        </md-select>
-    </div>
     <div *ngFor="let sample of sampleList">
-        <md-checkbox
-            color="primary"
-            class="example-margin"
-            [(ngModel)]="sample.TMP_CHECK">
-            {{sample.SYS_SAMPLE_CODE}}
-            -
-            {{sample.SYS_PANEL_CODE}}
-            -
-            {{sample.SYS_INDEX_CODE}}
-            -
-            {{sample.SYS_INDEX_SEQUENCE}}
-        </md-checkbox>
-        <sample-history
-            [sample]="sample">
-        </sample-history>
+        <md-expansion-panel>
+            <md-expansion-panel-header>
+                <md-panel-title>
+                    {{sample.SYS_SAMPLE_CODE}}
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="start stretch" >
+                <div style="width:700px">
+                    <sample-history
+                        [sample]="sample">
+                    </sample-history>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" >
+                    <div
+                        *ngFor="let schema of sample.SYS_SCHEMA"
+                        fxLayout="row" fxLayoutAlign="space-between center" >
+                        <div style="opacity:0.7">
+                            {{schema.SYS_LABEL}}:
+                        </div>
+                        <div style="margin-left: 5px;">
+                            <b>
+                                {{sample[schema.SYS_CODE]}}
+                            </b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-expansion-panel>
     </div>
     <div
         fxLayout="row"
