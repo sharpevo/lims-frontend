@@ -90,14 +90,14 @@ export class EntityService {
     .map(res => res.json())
   }
 
-  retrieveEntity(entityId: string, entityType: string){
+  retrieveEntity(entityId: string, entityType: string, option?: string){
     //console.log(entityType)
     if (!entityType) {
       entityType = "object"
     }
     //console.log(`${this.url}/${entityId}/entity`)
     //return this.http.get(`${this.url}/${entityId}/entity`)
-    let url = `${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}`
+    let url = `${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}${option?option:''}`
     //console.log('retrieveEntity:', url)
     return this.http.get(url)
     .map(res => res.json())
