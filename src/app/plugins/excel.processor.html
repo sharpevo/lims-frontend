@@ -100,27 +100,27 @@
                 </button>
             </div>
             <br/>
-            <div
-                *ngIf="excelResult.length > 0">
-                <table
-                    class="excel-table">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let key of (excelResult[0] | objectKeys)">
-                                {{key}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let sample of excelResult">
-                            <td *ngFor="let key of (sample | objectKeys)">
-                                {{sample[key]}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
+    </div>
+    <div
+        *ngIf="excelResult.length > 0">
+        <table
+            class="excel-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let key of (excelResult[0] | objectKeys)">
+                        {{key}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let sample of excelResult">
+                    <td *ngFor="let key of (sample | objectKeys)">
+                        {{sample[key]}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </md-expansion-panel>
