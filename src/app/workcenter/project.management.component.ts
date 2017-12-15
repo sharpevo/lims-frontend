@@ -24,7 +24,7 @@ export class ProjectManagementComponent{
   ){}
 
   ngOnInit(){
-    this.entity = this.entityService.retrieveByIdentifierFull(
+    this.entityService.retrieveByIdentifierFull(
       "/PROJECT_MANAGEMENT/GENERAL_PROJECT")
       .subscribe(data => {
         this.entity = data[0]
@@ -39,13 +39,23 @@ export class ProjectManagementComponent{
       "&limit=10&skip=" + this.skip
     )
     .subscribe(data => {
-      this.sampleList = data.sort(
+      this.sampleList = data
+      .filter(sample => {
+        // may be date or status
+        return true
+      })
+      .sort(
         (a,b) => {
           if (a.updatedAt < b.updatedAt) {
             return 1
           } else {
             return -1
           }
+        })
+
+        this.sampleList.forEach(sample => {
+          // excel plugin only export checked sample
+          sample.TMP_CHECKED = true
         })
     })
   }

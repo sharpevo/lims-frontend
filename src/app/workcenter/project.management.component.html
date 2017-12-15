@@ -55,3 +55,9 @@
         </md-expansion-panel>
     </div>
 </div>
+<plugin-excel-processor
+    *ngIf="(entity | json) != '{}'"
+    [hybridObjectMap]="{}"
+    [sampleList]="sampleList"
+    [workcenter]="entity">
+</plugin-excel-processor>
