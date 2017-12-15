@@ -71,6 +71,8 @@ import {UserService} from './util/user.service'
 
 import {MdSnackBar} from '@angular/material'
 
+import {RedirectComponent} from './util/redirect.component'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -112,6 +114,7 @@ import {MdSnackBar} from '@angular/material'
     ShowAuxiliaryAttributeDialog,
     AppsComponent,
     SpinnerComponent,
+    RedirectComponent,
   ],
   entryComponents:[
     GenreFormDialog,

@@ -6,6 +6,7 @@ import {WorkcenterDashboardComponent} from './workcenter/dashboard.component'
 import {ProjectManagementComponent} from './workcenter/project.management.component'
 import {AppsComponent} from './apps/component'
 import {UserService} from './util/user.service'
+import {RedirectComponent} from './util/redirect.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -51,6 +52,15 @@ const routes: Routes = [
   },
   //{path: 'manufacturing', component: ManufacturingComponent},
   //{path: 'query', component: QueryComponent},
+  {
+    path: 'redirect',
+    children: [
+      {
+        path: '**',
+        component: RedirectComponent
+      }
+    ]
+  },
 ]
 
 export const routingModule = RouterModule.forRoot(routes)
