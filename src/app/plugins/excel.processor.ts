@@ -4,6 +4,7 @@ import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
 import 'rxjs/Rx' ;
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -25,6 +26,7 @@ export class PluginExcelProcessorComponent {
     private entityService: EntityService,
     private genreService: GenreService,
     private sampleService: SampleService,
+    private router: Router,
   ){}
 
   ngOnInit(){
@@ -161,6 +163,7 @@ export class PluginExcelProcessorComponent {
         })
       })
     })
+    this.router.navigate(['/redirect' + this.router.url])
   }
 
   updateExcel2(){
