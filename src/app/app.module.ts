@@ -72,6 +72,7 @@ import {UserService} from './util/user.service'
 import {MdSnackBar} from '@angular/material'
 
 import {RedirectComponent} from './util/redirect.component'
+import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
 
 @NgModule({
   declarations: [
@@ -115,6 +116,7 @@ import {RedirectComponent} from './util/redirect.component'
     AppsComponent,
     SpinnerComponent,
     RedirectComponent,
+    EditPMSampleDialog,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -123,6 +125,7 @@ import {RedirectComponent} from './util/redirect.component'
     SampleFormDialog,
     SimpleTableDialog,
     ShowAuxiliaryAttributeDialog,
+    EditPMSampleDialog,
   ],
   imports: [
     BrowserModule,
