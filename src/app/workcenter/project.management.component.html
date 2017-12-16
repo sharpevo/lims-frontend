@@ -1,24 +1,37 @@
+<div fxLayout="column" fxLayoutAlign="space-around stretch" >
 <div fxLayout="row" fxLayoutAlign="space-between stretch" >
     <div>
         <button
-            md-button
+            md-raised-button
             (click)="openNewEntityDialog(entity)">
             NEW
         </button>
     </div>
     <div>
         <button
-            md-button
+            md-raised-button
             (click)="prevPage()">
             <md-icon>keyboard_arrow_left</md-icon>
         </button>
         <button
-            md-button
+            md-raised-button
             (click)="nextPage()">
             <md-icon>keyboard_arrow_right</md-icon>
         </button>
     </div>
 </div>
+<div>
+    <plugin-excel-processor
+        *ngIf="(entity | json) != '{}'"
+        [hybridObjectMap]="{}"
+        [sampleList]="sampleList"
+        [workcenter]="entity">
+    </plugin-excel-processor>
+</div>
+</div>
+<h2>
+    Sample List
+</h2>
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
@@ -61,9 +74,3 @@
     </div>
     </md-accordion>
 </div>
-<plugin-excel-processor
-    *ngIf="(entity | json) != '{}'"
-    [hybridObjectMap]="{}"
-    [sampleList]="sampleList"
-    [workcenter]="entity">
-</plugin-excel-processor>
