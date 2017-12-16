@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
+import {EditPMSampleDialog} from './project.management.edit.dialog'
 
 @Component({
   selector: 'project-management',
@@ -86,4 +87,13 @@ export class ProjectManagementComponent{
     });
   }
 
+  openEditEntityDialog(sample: any) {
+    let dialogRef = this.dialog.open(EditPMSampleDialog, {height:'50%', width: '70%'});
+    dialogRef.componentInstance.config.entity = this.entity
+    dialogRef.componentInstance.config.sampleEdited = sample
+    dialogRef.afterClosed().subscribe(result => {
+      //this.sampleList = this.sampleList.filter(sample => !sample.TMP_CHECK)
+      this.getSampleList()
+    });
+  }
 }
