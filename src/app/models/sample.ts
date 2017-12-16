@@ -691,7 +691,16 @@ export class SampleService{
       let DATE_EXISTS = false
 
       // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
-      Object.keys(targetEntityMap).forEach((entityId, index) =>{
+      Object.keys(targetEntityMap)
+      .sort((a,b) => {
+        // sort target entities by SYS_ORDER which is manipulated by admins.
+        if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
+          return 1
+        } else {
+          return -1
+        }
+      })
+      .forEach((entityId, index) =>{
 
         // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
         let targetEntityInput = targetEntityMap[entityId]
