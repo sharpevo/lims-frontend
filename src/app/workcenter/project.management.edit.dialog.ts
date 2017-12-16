@@ -34,14 +34,9 @@ export class EditPMSampleDialog {
       this.entityService.retrieveGenre(this.config.entity.id)
       .subscribe(data => {
         this.genreService.retrieveAttribute(data[0].id)
-        //this.entityService.retrieveAttribute(this.config.entity.id)
         .subscribe(data => {
-          console.log("EDIT>>>entity", this.config.entity)
-          console.log("EDIT>>>genre", data[0])
-          console.log("EDIT>>>attribute", data)
           this.attributeList = data
         })
-
       })
     }
 
