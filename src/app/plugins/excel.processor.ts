@@ -4,6 +4,7 @@ import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
 import 'rxjs/Rx' ;
+import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
 
 @Component({
@@ -112,6 +113,8 @@ export class PluginExcelProcessorComponent {
 
     this.excelResult.forEach(sample =>{
 
+      let sampleId = sample['IDENTIFIER']
+      if (sampleId) {
         // Convert excel-style object to database-style object.
         // The excel-style object is formed as:
         // 'LABEL': 'Value'
@@ -159,7 +162,41 @@ export class PluginExcelProcessorComponent {
               "parentMap": this.parentMap
             })
         })
-      })
+      } else {
+        // issue sample
+
+        // only allow sample creation at General Project Workcenter
+        if (this.workcenter.SYS_IDENTIFIER != "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
+          console.error("Not allowed to upload samples at this workcenter", this.workcenter.SYS_IDENTIFIER)
+          return
+        }
+
+        let newSample = {}
+        this.workcenterAttributeList.forEach(attr => {
+          newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
+        })
+
+        this.entityService.retrieveGenre(this.workcenter.id)
+        .subscribe(data => {
+          newSample['SYS_GENRE'] = data[0]
+          newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+          newSample['SYS_ENTITY_TYPE'] = 'collection'
+
+          newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
+            '/' +
+            newSample['SYS_SAMPLE_CODE'] + '.' +
+            new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+
+          this.sampleService.createObject(
+            newSample,
+            {
+              "attributeList": this.workcenterAttributeList,
+              "parentMap": this.parentMap,
+            },
+            true)
+        })
+
+      }
     })
     this.router.navigate(['/redirect' + this.router.url])
   }
