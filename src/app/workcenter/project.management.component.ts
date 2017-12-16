@@ -47,7 +47,7 @@ export class ProjectManagementComponent{
     this.entityService.retrieveEntity(
       this.entity.id,
       "collection",
-      "&limit=10&sort=-updatedAt&skip=" + this.skip
+      "&limit=10&sort=-createdAt&skip=" + this.skip
     )
     .subscribe(data => {
       this.sampleList = data
@@ -55,19 +55,11 @@ export class ProjectManagementComponent{
         // may be date or status
         return true
       })
-      .sort(
-        (a,b) => {
-          if (a.updatedAt < b.updatedAt) {
-            return 1
-          } else {
-            return -1
-          }
-        })
 
-        this.sampleList.forEach(sample => {
-          // excel plugin only export checked sample
-          sample.TMP_CHECKED = true
-        })
+      this.sampleList.forEach(sample => {
+        // excel plugin only export checked sample
+        sample.TMP_CHECKED = true
+      })
     })
   }
 
