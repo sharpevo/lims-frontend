@@ -550,7 +550,9 @@ export class SampleService{
                 let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
                 let refSampleDate = new Date(originalSampleSchuduledDate)
                 //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
-                if (sampleDate >= refSampleDate){
+                if (sampleDate >= refSampleDate ||
+                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
+
                   console.log( sampleDate, ">", refSampleDate)
                   //console.log("-->", sampleItem.id)
                   sampleItem['SYS_DATE_TERMINATED'] = new Date()
