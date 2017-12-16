@@ -107,7 +107,7 @@ export class SampleHistoryComponent {
     this.entityService.retrieveBySortBy(
       {"where":'{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
       },
-      "ORDER")
+      "SYS_ORDER")
       .subscribe(data => {
         this.workcenterList = data
         this.workcenterList.forEach(workcenter => {
