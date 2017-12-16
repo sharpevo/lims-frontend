@@ -83,7 +83,7 @@ export class ProjectManagementComponent{
 
 
   openNewEntityDialog(entity: any) {
-    let dialogRef = this.dialog.open(SampleFormDialog, {height:'850px', width: '600px'});
+    let dialogRef = this.dialog.open(SampleFormDialog, {height:'70%', width: '70%'});
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.issueSample = true
     //dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample.TMP_CHECK)
@@ -95,7 +95,7 @@ export class ProjectManagementComponent{
   }
 
   openEditEntityDialog(sample: any) {
-    let dialogRef = this.dialog.open(EditPMSampleDialog, {height:'50%', width: '70%'});
+    let dialogRef = this.dialog.open(EditPMSampleDialog, {height:'70%', width: '70%'});
     dialogRef.componentInstance.config.entity = this.entity
     dialogRef.componentInstance.config.sampleEdited = sample
     dialogRef.afterClosed().subscribe(result => {
