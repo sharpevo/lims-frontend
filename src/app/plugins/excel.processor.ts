@@ -112,8 +112,6 @@ export class PluginExcelProcessorComponent {
 
     this.excelResult.forEach(sample =>{
 
-      sample['IDENTIFIER'].split(",").forEach(sampleId => {
-
         // Convert excel-style object to database-style object.
         // The excel-style object is formed as:
         // 'LABEL': 'Value'
