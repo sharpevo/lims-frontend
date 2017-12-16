@@ -37,7 +37,7 @@ export class ProjectManagementComponent{
     this.entityService.retrieveEntity(
       this.entity.id,
       "collection",
-      "&limit=10&skip=" + this.skip
+      "&limit=10&sort=-updatedAt&skip=" + this.skip
     )
     .subscribe(data => {
       this.sampleList = data
