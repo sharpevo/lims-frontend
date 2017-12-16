@@ -14,26 +14,6 @@
 <br/>
 <br/>
 
-<md-tab-group
-    [selectedIndex]="1">
-    <md-tab label="Batch (Excel)">
-        <br/>
-        <input type="file" name="sampleExcel" (change)="submitExcel($event)">
-        <br/>
-        <div
-            *ngFor="let row of excelResult">
-            <span
-                style="margin-right: 10px"
-                *ngFor="let key of row|objectKeys">
-                <span style="opacity:0.3">
-                    {{key}}:
-                </span>
-                {{row[key]}}
-            </span>
-        </div>
-    </md-tab>
-
-    <md-tab label="One-by-one">
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
@@ -207,7 +187,3 @@
     </md-card>
     <br/>
 </div>
-</md-tab>
-</md-tab-group>
-
-
