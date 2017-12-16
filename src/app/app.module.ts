@@ -71,6 +71,9 @@ import {UserService} from './util/user.service'
 
 import {MdSnackBar} from '@angular/material'
 
+import {RedirectComponent} from './util/redirect.component'
+import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -112,6 +115,8 @@ import {MdSnackBar} from '@angular/material'
     ShowAuxiliaryAttributeDialog,
     AppsComponent,
     SpinnerComponent,
+    RedirectComponent,
+    EditPMSampleDialog,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -120,6 +125,7 @@ import {MdSnackBar} from '@angular/material'
     SampleFormDialog,
     SimpleTableDialog,
     ShowAuxiliaryAttributeDialog,
+    EditPMSampleDialog,
   ],
   imports: [
     BrowserModule,

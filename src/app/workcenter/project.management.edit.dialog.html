@@ -11,24 +11,10 @@
         x 
     </button>
 </div>
-<br/>
-<br/>
 
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
-    {{config.sampleList.length}} samples:
-    <ul>
-    <li *ngFor="let sample of config.sampleList">
-        {{sample['SYS_SAMPLE_CODE']}}
-        <span style="opacity:0.3">
-            ({{sample.id}} / {{sample['TMP_NEXT_SAMPLE_ID']}})
-        </span>
-    </li>
-    </ul>
-    <!--<span *ngFor="let sample of config.sampleList">-->
-        <!--{{sample['TMP_NEXT_SAMPLE_ID']}}-->
-    <!--</span>-->
     <br/>
     <br/>
     <div
@@ -39,6 +25,7 @@
                     <input
                         mdInput
                         [required]="attribute.SYS_REQUIRED"
+                        [disabled]="disabledAttribute[attribute.SYS_CODE]"
                         type="text"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
@@ -125,14 +112,6 @@
                     <br/>
                     <br/>
                 </div>
-                <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
-                    <br/>
-                    <entity-collection-expansion
-                        [object]="parentMap[attribute.SYS_CODE]"
-                        [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
-                        [entity]="attribute.SYS_TYPE_ENTITY">
-                    </entity-collection-expansion>
-                </div>
             </div>
             <div *ngSwitchDefault>
                 Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
@@ -140,50 +119,15 @@
         </div>
     </div>
 </div>
-<div
-    fxLayout="row"
-    fxLayoutAlign="end end">
+<md-dialog-actions>
     <button 
         md-button
-        (click)="submitObject()">
+        (click)="updateObject()">
         SUBMIT
     </button>
     <button 
         md-button
-        (click)="clearForm()">
-        CLEAR
+        md-dialog-close>
+        CANCEL
     </button>
-</div>
-<div
-    *ngFor="let entity of entityList"
-    fxLayout="column"
-    fxLayoutAlign="center stretch">
-    <md-card
-        fxLayout="row"
-        fxLayoutAlign="space-between center">
-        <div>
-            <entity-tostring
-                [entity]="entity">
-            </entity-tostring>
-        </div>
-        <div>
-            {{entity.SYS_CODE}}
-        </div>
-        <div>
-            <span style="color: #aaa">{{entity.id}}</span>
-        </div>
-        <div>
-            <button
-                md-icon-button
-                  (click)="editEntity(entity)">
-                <md-icon style="opacity:0.5">edit</md-icon>
-            </button>
-            <button
-                md-icon-button
-                (click)="deleteEntityById(entity.id)">
-                <md-icon style="opacity:0.5">delete</md-icon>
-            </button>
-        </div>
-    </md-card>
-    <br/>
-</div>
+</md-dialog-actions>

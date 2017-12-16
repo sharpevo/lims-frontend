@@ -9,6 +9,7 @@ import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from '../util/spinner.service'
 import {UserService} from '../util/user.service'
 
+import {Router} from '@angular/router'
 
 @Injectable()
 export class SampleService{
@@ -21,6 +22,7 @@ export class SampleService{
     private genreService: GenreService,
     private utilService: UtilService,
     private userService: UserService,
+    private router: Router,
     private entityService: EntityService
   ){
     this.userInfo = this.userService.getUserInfo()
@@ -548,7 +550,9 @@ export class SampleService{
                 let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
                 let refSampleDate = new Date(originalSampleSchuduledDate)
                 //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
-                if (sampleDate >= refSampleDate){
+                if (sampleDate >= refSampleDate ||
+                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
+
                   console.log( sampleDate, ">", refSampleDate)
                   //console.log("-->", sampleItem.id)
                   sampleItem['SYS_DATE_TERMINATED'] = new Date()
@@ -691,7 +695,16 @@ export class SampleService{
       let DATE_EXISTS = false
 
       // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
-      Object.keys(targetEntityMap).forEach((entityId, index) =>{
+      Object.keys(targetEntityMap)
+      .sort((a,b) => {
+        // sort target entities by SYS_ORDER which is manipulated by admins.
+        if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
+          return 1
+        } else {
+          return -1
+        }
+      })
+      .forEach((entityId, index) =>{
 
         // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
         let targetEntityInput = targetEntityMap[entityId]
@@ -776,6 +789,7 @@ export class SampleService{
         //setTimeout(() => {
         this.spinner.stop()
         this.showMessage("Completed", "OK")
+        this.router.navigate(['/redirect' + this.router.url])
         //}, 3000)
       }
     )
