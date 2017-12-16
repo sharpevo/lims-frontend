@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
+import {MdSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 
 @Component({
@@ -23,6 +24,7 @@ export class ProjectManagementComponent{
   constructor(
     public dialog: MdDialog,
     private entityService: EntityService,
+    private snackBar: MdSnackBar,
   ){}
 
   ngOnInit(){
@@ -74,6 +76,11 @@ export class ProjectManagementComponent{
     }
     this.getSampleList()
   }
+
+  showMessage(msg: string) {
+    this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
 
   openNewEntityDialog(entity: any) {
     let dialogRef = this.dialog.open(SampleFormDialog, {height:'850px', width: '600px'});

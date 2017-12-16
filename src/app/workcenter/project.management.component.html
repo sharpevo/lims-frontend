@@ -79,7 +79,8 @@
             </div>
             <md-action-row>
                 <button md-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button md-button color="warn">Pause</button>
+                <button md-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
+                <button md-button color="warn" (click)="showMessage('planning...')">Pause</button>
             </md-action-row>
         </md-expansion-panel>
     </div>
