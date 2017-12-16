@@ -64,7 +64,14 @@
                         </div>
                         <div style="margin-left: 5px;">
                             <b>
-                                {{sample[schema.SYS_CODE]}}
+                                <span
+                                    *ngIf="schema.SYS_TYPE == 'date'">
+                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                                </span>
+                                <span
+                                    *ngIf="schema.SYS_TYPE != 'date'">
+                                        {{sample[schema.SYS_CODE]}}
+                                </span>
                             </b>
                         </div>
                     </div>
