@@ -7,6 +7,13 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
 
 @Component({
   selector: 'project-management',
+  styles: [`
+    .disabled-panel{
+    opacity: 0.3;
+    pointer-events: none;
+    }
+    `
+  ],
   templateUrl: './project.management.component.html',
 })
 export class ProjectManagementComponent{

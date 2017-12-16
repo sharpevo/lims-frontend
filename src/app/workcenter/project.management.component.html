@@ -23,7 +23,8 @@
     <div *ngFor="let sample of sampleList">
         <md-expansion-panel
             (opened)="showHistory[sample.id] = true"
-            (closed)="showHistory[sample.id] = false">
+            (closed)="showHistory[sample.id] = false"
+            [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
             <md-expansion-panel-header>
                 <md-panel-title>
                     {{sample.SYS_SAMPLE_CODE}}
