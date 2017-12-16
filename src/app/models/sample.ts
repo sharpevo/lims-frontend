@@ -9,6 +9,7 @@ import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from '../util/spinner.service'
 import {UserService} from '../util/user.service'
 
+import {Router} from '@angular/router'
 
 @Injectable()
 export class SampleService{
@@ -21,6 +22,7 @@ export class SampleService{
     private genreService: GenreService,
     private utilService: UtilService,
     private userService: UserService,
+    private router: Router,
     private entityService: EntityService
   ){
     this.userInfo = this.userService.getUserInfo()
@@ -785,6 +787,7 @@ export class SampleService{
         //setTimeout(() => {
         this.spinner.stop()
         this.showMessage("Completed", "OK")
+        this.router.navigate(['/redirect' + this.router.url])
         //}, 3000)
       }
     )
