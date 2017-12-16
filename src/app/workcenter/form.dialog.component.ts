@@ -58,7 +58,7 @@ export class SampleFormDialog {
       this.object.SYS_GENRE = this.genreId
       this.generateEntityType()
       this.generateEntityCode()
-      this.getEntity()
+      //this.getEntity()
     }
 
     generateEntityCode(){
@@ -478,7 +478,7 @@ export class SampleFormDialog {
           this.generateEntityLabel()
         }
       )
-      this.getEntity()
+      //this.getEntity()
     }
 
     getEntity(){
