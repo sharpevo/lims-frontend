@@ -22,8 +22,9 @@
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
+    <md-accordion>
     <div *ngFor="let sample of sampleList">
-        <md-expansion-panel>
+        <md-expansion-panel (opened)="showHistory[sample.id] = true" (closed)="showHistory[sample.id] = false">
             <md-expansion-panel-header>
                 <md-panel-title>
                     {{sample.SYS_SAMPLE_CODE}}
@@ -37,6 +38,7 @@
             <div fxLayout="row" fxLayoutAlign="start stretch" >
                 <div style="width:700px">
                     <sample-history
+                        *ngIf="showHistory[sample.id]"
                         [sample]="sample">
                     </sample-history>
                 </div>
@@ -57,6 +59,7 @@
             </div>
         </md-expansion-panel>
     </div>
+    </md-accordion>
 </div>
 <plugin-excel-processor
     *ngIf="(entity | json) != '{}'"

@@ -16,6 +16,7 @@ export class ProjectManagementComponent{
   contractList: any[] = []
   batchList: any[] = []
   sampleList: any[] = []
+  showHistory: any = {}
   skip = 0
 
   constructor(
