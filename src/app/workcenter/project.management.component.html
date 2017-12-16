@@ -6,6 +6,39 @@
             NEW
         </button>
     </div>
+    <div fxLayout="row" fxLayoutAlign="space-between start"
+        fxLayoutGap="10px"
+        *ngIf="sampleList.length > 0">
+        <md-select
+            [(ngModel)]="queryCode"
+            placeholder="Attribute">
+            <md-option
+                value="{{attr.SYS_CODE}}"
+                *ngFor="let attr of sampleList[0].SYS_SCHEMA">
+                {{attr.SYS_LABEL}}
+            </md-option>
+        </md-select>
+        <md-input-container class="query-input">
+            <input
+                style="margin-top:-20px"
+                mdInput
+                type="text"
+                [(ngModel)]="queryValue"
+                placeholder=""/>
+        </md-input-container>
+        <button
+            [disabled]="queryCode == '' || queryValue == ''"
+            md-raised-button
+            (click)="getSampleList()">
+            QUERY
+        </button>
+        <button
+            [disabled]="queryCode == '' || queryValue == ''"
+            md-raised-button
+            (click)="clearQuery()">
+            CLEAR
+        </button>
+    </div>
 </div>
 <plugin-excel-processor
     *ngIf="(entity | json) != '{}'"

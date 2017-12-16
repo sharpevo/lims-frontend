@@ -12,6 +12,9 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
     opacity: 0.3;
     pointer-events: none;
     }
+    .query-input{
+    margin-top: -14px;
+    }
     `
   ],
   templateUrl: './project.management.component.html',
@@ -27,6 +30,8 @@ export class ProjectManagementComponent{
   sampleList: any[] = []
   showHistory: any = {}
   skip = 0
+  queryCode: string = ''
+  queryValue: string = ''
 
   constructor(
     public dialog: MdDialog,
@@ -44,10 +49,14 @@ export class ProjectManagementComponent{
   }
 
   getSampleList(){
+    let option = "&limit=10&sort=-createdAt&skip=" + this.skip
+    if (this.queryCode != '' && this.queryValue != '') {
+      option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
+    }
     this.entityService.retrieveEntity(
       this.entity.id,
       "collection",
-      "&limit=10&sort=-createdAt&skip=" + this.skip
+      option
     )
     .subscribe(data => {
       this.sampleList = data
@@ -101,5 +110,11 @@ export class ProjectManagementComponent{
       //this.sampleList = this.sampleList.filter(sample => !sample.TMP_CHECK)
       this.getSampleList()
     });
+  }
+
+  clearQuery(){
+    this.queryCode = ''
+    this.queryValue = ''
+    this.getSampleList()
   }
 }
