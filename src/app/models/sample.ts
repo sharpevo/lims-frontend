@@ -16,6 +16,12 @@ export class SampleService{
 
   userInfo: any = {}
 
+  ignoredAttribute: any = {
+    "SYS_WORKCENTER_OPREATOR":true,
+    "SYS_DATE_COMPLETED":true,
+    "SYS_DATE_SCHEDULED":true,
+  }
+
   constructor(
     public snackBar: MdSnackBar,
     public spinner: SpinnerService,
@@ -647,6 +653,7 @@ export class SampleService{
     if (issueSample){
       this.entityService.create(object)
       .subscribe(data =>{
+        delete data.SYS_WORKCENTER_OPERATOR
         this.buildRelationship(data, attributeInfo)
         console.log('Issue sample:', data)
       })
@@ -838,7 +845,9 @@ export class SampleService{
 
       subEntity['SYS_ENTITY_TYPE'] = 'collection'
       workcenterAttributeList.forEach(attribute => {
-        subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
+        if (!this.ignoredAttribute[attribute.SYS_CODE]) {
+          subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
+        }
       })
       return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
