@@ -40,6 +40,12 @@
                         Index Code #1 I7
                     </th>
                     <th>
+                        Index Sequence #2 I7
+                    </th>
+                    <th>
+                        Index Code #2 I7
+                    </th>
+                    <th>
                         Index Sequence #2 I5
                     </th>
                     <th>
@@ -55,14 +61,7 @@
                     </td>
                     <td>
                         <span
-                            *ngIf="resultList[i]">
-                            <entity-tostring
-                                [entity]="sample">
-                            </entity-tostring>
-                        </span>
-                        <span
-                            style="color:red"
-                            *ngIf="!resultList[i]">
+                            [class.td-hilight]="!resultList[i]">
                             <entity-tostring
                                 [entity]="sample">
                             </entity-tostring>
@@ -70,31 +69,30 @@
                     </td>
                     <td>
                         <span
-                            *ngIf="resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE_I7}}
-                        </span>
-                        <span
-                            style="color:red"
-                            *ngIf="!resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE_I7}}
+                            [class.seq-dup]="!resultList[i]">
+                            {{sample.SYS_S_INDEX_SEQUENCE_I7}}
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_INDEX_CODE_I7}}
+                        {{sample.SYS_S_INDEX_CODE_I7}}
                     </td>
                     <td>
                         <span
-                            *ngIf="resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE_I5}}
-                        </span>
-                        <span
-                            style="color:red"
-                            *ngIf="!resultList[i]">
-                            {{sample.SYS_INDEX_SEQUENCE_I5}}
+                            [class.seq-dup]="!resultList[i]">
+                            {{sample.SYS_M_INDEX_SEQUENCE_I7}}
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_INDEX_CODE_I5}}
+                        {{sample.SYS_M_INDEX_CODE_I7}}
+                    </td>
+                    <td>
+                        <span
+                            [class.seq-dup]="!resultList[i]">
+                            {{sample.SYS_M_INDEX_SEQUENCE_I5}}
+                        </span>
+                    </td>
+                    <td>
+                        {{sample.SYS_M_INDEX_CODE_I5}}
                     </td>
                 </tr>
             </tbody>
