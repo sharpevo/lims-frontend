@@ -8,6 +8,7 @@ import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
   templateUrl: './auxiliary.attribute.component.html',
 })
 export class AuxiliaryAttributeComponent{
+  @Input('outputValue') outputValue: any
   @Input('hybridObject') hybridObject: any
   @Input('sample') sample: any
   @Input('attributeLabel') attributeLabel: string
@@ -25,6 +26,7 @@ export class AuxiliaryAttributeComponent{
     this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, this.attributeGenre, attributeObjectList => {
       this.attributeObjectList = attributeObjectList
 
+
       // Pass the latest value of the given attribute to the top of the
       // component structure, e.g. workcenter/sample.dispatched.component
       if (this.attributeObjectList.length > 0){
@@ -41,6 +43,14 @@ export class AuxiliaryAttributeComponent{
           'SYS_CODE': this.attributeCode,
           'SYS_TYPE': this.attributeType,
         }
+        if (!this.outputValue){
+          this.outputValue = {}
+        }
+        if (!this.outputValue[this.sample.id]){
+          this.outputValue[this.sample.id] = {}
+        }
+        this.outputValue[this.sample.id][this.attributeCode] = attributeObjectList[0]['value']
+        console.log("OV", this.outputValue)
       }
 
     })
