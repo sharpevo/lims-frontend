@@ -128,7 +128,19 @@
     <md-card
         class="full-width">
         <md-card-subtitle i18n="@@dashboard-completed-samples">
-            COMPLETED SAMPLES
+            <div fxLayoutAlign="space-between center">
+                <div i18n="@@dashboard-dispateched-samples">
+                    COMPLETED SAMPLES
+                </div>
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <button
+                        md-raised-button
+                        (click)="editSample()">
+                        EDIT
+                    </button>
+                </div>
+            </div>
         </md-card-subtitle>
         <md-card-content>
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
