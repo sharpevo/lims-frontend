@@ -1,4 +1,3 @@
-
 <md-expansion-panel>
     <md-expansion-panel-header
         [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
@@ -61,7 +60,7 @@
                     </td>
                     <td>
                         <span
-                            [class.td-hilight]="!resultList[i]">
+                            [class.td-warn]="!resultList[i]">
                             <entity-tostring
                                 [entity]="sample">
                             </entity-tostring>
@@ -69,30 +68,75 @@
                     </td>
                     <td>
                         <span
-                            [class.seq-dup]="!resultList[i]">
-                            {{sample.SYS_S_INDEX_SEQUENCE_I7}}
+                            [class.td-warn]="!resultList[i]">
+                            <show-auxiliary-attribute
+                                [outputValue]="sampleMap"
+                                [hybridObject]="{}"
+                                [sample]="sample"
+                                [attributeLabel]="SI7-SEQN"
+                                [attributeType]="string"
+                                [attributeGenre]="genreMap['SI7_SEQN_KEY']"
+                                [attributeCode]="codeMap['SI7_SEQN_KEY']">
+                            </show-auxiliary-attribute>
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_S_INDEX_CODE_I7}}
+                        <show-auxiliary-attribute
+                            [hybridObject]="{}"
+                            [sample]="sample"
+                            [attributeLabel]="SI7-CODE"
+                            [attributeType]="string"
+                            [attributeGenre]="genreMap['SI7_CODE_KEY']"
+                            [attributeCode]="codeMap['SI7_CODE_KEY']">
+                        </show-auxiliary-attribute>
                     </td>
                     <td>
                         <span
-                            [class.seq-dup]="!resultList[i]">
-                            {{sample.SYS_M_INDEX_SEQUENCE_I7}}
+                            [class.td-warn]="!resultList[i]">
+                            <show-auxiliary-attribute
+                                [outputValue]="sampleMap"
+                                [hybridObject]="{}"
+                                [sample]="sample"
+                                [attributeLabel]="MI7-SEQN"
+                                [attributeType]="string"
+                                [attributeGenre]="genreMap['MI7_SEQN_KEY']"
+                                [attributeCode]="codeMap['MI7_SEQN_KEY']">
+                            </show-auxiliary-attribute>
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_M_INDEX_CODE_I7}}
+                        <show-auxiliary-attribute
+                            [hybridObject]="{}"
+                            [sample]="sample"
+                            [attributeLabel]="MI7-CODE"
+                            [attributeType]="string"
+                            [attributeGenre]="genreMap['MI7_CODE_KEY']"
+                            [attributeCode]="codeMap['MI7_CODE_KEY']">
+                        </show-auxiliary-attribute>
                     </td>
                     <td>
                         <span
-                            [class.seq-dup]="!resultList[i]">
-                            {{sample.SYS_M_INDEX_SEQUENCE_I5}}
+                            [class.td-warn]="!resultList[i]">
+                            <show-auxiliary-attribute
+                                [outputValue]="sampleMap"
+                                [hybridObject]="{}"
+                                [sample]="sample"
+                                [attributeLabel]="MI5-SEQN"
+                                [attributeType]="string"
+                                [attributeGenre]="genreMap['MI5_SEQN_KEY']"
+                                [attributeCode]="codeMap['MI5_SEQN_KEY']">
+                            </show-auxiliary-attribute>
                         </span>
                     </td>
                     <td>
-                        {{sample.SYS_M_INDEX_CODE_I5}}
+                        <show-auxiliary-attribute
+                            [hybridObject]="{}"
+                            [sample]="sample"
+                            [attributeLabel]="MI5-CODE"
+                            [attributeType]="string"
+                            [attributeGenre]="genreMap['MI5_CODE_KEY']"
+                            [attributeCode]="codeMap['MI5_CODE_KEY']">
+                        </show-auxiliary-attribute>
                     </td>
                 </tr>
             </tbody>
