@@ -85,12 +85,15 @@ export class PluginExcelProcessorComponent {
     this.excelUploader.nativeElement.value = ''
   }
 
-  exportSample(){
+  exportSample(template?: boolean){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList, this.hybridObjectMap)
     console.log("hybridSampleList:", hybridSampleList)
 
-    if (this.selectedSampleList.length > 0){
+    if (this.selectedSampleList.length > 0 || template){
+      if (template){
+        hybridSampleList = []
+      }
       this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
       .subscribe(data => {
         console.log(data)
