@@ -12,8 +12,8 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
     opacity: 0.3;
     pointer-events: none;
     }
-    .query-input{
-    margin-top: -14px;
+    .mat-select{
+    margin-top:-9px;
     }
     `
   ],
