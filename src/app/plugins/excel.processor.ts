@@ -277,7 +277,6 @@ export class PluginExcelProcessorComponent {
 
       }
     })
-    this.router.navigate(['/redirect' + this.router.url])
   }
 
   updateExcel2(){
