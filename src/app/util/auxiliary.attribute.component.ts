@@ -50,7 +50,7 @@ export class AuxiliaryAttributeComponent{
           this.outputValue[this.sample.id] = {}
         }
         this.outputValue[this.sample.id][this.attributeCode] = attributeObjectList[0]['value']
-        console.log("OV", this.outputValue)
+        //console.log("OV", this.outputValue)
       }
 
     })

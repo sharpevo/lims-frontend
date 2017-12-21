@@ -16,6 +16,7 @@ export class RedirectComponent{
   ngOnInit() {
     let url = this.route.snapshot.url
     console.log('redirect', url, this.route)
+    console.log("SEG", url.map(seg => '/' + seg.path))
     this.router.navigate(url.map((seg) => '/' + seg.path))
   }
 }
