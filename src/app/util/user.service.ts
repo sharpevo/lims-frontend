@@ -72,7 +72,7 @@ export class UserService {
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
       window.location.href = environment.uicUrl +
-        "/login?return_to=" +
+        "/profile?return_to=" +
         environment.limsUrl.replace(/^https?:\/\//,'')
     })
   }

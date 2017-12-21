@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
@@ -130,6 +130,7 @@ import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     FlexLayoutModule,
     MaterialModule,

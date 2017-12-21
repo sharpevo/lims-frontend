@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {AttributeService} from '../attribute/service'
 import {SampleService} from '../models/sample'
 
 @Component({
@@ -13,21 +14,45 @@ export class PluginIndexValidatorComponent {
   result: boolean = true
   previousCheckedList: boolean[] = []
   resultList: boolean[] = []
+  codeMap: any = {
+    "MI7_SEQN_KEY": "SYS_M_INDEX_SEQUENCE_I7",
+    "MI7_CODE_KEY": "SYS_M_INDEX_CODE_I7",
+    "MI5_SEQN_KEY": "SYS_M_INDEX_SEQUENCE_I5",
+    "MI5_CODE_KEY": "SYS_M_INDEX_CODE_I5",
+    "SI7_SEQN_KEY": "SYS_S_INDEX_SEQUENCE_I7",
+    "SI7_CODE_KEY": "SYS_S_INDEX_CODE_I7",
+  }
+  genreMap: any = {}
+  sampleMap: any = {}
+  test: string = ''
 
   constructor(
     private entityService: EntityService,
+    private attributeService: AttributeService,
     private sampleService: SampleService,
   ) {}
 
   ngOnInit(){
     this.updatePreviousCheckedList()
     console.log(this.previousCheckedList)
+    this.getConstGenre()
   }
 
   ngDoCheck(){
     if (this.isSampleListChanged()){
       this.validateIndices()
     }
+  }
+
+  getConstGenre(){
+    Object.keys(this.codeMap).forEach(key => {
+      this.attributeService.retrieveBy({
+        "SYS_CODE": this.codeMap[key]
+      })
+      .subscribe(data => {
+        this.genreMap[key] = data[0].SYS_GENRE.id
+      })
+    })
   }
 
   updatePreviousCheckedList(){
@@ -66,11 +91,32 @@ export class PluginIndexValidatorComponent {
     //for (let sample of this.selectedSampleList; let i = index){
     for (let i=0; i<this.selectedSampleList.length; i++){
       let sample = this.selectedSampleList[i]
-      let i5 = ''
-      if (sample['SYS_INDEX_SEQUENCE_I5']) {
-        i5 = sample['SYS_INDEX_SEQUENCE_I5']
+      if (!this.sampleMap[sample.id]){
+        this.sampleMap[sample.id] = {}
       }
-      let key = sample['SYS_INDEX_SEQUENCE_I7'] + i5
+      let mi5 = ''
+      if (this.sampleMap[sample.id][this.codeMap['MI5_SEQN_KEY']]) {
+        mi5 = this.sampleMap[sample.id][this.codeMap['MI5_SEQN_KEY']]
+        if (mi5 == '---'){
+          mi5 = ''
+        }
+      }
+      let mi7 = ''
+      if (this.sampleMap[sample.id][this.codeMap['MI7_SEQN_KEY']]) {
+        mi7 = this.sampleMap[sample.id][this.codeMap['MI7_SEQN_KEY']]
+        if (mi7 == '---'){
+          mi7 = ''
+        }
+      }
+      let si7 = ''
+      if (this.sampleMap[sample.id][this.codeMap['SI7_SEQN_KEY']]) {
+        si7 = this.sampleMap[sample.id][this.codeMap['SI7_SEQN_KEY']]
+        if (si7 == '---'){
+          si7 = ''
+        }
+      }
+
+      let key = si7 + mi7 + mi5
       console.log("Sequence", key)
       //console.log(key)
       //console.log(seqMap[key])

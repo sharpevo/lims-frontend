@@ -7,6 +7,7 @@ import {UserService} from '../util/user.service'
 
 //import {Observable} from 'rxjs/Observable'
 import { Observable } from 'rxjs/Rx'
+import {MdSnackBar} from '@angular/material'
 
 @Component({
   selector: 'workcenter-dashboard',
@@ -38,6 +39,7 @@ export class WorkcenterDashboardComponent{
     private router: Router,
     private entityService: EntityService,
     private userService: UserService,
+    private snackBar: MdSnackBar,
   ){
     this.objectId = this.route.snapshot.params['id']
   }
@@ -169,5 +171,12 @@ export class WorkcenterDashboardComponent{
         this.dispatchedComponent.getSampleList()
       })
     });
+  }
+
+  editSample(){
+    this.showMessage("planning...")
+  }
+  showMessage(msg: string) {
+    this.snackBar.open(msg, 'OK', {duration: 3000});
   }
 }

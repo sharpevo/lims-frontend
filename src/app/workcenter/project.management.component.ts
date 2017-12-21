@@ -12,8 +12,8 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
     opacity: 0.3;
     pointer-events: none;
     }
-    .query-input{
-    margin-top: -14px;
+    .mat-select{
+    margin-top:-9px;
     }
     `
   ],
@@ -50,6 +50,10 @@ export class ProjectManagementComponent{
 
   getSampleList(){
     let option = "&limit=10&sort=-createdAt&skip=" + this.skip
+    if (this.queryCode == '' && this.queryValue != '') {
+      this.showMessage("Please take an attribute.")
+      return
+    }
     if (this.queryCode != '' && this.queryValue != '') {
       option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
     }

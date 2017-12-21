@@ -25,11 +25,11 @@ export class SimpleTableDialog {
     switch (this.config.hybridType){
       case "RUN":
         this.targetHybridType = "LANE"
-      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/LANE_PREPARE/")
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/POOLING/")
       break
       case "LANE":
         this.targetHybridType = "CAPTURE"
-      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/CAPTURE_RESULT/")
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/CAPTURE_PREPARE/")
       break
       case "CAPTURE":
         this.targetHybridType = "SAMPLE"

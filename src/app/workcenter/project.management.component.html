@@ -1,15 +1,15 @@
-<div fxLayout="row" fxLayoutAlign="space-between stretch" >
-    <div>
-        <button
-            md-raised-button
-            (click)="openNewEntityDialog(entity)">
-            NEW
-        </button>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between start"
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        任务下达
+    </h3>
+    <div
         fxLayoutGap="10px"
-        *ngIf="sampleList.length > 0">
+        fxLayout="row"
+        fxLayoutAlign="end center">
         <md-select
+            *ngIf="sampleList.length > 0"
             [(ngModel)]="queryCode"
             placeholder="Attribute">
             <md-option
@@ -18,37 +18,45 @@
                 {{attr.SYS_LABEL}}
             </md-option>
         </md-select>
-        <md-input-container class="query-input">
+        <md-input-container>
+            <button
+                md-button
+                mdPrefix
+                md-icon-button
+                aria-label="Clear"
+                placeholder="Search"
+                (click)="getSampleList()">
+                <md-icon>search</md-icon>
+            </button>
             <input
-                style="margin-top:-20px"
                 mdInput
                 type="text"
+                (keyup.enter)="getSampleList()"
                 [(ngModel)]="queryValue"
                 placeholder=""/>
+            <md-error *ngIf="queryCode==''">
+                Attribute is <strong>required</strong>
+            </md-error>
+            <button
+                md-button
+                *ngIf="queryValue"
+                mdSuffix
+                md-icon-button
+                aria-label="Clear"
+                (click)="clearQuery()">
+                <md-icon>close</md-icon>
+            </button>
         </md-input-container>
-        <button
-            [disabled]="queryCode == '' || queryValue == ''"
-            md-raised-button
-            (click)="getSampleList()">
-            QUERY
-        </button>
-        <button
-            [disabled]="queryCode == '' || queryValue == ''"
-            md-raised-button
-            (click)="clearQuery()">
-            CLEAR
-        </button>
     </div>
 </div>
-<plugin-excel-processor
-    *ngIf="(entity | json) != '{}'"
-    [hybridObjectMap]="{}"
-    [sampleList]="sampleList"
-    [workcenter]="entity">
-</plugin-excel-processor>
-<h2>
-    Sample List
-</h2>
+<div
+    style="margin-top:20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between end" >
+    <h3 class="section-title">
+        Sample List
+    </h3>
+</div>
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
@@ -114,17 +122,32 @@
     </div>
     </md-accordion>
 </div>
-<br/>
-<br/>
-<div>
+<div fxLayout="row" fxLayoutAlign="end center" >
     <button
-        md-raised-button
+        md-icon-button
+        (click)="openNewEntityDialog(entity)">
+        <md-icon>add</md-icon>
+    </button>
+    <button
+        md-icon-button
         (click)="prevPage()">
         <md-icon>keyboard_arrow_left</md-icon>
     </button>
     <button
-        md-raised-button
+        md-icon-button
         (click)="nextPage()">
         <md-icon>keyboard_arrow_right</md-icon>
     </button>
+</div>
+<div
+    style="margin-top: 20px">
+    <h3 class="section-title">
+        Utils
+    </h3>
+    <plugin-excel-processor
+        *ngIf="(entity | json) != '{}'"
+        [hybridObjectMap]="{}"
+        [sampleList]="sampleList"
+        [workcenter]="entity">
+    </plugin-excel-processor>
 </div>
