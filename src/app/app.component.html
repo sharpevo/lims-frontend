@@ -13,10 +13,10 @@
         <span class="toolbar-spacer"></span>
         <span class="toolbar-version">
             <span *ngIf="userInfo">
-                <button md-button [mdMenuTriggerFor]="menu">
+                <button md-button [mdMenuTriggerFor]="userMenu">
                     {{userInfo.email}}
                 </button>
-                <md-menu #menu="mdMenu">
+                <md-menu #userMenu="mdMenu">
                     <a
                         href="{{environment.uicUrl}}/profile"
                         md-menu-item>
@@ -35,6 +35,23 @@
                     </a>
                 </md-menu>
             </span>
+        </span>
+        <span class="toolbar-version">
+            <button md-icon-button [mdMenuTriggerFor]="appMenu">
+                <md-icon>more_vert</md-icon>
+            </button>
+            <md-menu #appMenu="mdMenu">
+                <button
+                    (click)="refresh()"
+                    md-menu-item>
+                    <md-icon>refresh</md-icon>
+                    <span>Refresh</span>
+                </button>
+                <button md-menu-item disabled>
+                    <md-icon>bug_report</md-icon>
+                    <span>Bug report</span>
+                </button>
+            </md-menu>
         </span>
     </md-toolbar>
     <md-sidenav-container style="background:#f1f1f1" fullscreen>

@@ -7,6 +7,7 @@ import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
 import {UserService} from './util/user.service'
 import { Subscription } from 'rxjs/Subscription';
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent {
     private utilService: UtilService,
     private userService: UserService,
     private spinnerService: SpinnerService,
-    private entityService: EntityService
+    private entityService: EntityService,
+    private router: Router,
   ){}
 
   ngOnInit(){
@@ -82,5 +84,9 @@ export class AppComponent {
     let expires = "expires=" + date.toUTCString()
     document.cookie = name + "=" + value + "; " +  expires + (path.length > 0 ? "; path=" + path : "")
     console.log("cookie", document.cookie)
+  }
+
+  refresh(){
+    this.router.navigate(['/redirect' + this.router.url])
   }
 }
