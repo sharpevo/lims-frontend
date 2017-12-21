@@ -113,12 +113,7 @@ export class PluginExcelProcessorComponent {
         const pdfUrl = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
 
-        let date = new Date()
-        let timestamp = '' + date.getFullYear() +
-          (date.getMonth() + 1) +
-          date.getDate() + '.' +
-          date.getHours() + '' +
-          date.getMinutes()
+        let timestamp = new DatePipe('en-US').transform(new Date(), 'yyyyMMdd.HHmmss')
         anchor.download = this.workcenter[this.workcenter['SYS_LABEL']] + '.' + timestamp + '.xlsx';
         anchor.href = pdfUrl;
         anchor.click()
