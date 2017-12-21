@@ -32,48 +32,6 @@
                 </button>
             </div>
             <br/>
-            <div
-                *ngIf="selectedSampleList.length > 0">
-                <table
-                    class="excel-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                No.
-                            </th>
-                            <th>
-                                Sample Code
-                            </th>
-                            <th>
-                                Index Sequence
-                            </th>
-                            <th>
-                                Index Code
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let sample of selectedSampleList; let i = index">
-                            <td>
-                                {{i+1}}
-                            </td>
-                            <td>
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </td>
-                            <td>
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </td>
-                            <td>
-                                {{sample.SYS_INDEX_CODE}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
         <br/>
         <div fxFlex="49">
