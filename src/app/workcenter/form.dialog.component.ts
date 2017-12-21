@@ -174,6 +174,7 @@ export class SampleFormDialog {
         this.object,
         this.parentMap
       )
+      this.dialogRef.close();
     }
 
     submitObject_orginal(){
