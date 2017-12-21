@@ -18,7 +18,8 @@ export class PluginExcelProcessorComponent {
   @Input() hybridObjectMap
   @ViewChild('excelUploader') excelUploader
   selectedSampleList: any[] = []
-  excelResult: any[] = []
+  excelResultSample: any[] = []
+  excelResultGroup: any[] = []
   parentMap: any = {} // parent entity like BoM or Routing
   entityMap: any = {} // entity type like operator
   workcenterAttributeList: any[] = []
@@ -76,12 +77,14 @@ export class PluginExcelProcessorComponent {
     console.log(file)
     this.utilService.postExcel(file)
     .subscribe(data => {
-      this.excelResult = data[0]
+      this.excelResultSample = data[0]
+      this.excelResultGroup = data[1]
     })
   }
 
   clearExcel(){
-    this.excelResult = []
+    this.excelResultSample = []
+    this.excelResultGroup = []
     this.excelUploader.nativeElement.value = ''
   }
 
@@ -212,7 +215,7 @@ export class PluginExcelProcessorComponent {
   }
 
   updateExcel2(){
-    this.utilService.putExcel(this.excelResult)
+    this.utilService.putExcel(this.excelResultSample)
     .subscribe(data => {
       console.log(data)
       this.selectedSampleList.forEach(sample => sample.TMP_CHECKED = false)
