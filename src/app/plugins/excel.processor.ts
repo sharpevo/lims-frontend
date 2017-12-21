@@ -135,22 +135,62 @@ export class PluginExcelProcessorComponent {
       this.parentMap[this.parentMapKey] = {}
     }
     this.excelResultGroup.forEach(groupInExcel => {
+
       console.log("groupInExcel", groupInExcel)
       let groupId = groupInExcel['IDENTIFIER']
       if (groupId) {
         this.entityService.retrieveBy({"_id": groupId})
         .subscribe(data => {
           let group = data[0]
-          console.log("group", group)
-          this.parentMap[this.parentMapKey][groupId] = {}
-          group.SYS_SCHEMA.forEach(schema => {
-            this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
-          })
-          this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+          if (this.parentMapFloor == "collection"){
+            // bom, get the first lot for uploading / default
+            // sort by the lot label
+
+            // retrive collections/LOTs under the given material
+            this.entityService.retrieveEntity(group['SYS_SOURCE'], "collection")
+            .subscribe(data => {
+
+              console.log("material", data)
+              // get the delfault lot in the array sorted by the SYS_CODE
+              // e.g. LOT160810
+              let defaultMaterial = {}
+
+              // get the default material
+              let defaultMaterialList = data.filter(material => material['SYS_IS_DEFAULT'])
+              if (defaultMaterialList.length > 0) {
+                defaultMaterial = defaultMaterial[0]
+              } else {
+                // if default flag is not set well, get the oldest lot
+                defaultMaterial = data.sort((a,b) => {
+                  if (a['createAt'] < b['createdAt']) {
+                    return 1
+                  } else {
+                    return -1
+                  }
+                })[0]
+              }
+              groupId = defaultMaterial['id']
+
+              console.log("group", groupId)
+              this.parentMap[this.parentMapKey][groupId] = {}
+              group.SYS_SCHEMA.forEach(schema => {
+                this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
+              })
+              this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+            })
+          } else {
+            console.log("group", groupId)
+            this.parentMap[this.parentMapKey][groupId] = {}
+            group.SYS_SCHEMA.forEach(schema => {
+              this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
+            })
+            this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+          }
         })
       }
     })
     console.log("NEW PARENTMAP", this.parentMap)
+
     //return
     //}
     //updateExcelRaw(){
