@@ -21,6 +21,8 @@ export class PluginExcelProcessorComponent {
   excelResultSample: any[] = []
   excelResultGroup: any[] = []
   parentMap: any = {} // parent entity like BoM or Routing
+  parentMapKey: string = ''
+  parentMapFloor: string = ''
   entityMap: any = {} // entity type like operator
   workcenterAttributeList: any[] = []
   constructor(
@@ -48,6 +50,8 @@ export class PluginExcelProcessorComponent {
 
           // Process BoM or Routing
           if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
+            this.parentMapKey = attr.SYS_CODE
+            this.parentMapFloor = attr.SYS_FLOOR_ENTITY_TYPE
             this.parentMap[attr.SYS_CODE] = {}
 
             // Get the entities under the BoM, note that the empty string indicates
@@ -120,11 +124,38 @@ export class PluginExcelProcessorComponent {
         anchor.click()
       })
     }
+    console.log("PARENTMAP", this.parentMap)
   }
 
   updateExcel(){
 
-    this.excelResult.forEach(sample =>{
+    // update the parentMap according to the excel if another sheets provides some.
+    if (this.excelResultGroup.length > 0){
+      this.parentMap = {}
+      this.parentMap[this.parentMapKey] = {}
+    }
+    this.excelResultGroup.forEach(groupInExcel => {
+      console.log("groupInExcel", groupInExcel)
+      let groupId = groupInExcel['IDENTIFIER']
+      if (groupId) {
+        this.entityService.retrieveBy({"_id": groupId})
+        .subscribe(data => {
+          let group = data[0]
+          console.log("group", group)
+          this.parentMap[this.parentMapKey][groupId] = {}
+          group.SYS_SCHEMA.forEach(schema => {
+            this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
+          })
+          this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+        })
+      }
+    })
+    console.log("NEW PARENTMAP", this.parentMap)
+    //return
+    //}
+    //updateExcelRaw(){
+
+    this.excelResultSample.forEach(sample =>{
 
       let sampleId = sample['IDENTIFIER']
       if (sampleId) {
