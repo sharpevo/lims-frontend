@@ -897,9 +897,13 @@ export class SampleService{
       })
       return this.entityService.create(subEntity)
     })
-    .retryWhen(error => {
-      return error
-    })
+    .retryWhen(
+      attempts => Observable.range(1, 20)
+      .zip(attempts, i => i)
+      .mergeMap(i => {
+        console.log("delay retry by " + i + " seconds")
+        return Observable.timer(i * 1000);
+      }))
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action)
