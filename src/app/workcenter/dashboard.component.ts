@@ -128,7 +128,6 @@ export class WorkcenterDashboardComponent{
         this.entityService.retrieveEntity(this.workcenterId, 'collection')
         .subscribe(data => {
           this.sampleList = data
-          this.dispatchedComponent.getSampleList()
           this.activatedComponent.getSampleList()
         })
       })
