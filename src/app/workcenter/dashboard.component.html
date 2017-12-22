@@ -1,23 +1,41 @@
-<h2>{{workcenter[workcenter['SYS_LABEL']]}}</h2>
-<md-tab-group
-    [selectedIndex]="1"
-    [(selectedIndex)]="selectedIndex">
-    <md-tab i18n-label="@@dashboard-tab-scheduled" label="Scheduled">
-    </md-tab>
-    <md-tab i18n-label="@@dashboard-tab-processing" label="Processing">
-    </md-tab>
-    <md-tab i18n-label="@@dashboard-tab-completed" label="Completed">
-    </md-tab>
-</md-tab-group>
-<br/>
-<section *ngIf="selectedIndex === 0">
-    <md-card
-        class="full-width">
-        <md-card-subtitle i18n="@@dashboard-scheduled-samples">
-            SCHEDULED SAMPLES
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        {{workcenter[workcenter['SYS_LABEL']]}}
+    </h3>
+</div>
+
+<div
+    style="margin-top:20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between end" >
+    <h3 class="section-title"
+        i18n="@@dashboard-tab-scheduled">
+        Scheduled
+    </h3>
+</div>
+<div
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch">
+    <md-accordion [multi]="false">
+        <md-expansion-panel
+            (opened)="showPanel['scheduled'] = true"
+            (closed)="showPanel['scheduled'] = false"
+            [class.disabled-panel]="false">
+            <md-expansion-panel-header>
+                <md-panel-title
+                    i18n="@@dashboard-scheduled-samples">
+                    SCHEDULED SAMPLES
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                    </span>
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div
+                *ngIf="showPanel['scheduled']">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-scheduled
@@ -26,17 +44,50 @@
                     </workcenter-sample-scheduled>
                 </div>
             </div>
-        </md-card-content>
-    </md-card>
-</section>
-<section *ngIf="selectedIndex === 1">
-    <md-card
-        class="full-width">
-        <md-card-subtitle>
-            <div fxLayoutAlign="space-between center">
-                <div i18n="@@dashboard-activated-samples">
+        </md-expansion-panel>
+    </md-accordion>
+</div>
+
+<div
+    style="margin-top:20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between end" >
+    <h3 class="section-title"
+        i18n="@@dashboard-tab-processing">
+        Processing
+    </h3>
+</div>
+<div
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch">
+    <md-accordion [multi]="false">
+        <md-expansion-panel
+            (opened)="showPanel['activated'] = true"
+            (closed)="showPanel['activated'] = false"
+            [class.disabled-panel]="false">
+            <md-expansion-panel-header>
+                <md-panel-title
+                    i18n="@@dashboard-activated-samples">
                     ACTIVATED SAMPLES
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                    </span>
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div
+                *ngIf="showPanel['activated']">
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <workcenter-sample-activated
+                        #activatedComponent
+                        *ngIf="sampleList.length > 0"
+                        [workcenter]="workcenter"
+                        [sampleList]="sampleList">
+                    </workcenter-sample-activated>
                 </div>
+            </div>
+            <md-action-row>
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <md-select
@@ -53,64 +104,36 @@
                     </md-select>
                     <button
                         i18n="@@dashboard-btn-dispatch"
-                        md-raised-button
+                        md-button
                         (click)="dispatch()">
                         DISPATCH
                     </button>
                     <button
                         i18n="@@dashboard-btn-terminate"
-                        md-raised-button>
+                        color="warn"
+                        md-button>
                         TERMINATE
                     </button>
                 </div>
-            </div>
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
-                <div
-                    *ngIf="(workcenter | json) != '{}'">
-                    <workcenter-sample-activated
-                        #activatedComponent
-                        *ngIf="sampleList.length > 0"
-                        [workcenter]="workcenter"
-                        [sampleList]="sampleList">
-                    </workcenter-sample-activated>
-                </div>
-            </div>
-        </md-card-content>
-    </md-card>
-    <br/>
-    <md-card
-        class="full-width">
-        <md-card-subtitle>
-            <div fxLayoutAlign="space-between center">
-                <div i18n="@@dashboard-dispateched-samples">
+            </md-action-row>
+        </md-expansion-panel>
+        <md-expansion-panel
+            [expanded]="showPanel['dispatched']"
+            (opened)="showPanel['dispatched'] = true"
+            (closed)="showPanel['dispatched'] = false"
+            [class.disabled-panel]="false">
+            <md-expansion-panel-header>
+                <md-panel-title
+                    i18n="@@dashboard-dispateched-samples">
                     DISPATCHED SAMPLES
-                </div>
-                <div
-                    *ngIf="(workcenter | json) != '{}'">
-                    <button
-                        i18n="@@dashboard-btn-release"
-                        md-raised-button
-                        (click)="undispatch()">
-                        RELEASE
-                    </button>
-                    <button
-                        i18n="@@dashboard-btn-process"
-                        md-raised-button
-                        (click)="openNewEntityDialog(workcenter)">
-                        PROCESS
-                    </button>
-                    <button
-                        i18n="@@dashboard-btn-terminate"
-                        md-raised-button>
-                        TERMINATED
-                    </button>
-                </div>
-            </div>
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                    </span>
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div
+                *ngIf="showPanel['dispatched']">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-dispatched
@@ -121,29 +144,62 @@
                     </workcenter-sample-dispatched>
                 </div>
             </div>
-        </md-card-content>
-    </md-card>
-</section>
-<section *ngIf="selectedIndex === 2">
-    <md-card
-        class="full-width">
-        <md-card-subtitle i18n="@@dashboard-completed-samples">
-            <div fxLayoutAlign="space-between center">
-                <div i18n="@@dashboard-dispateched-samples">
-                    COMPLETED SAMPLES
-                </div>
+            <md-action-row>
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <button
-                        md-raised-button
-                        (click)="editSample()">
-                        EDIT
+                        i18n="@@dashboard-btn-release"
+                        md-button
+                        (click)="undispatch()">
+                        RELEASE
+                    </button>
+                    <button
+                        i18n="@@dashboard-btn-process"
+                        md-button
+                        (click)="openNewEntityDialog(workcenter)">
+                        PROCESS
+                    </button>
+                    <button
+                        i18n="@@dashboard-btn-terminate"
+                        color="warn"
+                        md-button>
+                        TERMINATE
                     </button>
                 </div>
-            </div>
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+            </md-action-row>
+        </md-expansion-panel>
+    </md-accordion>
+</div>
+
+<div
+    style="margin-top:20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between end" >
+    <h3 class="section-title"
+        i18n="@@dashboard-tab-completed">
+        Completed
+    </h3>
+</div>
+<div
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch">
+    <md-accordion [multi]="false">
+        <md-expansion-panel
+            (opened)="showPanel['completed'] = true"
+            (closed)="showPanel['completed'] = false"
+            [class.disabled-panel]="false">
+            <md-expansion-panel-header>
+                <md-panel-title
+                    i18n="@@dashboard-dispateched-samples">
+                    COMPLETED SAMPLES
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                    </span>
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div
+                *ngIf="showPanel['completed']">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-completed
@@ -154,16 +210,33 @@
                     </workcenter-sample-completed>
                 </div>
             </div>
-        </md-card-content>
-    </md-card>
-    <br/>
-    <md-card
-        class="full-width">
-        <md-card-subtitle i18n="@@dashboard-terminated-samples">
-            TERMINATED SAMPLES
-        </md-card-subtitle>
-        <md-card-content>
-            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+            <md-action-row>
+                <div
+                    *ngIf="(workcenter | json) != '{}'">
+                    <button
+                        md-button
+                        (click)="editSample()">
+                        EDIT
+                    </button>
+                </div>
+            </md-action-row>
+        </md-expansion-panel>
+        <md-expansion-panel
+            (opened)="showPanel['terminated'] = true"
+            (closed)="showPanel['terminated'] = false"
+            [class.disabled-panel]="false">
+            <md-expansion-panel-header>
+                <md-panel-title
+                    i18n="@@dashboard-terminated-samples">
+                    TERMINATED SAMPLES
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                    </span>
+                </md-panel-title>
+                <md-panel-description>
+                </md-panel-description>
+            </md-expansion-panel-header>
+            <div
+                *ngIf="showPanel['terminated']">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-terminated
@@ -172,6 +245,8 @@
                     </workcenter-sample-terminated>
                 </div>
             </div>
-        </md-card-content>
-    </md-card>
-</section>
+            <md-action-row>
+            </md-action-row>
+        </md-expansion-panel>
+    </md-accordion>
+</div>

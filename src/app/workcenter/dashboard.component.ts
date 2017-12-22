@@ -12,6 +12,15 @@ import {MdSnackBar} from '@angular/material'
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
+  styles:[`
+    .disabled-panel{
+    opacity: 0.3;
+    pointer-events: none;
+    }
+    .mat-select{
+    margin-top:-9px;
+    }
+    `],
 })
 export class WorkcenterDashboardComponent{
   sub: any = {}
@@ -27,6 +36,7 @@ export class WorkcenterDashboardComponent{
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
+  showPanel: any = {}
 
   sampleList: any[] = []
 
@@ -45,6 +55,7 @@ export class WorkcenterDashboardComponent{
   }
 
   ngOnInit(){
+    this.showPanel['dispatched'] = true
     this.sub = this.route.params.subscribe(params => {
       this.workcenterId = params['id']
       this.getWorkcenter()
