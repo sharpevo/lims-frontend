@@ -36,7 +36,13 @@ export class WorkcenterDashboardComponent{
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
-  showPanel: any = {}
+  showPanel: any = {
+    'scheduled': false,
+    'activated': false,
+    'dispatched': false,
+    'completed': false,
+    'terminated': false,
+  }
 
   sampleList: any[] = []
 
@@ -55,7 +61,6 @@ export class WorkcenterDashboardComponent{
   }
 
   ngOnInit(){
-    this.showPanel['dispatched'] = true
     this.sub = this.route.params.subscribe(params => {
       this.workcenterId = params['id']
       this.getWorkcenter()
@@ -184,5 +189,22 @@ export class WorkcenterDashboardComponent{
   }
   showMessage(msg: string) {
     this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
+  openPanel(panel: string){
+    Object.keys(this.showPanel).forEach(key => {
+      if (key == panel){
+        this.showPanel[key] = true
+      } else {
+        this.showPanel[key] = false
+      }
+    })
+    console.log(this.showPanel)
+  }
+  closePanel(panel: string){
+    this.showPanel[panel] = false
+  }
+  isExpanded(panel: string){
+    return this.showPanel[panel]
   }
 }

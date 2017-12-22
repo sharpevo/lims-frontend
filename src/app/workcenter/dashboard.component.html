@@ -21,8 +21,9 @@
     fxLayoutAlign="space-between stretch">
     <md-accordion [multi]="false">
         <md-expansion-panel
-            (opened)="showPanel['scheduled'] = true"
-            (closed)="showPanel['scheduled'] = false"
+            [expanded]="isExpanded('scheduled')"
+            (opened)="openPanel('scheduled')"
+            (closed)="closePanel('scheduled')"
             [class.disabled-panel]="false">
             <md-expansion-panel-header>
                 <md-panel-title
@@ -62,8 +63,9 @@
     fxLayoutAlign="space-between stretch">
     <md-accordion [multi]="false">
         <md-expansion-panel
-            (opened)="showPanel['activated'] = true"
-            (closed)="showPanel['activated'] = false"
+            [expanded]="isExpanded('activated')"
+            (opened)="openPanel('activated')"
+            (closed)="closePanel('activated')"
             [class.disabled-panel]="false">
             <md-expansion-panel-header>
                 <md-panel-title
@@ -118,9 +120,9 @@
             </md-action-row>
         </md-expansion-panel>
         <md-expansion-panel
-            [expanded]="showPanel['dispatched']"
-            (opened)="showPanel['dispatched'] = true"
-            (closed)="showPanel['dispatched'] = false"
+            [expanded]="isExpanded('dispatched')"
+            (opened)="openPanel('dispatched')"
+            (closed)="closePanel('dispatched')"
             [class.disabled-panel]="false">
             <md-expansion-panel-header>
                 <md-panel-title
@@ -149,6 +151,7 @@
                     *ngIf="(workcenter | json) != '{}'">
                     <button
                         i18n="@@dashboard-btn-release"
+                        color="accent"
                         md-button
                         (click)="undispatch()">
                         RELEASE
@@ -185,8 +188,9 @@
     fxLayoutAlign="space-between stretch">
     <md-accordion [multi]="false">
         <md-expansion-panel
-            (opened)="showPanel['completed'] = true"
-            (closed)="showPanel['completed'] = false"
+            [expanded]="isExpanded('completed')"
+            (opened)="openPanel('completed')"
+            (closed)="closePanel('completed')"
             [class.disabled-panel]="false">
             <md-expansion-panel-header>
                 <md-panel-title
@@ -222,8 +226,9 @@
             </md-action-row>
         </md-expansion-panel>
         <md-expansion-panel
-            (opened)="showPanel['terminated'] = true"
-            (closed)="showPanel['terminated'] = false"
+            [expanded]="isExpanded('terminated')"
+            (opened)="openPanel('terminated')"
+            (closed)="closePanel('terminated')"
             [class.disabled-panel]="false">
             <md-expansion-panel-header>
                 <md-panel-title
