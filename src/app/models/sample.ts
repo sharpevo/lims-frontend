@@ -156,6 +156,68 @@ export class SampleService{
     })
   }
 
+  retrieveAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string){
+
+    // Get the latest sample
+    return this.entityService.retrieveBy({
+      "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+    })
+    .map(_sampleList => {
+
+      let sampleList = _sampleList
+      .sort((a,b) => {
+        //if (a['updatedAt'] < b['updatedAt']){
+        if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
+          return 1
+        } else {
+          return -1
+        }
+      })
+      let attributeObjectList = []
+
+      let activatedSampleList = sampleList
+      .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+      //!sample['SYS_DATE_TERMINATED'])
+      if (activatedSampleList.length > 0){
+        let uniqueSampleList = []
+        let seen = {}
+        activatedSampleList.forEach(sample => {
+          let key = attributeCode + "|" + sample[attributeCode]
+          if (!seen[key]) {
+            if (sample[attributeCode]){
+              seen[key] = true
+            }
+
+            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+              uniqueSampleList.push(sample)
+            }
+          }
+        })
+
+        uniqueSampleList
+        .forEach(sample => {
+          attributeObjectList.push({
+            "id": sample.id,
+            "dateCompleted": sample['SYS_DATE_COMPLETED'],
+            "dateUpdated": sample['updatedAt'],
+            "value": sample[attributeCode]?sample[attributeCode]:"---"
+          })
+        })
+      } else {
+        // For samples that are just submitted, none of which satisfied the
+        // date condition, so push the attributes of the first sample.
+        let firstSample = sampleList[0]
+        attributeObjectList.push({
+          "id": firstSample.id,
+          "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
+          "dateUpdated": firstSample['updatedAt'],
+          "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
+        })
+      }
+      return attributeObjectList
+    })
+  }
+
   /**
    * Get the latest attributes of the given sample
    *
