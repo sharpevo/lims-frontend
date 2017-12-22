@@ -187,6 +187,9 @@ export class WorkcenterDashboardComponent{
   editSample(){
     this.showMessage("planning...")
   }
+  terminateSample(){
+    this.showMessage("planning...")
+  }
   showMessage(msg: string) {
     this.snackBar.open(msg, 'OK', {duration: 3000});
   }
