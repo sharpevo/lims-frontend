@@ -36,7 +36,7 @@
                 </md-panel-description>
             </md-expansion-panel-header>
             <div
-                *ngIf="showPanel['scheduled']">
+                *ngIf="isExpanded('scheduled')">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-scheduled
@@ -78,7 +78,7 @@
                 </md-panel-description>
             </md-expansion-panel-header>
             <div
-                *ngIf="showPanel['activated']">
+                *ngIf="isExpanded('activated')">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-activated
@@ -135,7 +135,7 @@
                 </md-panel-description>
             </md-expansion-panel-header>
             <div
-                *ngIf="showPanel['dispatched']">
+                *ngIf="isExpanded('dispatched')">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-dispatched
@@ -203,7 +203,7 @@
                 </md-panel-description>
             </md-expansion-panel-header>
             <div
-                *ngIf="showPanel['completed']">
+                *ngIf="isExpanded('completed')">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-completed
@@ -241,7 +241,7 @@
                 </md-panel-description>
             </md-expansion-panel-header>
             <div
-                *ngIf="showPanel['terminated']">
+                *ngIf="isExpanded('terminated')">
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-terminated
