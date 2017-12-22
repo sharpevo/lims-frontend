@@ -69,74 +69,80 @@
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            <show-auxiliary-attribute
-                                [outputValue]="sampleMap"
-                                [hybridObject]="{}"
-                                [sample]="sample"
-                                [attributeLabel]="SI7-SEQN"
-                                [attributeType]="string"
-                                [attributeGenre]="genreMap['SI7_SEQN_KEY']"
-                                [attributeCode]="codeMap['SI7_SEQN_KEY']">
-                            </show-auxiliary-attribute>
+                            {{this.sampleMap[sample.id][codeMap['SI7_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="SI7-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['SI7_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['SI7_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
                         </span>
                     </td>
                     <td>
-                        <show-auxiliary-attribute
-                            [hybridObject]="{}"
-                            [sample]="sample"
-                            [attributeLabel]="SI7-CODE"
-                            [attributeType]="string"
-                            [attributeGenre]="genreMap['SI7_CODE_KEY']"
-                            [attributeCode]="codeMap['SI7_CODE_KEY']">
-                        </show-auxiliary-attribute>
+                        {{this.sampleMap[sample.id][codeMap['SI7_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="SI7-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['SI7_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['SI7_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
                     </td>
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            <show-auxiliary-attribute
-                                [outputValue]="sampleMap"
-                                [hybridObject]="{}"
-                                [sample]="sample"
-                                [attributeLabel]="MI7-SEQN"
-                                [attributeType]="string"
-                                [attributeGenre]="genreMap['MI7_SEQN_KEY']"
-                                [attributeCode]="codeMap['MI7_SEQN_KEY']">
-                            </show-auxiliary-attribute>
+                            {{this.sampleMap[sample.id][codeMap['MI7_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="MI7-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['MI7_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['MI7_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
                         </span>
                     </td>
                     <td>
-                        <show-auxiliary-attribute
-                            [hybridObject]="{}"
-                            [sample]="sample"
-                            [attributeLabel]="MI7-CODE"
-                            [attributeType]="string"
-                            [attributeGenre]="genreMap['MI7_CODE_KEY']"
-                            [attributeCode]="codeMap['MI7_CODE_KEY']">
-                        </show-auxiliary-attribute>
+                        {{this.sampleMap[sample.id][codeMap['MI7_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="MI7-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['MI7_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['MI7_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
                     </td>
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            <show-auxiliary-attribute
-                                [outputValue]="sampleMap"
-                                [hybridObject]="{}"
-                                [sample]="sample"
-                                [attributeLabel]="MI5-SEQN"
-                                [attributeType]="string"
-                                [attributeGenre]="genreMap['MI5_SEQN_KEY']"
-                                [attributeCode]="codeMap['MI5_SEQN_KEY']">
-                            </show-auxiliary-attribute>
+                            {{this.sampleMap[sample.id][codeMap['MI5_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="MI5-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['MI5_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['MI5_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
                         </span>
                     </td>
                     <td>
-                        <show-auxiliary-attribute
-                            [hybridObject]="{}"
-                            [sample]="sample"
-                            [attributeLabel]="MI5-CODE"
-                            [attributeType]="string"
-                            [attributeGenre]="genreMap['MI5_CODE_KEY']"
-                            [attributeCode]="codeMap['MI5_CODE_KEY']">
-                        </show-auxiliary-attribute>
+                        {{this.sampleMap[sample.id][codeMap['MI5_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="MI5-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['MI5_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['MI5_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
                     </td>
                 </tr>
             </tbody>
