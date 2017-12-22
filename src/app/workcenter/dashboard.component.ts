@@ -12,6 +12,15 @@ import {MdSnackBar} from '@angular/material'
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
+  styles:[`
+    .disabled-panel{
+    opacity: 0.3;
+    pointer-events: none;
+    }
+    .mat-select{
+    margin-top:-9px;
+    }
+    `],
 })
 export class WorkcenterDashboardComponent{
   sub: any = {}
@@ -27,6 +36,13 @@ export class WorkcenterDashboardComponent{
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
+  showPanel: any = {
+    'scheduled': false,
+    'activated': false,
+    'dispatched': false,
+    'completed': false,
+    'terminated': false,
+  }
 
   sampleList: any[] = []
 
@@ -173,5 +189,22 @@ export class WorkcenterDashboardComponent{
   }
   showMessage(msg: string) {
     this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
+  openPanel(panel: string){
+    Object.keys(this.showPanel).forEach(key => {
+      if (key == panel){
+        this.showPanel[key] = true
+      } else {
+        this.showPanel[key] = false
+      }
+    })
+    console.log(this.showPanel)
+  }
+  closePanel(panel: string){
+    this.showPanel[panel] = false
+  }
+  isExpanded(panel: string){
+    return this.showPanel[panel]
   }
 }
