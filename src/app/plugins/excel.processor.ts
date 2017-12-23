@@ -171,8 +171,14 @@ export class PluginExcelProcessorComponent {
               console.log("group", groupId)
               this.parentMap[this.parentMapKey][groupId] = {}
               group.SYS_SCHEMA.forEach(schema => {
-                this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
+                Object.keys(groupInExcel).forEach(key => {
+                  if (schema.SYS_LABEL == key){
+                    this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key]
+                  }
+                })
               })
+              this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId // defaultMaterial
+              this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true
               this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
             })
           } else {
