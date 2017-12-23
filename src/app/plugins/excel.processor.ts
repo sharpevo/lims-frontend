@@ -134,6 +134,8 @@ export class PluginExcelProcessorComponent {
       console.log("groupInExcel", groupInExcel)
       let groupId = groupInExcel['IDENTIFIER']
       if (groupId) {
+
+        // retrieve the group item (object with the given id)
         this.entityService.retrieveBy({"_id": groupId})
         .subscribe(data => {
           let group = data[0]
@@ -177,8 +179,14 @@ export class PluginExcelProcessorComponent {
             console.log("group", groupId)
             this.parentMap[this.parentMapKey][groupId] = {}
             group.SYS_SCHEMA.forEach(schema => {
-              this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = group[schema.SYS_CODE]
+              Object.keys(groupInExcel).forEach(key => {
+                if (schema.SYS_LABEL == key){
+                  this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key] // overwrited by the backend data
+                }
+              })
             })
+            this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
+            this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true // mimic submited in the form
             this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
           }
         })
