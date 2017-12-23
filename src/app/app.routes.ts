@@ -7,6 +7,7 @@ import {ProjectManagementComponent} from './workcenter/project.management.compon
 import {AppsComponent} from './apps/component'
 import {UserService} from './util/user.service'
 import {RedirectComponent} from './util/redirect.component'
+import {MaterialOverviewComponent} from './material/overview.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -49,6 +50,10 @@ const routes: Routes = [
     path: 'project-management',
     component: ProjectManagementComponent,
     canActivate: [UserService],
+  },
+  {
+    path: 'material-overview',
+    component: MaterialOverviewComponent,
   },
   //{path: 'manufacturing', component: ManufacturingComponent},
   //{path: 'query', component: QueryComponent},

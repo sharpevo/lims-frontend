@@ -1,0 +1,122 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        物料
+    </h3>
+    <div
+        fxLayoutGap="10px"
+        fxLayout="row"
+        fxLayoutAlign="end center">
+        <md-select
+            *ngIf="materialObjectList.length > 0"
+            [(ngModel)]="queryCode"
+            placeholder="Attribute">
+            <md-option
+                value="{{attr.SYS_CODE}}"
+                *ngFor="let attr of materialObjectList[0].SYS_SCHEMA">
+                {{attr.SYS_LABEL}}
+            </md-option>
+        </md-select>
+        <md-input-container>
+            <button
+                md-button
+                mdPrefix
+                md-icon-button
+                aria-label="Clear"
+                placeholder="Search"
+                (click)="getMaterialList()">
+                <md-icon>search</md-icon>
+            </button>
+            <input
+                mdInput
+                type="text"
+                (keyup.enter)="getMaterialList()"
+                [(ngModel)]="queryValue"
+                placeholder=""/>
+            <md-error *ngIf="queryCode==''">
+                Attribute is <strong>required</strong>
+            </md-error>
+            <button
+                md-button
+                *ngIf="queryValue"
+                mdSuffix
+                md-icon-button
+                aria-label="Clear"
+                (click)="clearQuery()">
+                <md-icon>close</md-icon>
+            </button>
+        </md-input-container>
+    </div>
+</div>
+
+<div *ngFor="let material of materialObjectList">
+    <div
+        style="margin-top:20px"
+        fxLayout="row"
+        fxLayoutAlign="space-between end" >
+        <h3 class="section-title">
+            {{material[material['SYS_LABEL']]}}
+        </h3>
+    </div>
+    <div
+        fxLayout="column"
+        fxLayoutAlign="space-between stretch">
+        <md-accordion [multi]="true">
+        <div *ngFor="let lot of material['TMP_LOT_LIST']">
+            <md-expansion-panel
+                [expanded]="isExpanded(lot.id)"
+                (opened)="openPanel(lot.id)"
+                (closed)="closePanel(lot.id)">
+                <md-expansion-panel-header>
+                    <md-panel-title>
+                        {{lot[lot['SYS_LABEL']]}}
+                        <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                            ({{lot.id}})
+                        </span>
+                    </md-panel-title>
+                    <md-panel-description>
+                    </md-panel-description>
+                </md-expansion-panel-header>
+                <div fxLayout="row" fxLayoutAlign="start stretch" >
+                    <md-list>
+                        <h3 mat-subheader>采购记录(planning...)</h3>
+                        <md-list-item>
+                            ...
+                        </md-list-item>
+                        <md-divider></md-divider>
+                        <h3 mat-subheader>样品记录: {{total}}</h3>
+                        <md-list-item *ngFor="let sample of sampleMap[lot.id]">
+                            <md-icon mat-list-icon>format_color_fill</md-icon>
+                            <h4 md-line>{{sample.SYS_SAMPLE_CODE}}</h4>
+                            <p md-line> {{sample.createdAt | date}}: {{sample.SYS_QUANTITY}}, {{sample.REMARK}}</p>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <md-action-row>
+                    <button md-button (click)="openEditEntityDialog(lot)">Add</button>
+                    <button md-button color="accent" (click)="showMessage('planning...')">Default LOT</button>
+                    <button md-button color="warn" (click)="showMessage('planning...')">Disable</button>
+                </md-action-row>
+            </md-expansion-panel>
+        </div>
+        </md-accordion>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" >
+        <button
+            md-icon-button
+            (click)="showMessage('planning...')">
+            <md-icon>add</md-icon>
+        </button>
+        <button
+            md-icon-button
+            (click)="showMessage('planning...')">
+            <md-icon>keyboard_arrow_left</md-icon>
+        </button>
+        <button
+            md-icon-button
+            (click)="showMessage('planning...')">
+            <md-icon>keyboard_arrow_right</md-icon>
+        </button>
+    </div>
+</div>

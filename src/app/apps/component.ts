@@ -50,6 +50,12 @@ export class AppsComponent {
     })
     this.appList.push({
       "isInternal": true,
+      "label": "物料",
+      "url":"/material-overview",
+      "icon":"extension",
+    })
+    this.appList.push({
+      "isInternal": true,
       "label": "配置",
       "url":"/tree",
       "icon":"settings",
