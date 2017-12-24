@@ -20,6 +20,7 @@ export class AppComponent {
   userInfo: any
   subscription: Subscription
   interval: any
+  showMessage: boolean = true
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
@@ -88,5 +89,14 @@ export class AppComponent {
 
   refresh(){
     this.router.navigate(['/redirect' + this.router.url])
+  }
+
+  onActivate(event: any){
+    this.showMessage = false
+    console.log("ACTIVATE")
+  }
+  onDeactivate(event: any){
+    this.showMessage = true
+    console.log("DEACTIVATE")
   }
 }
