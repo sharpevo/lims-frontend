@@ -20,6 +20,52 @@ export class AppComponent {
   userInfo: any
   subscription: Subscription
   interval: any
+  showMessage: boolean = true
+  taskCompletedList: any[] = [
+    {
+      title: "#75 优化任务下达",
+      date: "2017-12-17",
+    },
+    {
+      title: "#77 指定工作中心物料清单同Excel文件上传处理",
+      date: "2017-12-19",
+    },
+    {
+      title: "#88 经Excel上传实现任务批量下达同时Sheet2配置工艺流程",
+      date: "2017-12-21",
+    },
+    {
+      title: "#100 优化工作中心",
+      date: "2017-12-22",
+    },
+    {
+      title: "#98 修复双端Index校验bug",
+      date: "2017-12-22",
+    },
+    {
+      title: "#103 增加物料管理入口",
+      date: "2017-12-23",
+    },
+    {
+      title: "#104 增加样品查询模块",
+      date: "2017-12-24",
+    }
+
+  ]
+  taskPlannedList: any[] = [
+    {
+      title: "#78 工作中心文件上传(不解析)并在线预览(pdf)",
+      date: "Week: 52",
+    },
+    {
+      title: "#99 修复Excel导出部分参考属性缺失bug",
+      date: "Week: 52",
+    },
+    {
+      title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
+      date: "Week: 52",
+    },
+  ]
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
@@ -88,5 +134,14 @@ export class AppComponent {
 
   refresh(){
     this.router.navigate(['/redirect' + this.router.url])
+  }
+
+  onActivate(event: any){
+    this.showMessage = false
+    console.log("ACTIVATE")
+  }
+  onDeactivate(event: any){
+    this.showMessage = true
+    console.log("DEACTIVATE")
   }
 }
