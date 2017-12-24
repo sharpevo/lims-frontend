@@ -154,14 +154,24 @@
                 <md-list>
                     <h3 md-subheader>Changelog</h3>
                     <md-list-item *ngFor="let log of taskCompletedList">
-                        <md-icon md-list-icon>check_box</md-icon>
+                        <md-icon
+                            *ngIf="log.title != ''"
+                            md-list-icon>check_box</md-icon>
+                        <md-icon
+                            *ngIf="log.title == ''"
+                            md-list-icon>more_horiz</md-icon>
                         <h4 md-line>{{log.title}}</h4>
                         <p md-line> {{log.date}} </p>
                     </md-list-item>
                     <md-divider></md-divider>
                     <h3 md-subheader>Next</h3>
                     <md-list-item *ngFor="let log of taskPlannedList">
-                        <md-icon md-list-icon>check_box_outline_blank</md-icon>
+                        <md-icon
+                            *ngIf="log.title != ''"
+                            md-list-icon>check_box_outline_blank</md-icon>
+                        <md-icon
+                            *ngIf="log.title == ''"
+                            md-list-icon>more_horiz</md-icon>
                         <h4 md-line>{{log.title}}</h4>
                         <p md-line> {{log.date}} </p>
                     </md-list-item>
