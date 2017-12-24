@@ -23,33 +23,41 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
-      title: "#75 优化任务下达",
-      date: "2017-12-17",
+      title: "#106 增加样品查询模块(项目编号, 日期范围)",
+      date: "2017-12-24",
     },
     {
-      title: "#77 指定工作中心物料清单同Excel文件上传处理",
-      date: "2017-12-19",
+      title: "#104 增加简单样品详情",
+      date: "2017-12-24",
     },
     {
-      title: "#88 经Excel上传实现任务批量下达同时Sheet2配置工艺流程",
-      date: "2017-12-21",
-    },
-    {
-      title: "#100 优化工作中心",
-      date: "2017-12-22",
+      title: "#103 增加简单物料管理",
+      date: "2017-12-23",
     },
     {
       title: "#98 修复双端Index校验bug",
       date: "2017-12-22",
     },
     {
-      title: "#103 增加物料管理入口",
-      date: "2017-12-23",
+      title: "#100 优化工作中心",
+      date: "2017-12-22",
     },
     {
-      title: "#104 增加样品查询模块",
-      date: "2017-12-24",
-    }
+      title: "#88 经Excel上传实现任务批量下达同时Sheet2配置工艺流程",
+      date: "2017-12-21",
+    },
+    {
+      title: "#77 指定工作中心物料清单同Excel文件上传处理",
+      date: "2017-12-19",
+    },
+    {
+      title: "#75 优化任务下达",
+      date: "2017-12-17",
+    },
+    {
+      title: "",
+      date: "",
+    },
 
   ]
   taskPlannedList: any[] = [
@@ -64,6 +72,10 @@ export class AppComponent {
     {
       title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
       date: "Week: 52",
+    },
+    {
+      title: "",
+      date: "",
     },
   ]
   constructor(
