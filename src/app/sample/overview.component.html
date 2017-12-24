@@ -1,0 +1,184 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        {{sampleCode}}
+    </h3>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-between start" >
+<div>
+    <div
+        style="margin-top:20px"
+        fxLayout="row"
+        fxLayoutAlign="space-between end" >
+        <h3 class="section-title">
+            Workcenters
+        </h3>
+    </div>
+    <div
+        *ngIf="sampleProductWorkcenterList.length > 0"
+        fxLayout="column"
+        fxLayoutAlign="space-between stretch">
+        <md-accordion [multi]="false">
+        <div *ngFor="let sample of sampleProductWorkcenterList.slice(skipMap['workcenter'], skipMap['workcenter'] + 10)">
+            <md-expansion-panel
+                [expanded]="isExpanded(sample.id + '-workcenter')"
+                (opened)="openPanel(sample.id + '-workcenter')"
+                (closed)="closePanel(sample.id + '-workcenter')">
+                <md-expansion-panel-header>
+                    <md-panel-title>
+                        {{sample['TMP_SOURCE']}}
+                        <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                            ({{sample.id}})
+                        </span>
+                    </md-panel-title>
+                    <md-panel-description>
+                    </md-panel-description>
+                </md-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="start start" >
+                    <div
+                        *ngFor="let schema of sample.SYS_SCHEMA"
+                        fxLayout="row" fxLayoutAlign="space-between center" >
+                        <div style="opacity:0.7">
+                            {{schema.SYS_LABEL}}:
+                        </div>
+                        <div style="margin-left: 5px;">
+                            <b>
+                                <span
+                                    *ngIf="schema.SYS_TYPE == 'date'">
+                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                                </span>
+                                <span
+                                    *ngIf="schema.SYS_TYPE != 'date'">
+                                        {{sample[schema.SYS_CODE]}}
+                                </span>
+                            </b>
+                        </div>
+                    </div>
+                    <div style="opacity:0.7">
+                        Created:
+                    </div>
+                    <div style="margin-left: 5px;">
+                        <b>
+                            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
+                        </b>
+                    </div>
+                </div>
+            </md-expansion-panel>
+        </div>
+        </md-accordion>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" >
+        <button
+            md-icon-button
+            (click)="prevPage('workcenter')">
+            <md-icon>keyboard_arrow_left</md-icon>
+        </button>
+        <button
+            md-icon-button
+            (click)="nextPage('workcenter')">
+            <md-icon>keyboard_arrow_right</md-icon>
+        </button>
+    </div>
+
+    <div
+        style="margin-top:20px"
+        fxLayout="row"
+        fxLayoutAlign="space-between end" >
+        <h3 class="section-title">
+            Materials
+        </h3>
+    </div>
+    <div
+        *ngIf="sampleMaterialList.length > 0"
+        fxLayout="column"
+        fxLayoutAlign="space-between stretch">
+        <md-accordion [multi]="false">
+        <div *ngFor="let sample of sampleMaterialList.slice(skipMap['material'], skipMap['material'] + 10)">
+            <md-expansion-panel
+                [expanded]="isExpanded(sample.id + '-material')"
+                (opened)="openPanel(sample.id + '-material')"
+                (closed)="closePanel(sample.id + '-material')">
+                <md-expansion-panel-header>
+                    <md-panel-title>
+                        {{sample['TMP_SOURCE']}} x {{sample['SYS_QUANTITY']}}
+                        <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                            ({{sample.id}})
+                        </span>
+                    </md-panel-title>
+                    <md-panel-description>
+                    </md-panel-description>
+                </md-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="start start" >
+                    <div
+                        fxLayout="row" fxLayoutAlign="space-between center" >
+                        <div style="opacity:0.7">
+                            备注:
+                        </div>
+                        <div style="margin-left: 5px;">
+                            <b>
+                                {{sample.REMARK}}
+                            </b>
+                        </div>
+                    </div>
+                    <div
+                        fxLayout="row" fxLayoutAlign="space-between center" >
+                        <div style="opacity:0.7">
+                            提交日期:
+                        </div>
+                        <div style="margin-left: 5px;">
+                            <b>
+                                {{sample[createdAt] | date: 'yyyy.MM.dd HH:mm'}}
+                            </b>
+                        </div>
+                    </div>
+                </div>
+            </md-expansion-panel>
+        </div>
+        </md-accordion>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" >
+        <button
+            md-icon-button
+            (click)="prevPage('material')">
+            <md-icon>keyboard_arrow_left</md-icon>
+        </button>
+        <button
+            md-icon-button
+            (click)="nextPage('material')">
+            <md-icon>keyboard_arrow_right</md-icon>
+        </button>
+    </div>
+</div>
+<div
+    *ngIf="sampleProjectManagementList.length > 0"
+    fxLayout="column"
+    fxLayoutAlign="start start" >
+    <div
+        *ngFor="let schema of sampleProjectManagementList[0].SYS_SCHEMA"
+        fxLayout="row" fxLayoutAlign="space-between center" >
+        <div style="opacity:0.7">
+            {{schema.SYS_LABEL}}:
+        </div>
+        <div style="margin-left: 5px;">
+            <b>
+                <span
+                    *ngIf="schema.SYS_TYPE == 'date'">
+                    {{sampleProjectManagementList[0][schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                </span>
+                <span
+                    *ngIf="schema.SYS_TYPE != 'date'">
+                        {{sampleProjectManagementList[0][schema.SYS_CODE]}}
+                </span>
+            </b>
+        </div>
+    </div>
+    <div style="opacity:0.7">
+        Created:
+    </div>
+    <div style="margin-left: 5px;">
+        <b>
+            {{sampleProjectManagementList[0].createdAt | date: 'yyyy.MM.dd HH:mm'}}
+        </b>
+    </div>
+</div>
