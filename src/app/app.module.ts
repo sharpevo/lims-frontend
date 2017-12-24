@@ -74,6 +74,7 @@ import {MdSnackBar} from '@angular/material'
 import {RedirectComponent} from './util/redirect.component'
 import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
 import {MaterialOverviewComponent} from './material/overview.component'
+import {SampleOverviewComponent} from './sample/overview.component'
 
 @NgModule({
   declarations: [
@@ -119,6 +120,7 @@ import {MaterialOverviewComponent} from './material/overview.component'
     RedirectComponent,
     EditPMSampleDialog,
     MaterialOverviewComponent,
+    SampleOverviewComponent,
   ],
   entryComponents:[
     GenreFormDialog,

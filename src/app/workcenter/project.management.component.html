@@ -18,7 +18,8 @@
                 {{attr.SYS_LABEL}}
             </md-option>
         </md-select>
-        <md-input-container>
+        <md-input-container
+            *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
             <button
                 md-button
                 mdPrefix
@@ -46,6 +47,31 @@
                 (click)="clearQuery()">
                 <md-icon>close</md-icon>
             </button>
+        </md-input-container>
+        <md-input-container
+            *ngIf="queryCode == 'SYS_DATE_COMPLETED'">
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateStart"
+                    placeholder="starts at..."/>
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateEnd"
+                    placeholder="ends at..."/>
+                <button
+                    md-button
+                    md-icon-button
+                    aria-label="Search"
+                    placeholder="Search"
+                    (click)="getSampleList()">
+                    <md-icon>search</md-icon>
+                </button>
+            </div>
         </md-input-container>
     </div>
 </div>
@@ -76,7 +102,7 @@
                 <md-panel-description>
                 </md-panel-description>
             </md-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="start stretch" >
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
                 <div style="width:700px">
                     <sample-history
                         *ngIf="showHistory[sample.id]"
@@ -114,6 +140,7 @@
                 </div>
             </div>
             <md-action-row>
+                <button md-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button md-button (click)="openEditEntityDialog(sample)">Edit</button>
                 <button md-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
                 <button md-button color="warn" (click)="showMessage('planning...')">Pause</button>

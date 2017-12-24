@@ -32,6 +32,8 @@ export class ProjectManagementComponent{
   skip = 0
   queryCode: string = ''
   queryValue: string = ''
+  queryDateStart: string =''
+  queryDateEnd: string =''
 
   constructor(
     public dialog: MdDialog,
@@ -49,14 +51,34 @@ export class ProjectManagementComponent{
   }
 
   getSampleList(){
+    let sortStart = ''
+    let sortEnd = ''
     let option = "&limit=10&sort=-createdAt&skip=" + this.skip
-    if (this.queryCode == '' && this.queryValue != '') {
+    if (this.queryCode == '' && this.queryCode != "") {
       this.showMessage("Please take an attribute.")
       return
     }
-    if (this.queryCode != '' && this.queryValue != '') {
-      option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
+    if (this.queryCode != '' && this.queryCode != 'SYS_DATE_COMPLETED') {
+      if (this.queryValue != '') {
+        option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
+      } else {
+        this.showMessage("Please input the value.")
+        return
+      }
     }
+    if (this.queryCode == 'SYS_DATE_COMPLETED') {
+      if (this.queryDateStart == '' && this.queryDateEnd == ''){
+        this.showMessage("Please input the date.")
+        return
+      }
+      if (this.queryDateStart != ''){
+        sortStart = this.queryDateStart
+      }
+      if (this.queryDateEnd != ''){
+        sortEnd = this.queryDateEnd
+      }
+    }
+
     this.entityService.retrieveEntity(
       this.entity.id,
       "collection",
@@ -65,8 +87,19 @@ export class ProjectManagementComponent{
     .subscribe(data => {
       this.sampleList = data
       .filter(sample => {
-        // may be date or status
-        return true
+        if (sortStart == '' && sortEnd == ''){
+          return true
+        }
+        if (sortStart != '' && sortEnd == ''){
+          return new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)
+        }
+        if (sortStart == '' && sortEnd != ''){
+          return new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd)
+        }
+        if (sortStart != '' && sortEnd != ''){
+          return (new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)) &&
+            (new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd))
+        }
       })
 
       this.sampleList.forEach(sample => {

@@ -150,7 +150,27 @@
             </md-list>
         </md-sidenav>
         <div class="central-content">
-            <router-outlet></router-outlet>
+            <div *ngIf="showMessage">
+                <md-list>
+                    <h3 md-subheader>Changelog</h3>
+                    <md-list-item *ngFor="let log of taskCompletedList">
+                        <md-icon md-list-icon>check_box</md-icon>
+                        <h4 md-line>{{log.title}}</h4>
+                        <p md-line> {{log.date}} </p>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                    <h3 md-subheader>Next</h3>
+                    <md-list-item *ngFor="let log of taskPlannedList">
+                        <md-icon md-list-icon>check_box_outline_blank</md-icon>
+                        <h4 md-line>{{log.title}}</h4>
+                        <p md-line> {{log.date}} </p>
+                    </md-list-item>
+                </md-list>
+            </div>
+            <router-outlet
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)">
+            </router-outlet>
         </div>
     </md-sidenav-container>
     <spinner-component></spinner-component>
