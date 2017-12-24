@@ -76,7 +76,7 @@
                 <md-panel-description>
                 </md-panel-description>
             </md-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="start stretch" >
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
                 <div style="width:700px">
                     <sample-history
                         *ngIf="showHistory[sample.id]"
@@ -114,6 +114,7 @@
                 </div>
             </div>
             <md-action-row>
+                <button md-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button md-button (click)="openEditEntityDialog(sample)">Edit</button>
                 <button md-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
                 <button md-button color="warn" (click)="showMessage('planning...')">Pause</button>

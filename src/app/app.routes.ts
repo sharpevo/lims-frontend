@@ -8,6 +8,7 @@ import {AppsComponent} from './apps/component'
 import {UserService} from './util/user.service'
 import {RedirectComponent} from './util/redirect.component'
 import {MaterialOverviewComponent} from './material/overview.component'
+import {SampleOverviewComponent} from './sample/overview.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -65,6 +66,14 @@ const routes: Routes = [
         component: RedirectComponent
       }
     ]
+  },
+  {
+    path: 'sample-overview/:sample_code',
+    component: SampleOverviewComponent,
+    //canActivate: [UserService],
+    //data: {
+    //expectedRole: 'lims-workcenter-',
+    //},
   },
 ]
 
