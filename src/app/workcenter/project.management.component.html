@@ -18,7 +18,8 @@
                 {{attr.SYS_LABEL}}
             </md-option>
         </md-select>
-        <md-input-container>
+        <md-input-container
+            *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
             <button
                 md-button
                 mdPrefix
@@ -46,6 +47,31 @@
                 (click)="clearQuery()">
                 <md-icon>close</md-icon>
             </button>
+        </md-input-container>
+        <md-input-container
+            *ngIf="queryCode == 'SYS_DATE_COMPLETED'">
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateStart"
+                    placeholder="starts at..."/>
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateEnd"
+                    placeholder="ends at..."/>
+                <button
+                    md-button
+                    md-icon-button
+                    aria-label="Search"
+                    placeholder="Search"
+                    (click)="getSampleList()">
+                    <md-icon>search</md-icon>
+                </button>
+            </div>
         </md-input-container>
     </div>
 </div>
