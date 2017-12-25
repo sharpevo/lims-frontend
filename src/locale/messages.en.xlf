@@ -125,6 +125,51 @@
         </context-group>
       <target state="final">
         Utils
-    </target></trans-unit></body>
+    </target></trans-unit><trans-unit id="plugin-excel-intro-export" datatype="html">
+        <source>
+                            Export:
+                        </source>
+        
+      <target state="final">
+                            Export:
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="plugin-excel-button-export" datatype="html">
+        <source>
+                    EXPORT
+                </source>
+        
+      <target state="final">
+                    EXPORT
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
+        <source>
+                        Choose File:
+                    </source>
+        
+      <target state="final">
+                        Choose File:
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
+        <source>
+                    IMPORT
+                </source>
+        
+      <target state="final">
+                    IMPORT
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
+        <source>
+                    TEMPLATE
+                </source>
+        
+      <target state="final">
+                    TEMPLATE
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
+        <source>
+            Plugin: Excel Processor
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      <target state="final">
+            Plugin: Excel Processor
+        </target></trans-unit></body>
   </file>
 </xliff>

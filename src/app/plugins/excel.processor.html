@@ -1,6 +1,7 @@
 <md-expansion-panel>
     <md-expansion-panel-header>
-        <md-panel-title>
+        <md-panel-title
+            i18n="@@plugin-excel-title">
             Plugin: Excel Processor
         </md-panel-title>
         <md-panel-description>
@@ -17,16 +18,22 @@
                     fxFlex>
                     <span
                         *ngIf="selectedSampleList.length > 0">
-                        Export: <b>{{selectedSampleList.length}}</b> Sample
+                        <span
+                            i18n="@@plugin-excel-intro-export">
+                            Export:
+                        </span>
+                        <b>{{selectedSampleList.length}}</b> Sample
                     </span>
                 </label>
                 <button
                     md-button
+                    i18n="@@plugin-excel-button-template"
                     (click)="exportSample(true)">
                     TEMPLATE
                 </button>
                 <button
                     md-button
+                    i18n="@@plugin-excel-button-export"
                     (click)="exportSample()">
                     EXPORT
                 </button>
@@ -51,13 +58,17 @@
                     for="upload-file-input"
                     class="excel-label"
                     fxFlex>
-                    Choose File:
+                    <span
+                        i18n="@@plugin-excel-label-choosefile">
+                        Choose File:
+                    </span>
                     <b>
                         {{excelUploader.value.split('\\').pop()}}
                     </b>
                 </label>
                 <button
                     md-button
+                    i18n="@@plugin-excel-button-import"
                     (click)="updateExcel()">
                     IMPORT
                 </button>

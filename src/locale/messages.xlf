@@ -149,6 +149,60 @@
           <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="plugin-excel-title" datatype="html">
+        <source>
+            Plugin: Excel Processor
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="plugin-excel-intro-export" datatype="html">
+        <source>
+                            Export:
+                        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="plugin-excel-button-template" datatype="html">
+        <source>
+                    TEMPLATE
+                </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="plugin-excel-button-export" datatype="html">
+        <source>
+                    EXPORT
+                </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="plugin-excel-label-choosefile" datatype="html">
+        <source>
+                        Choose File:
+                    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="plugin-excel-button-import" datatype="html">
+        <source>
+                    IMPORT
+                </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

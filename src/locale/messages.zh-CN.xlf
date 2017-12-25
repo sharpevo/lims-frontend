@@ -108,28 +108,67 @@
         <source>
         Sample List
     </source>
-        <target state="translated">
-                样品列表
-            </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
           <context context-type="linenumber">84</context>
         </context-group>
       <target state="new">
-        Sample List
+        样品列表
     </target></trans-unit><trans-unit id="project-management-util-section" datatype="html">
         <source>
         Utils
     </source>
-        <target state="translated">
-                工具
-            </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
           <context context-type="linenumber">175</context>
         </context-group>
       <target state="new">
-        Utils
-    </target></trans-unit></body>
+        工具
+    </target></trans-unit><trans-unit id="plugin-excel-intro-export" datatype="html">
+        <source>
+                            Export:
+                        </source>
+        
+      <target state="new">
+                            导出样品:
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="plugin-excel-button-export" datatype="html">
+        <source>
+                    EXPORT
+                </source>
+        
+      <target state="new">
+                    导出
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
+        <source>
+                        Choose File:
+                    </source>
+        
+      <target state="new">
+                        选择文件:
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
+        <source>
+                    IMPORT
+                </source>
+        
+      <target state="new">
+                    导入
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
+        <source>
+                    TEMPLATE
+                </source>
+        
+      <target state="new">
+                    下载模板
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
+        <source>
+            Plugin: Excel Processor
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      <target state="new">
+            插件: 导出/导入
+        </target></trans-unit></body>
   </file>
 </xliff>
