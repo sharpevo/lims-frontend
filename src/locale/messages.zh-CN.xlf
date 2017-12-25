@@ -169,6 +169,46 @@
         </context-group>
       <target state="new">
             插件: 导出/导入
+        </target></trans-unit><trans-unit id="plugin-index-validator-title" datatype="html">
+        <source>
+            Plugin: Index Validator
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      <target state="new">
+            插件: Index校验
+        </target></trans-unit><trans-unit id="plugin-index-result-pass" datatype="html">
+        <source>
+            PASS
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      <target state="new">
+            通过
+        </target></trans-unit><trans-unit id="plugin-index-result-fail" datatype="html">
+        <source>
+            FAIL
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      <target state="new">
+            失败
+        </target></trans-unit><trans-unit id="plugin-index-result-intro" datatype="html">
+        <source>
+            No sample selected
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      <target state="new">
+            请选择样品
         </target></trans-unit></body>
   </file>
 </xliff>

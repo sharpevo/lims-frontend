@@ -2,20 +2,24 @@
     <md-expansion-panel-header
         [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
         <md-panel-title
+            i18n="@@plugin-index-validator-title"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             Plugin: Index Validator
         </md-panel-title>
         <md-panel-description
             *ngIf="selectedSampleList.length > 0 && result"
+            i18n="@@plugin-index-result-pass"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             PASS
         </md-panel-description>
         <md-panel-description
             *ngIf="selectedSampleList.length > 0 && !result"
+            i18n="@@plugin-index-result-fail"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             FAIL
         </md-panel-description>
         <md-panel-description
+            i18n="@@plugin-index-result-intro"
             *ngIf="selectedSampleList.length == 0">
             No sample selected
         </md-panel-description>
