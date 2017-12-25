@@ -3,111 +3,91 @@
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="dashboard-tab-scheduled" datatype="html">
-        <source>Scheduled</source>
+        <source>
+        Scheduled
+    </source>
         <target>已下达</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit>
       <trans-unit id="dashboard-tab-processing" datatype="html">
-        <source>Processing</source>
+        <source>
+        Processing
+    </source>
         <target>处理中</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
       <trans-unit id="dashboard-tab-completed" datatype="html">
-        <source>Completed</source>
+        <source>
+        Completed
+    </source>
         <target>已完成</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">184</context></context-group></trans-unit>
       <trans-unit id="dashboard-scheduled-samples" datatype="html">
         <source>
-            SCHEDULED SAMPLES
-        </source>
+                    SCHEDULED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
         <target>已下达</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">30</context></context-group></trans-unit>
       <trans-unit id="dashboard-activated-samples" datatype="html">
         <source>
                     ACTIVATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
                 </source>
         <target>已抵达</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
       <trans-unit id="dashboard-operator" datatype="html">
         <source>Operator</source>
         <target>实验员</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-dispatch" datatype="html">
         <source>
                         DISPATCH
                     </source>
         <target>分派</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-terminate" datatype="html">
         <source>
                         TERMINATE
                     </source>
         <target>终止</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-      </trans-unit>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">117</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">170</context></context-group></trans-unit>
       <trans-unit id="dashboard-dispateched-samples" datatype="html">
         <source>
                     DISPATCHED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
                 </source>
         <target>已分派</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">130</context></context-group></trans-unit>
       <trans-unit id="dashboard-completed-samples" datatype="html">
         <source>
-            COMPLETED SAMPLES
-        </source>
+                    COMPLETED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
         <target>已完成</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">130</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">199</context></context-group></trans-unit>
       <trans-unit id="dashboard-terminated-samples" datatype="html">
         <source>
-            TERMINATED SAMPLES
-        </source>
+                    TERMINATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
         <target>已终止</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">150</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">237</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-release" datatype="html">
         <source>
                         RELEASE
@@ -115,21 +95,41 @@
         <target state="translated">
                 重新分派
             </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-process" datatype="html">
         <source>
                         PROCESS
                     </source>
         <target state="translated">记录</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit>
+    <trans-unit id="project-management-sample-section" datatype="html">
+        <source>
+        Sample List
+    </source>
+        <target state="translated">
+                样品列表
+            </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">84</context>
         </context-group>
-      </trans-unit>
-    </body>
+      <target state="new">
+        Sample List
+    </target></trans-unit><trans-unit id="project-management-util-section" datatype="html">
+        <source>
+        Utils
+    </source>
+        <target state="translated">
+                工具
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+      <target state="new">
+        Utils
+    </target></trans-unit></body>
   </file>
 </xliff>
