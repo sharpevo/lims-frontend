@@ -711,24 +711,24 @@ export class SampleService{
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
     if (issueSample){
-      this.entityService.create(object)
-      .subscribe(data =>{
+      return this.entityService.create(object)
+      .mergeMap(data => {
         delete data.SYS_WORKCENTER_OPERATOR
-        this.buildRelationship(data, attributeInfo)
         console.log('Issue sample:', data)
+        return this.buildRelationship(data, attributeInfo)
       })
     } else {
       this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-      .subscribe(data => {
+      .mergeMap(data => {
         //console.log("retrive chained sample:", data)
         object.id = data[0].id
         object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
         // Using update instead of create since the identifier /workcenter/17R001
         // has been assigned to the scheduled sample
-        this.entityService.update(object)
-        .subscribe(data => {
-          this.buildRelationship(data, attributeInfo)
+        return this.entityService.update(object)
+        .mergeMap(data => {
           console.log('Add Entity:', data)
+          return this.buildRelationship(data, attributeInfo)
         },
         err => {
           console.error(err)
