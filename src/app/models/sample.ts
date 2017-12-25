@@ -796,7 +796,7 @@ export class SampleService{
           targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
           SYS_DATE_SCHEDULED.setDate(
             SYS_DATE_SCHEDULED.getDate() +
-              (targetEntityInput['SYS_DURATION']?targetEntityInput['SYS_DURATION']:0)
+              (targetEntityInput['SYS_DURATION']?Number(targetEntityInput['SYS_DURATION']):0)
           )
           if (index == 0){
             targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
