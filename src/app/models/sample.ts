@@ -843,22 +843,8 @@ export class SampleService{
       })
 
     })
-
-    Observable.concat(...observableList).subscribe(
-      data => {
-        console.log("data: ", data)
-      },
-      err => {
-        console.log("err: ", err)
-      },
-      () => {
-        //setTimeout(() => {
-        this.showMessage("Completed", "OK")
-        this.router.navigate(['/redirect' + this.router.url])
-        //}, 3000)
-      }
-    )
-
+    //return Observable.of(...observableList).concatAll()
+    return Observable.concat(...observableList)
   }
 
   /**
