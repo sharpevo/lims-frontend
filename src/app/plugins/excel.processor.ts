@@ -6,6 +6,7 @@ import {UtilService} from '../util/service'
 import 'rxjs/Rx' ;
 import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
+import { Observable } from 'rxjs/Rx'
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -204,6 +205,8 @@ export class PluginExcelProcessorComponent {
     //}
     //updateExcelRaw(){
 
+    let observableList = []
+
     this.excelResultSample.forEach(sample =>{
 
       let sampleId = sample['IDENTIFIER']
@@ -269,28 +272,43 @@ export class PluginExcelProcessorComponent {
           newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
         })
 
-        this.entityService.retrieveGenre(this.workcenter.id)
-        .subscribe(data => {
-          newSample['SYS_GENRE'] = data[0]
-          newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
-          newSample['SYS_ENTITY_TYPE'] = 'collection'
+        observableList.push(
+          this.entityService.retrieveGenre(this.workcenter.id)
+          .mergeMap(data => {
+            //.subscribe(data => {
+            newSample['SYS_GENRE'] = data[0]
+            newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+            newSample['SYS_ENTITY_TYPE'] = 'collection'
 
-          newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
-            '/' +
-            newSample['SYS_SAMPLE_CODE'] + '.' +
-            new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+            newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
+              '/' +
+              newSample['SYS_SAMPLE_CODE'] + '.' +
+              new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
 
-          this.sampleService.createObject(
-            newSample,
-            {
-              "attributeList": this.workcenterAttributeList,
-              "parentMap": this.parentMap,
-            },
-            true)
-        })
+            return this.sampleService.createObject(
+              newSample,
+              {
+                "attributeList": this.workcenterAttributeList,
+                "parentMap": this.parentMap,
+              },
+              true)
+          })
+        )
 
       }
     })
+
+    Observable.concat(...observableList)
+    .subscribe(
+      data => {
+        console.log("complete sample", data)
+      },
+      err => {
+      },
+      () => {
+        console.log("Request done.")
+        this.router.navigate(['/redirect' + this.router.url])
+      })
   }
 
   updateExcel2(){
