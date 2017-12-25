@@ -6,7 +6,6 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
-import {SpinnerService} from '../util/spinner.service'
 import {UserService} from '../util/user.service'
 
 import {Router} from '@angular/router'
@@ -24,7 +23,6 @@ export class SampleService{
 
   constructor(
     public snackBar: MdSnackBar,
-    public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
     private userService: UserService,
@@ -748,7 +746,6 @@ export class SampleService{
    *
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
-    this.spinner.start()
 
     let observableList = []
 
@@ -856,7 +853,6 @@ export class SampleService{
       },
       () => {
         //setTimeout(() => {
-        this.spinner.stop()
         this.showMessage("Completed", "OK")
         this.router.navigate(['/redirect' + this.router.url])
         //}, 3000)
