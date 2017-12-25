@@ -637,12 +637,22 @@ export class SampleService{
                 delete sample.SYS_TARGET
                 // create object after terminating samples
                 this.createObject(sample, attributeInfo, true)
+                .subscribe(
+                  data => {},
+                    err => {},
+                    () => {
+                    this.router.navigate(['/redirect' + this.router.url])
+                  })
               })
             })
-
-
       } else {
         this.createObject(sample, attributeInfo, true)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       }
     })
   }
@@ -701,6 +711,12 @@ export class SampleService{
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         this.createObject(sample, attributeInfo, false)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       })
     })
 
