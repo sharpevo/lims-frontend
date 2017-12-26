@@ -35,6 +35,7 @@ export class PluginExcelProcessorComponent {
   ){}
 
   ngOnInit(){
+    //console.log("hybridObjectMap: ", this.hybridObjectMap)
     this.generateParentMap()
   }
 
@@ -59,6 +60,7 @@ export class PluginExcelProcessorComponent {
             // the "object" entity type which is implemented in the entityService.
             this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
             .subscribe(data => {
+              console.log("--", data)
               data.forEach(material => {
                 this.parentMap[attr.SYS_CODE][material.id] = {}
                 material['SYS_SCHEMA'].forEach(materialAttr => {
@@ -130,9 +132,11 @@ export class PluginExcelProcessorComponent {
       this.parentMap = {}
       this.parentMap[this.parentMapKey] = {}
     }
+    //console.log("excelResultGroup: ", this.excelResultGroup)
     this.excelResultGroup.forEach(groupInExcel => {
 
       console.log("groupInExcel", groupInExcel)
+      // groupId indicates the workcenter or the material itself
       let groupId = groupInExcel['IDENTIFIER']
       if (groupId) {
 
@@ -140,6 +144,8 @@ export class PluginExcelProcessorComponent {
         this.entityService.retrieveBy({"_id": groupId})
         .subscribe(data => {
           let group = data[0]
+
+          console.log("GROUP", group)
           if (this.parentMapFloor == "collection"){
             // bom, get the first lot for uploading / default
             // sort by the lot label
@@ -174,25 +180,33 @@ export class PluginExcelProcessorComponent {
               group.SYS_SCHEMA.forEach(schema => {
                 Object.keys(groupInExcel).forEach(key => {
                   if (schema.SYS_LABEL == key){
+                    //console.log("Schema vs. key: ", schema.SYS_CODE, key)
                     this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key]
                   }
                 })
               })
+              //this.parentMap[this.parentMapKey][groupId]['SYS_QUANTITY'] = groupInExcel['Duration']
+              //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
               this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId // defaultMaterial
               this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true
               this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
             })
           } else {
+
             console.log("group", groupId)
             this.parentMap[this.parentMapKey][groupId] = {}
             group.SYS_SCHEMA.forEach(schema => {
               Object.keys(groupInExcel).forEach(key => {
+                //console.log("Schema vs. key: ", schema.SYS_LABEL, key)
                 if (schema.SYS_LABEL == key){
                   this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key] // overwrited by the backend data
                 }
               })
             })
-            this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
+            //this.parentMap[this.parentMapKey][groupId]['SYS_DURATION'] = groupInExcel['Duration']
+            //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
+            this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = group['SYS_SOURCE']
+            //this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
             this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true // mimic submited in the form
             this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
           }
