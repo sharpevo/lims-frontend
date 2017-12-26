@@ -734,7 +734,7 @@ export class SampleService{
         return this.buildRelationship(data, attributeInfo)
       })
     } else {
-      this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+      return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
       .mergeMap(data => {
         //console.log("retrive chained sample:", data)
         object.id = data[0].id
@@ -745,9 +745,6 @@ export class SampleService{
         .mergeMap(data => {
           console.log('Add Entity:', data)
           return this.buildRelationship(data, attributeInfo)
-        },
-        err => {
-          console.error(err)
         })
       })
     }
