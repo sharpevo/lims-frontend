@@ -23,6 +23,21 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#141 修复计划进度bug(WPS数据类型所致)",
+      date: "2017-12-26",
+      highlight: true,
+    },
+    {
+      title: "#140 样品Excel导出前按样品编号升序排序",
+      date: "2017-12-25",
+      highlight: true,
+    },
+    {
+      title: "#138 增加缺失前端国际化字段(任务下达/插件等)",
+      date: "2017-12-25",
+      highlight: true,
+    },
+    {
       title: "#106 增加样品查询模块(项目编号, 日期范围)",
       date: "2017-12-24",
     },

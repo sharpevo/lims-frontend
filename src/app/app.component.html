@@ -160,7 +160,7 @@
                         <md-icon
                             *ngIf="log.title == ''"
                             md-list-icon>more_horiz</md-icon>
-                        <h4 md-line>{{log.title}}</h4>
+                        <h4 md-line [class.highlight-log]="log.highlight">{{log.title}}</h4>
                         <p md-line> {{log.date}} </p>
                     </md-list-item>
                     <md-divider></md-divider>
