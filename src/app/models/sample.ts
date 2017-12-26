@@ -538,25 +538,7 @@ export class SampleService{
             this.submitSample(workcenter, object, data, attributeInfo)
           })
         })
-
-        // Send notification to Dingtalk
-        let date = new Date()
-        let msg_date = date.getFullYear() + '-' +
-          (date.getMonth() + 1) + '-' +
-          date.getDate() + ' ' +
-          date.getHours() + ':' +
-          date.getMinutes()
-
-        this.utilService.sendNotif(
-          "actionCard",
-          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
-          "/workcenter-dashboard/" + workcenter.id
-        )
-        .subscribe(() => {
-          console.log("Sending notification:", data)
-        })
       })
-
     })
 
 
