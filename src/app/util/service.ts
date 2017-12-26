@@ -24,8 +24,7 @@ export class UtilService{
     formData.append('excelFile', file[0], file[0].name)
     return this.http.post(
       '/excelparse',
-      formData,
-      {})
+      formData)
       .map(res => res.json())
   }
 

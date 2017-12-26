@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {AttributeService} from '../attribute/service'
 import {SampleService} from '../models/sample'
+import {Observable} from 'rxjs/Rx'
 
 @Component({
   selector: 'plugin-index-validator',
@@ -13,15 +15,36 @@ export class PluginIndexValidatorComponent {
   result: boolean = true
   previousCheckedList: boolean[] = []
   resultList: boolean[] = []
+  codeMap: any = {
+    "MI7_SEQN_KEY": "SYS_M_INDEX_SEQUENCE_I7",
+    "MI7_CODE_KEY": "SYS_M_INDEX_CODE_I7",
+    "MI5_SEQN_KEY": "SYS_M_INDEX_SEQUENCE_I5",
+    "MI5_CODE_KEY": "SYS_M_INDEX_CODE_I5",
+    "SI7_SEQN_KEY": "SYS_S_INDEX_SEQUENCE_I7",
+    "SI7_CODE_KEY": "SYS_S_INDEX_CODE_I7",
+  }
+  genreMap: any = {}
+  sampleMap: any = {}
+  seqMap: any = {}
+  test: string = ''
 
   constructor(
     private entityService: EntityService,
+    private attributeService: AttributeService,
     private sampleService: SampleService,
   ) {}
 
   ngOnInit(){
     this.updatePreviousCheckedList()
     console.log(this.previousCheckedList)
+    Object.keys(this.codeMap).forEach(key => {
+      this.attributeService.retrieveBy({
+        "SYS_CODE": this.codeMap[key]
+      })
+      .subscribe(data => {
+        this.genreMap[key] = data[0].SYS_GENRE.id
+      })
+    })
   }
 
   ngDoCheck(){
@@ -58,39 +81,65 @@ export class PluginIndexValidatorComponent {
   validateIndices(){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     this.resultList = []
-    let resultFlag = true
+    this.seqMap = []
     if (this.selectedSampleList.length == 0){
       return
     }
-    let seqMap = {}
-    //for (let sample of this.selectedSampleList; let i = index){
+    let sampleObs = []
     for (let i=0; i<this.selectedSampleList.length; i++){
-      let key = this.selectedSampleList[i]['SYS_INDEX_SEQUENCE']
-      //console.log(key)
-      //console.log(seqMap[key])
-      //if (seqMap[sample['SYS_INDEX_SEQUENCE']] === '') {
+      let sample = this.selectedSampleList[i]
+      this.resultList[i] = true
 
-      // key != null to treat blank index sequence as invalid one
-      if (seqMap[key] == null && key != null) {
-        // id is more stable than SYS_SAMLPE_CODE
-        // or index note that 0=='' returns true
-        seqMap[key] = ''+i
-        this.resultList[i] = true
-      } else {
-        this.result = false
-        resultFlag = false
-        this.resultList[i] = false
-        this.resultList[Number(seqMap[key])] = false
-        // keep validating for all the left samples
-        // return
-      }
-    }
-    if (resultFlag){
+      this.sampleMap[sample.id] = {}
+      Object.keys(this.codeMap).forEach(key => {
+        sampleObs.push(
+          this.sampleService.retrieveAuxiliaryAttributeList(
+            sample,
+            this.codeMap[key],
+            this.genreMap[key])
+            .map(data => {
+              return {'key': key, 'attrValueList': data, 'sampleId': sample.id, 'index': i}
+            })
+        )
+      })
+
+    } // end of for loop
+
+    Observable
+    .forkJoin(sampleObs)
+    .subscribe(data => {
+      console.log("DATA", data)
+      data.forEach(result => {
+        let key = result['key']
+        let attr = result['attrValueList']
+        let sampleId = result['sampleId']
+        let index = result['index']
+        this.sampleMap[sampleId][this.codeMap[key]] = attr.length > 0?attr[0]['value']:''
+      })
+
       this.result = true
-    } else {
-      this.result = false
-    }
+      this.selectedSampleList.forEach((sample, index) => {
+        this.checkSequence(sample.id, index)
+      })
+    })
 
+  }
+
+  checkSequence(sampleId: string, index: number){
+    let mi5 = this.sampleMap[sampleId][this.codeMap['MI5_SEQN_KEY']]
+    let mi7 = this.sampleMap[sampleId][this.codeMap['MI7_SEQN_KEY']]
+    let si7 = this.sampleMap[sampleId][this.codeMap['SI7_SEQN_KEY']]
+    let key = si7 + mi7 + mi5
+    if (this.seqMap.hasOwnProperty(key) && Number(this.seqMap[key]) != index){
+      console.log("duped: ", sampleId, key, this.seqMap)
+      this.result = false
+      this.resultList[index] = false
+      this.resultList[Number(this.seqMap[key])] = false
+    } else if (key) {
+      this.seqMap[key] = '' + index
+      this.resultList[index] = true
+    }
+    //console.log("sample: ", sampleId, "index: " + index, "key: " + key, this.seqMap, "resultList", this.resultList)
   }
 
 }

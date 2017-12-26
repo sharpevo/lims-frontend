@@ -7,6 +7,7 @@ import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
 import {UserService} from './util/user.service'
 import { Subscription } from 'rxjs/Subscription';
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -19,25 +20,79 @@ export class AppComponent {
   userInfo: any
   subscription: Subscription
   interval: any
+  showMessage: boolean = true
+  taskCompletedList: any[] = [
+    {
+      title: "#106 增加样品查询模块(项目编号, 日期范围)",
+      date: "2017-12-24",
+    },
+    {
+      title: "#104 增加简单样品详情",
+      date: "2017-12-24",
+    },
+    {
+      title: "#103 增加简单物料管理",
+      date: "2017-12-23",
+    },
+    {
+      title: "#98 修复双端Index校验bug",
+      date: "2017-12-22",
+    },
+    {
+      title: "#100 优化工作中心",
+      date: "2017-12-22",
+    },
+    {
+      title: "#88 经Excel上传实现任务批量下达同时Sheet2配置工艺流程",
+      date: "2017-12-21",
+    },
+    {
+      title: "#77 指定工作中心物料清单同Excel文件上传处理",
+      date: "2017-12-19",
+    },
+    {
+      title: "#75 优化任务下达",
+      date: "2017-12-17",
+    },
+    {
+      title: "",
+      date: "",
+    },
+
+  ]
+  taskPlannedList: any[] = [
+    {
+      title: "#78 工作中心文件上传(不解析)并在线预览(pdf)",
+      date: "Week: 52",
+    },
+    {
+      title: "#99 修复Excel导出部分参考属性缺失bug",
+      date: "Week: 52",
+    },
+    {
+      title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
+      date: "Week: 52",
+    },
+    {
+      title: "",
+      date: "",
+    },
+  ]
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
     private userService: UserService,
     private spinnerService: SpinnerService,
-    private entityService: EntityService
+    private entityService: EntityService,
+    private router: Router,
   ){}
 
   ngOnInit(){
+
+    this.checking()
     this.interval = setInterval(() => {
-      this.utilService.checkAvailability()
-      .subscribe(data => {
-      },
-      error => {
-        console.log("backend failded")
-        this.userService.authFail()
-      })
+      this.checking()
     }, 1000 * 60)
-    this.userInfo = this.userService.getUserInfo()
     this.getParams()
   }
 
@@ -46,6 +101,18 @@ export class AppComponent {
       console.log("clear jobs")
       clearInterval(this.interval)
     }
+  }
+
+  checking() {
+    this.utilService.checkAvailability()
+    .subscribe(data => {
+      console.log("check", data)
+      this.userInfo = this.userService.getUserInfo()
+    },
+    error => {
+      console.log("backend failded", error)
+      this.userService.authFail()
+    })
   }
 
   getParams() {
@@ -75,5 +142,18 @@ export class AppComponent {
     let expires = "expires=" + date.toUTCString()
     document.cookie = name + "=" + value + "; " +  expires + (path.length > 0 ? "; path=" + path : "")
     console.log("cookie", document.cookie)
+  }
+
+  refresh(){
+    this.router.navigate(['/redirect' + this.router.url])
+  }
+
+  onActivate(event: any){
+    this.showMessage = false
+    console.log("ACTIVATE")
+  }
+  onDeactivate(event: any){
+    this.showMessage = true
+    console.log("DEACTIVATE")
   }
 }

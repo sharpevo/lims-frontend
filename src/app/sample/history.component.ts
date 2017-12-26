@@ -107,7 +107,7 @@ export class SampleHistoryComponent {
     this.entityService.retrieveBySortBy(
       {"where":'{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
       },
-      "ORDER")
+      "SYS_ORDER")
       .subscribe(data => {
         this.workcenterList = data
         this.workcenterList.forEach(workcenter => {
@@ -146,7 +146,7 @@ export class SampleHistoryComponent {
           let chartData = {
             data:[],
             fill:false,
-            pointRadius: 6,
+            pointRadius: [],
             pointHoverRadius: 10,
             label: dataSetLabel,
             pointStyle:[],
@@ -178,11 +178,25 @@ export class SampleHistoryComponent {
                   scheduledDate: (scheduledDate.getMonth()+1) + '月' + scheduledDate.getDate() + '日',
                 })
 
-                if (this.sampleMap[key][j-1]['SYS_DATE_TERMINATED']){
-                  chartData.pointStyle.push('triangle')
-                } else {
-                  chartData.pointStyle.push('circle')
+                let style = ''
+                let radius = 0
+                // completed samples
+                if (!this.sampleMap[key][j-1]['SYS_DATE_TERMINATED'] && this.sampleMap[key][j-1]['SYS_DATE_COMPLETED']){
+                  style = 'rect'
+                  radius = 8
                 }
+                // next available samples
+                if (!this.sampleMap[key][j-1]['SYS_DATE_TERMINATED'] && !this.sampleMap[key][j-1]['SYS_DATE_COMPLETED']){
+                  style = 'rectRot'
+                  radius = 10
+                }
+                // terminated samples
+                if (this.sampleMap[key][j-1]['SYS_DATE_TERMINATED']){
+                  style = 'triangle'
+                  radius = 8
+                }
+                chartData.pointStyle.push(style)
+                chartData.pointRadius.push(radius)
               } else {
                 offset += 1
                 //console.log("!=", offset)

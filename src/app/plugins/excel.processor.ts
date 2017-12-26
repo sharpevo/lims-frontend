@@ -4,6 +4,9 @@ import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
 import 'rxjs/Rx' ;
+import {DatePipe} from '@angular/common'
+import {Router} from '@angular/router'
+import { Observable } from 'rxjs/Rx'
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -16,8 +19,11 @@ export class PluginExcelProcessorComponent {
   @Input() hybridObjectMap
   @ViewChild('excelUploader') excelUploader
   selectedSampleList: any[] = []
-  excelResult: any[] = []
+  excelResultSample: any[] = []
+  excelResultGroup: any[] = []
   parentMap: any = {} // parent entity like BoM or Routing
+  parentMapKey: string = ''
+  parentMapFloor: string = ''
   entityMap: any = {} // entity type like operator
   workcenterAttributeList: any[] = []
   constructor(
@@ -25,9 +31,11 @@ export class PluginExcelProcessorComponent {
     private entityService: EntityService,
     private genreService: GenreService,
     private sampleService: SampleService,
+    private router: Router,
   ){}
 
   ngOnInit(){
+    //console.log("hybridObjectMap: ", this.hybridObjectMap)
     this.generateParentMap()
   }
 
@@ -44,12 +52,15 @@ export class PluginExcelProcessorComponent {
 
           // Process BoM or Routing
           if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
+            this.parentMapKey = attr.SYS_CODE
+            this.parentMapFloor = attr.SYS_FLOOR_ENTITY_TYPE
             this.parentMap[attr.SYS_CODE] = {}
 
             // Get the entities under the BoM, note that the empty string indicates
             // the "object" entity type which is implemented in the entityService.
             this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
             .subscribe(data => {
+              console.log("--", data)
               data.forEach(material => {
                 this.parentMap[attr.SYS_CODE][material.id] = {}
                 material['SYS_SCHEMA'].forEach(materialAttr => {
@@ -73,21 +84,26 @@ export class PluginExcelProcessorComponent {
     console.log(file)
     this.utilService.postExcel(file)
     .subscribe(data => {
-      this.excelResult = data[0]
+      this.excelResultSample = data[0]
+      this.excelResultGroup = data[1]
     })
   }
 
   clearExcel(){
-    this.excelResult = []
+    this.excelResultSample = []
+    this.excelResultGroup = []
     this.excelUploader.nativeElement.value = ''
   }
 
-  exportSample(){
+  exportSample(template?: boolean){
     this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
     let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList, this.hybridObjectMap)
     console.log("hybridSampleList:", hybridSampleList)
 
-    if (this.selectedSampleList.length > 0){
+    if (this.selectedSampleList.length > 0 || template){
+      if (template){
+        hybridSampleList = []
+      }
       this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
       .subscribe(data => {
         console.log(data)
@@ -99,19 +115,116 @@ export class PluginExcelProcessorComponent {
 
         const pdfUrl = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
-        anchor.download = 'test.xlsx';
+
+        let timestamp = new DatePipe('en-US').transform(new Date(), 'yyyyMMdd.HHmmss')
+        anchor.download = this.workcenter[this.workcenter['SYS_LABEL']] + '.' + timestamp + '.xlsx';
         anchor.href = pdfUrl;
         anchor.click()
       })
     }
+    console.log("PARENTMAP", this.parentMap)
   }
 
   updateExcel(){
 
-    this.excelResult.forEach(sample =>{
+    // update the parentMap according to the excel if another sheets provides some.
+    if (this.excelResultGroup.length > 0){
+      this.parentMap = {}
+      this.parentMap[this.parentMapKey] = {}
+    }
+    //console.log("excelResultGroup: ", this.excelResultGroup)
+    this.excelResultGroup.forEach(groupInExcel => {
 
-      sample['IDENTIFIER'].split(",").forEach(sampleId => {
+      console.log("groupInExcel", groupInExcel)
+      // groupId indicates the workcenter or the material itself
+      let groupId = groupInExcel['IDENTIFIER']
+      if (groupId) {
 
+        // retrieve the group item (object with the given id)
+        this.entityService.retrieveBy({"_id": groupId})
+        .subscribe(data => {
+          let group = data[0]
+
+          console.log("GROUP", group)
+          if (this.parentMapFloor == "collection"){
+            // bom, get the first lot for uploading / default
+            // sort by the lot label
+
+            // retrive collections/LOTs under the given material
+            this.entityService.retrieveEntity(group['SYS_SOURCE'], "collection")
+            .subscribe(data => {
+
+              console.log("material", data)
+              // get the delfault lot in the array sorted by the SYS_CODE
+              // e.g. LOT160810
+              let defaultMaterial = {}
+
+              // get the default material
+              let defaultMaterialList = data.filter(material => material['SYS_IS_DEFAULT'])
+              if (defaultMaterialList.length > 0) {
+                defaultMaterial = defaultMaterial[0]
+              } else {
+                // if default flag is not set well, get the oldest lot
+                defaultMaterial = data.sort((a,b) => {
+                  if (a['createAt'] < b['createdAt']) {
+                    return 1
+                  } else {
+                    return -1
+                  }
+                })[0]
+              }
+              groupId = defaultMaterial['id']
+
+              console.log("group", groupId)
+              this.parentMap[this.parentMapKey][groupId] = {}
+              group.SYS_SCHEMA.forEach(schema => {
+                Object.keys(groupInExcel).forEach(key => {
+                  if (schema.SYS_LABEL == key){
+                    //console.log("Schema vs. key: ", schema.SYS_CODE, key)
+                    this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key]
+                  }
+                })
+              })
+              //this.parentMap[this.parentMapKey][groupId]['SYS_QUANTITY'] = groupInExcel['Duration']
+              //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
+              this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId // defaultMaterial
+              this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true
+              this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+            })
+          } else {
+
+            console.log("group", groupId)
+            this.parentMap[this.parentMapKey][groupId] = {}
+            group.SYS_SCHEMA.forEach(schema => {
+              Object.keys(groupInExcel).forEach(key => {
+                //console.log("Schema vs. key: ", schema.SYS_LABEL, key)
+                if (schema.SYS_LABEL == key){
+                  this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key] // overwrited by the backend data
+                }
+              })
+            })
+            //this.parentMap[this.parentMapKey][groupId]['SYS_DURATION'] = groupInExcel['Duration']
+            //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
+            this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = group['SYS_SOURCE']
+            //this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
+            this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true // mimic submited in the form
+            this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+          }
+        })
+      }
+    })
+    console.log("NEW PARENTMAP", this.parentMap)
+
+    //return
+    //}
+    //updateExcelRaw(){
+
+    let observableList = []
+
+    this.excelResultSample.forEach(sample =>{
+
+      let sampleId = sample['IDENTIFIER']
+      if (sampleId) {
         // Convert excel-style object to database-style object.
         // The excel-style object is formed as:
         // 'LABEL': 'Value'
@@ -159,12 +272,61 @@ export class PluginExcelProcessorComponent {
               "parentMap": this.parentMap
             })
         })
-      })
+      } else {
+        // issue sample
+
+        // only allow sample creation at General Project Workcenter
+        if (this.workcenter.SYS_IDENTIFIER != "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
+          console.error("Not allowed to upload samples at this workcenter", this.workcenter.SYS_IDENTIFIER)
+          return
+        }
+
+        let newSample = {}
+        this.workcenterAttributeList.forEach(attr => {
+          newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
+        })
+
+        observableList.push(
+          this.entityService.retrieveGenre(this.workcenter.id)
+          .mergeMap(data => {
+            //.subscribe(data => {
+            newSample['SYS_GENRE'] = data[0]
+            newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+            newSample['SYS_ENTITY_TYPE'] = 'collection'
+
+            newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
+              '/' +
+              newSample['SYS_SAMPLE_CODE'] + '.' +
+              new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+
+            return this.sampleService.createObject(
+              newSample,
+              {
+                "attributeList": this.workcenterAttributeList,
+                "parentMap": this.parentMap,
+              },
+              true)
+          })
+        )
+
+      }
     })
+
+    Observable.concat(...observableList)
+    .subscribe(
+      data => {
+        console.log("complete sample", data)
+      },
+      err => {
+      },
+      () => {
+        console.log("Request done.")
+        this.router.navigate(['/redirect' + this.router.url])
+      })
   }
 
   updateExcel2(){
-    this.utilService.putExcel(this.excelResult)
+    this.utilService.putExcel(this.excelResultSample)
     .subscribe(data => {
       console.log(data)
       this.selectedSampleList.forEach(sample => sample.TMP_CHECKED = false)

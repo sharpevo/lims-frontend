@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
@@ -71,6 +71,11 @@ import {UserService} from './util/user.service'
 
 import {MdSnackBar} from '@angular/material'
 
+import {RedirectComponent} from './util/redirect.component'
+import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
+import {MaterialOverviewComponent} from './material/overview.component'
+import {SampleOverviewComponent} from './sample/overview.component'
+
 @NgModule({
   declarations: [
     ObjectKeysPipe,
@@ -112,6 +117,10 @@ import {MdSnackBar} from '@angular/material'
     ShowAuxiliaryAttributeDialog,
     AppsComponent,
     SpinnerComponent,
+    RedirectComponent,
+    EditPMSampleDialog,
+    MaterialOverviewComponent,
+    SampleOverviewComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -120,10 +129,12 @@ import {MdSnackBar} from '@angular/material'
     SampleFormDialog,
     SimpleTableDialog,
     ShowAuxiliaryAttributeDialog,
+    EditPMSampleDialog,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     FlexLayoutModule,
     MaterialModule,

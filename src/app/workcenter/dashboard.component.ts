@@ -7,10 +7,20 @@ import {UserService} from '../util/user.service'
 
 //import {Observable} from 'rxjs/Observable'
 import { Observable } from 'rxjs/Rx'
+import {MdSnackBar} from '@angular/material'
 
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
+  styles:[`
+    .disabled-panel{
+    opacity: 0.3;
+    pointer-events: none;
+    }
+    .mat-select{
+    margin-top:-9px;
+    }
+    `],
 })
 export class WorkcenterDashboardComponent{
   sub: any = {}
@@ -26,6 +36,13 @@ export class WorkcenterDashboardComponent{
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
+  showPanel: any = {
+    'scheduled': false,
+    'activated': false,
+    'dispatched': false,
+    'completed': false,
+    'terminated': false,
+  }
 
   sampleList: any[] = []
 
@@ -38,6 +55,7 @@ export class WorkcenterDashboardComponent{
     private router: Router,
     private entityService: EntityService,
     private userService: UserService,
+    private snackBar: MdSnackBar,
   ){
     this.objectId = this.route.snapshot.params['id']
   }
@@ -110,7 +128,6 @@ export class WorkcenterDashboardComponent{
         this.entityService.retrieveEntity(this.workcenterId, 'collection')
         .subscribe(data => {
           this.sampleList = data
-          this.dispatchedComponent.getSampleList()
           this.activatedComponent.getSampleList()
         })
       })
@@ -163,11 +180,33 @@ export class WorkcenterDashboardComponent{
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
-      this.entityService.retrieveEntity(this.workcenterId, 'collection')
-      .subscribe(data => {
-        this.sampleList = data
-        this.dispatchedComponent.getSampleList()
-      })
     });
+  }
+
+  editSample(){
+    this.showMessage("planning...")
+  }
+  terminateSample(){
+    this.showMessage("planning...")
+  }
+  showMessage(msg: string) {
+    this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
+  openPanel(panel: string){
+    Object.keys(this.showPanel).forEach(key => {
+      if (key == panel){
+        this.showPanel[key] = true
+      } else {
+        this.showPanel[key] = false
+      }
+    })
+    console.log(this.showPanel)
+  }
+  closePanel(panel: string){
+    this.showPanel[panel] = false
+  }
+  isExpanded(panel: string){
+    return this.showPanel[panel]
   }
 }

@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {UserService} from '../util/user.service'
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'apps-view',
@@ -16,24 +17,25 @@ export class AppsComponent {
   constructor(
     private entityService: EntityService,
     private userService: UserService,
+    private router: Router,
   ){}
 
   ngOnInit(){
     this.userInfo = this.userService.getUserInfo()
     this.getWorkcenterList("/PRODUCT_WORKCENTER")
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
-    this.appList.push({
-      "isInternal": false,
-      "label": "样品管理",
-      "url":"http://192.168.1.90:8085",
-      "icon":"extension",
-    })
-    this.appList.push({
-      "isInternal": false,
-      "label": "客户管理",
-      "url":"http://192.168.1.90:8088",
-      "icon":"extension",
-    })
+    //this.appList.push({
+    //"isInternal": false,
+    //"label": "样品管理",
+    //"url":"192.168.1.90:8085",
+    //"icon":"extension",
+    //})
+    //this.appList.push({
+    //"isInternal": false,
+    //"label": "客户管理",
+    //"url":"192.168.1.90:8088",
+    //"icon":"extension",
+    //})
     this.appList.push({
       "isInternal": true,
       "label": "任务下达*",
@@ -44,6 +46,12 @@ export class AppsComponent {
       "isInternal": true,
       "label": "工作中心",
       "url":"/workcenter-overview",
+      "icon":"extension",
+    })
+    this.appList.push({
+      "isInternal": true,
+      "label": "物料",
+      "url":"/material-overview",
       "icon":"extension",
     })
     this.appList.push({
@@ -110,5 +118,13 @@ export class AppsComponent {
         })
       })
     })
+  }
+
+  navigateTo(app: any){
+    if (app.isInternal){
+      this.router.navigate([app.url])
+    } else {
+      window.location.href = `http://${app.url}`
+    }
   }
 }

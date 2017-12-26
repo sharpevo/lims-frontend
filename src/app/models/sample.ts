@@ -6,21 +6,27 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
-import {SpinnerService} from '../util/spinner.service'
 import {UserService} from '../util/user.service'
 
+import {Router} from '@angular/router'
 
 @Injectable()
 export class SampleService{
 
   userInfo: any = {}
 
+  ignoredAttribute: any = {
+    "SYS_WORKCENTER_OPREATOR":true,
+    "SYS_DATE_COMPLETED":true,
+    "SYS_DATE_SCHEDULED":true,
+  }
+
   constructor(
     public snackBar: MdSnackBar,
-    public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
     private userService: UserService,
+    private router: Router,
     private entityService: EntityService
   ){
     this.userInfo = this.userService.getUserInfo()
@@ -145,6 +151,68 @@ export class SampleService{
       }
 
       callback(attributeObjectList)
+    })
+  }
+
+  retrieveAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string){
+
+    // Get the latest sample
+    return this.entityService.retrieveBy({
+      "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+    })
+    .map(_sampleList => {
+
+      let sampleList = _sampleList
+      .sort((a,b) => {
+        //if (a['updatedAt'] < b['updatedAt']){
+        if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
+          return 1
+        } else {
+          return -1
+        }
+      })
+      let attributeObjectList = []
+
+      let activatedSampleList = sampleList
+      .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+      //!sample['SYS_DATE_TERMINATED'])
+      if (activatedSampleList.length > 0){
+        let uniqueSampleList = []
+        let seen = {}
+        activatedSampleList.forEach(sample => {
+          let key = attributeCode + "|" + sample[attributeCode]
+          if (!seen[key]) {
+            if (sample[attributeCode]){
+              seen[key] = true
+            }
+
+            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+              uniqueSampleList.push(sample)
+            }
+          }
+        })
+
+        uniqueSampleList
+        .forEach(sample => {
+          attributeObjectList.push({
+            "id": sample.id,
+            "dateCompleted": sample['SYS_DATE_COMPLETED'],
+            "dateUpdated": sample['updatedAt'],
+            "value": sample[attributeCode]?sample[attributeCode]:"---"
+          })
+        })
+      } else {
+        // For samples that are just submitted, none of which satisfied the
+        // date condition, so push the attributes of the first sample.
+        let firstSample = sampleList[0]
+        attributeObjectList.push({
+          "id": firstSample.id,
+          "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
+          "dateUpdated": firstSample['updatedAt'],
+          "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
+        })
+      }
+      return attributeObjectList
     })
   }
 
@@ -548,7 +616,9 @@ export class SampleService{
                 let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
                 let refSampleDate = new Date(originalSampleSchuduledDate)
                 //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
-                if (sampleDate >= refSampleDate){
+                if (sampleDate >= refSampleDate ||
+                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
+
                   console.log( sampleDate, ">", refSampleDate)
                   //console.log("-->", sampleItem.id)
                   sampleItem['SYS_DATE_TERMINATED'] = new Date()
@@ -567,12 +637,22 @@ export class SampleService{
                 delete sample.SYS_TARGET
                 // create object after terminating samples
                 this.createObject(sample, attributeInfo, true)
+                .subscribe(
+                  data => {},
+                    err => {},
+                    () => {
+                    this.router.navigate(['/redirect' + this.router.url])
+                  })
               })
             })
-
-
       } else {
         this.createObject(sample, attributeInfo, true)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       }
     })
   }
@@ -631,6 +711,12 @@ export class SampleService{
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         this.createObject(sample, attributeInfo, false)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       })
     })
 
@@ -641,23 +727,24 @@ export class SampleService{
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
     if (issueSample){
-      this.entityService.create(object)
-      .subscribe(data =>{
-        this.buildRelationship(data, attributeInfo)
+      return this.entityService.create(object)
+      .mergeMap(data => {
+        delete data.SYS_WORKCENTER_OPERATOR
         console.log('Issue sample:', data)
+        return this.buildRelationship(data, attributeInfo)
       })
     } else {
       this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-      .subscribe(data => {
+      .mergeMap(data => {
         //console.log("retrive chained sample:", data)
         object.id = data[0].id
         object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
         // Using update instead of create since the identifier /workcenter/17R001
         // has been assigned to the scheduled sample
-        this.entityService.update(object)
-        .subscribe(data => {
-          this.buildRelationship(data, attributeInfo)
+        return this.entityService.update(object)
+        .mergeMap(data => {
           console.log('Add Entity:', data)
+          return this.buildRelationship(data, attributeInfo)
         },
         err => {
           console.error(err)
@@ -675,7 +762,6 @@ export class SampleService{
    *
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
-    this.spinner.start()
 
     let observableList = []
 
@@ -691,7 +777,16 @@ export class SampleService{
       let DATE_EXISTS = false
 
       // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
-      Object.keys(targetEntityMap).forEach((entityId, index) =>{
+      Object.keys(targetEntityMap)
+      .sort((a,b) => {
+        // sort target entities by SYS_ORDER which is manipulated by admins.
+        if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
+          return 1
+        } else {
+          return -1
+        }
+      })
+      .forEach((entityId, index) =>{
 
         // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
         let targetEntityInput = targetEntityMap[entityId]
@@ -714,7 +809,7 @@ export class SampleService{
           targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
           SYS_DATE_SCHEDULED.setDate(
             SYS_DATE_SCHEDULED.getDate() +
-              (targetEntityInput['SYS_DURATION']?targetEntityInput['SYS_DURATION']:0)
+              (targetEntityInput['SYS_DURATION']?Number(targetEntityInput['SYS_DURATION']):0)
           )
           if (index == 0){
             targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
@@ -764,22 +859,8 @@ export class SampleService{
       })
 
     })
-
-    Observable.concat(...observableList).subscribe(
-      data => {
-        console.log("data: ", data)
-      },
-      err => {
-        console.log("err: ", err)
-      },
-      () => {
-        //setTimeout(() => {
-        this.spinner.stop()
-        this.showMessage("Completed", "OK")
-        //}, 3000)
-      }
-    )
-
+    //return Observable.of(...observableList).concatAll()
+    return Observable.concat(...observableList)
   }
 
   /**
@@ -824,7 +905,9 @@ export class SampleService{
 
       subEntity['SYS_ENTITY_TYPE'] = 'collection'
       workcenterAttributeList.forEach(attribute => {
-        subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
+        if (!this.ignoredAttribute[attribute.SYS_CODE]) {
+          subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
+        }
       })
       return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
@@ -874,9 +957,13 @@ export class SampleService{
       })
       return this.entityService.create(subEntity)
     })
-    .retryWhen(error => {
-      return error
-    })
+    .retryWhen(
+      attempts => Observable.range(1, 20)
+      .zip(attempts, i => i)
+      .mergeMap(i => {
+        console.log("delay retry by " + i + " seconds")
+        return Observable.timer(i * 1000);
+      }))
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action)

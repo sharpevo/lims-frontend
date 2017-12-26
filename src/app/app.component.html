@@ -13,10 +13,10 @@
         <span class="toolbar-spacer"></span>
         <span class="toolbar-version">
             <span *ngIf="userInfo">
-                <button md-icon-button [mdMenuTriggerFor]="menu">
-                    {{userInfo.name}}
+                <button md-button [mdMenuTriggerFor]="userMenu">
+                    {{userInfo.email}}
                 </button>
-                <md-menu #menu="mdMenu">
+                <md-menu #userMenu="mdMenu">
                     <a
                         href="{{environment.uicUrl}}/profile"
                         md-menu-item>
@@ -36,8 +36,25 @@
                 </md-menu>
             </span>
         </span>
+        <span class="toolbar-version">
+            <button md-icon-button [mdMenuTriggerFor]="appMenu">
+                <md-icon>more_vert</md-icon>
+            </button>
+            <md-menu #appMenu="mdMenu">
+                <button
+                    (click)="refresh()"
+                    md-menu-item>
+                    <md-icon>refresh</md-icon>
+                    <span>Refresh</span>
+                </button>
+                <button md-menu-item disabled>
+                    <md-icon>bug_report</md-icon>
+                    <span>Bug report</span>
+                </button>
+            </md-menu>
+        </span>
     </md-toolbar>
-    <md-sidenav-container fullscreen>
+    <md-sidenav-container style="background:#f1f1f1" fullscreen>
         <md-sidenav #sidenav mode="side" class="app-sidenav" opened="false">
             <md-list>
                 <!--<h1 style="text-align:center;font-size:1.5em;">Entities</h1>-->
@@ -133,7 +150,37 @@
             </md-list>
         </md-sidenav>
         <div class="central-content">
-            <router-outlet></router-outlet>
+            <div *ngIf="showMessage">
+                <md-list>
+                    <h3 md-subheader>Changelog</h3>
+                    <md-list-item *ngFor="let log of taskCompletedList">
+                        <md-icon
+                            *ngIf="log.title != ''"
+                            md-list-icon>check_box</md-icon>
+                        <md-icon
+                            *ngIf="log.title == ''"
+                            md-list-icon>more_horiz</md-icon>
+                        <h4 md-line>{{log.title}}</h4>
+                        <p md-line> {{log.date}} </p>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                    <h3 md-subheader>Next</h3>
+                    <md-list-item *ngFor="let log of taskPlannedList">
+                        <md-icon
+                            *ngIf="log.title != ''"
+                            md-list-icon>check_box_outline_blank</md-icon>
+                        <md-icon
+                            *ngIf="log.title == ''"
+                            md-list-icon>more_horiz</md-icon>
+                        <h4 md-line>{{log.title}}</h4>
+                        <p md-line> {{log.date}} </p>
+                    </md-list-item>
+                </md-list>
+            </div>
+            <router-outlet
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)">
+            </router-outlet>
         </div>
     </md-sidenav-container>
     <spinner-component></spinner-component>

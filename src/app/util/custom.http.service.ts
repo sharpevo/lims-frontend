@@ -44,6 +44,9 @@ export class CustomHttpService extends Http {
   }
 
   post(url: string, data: any, options?: RequestOptionsArgs): Observable<any> {
+    if (!options) {
+      options = {headers: new Headers()}
+    }
     this.beforeRequest()
     return super.post(this.getFullUrl(url), data, this.requestOptions(options))
     .catch(this.onCatch)
@@ -134,6 +137,7 @@ export class CustomHttpService extends Http {
     let userInfo = {
       'id':res.headers.get('igenetech-user-id'),
       'email':res.headers.get('igenetech-user-email'),
+      'limsid':res.headers.get('igenetech-user-limsid')|| "",
       'name':res.headers.get('igenetech-user-name'),
       'roles':res.headers.get('igenetech-user-roles'),
       'role':JSON.parse(res.headers.get('igenetech-user-role')),

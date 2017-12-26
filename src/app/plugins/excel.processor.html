@@ -1,6 +1,7 @@
 <md-expansion-panel>
     <md-expansion-panel-header>
-        <md-panel-title>
+        <md-panel-title
+            i18n="@@plugin-excel-title">
             Plugin: Excel Processor
         </md-panel-title>
         <md-panel-description>
@@ -17,58 +18,27 @@
                     fxFlex>
                     <span
                         *ngIf="selectedSampleList.length > 0">
-                        Export: <b>{{selectedSampleList.length}}</b> Sample
+                        <span
+                            i18n="@@plugin-excel-intro-export">
+                            Export:
+                        </span>
+                        <b>{{selectedSampleList.length}}</b> Sample
                     </span>
                 </label>
                 <button
                     md-button
+                    i18n="@@plugin-excel-button-template"
+                    (click)="exportSample(true)">
+                    TEMPLATE
+                </button>
+                <button
+                    md-button
+                    i18n="@@plugin-excel-button-export"
                     (click)="exportSample()">
                     EXPORT
                 </button>
             </div>
             <br/>
-            <div
-                *ngIf="selectedSampleList.length > 0">
-                <table
-                    class="excel-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                No.
-                            </th>
-                            <th>
-                                Sample Code
-                            </th>
-                            <th>
-                                Index Sequence
-                            </th>
-                            <th>
-                                Index Code
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let sample of selectedSampleList; let i = index">
-                            <td>
-                                {{i+1}}
-                            </td>
-                            <td>
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </td>
-                            <td>
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </td>
-                            <td>
-                                {{sample.SYS_INDEX_CODE}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
         <br/>
         <div fxFlex="49">
@@ -88,39 +58,64 @@
                     for="upload-file-input"
                     class="excel-label"
                     fxFlex>
-                    Choose File:
+                    <span
+                        i18n="@@plugin-excel-label-choosefile">
+                        Choose File:
+                    </span>
                     <b>
                         {{excelUploader.value.split('\\').pop()}}
                     </b>
                 </label>
                 <button
                     md-button
+                    i18n="@@plugin-excel-button-import"
                     (click)="updateExcel()">
                     IMPORT
                 </button>
             </div>
             <br/>
-            <div
-                *ngIf="excelResult.length > 0">
-                <table
-                    class="excel-table">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let key of (excelResult[0] | objectKeys)">
-                                {{key}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let sample of excelResult">
-                            <td *ngFor="let key of (sample | objectKeys)">
-                                {{sample[key]}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
+    </div>
+    <div
+        *ngIf="excelResultSample.length > 0">
+        <table
+            class="excel-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let key of (excelResultSample[0] | objectKeys)">
+                        {{key}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let sample of excelResultSample">
+                    <td *ngFor="let key of (sample | objectKeys)">
+                        {{sample[key]}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div
+        *ngIf="excelResultGroup.length > 0">
+        <table
+            class="excel-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let key of (excelResultGroup[0] | objectKeys)">
+                        {{key}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let group of excelResultGroup">
+                    <td *ngFor="let key of (group | objectKeys)">
+                        {{group[key]}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </md-expansion-panel>
