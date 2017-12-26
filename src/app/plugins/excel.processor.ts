@@ -7,6 +7,7 @@ import 'rxjs/Rx' ;
 import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
 import { Observable } from 'rxjs/Rx'
+import {UserService} from '../util/user.service'
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -26,13 +27,19 @@ export class PluginExcelProcessorComponent {
   parentMapFloor: string = ''
   entityMap: any = {} // entity type like operator
   workcenterAttributeList: any[] = []
+
+  userInfo: any = {}
+
   constructor(
     private utilService: UtilService,
     private entityService: EntityService,
     private genreService: GenreService,
     private sampleService: SampleService,
     private router: Router,
-  ){}
+    private userService: UserService,
+  ){
+    this.userInfo = this.userService.getUserInfo()
+  }
 
   ngOnInit(){
     //console.log("hybridObjectMap: ", this.hybridObjectMap)
@@ -307,19 +314,54 @@ export class PluginExcelProcessorComponent {
               },
               true)
           })
+          .delay(500)
         )
 
       }
     })
 
+    let targetOutput = []
     Observable.concat(...observableList)
     .subscribe(
       data => {
+        targetOutput.push(data)
         console.log("complete sample", data)
       },
       err => {
       },
       () => {
+
+        console.log("targetOutput:", targetOutput)
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+          (date.getMonth() + 1) + '-' +
+          date.getDate() + ' ' +
+          date.getHours() + ':' +
+          date.getMinutes()
+
+        let message = ''
+        let sampleCode = ''
+        targetOutput.forEach(target => {
+          let sample = target['sample']
+          let workcenter = target['workcenter']
+          if (message == '' || sample['SYS_SAMPLE_CODE'] != sampleCode) {
+            sampleCode = sample['SYS_SAMPLE_CODE']
+            message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+              `scheduled to the following workcenters\n\n`
+          }
+          let scheduledDate = new DatePipe('en-US')
+          .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+          message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+        })
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+          `${msg_date}`
+        this.utilService.sendNotif(
+          "actionCard",
+          message,
+          ""
+        )
+        .subscribe(() => {
+        })
         console.log("Request done.")
         this.router.navigate(['/redirect' + this.router.url])
       })
