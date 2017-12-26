@@ -6,7 +6,6 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
-import {SpinnerService} from '../util/spinner.service'
 import {UserService} from '../util/user.service'
 
 import {Router} from '@angular/router'
@@ -24,7 +23,6 @@ export class SampleService{
 
   constructor(
     public snackBar: MdSnackBar,
-    public spinner: SpinnerService,
     private genreService: GenreService,
     private utilService: UtilService,
     private userService: UserService,
@@ -639,12 +637,22 @@ export class SampleService{
                 delete sample.SYS_TARGET
                 // create object after terminating samples
                 this.createObject(sample, attributeInfo, true)
+                .subscribe(
+                  data => {},
+                    err => {},
+                    () => {
+                    this.router.navigate(['/redirect' + this.router.url])
+                  })
               })
             })
-
-
       } else {
         this.createObject(sample, attributeInfo, true)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       }
     })
   }
@@ -703,6 +711,12 @@ export class SampleService{
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         this.createObject(sample, attributeInfo, false)
+        .subscribe(
+          data => {},
+            err => {},
+            () => {
+            this.router.navigate(['/redirect' + this.router.url])
+          })
       })
     })
 
@@ -713,24 +727,24 @@ export class SampleService{
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
     if (issueSample){
-      this.entityService.create(object)
-      .subscribe(data =>{
+      return this.entityService.create(object)
+      .mergeMap(data => {
         delete data.SYS_WORKCENTER_OPERATOR
-        this.buildRelationship(data, attributeInfo)
         console.log('Issue sample:', data)
+        return this.buildRelationship(data, attributeInfo)
       })
     } else {
       this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-      .subscribe(data => {
+      .mergeMap(data => {
         //console.log("retrive chained sample:", data)
         object.id = data[0].id
         object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
         // Using update instead of create since the identifier /workcenter/17R001
         // has been assigned to the scheduled sample
-        this.entityService.update(object)
-        .subscribe(data => {
-          this.buildRelationship(data, attributeInfo)
+        return this.entityService.update(object)
+        .mergeMap(data => {
           console.log('Add Entity:', data)
+          return this.buildRelationship(data, attributeInfo)
         },
         err => {
           console.error(err)
@@ -748,7 +762,6 @@ export class SampleService{
    *
    */
   buildRelationship(sourceEntity: any, attributeInfo: any){
-    this.spinner.start()
 
     let observableList = []
 
@@ -846,23 +859,8 @@ export class SampleService{
       })
 
     })
-
-    Observable.concat(...observableList).subscribe(
-      data => {
-        console.log("data: ", data)
-      },
-      err => {
-        console.log("err: ", err)
-      },
-      () => {
-        //setTimeout(() => {
-        this.spinner.stop()
-        this.showMessage("Completed", "OK")
-        this.router.navigate(['/redirect' + this.router.url])
-        //}, 3000)
-      }
-    )
-
+    //return Observable.of(...observableList).concatAll()
+    return Observable.concat(...observableList)
   }
 
   /**
