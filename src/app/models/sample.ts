@@ -746,6 +746,13 @@ export class SampleService{
         console.log('Issue sample:', data)
         return this.buildRelationship(data, attributeInfo)
       })
+      .retryWhen(
+        attempts => Observable.range(1, 10)
+        .zip(attempts, i => i)
+        .mergeMap(i => {
+          console.log("delay retry by " + i + " seconds")
+          return Observable.timer(i * 1000);
+        }))
     } else {
       return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
       .mergeMap(data => {
@@ -760,6 +767,13 @@ export class SampleService{
           return this.buildRelationship(data, attributeInfo)
         })
       })
+      .retryWhen(
+        attempts => Observable.range(1, 10)
+        .zip(attempts, i => i)
+        .mergeMap(i => {
+          console.log("delay retry by " + i + " seconds")
+          return Observable.timer(i * 1000);
+        }))
     }
   }
 
@@ -969,9 +983,10 @@ export class SampleService{
       .map(entity => {
         return {'workcenter': targetEntity, 'sample': subEntity}
       })
+      .delay(100)
     })
     .retryWhen(
-      attempts => Observable.range(1, 20)
+      attempts => Observable.range(1, 10)
       .zip(attempts, i => i)
       .mergeMap(i => {
         console.log("delay retry by " + i + " seconds")
