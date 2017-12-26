@@ -314,7 +314,7 @@ export class PluginExcelProcessorComponent {
               },
               true)
           })
-          .delay(500)
+          .delay(100)
         )
 
       }
@@ -341,29 +341,44 @@ export class PluginExcelProcessorComponent {
 
         let message = ''
         let sampleCode = ''
+        let sampleCount = 0
+        const MAX_TARGET_LENGTH = 22 // 3 samples x 7 workcenters
+
+        // concise message to DingTalk if more than 10 samples submitted
+        // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
         targetOutput.forEach(target => {
           let sample = target['sample']
           let workcenter = target['workcenter']
-          if (message == '' || sample['SYS_SAMPLE_CODE'] != sampleCode) {
-            sampleCode = sample['SYS_SAMPLE_CODE']
-            message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-              `scheduled to the following workcenters\n\n`
-          }
           let scheduledDate = new DatePipe('en-US')
           .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-          message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+          if (sample['SYS_SAMPLE_CODE'] != sampleCode){
+            sampleCount += 1
+            sampleCode = sample['SYS_SAMPLE_CODE']
+            if (targetOutput.length < MAX_TARGET_LENGTH){
+              message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                `scheduled to the following workcenters\n\n`
+            } else {
+              message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
+            }
+          }
+          if (targetOutput.length < MAX_TARGET_LENGTH){
+            message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+          }
         })
+        if (targetOutput.length > MAX_TARGET_LENGTH){
+          message = `# **${sampleCount}** samples issued\n\n` + message
+        }
+
         message +=`> \n\n${this.userInfo.name}\n\n` +
           `${msg_date}`
         this.utilService.sendNotif(
           "actionCard",
           message,
-          ""
-        )
-        .subscribe(() => {
-        })
-        console.log("Request done.")
-        this.router.navigate(['/redirect' + this.router.url])
+          "")
+          .subscribe(() => {})
+
+          console.log("Request done.")
+          this.router.navigate(['/redirect' + this.router.url])
       })
   }
 
