@@ -935,6 +935,9 @@ export class SampleService{
         subEntity[key] = targetEntityInput[key]
       })
       return this.entityService.create(subEntity)
+      .map(entity => {
+        return {'workcenter': targetEntity, 'sample': subEntity}
+      })
     })
     .retryWhen(
       attempts => Observable.range(1, 20)
