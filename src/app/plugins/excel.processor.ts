@@ -140,7 +140,7 @@ export class PluginExcelProcessorComponent {
       this.parentMap[this.parentMapKey] = {}
     }
 
-    let groupObs = []
+    let groupObservableList = []
     //console.log("excelResultGroup: ", this.excelResultGroup)
     this.excelResultGroup.forEach(groupInExcel => {
 
@@ -150,7 +150,7 @@ export class PluginExcelProcessorComponent {
       if (groupId) {
 
         // retrieve the group item (object with the given id)
-        groupObs.push(
+        groupObservableList.push(
           this.entityService.retrieveBy({"_id": groupId})
           .mergeMap(data => {
             //.subscribe(data => {
@@ -235,10 +235,13 @@ export class PluginExcelProcessorComponent {
     //}
     //updateExcelRaw(){
 
+    console.log(">>>>>>>>>>>>>>>", this.excelResultSample)
 
-    Observable.concat(...groupObs)
+    Observable.concat(...groupObservableList)
     .subscribe(data => {}, err => {}, () => {
-      let observableList = []
+
+      let sampleMessageList = []
+      let sampleObservableList = []
 
       this.excelResultSample.forEach(sample =>{
 
@@ -247,50 +250,58 @@ export class PluginExcelProcessorComponent {
           // Convert excel-style object to database-style object.
           // The excel-style object is formed as:
           // 'LABEL': 'Value'
-          this.entityService.retrieveBy({
-            "_id": sampleId
-          })
-          .subscribe(data => {
-            let mergedSample = data[0]
-
-            //
-            // For the reason of SYS_GENRE is defined from General project instead
-            // of the current workcenter in the legacy database:
-            // 1. schema: from workcenter, like sample sn
-            // 2. sample: from excel, like operator, id, exactly the workcenter
-            //
-            mergedSample.SYS_SCHEMA.forEach(schema => {
-              console.log("!!!", sample, schema)
-              if (sample[schema.SYS_LABEL]){
-                if (schema.SYS_TYPE != 'entity'){
-                  mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-                } else {
-                  mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-
-                  // TODO: Convert SYS_LABEL to id before commit to the database
-                  //let queryObject = {}
-                  //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
-                  //this.entityService.retrieveBy(queryObject)
-                  //.subscribe(data => {
-                  //if (data[0]){
-                  //console.log("Entity:", data[0])
-                  //mergedSample[schema.SYS_CODE] = data[0].id
-                  //} else {
-                  //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
-                  //}
-                  //})
-                }
-              }
+          sampleObservableList.push(
+            this.entityService.retrieveBy({
+              "_id": sampleId
             })
-            this.sampleService.submitSample(
-              this.workcenter,
-              mergedSample,
-              data[0],
-              {
-                "attributeList": this.workcenterAttributeList,
-                "parentMap": this.parentMap
+            .mergeMap(data => {
+              let mergedSample = data[0]
+
+              //
+              // For the reason of SYS_GENRE is defined from General project instead
+              // of the current workcenter in the legacy database:
+              // 1. schema: from workcenter, like sample sn
+              // 2. sample: from excel, like operator, id, exactly the workcenter
+              //
+              mergedSample.SYS_SCHEMA.forEach(schema => {
+                console.log("!!!", sample, schema)
+                if (sample[schema.SYS_LABEL]){
+                  if (schema.SYS_TYPE != 'entity'){
+                    mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+                  } else {
+                    mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+
+                    // TODO: Convert SYS_LABEL to id before commit to the database
+                    //let queryObject = {}
+                    //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
+                    //this.entityService.retrieveBy(queryObject)
+                    //.subscribe(data => {
+                    //if (data[0]){
+                    //console.log("Entity:", data[0])
+                    //mergedSample[schema.SYS_CODE] = data[0].id
+                    //} else {
+                    //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
+                    //}
+                    //})
+                  }
+                }
               })
-          })
+
+
+              sampleMessageList.push('>- ' + mergedSample.SYS_SAMPLE_CODE + '\n\n')
+              return this.sampleService.submitSample$(
+                this.workcenter,
+                mergedSample,
+                data[0],
+                {
+                  "attributeList": this.workcenterAttributeList,
+                  "parentMap": this.parentMap
+                })
+                //.mergeMap(data => {
+                //sampleMessageList.push('>- ' + mergedSample.SYS_SAMPLE_CODE)
+                //})
+            })
+          )
         } else {
           // issue sample
 
@@ -305,7 +316,7 @@ export class PluginExcelProcessorComponent {
             newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
           })
 
-          observableList.push(
+          sampleObservableList.push(
             this.entityService.retrieveGenre(this.workcenter.id)
             .mergeMap(data => {
               //.subscribe(data => {
@@ -333,7 +344,7 @@ export class PluginExcelProcessorComponent {
       })
 
       let targetOutput = []
-      Observable.concat(...observableList)
+      Observable.concat(...sampleObservableList)
       .subscribe(
         data => {
           targetOutput.push(data)
@@ -356,33 +367,43 @@ export class PluginExcelProcessorComponent {
           let sampleCount = 0
           const MAX_TARGET_LENGTH = 22 // 3 samples x 7 workcenters
 
-          // concise message to DingTalk if more than 10 samples submitted
-          // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
-          targetOutput.forEach(target => {
-            let sample = target['sample']
-            let workcenter = target['workcenter']
-            let scheduledDate = new DatePipe('en-US')
-            .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-            if (sample['SYS_SAMPLE_CODE'] != sampleCode){
-              sampleCount += 1
-              sampleCode = sample['SYS_SAMPLE_CODE']
-              if (targetOutput.length < MAX_TARGET_LENGTH){
-                message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-                  `scheduled to the following workcenters\n\n`
-              } else {
-                message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
+          if (sampleMessageList.length == 0) {
+            // concise message to DingTalk if more than 10 samples submitted
+            // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
+            targetOutput.forEach(target => {
+              let sample = target['sample']
+              let workcenter = target['workcenter']
+              let scheduledDate = new DatePipe('en-US')
+              .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+              if (sample['SYS_SAMPLE_CODE'] != sampleCode){
+                sampleCount += 1
+                sampleCode = sample['SYS_SAMPLE_CODE']
+                if (targetOutput.length < MAX_TARGET_LENGTH){
+                  message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                    `scheduled to the following workcenters\n\n`
+                } else {
+                  message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
+                }
               }
+              if (targetOutput.length < MAX_TARGET_LENGTH){
+                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+              }
+            })
+            if (targetOutput.length > MAX_TARGET_LENGTH){
+              message = `# **${sampleCount}** samples issued\n\n` + message
             }
-            if (targetOutput.length < MAX_TARGET_LENGTH){
-              message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-            }
-          })
-          if (targetOutput.length > MAX_TARGET_LENGTH){
-            message = `# **${sampleCount}** samples issued\n\n` + message
+          } else {
+            message = `# **${this.workcenter[this.workcenter['SYS_LABEL']]}:** ${sampleMessageList.length} samples submitted\n\n`
+            sampleMessageList.forEach(msg => {
+              message += msg
+            })
           }
 
           message +=`> \n\n${this.userInfo.name}\n\n` +
             `${msg_date}`
+          //console.log("<<", this.workcenter)
+
+          console.log("<<<", sampleMessageList, message)
           this.utilService.sendNotif(
             "actionCard",
             message,
