@@ -306,7 +306,7 @@ export class PluginExcelProcessorComponent {
               newSample['SYS_SAMPLE_CODE'] + '.' +
               new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
 
-            return this.sampleService.createObject(
+            return this.sampleService.createObject$(
               newSample,
               {
                 "attributeList": this.workcenterAttributeList,
