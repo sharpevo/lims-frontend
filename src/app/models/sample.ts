@@ -681,6 +681,7 @@ export class SampleService{
 
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
+        this.createObject(sample, attributeInfo, false)
       })
     })
 
@@ -688,6 +689,7 @@ export class SampleService{
 
   createObject(sample: any, attributeInfo: any, issueSample: boolean){
     let targetOutput = []
+    console.log(">>", sample, attributeInfo)
     this.createObject$(sample, attributeInfo, issueSample)
     .subscribe(
       data => {
@@ -702,17 +704,36 @@ export class SampleService{
           date.getHours() + ':' +
           date.getMinutes()
 
-        let message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-          `scheduled to the following workcenters\n\n`
+        let message = ''
+        if (issueSample){
+          message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+          message += `scheduled to the following workcenters\n\n`
+        } else {
+          message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+          attributeInfo['attributeList'].forEach(attr => {
+            if (sample.hasOwnProperty(attr.SYS_CODE)) {
+              message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+            }
+          })
+          message += `with the following materials\n\n`
+          //message += `submitted in `
+        }
         targetOutput.forEach(target => {
           let sample = target['sample']
           let workcenter = target['workcenter']
-          let scheduledDate = new DatePipe('en-US')
-          .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-          message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+          console.log(target)
+          if (issueSample){
+            let scheduledDate = new DatePipe('en-US')
+            .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+            message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+          } else {
+
+            message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+          }
         })
         message +=`> \n\n${this.userInfo.name}\n\n` +
           `${msg_date}`
+        console.log("mmm", message)
         this.utilService.sendNotif(
           "actionCard",
           message,
@@ -726,7 +747,7 @@ export class SampleService{
       })
   }
 
-  createObject$(object: any, attributeInfo: any, issueSample: boolean): any{
+  createObject$(object: any, attributeInfo: any, issueSample: boolean){
 
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
