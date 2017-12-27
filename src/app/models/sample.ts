@@ -1045,7 +1045,7 @@ export class SampleService{
       .map(entity => {
         return {'workcenter': targetEntity, 'sample': subEntity}
       })
-      .delay(100)
+      //.delay(100)
     })
     .retryWhen(
       attempts => Observable.range(1, 10)
