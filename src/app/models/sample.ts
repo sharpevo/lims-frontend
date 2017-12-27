@@ -764,8 +764,9 @@ export class SampleService{
               message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
             }
           })
-          message += `with the following materials\n\n`
-          //message += `submitted in `
+          if (targetOutput.length > 0){
+            message += `with the following materials\n\n`
+          }
         }
         targetOutput.forEach(target => {
           let sample = target['sample']
