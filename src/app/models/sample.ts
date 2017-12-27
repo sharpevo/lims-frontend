@@ -620,52 +620,10 @@ export class SampleService{
                 delete sample.SYS_TARGET
                 // create object after terminating samples
                 this.createObject(sample, attributeInfo, true)
-                .subscribe(
-                  data => {},
-                    err => {},
-                    () => {
-                    this.router.navigate(['/redirect' + this.router.url])
-                  })
               })
             })
       } else {
-        let targetOutput = []
         this.createObject(sample, attributeInfo, true)
-        .subscribe(
-          data => {
-            targetOutput.push(data)
-          },
-          err => {},
-            () => {
-            let date = new Date()
-            let msg_date = date.getFullYear() + '-' +
-              (date.getMonth() + 1) + '-' +
-              date.getDate() + ' ' +
-              date.getHours() + ':' +
-              date.getMinutes()
-
-            let message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-              `scheduled to the following workcenters\n\n`
-            targetOutput.forEach(target => {
-              let sample = target['sample']
-              let workcenter = target['workcenter']
-              let scheduledDate = new DatePipe('en-US')
-              .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-              message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-            })
-            message +=`> \n\n${this.userInfo.name}\n\n` +
-              `${msg_date}`
-            this.utilService.sendNotif(
-              "actionCard",
-              message,
-              //`${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
-              ""
-            )
-            .subscribe(() => {
-              //console.log("Sending notification:", data)
-            })
-            this.router.navigate(['/redirect' + this.router.url])
-          })
       }
     })
   }
@@ -723,19 +681,52 @@ export class SampleService{
 
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
-        this.createObject(sample, attributeInfo, false)
-        .subscribe(
-          data => {},
-            err => {},
-            () => {
-            this.router.navigate(['/redirect' + this.router.url])
-          })
       })
     })
 
   }
 
-  createObject(object: any, attributeInfo: any, issueSample: boolean){
+  createObject(sample: any, attributeInfo: any, issueSample: boolean){
+    let targetOutput = []
+    this.createObject$(sample, attributeInfo, issueSample)
+    .subscribe(
+      data => {
+        targetOutput.push(data)
+      },
+      err => {},
+        () => {
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+          (date.getMonth() + 1) + '-' +
+          date.getDate() + ' ' +
+          date.getHours() + ':' +
+          date.getMinutes()
+
+        let message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+          `scheduled to the following workcenters\n\n`
+        targetOutput.forEach(target => {
+          let sample = target['sample']
+          let workcenter = target['workcenter']
+          let scheduledDate = new DatePipe('en-US')
+          .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+          message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+        })
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+          `${msg_date}`
+        this.utilService.sendNotif(
+          "actionCard",
+          message,
+          //`${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
+          ""
+        )
+        .subscribe(() => {
+          //console.log("Sending notification:", data)
+        })
+        this.router.navigate(['/redirect' + this.router.url])
+      })
+  }
+
+  createObject$(object: any, attributeInfo: any, issueSample: boolean): any{
 
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
@@ -1000,4 +991,6 @@ export class SampleService{
   showMessage(message: string, action: string) {
     this.snackBar.open(message, action, {duration: 4000})
   }
+
 }
+
