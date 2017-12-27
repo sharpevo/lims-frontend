@@ -628,6 +628,55 @@ export class SampleService{
     })
   }
 
+  submitSample$(entity: any, object: any, selectedSample: any, attributeInfo: any){
+
+    return this.entityService.retrieveBy({
+      'SYS_TARGET': selectedSample['SYS_TARGET'],
+      'sort': 'SYS_ORDER',
+    }).mergeMap(data => {
+      let sample = {}
+      let previousSample = this.parsePreviousSample(selectedSample, data)
+      return this.entityService.retrieveAttribute(previousSample.id)
+      .mergeMap(data => {
+        //data.forEach(attribute => {
+        //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+        //})
+
+        // Copy capture/lane/run code manually
+        let captureCode = 'SYS_CAPTURE_CODE'
+        let laneCode = 'SYS_LANE_CODE'
+        let runCode = 'SYS_RUN_CODE'
+        if (previousSample[captureCode]) {
+          sample[captureCode] = previousSample[captureCode]
+        }
+        if (previousSample[laneCode]) {
+          sample[laneCode] = previousSample[laneCode]
+        }
+        if (previousSample[runCode]) {
+          sample[runCode] = previousSample[runCode]
+        }
+
+        // Copy attributes from object to sample
+        Object.keys(object).forEach(key => {
+          sample[key] = object[key]
+        })
+
+        // Add customized sample attribute
+        sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
+          selectedSample['SYS_CODE']
+
+        // Add default label, including SYS_SAMPLE_CODE
+        sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+        sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
+
+        sample['SYS_DATE_COMPLETED'] = new Date()
+        sample['SYS_ENTITY_TYPE'] = 'collection'
+        return this.createObject$(sample, attributeInfo, false)
+      })
+    })
+
+  }
+
   /**
    * submitSample will build samples for the specific workcenter, manipulated
    * by operators
