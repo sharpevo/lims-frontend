@@ -139,6 +139,8 @@ export class PluginExcelProcessorComponent {
       this.parentMap = {}
       this.parentMap[this.parentMapKey] = {}
     }
+
+    let groupObs = []
     //console.log("excelResultGroup: ", this.excelResultGroup)
     this.excelResultGroup.forEach(groupInExcel => {
 
@@ -148,76 +150,83 @@ export class PluginExcelProcessorComponent {
       if (groupId) {
 
         // retrieve the group item (object with the given id)
-        this.entityService.retrieveBy({"_id": groupId})
-        .subscribe(data => {
-          let group = data[0]
+        groupObs.push(
+          this.entityService.retrieveBy({"_id": groupId})
+          .mergeMap(data => {
+            //.subscribe(data => {
+            let group = data[0]
 
-          console.log("GROUP", group)
-          if (this.parentMapFloor == "collection"){
-            // bom, get the first lot for uploading / default
-            // sort by the lot label
+            console.log("GROUP", group)
+            if (this.parentMapFloor == "collection"){
+              // bom, get the first lot for uploading / default
+              // sort by the lot label
 
-            // retrive collections/LOTs under the given material
-            this.entityService.retrieveEntity(group['SYS_SOURCE'], "collection")
-            .subscribe(data => {
+              // retrive collections/LOTs under the given material
+              return this.entityService.retrieveEntity(group['SYS_SOURCE'], "collection")
+              .mergeMap(data => {
+                //.subscribe(data => {
 
-              console.log("material", data)
-              // get the delfault lot in the array sorted by the SYS_CODE
-              // e.g. LOT160810
-              let defaultMaterial = {}
+                console.log("material", data)
+                // get the delfault lot in the array sorted by the SYS_CODE
+                // e.g. LOT160810
+                let defaultMaterial = {}
 
-              // get the default material
-              let defaultMaterialList = data.filter(material => material['SYS_IS_DEFAULT'])
-              if (defaultMaterialList.length > 0) {
-                defaultMaterial = defaultMaterial[0]
-              } else {
-                // if default flag is not set well, get the oldest lot
-                defaultMaterial = data.sort((a,b) => {
-                  if (a['createAt'] < b['createdAt']) {
-                    return 1
-                  } else {
-                    return -1
-                  }
-                })[0]
-              }
-              groupId = defaultMaterial['id']
+                // get the default material
+                let defaultMaterialList = data.filter(material => material['SYS_IS_DEFAULT'])
+                if (defaultMaterialList.length > 0) {
+                  defaultMaterial = defaultMaterial[0]
+                } else {
+                  // if default flag is not set well, get the oldest lot
+                  defaultMaterial = data.sort((a,b) => {
+                    if (a['createAt'] < b['createdAt']) {
+                      return 1
+                    } else {
+                      return -1
+                    }
+                  })[0]
+                }
+                groupId = defaultMaterial['id']
+
+                console.log("group", groupId)
+                this.parentMap[this.parentMapKey][groupId] = {}
+                group.SYS_SCHEMA.forEach(schema => {
+                  Object.keys(groupInExcel).forEach(key => {
+                    if (schema.SYS_LABEL == key){
+                      //console.log("Schema vs. key: ", schema.SYS_CODE, key)
+                      this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key]
+                    }
+                  })
+                })
+                //this.parentMap[this.parentMapKey][groupId]['SYS_QUANTITY'] = groupInExcel['Duration']
+                //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
+                this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId // defaultMaterial
+                this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true
+                this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
+                return Observable.of("1")
+              })
+            } else {
 
               console.log("group", groupId)
               this.parentMap[this.parentMapKey][groupId] = {}
               group.SYS_SCHEMA.forEach(schema => {
                 Object.keys(groupInExcel).forEach(key => {
+                  //console.log("Schema vs. key: ", schema.SYS_LABEL, key)
                   if (schema.SYS_LABEL == key){
-                    //console.log("Schema vs. key: ", schema.SYS_CODE, key)
-                    this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key]
+                    this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key] // overwrited by the backend data
                   }
                 })
               })
-              //this.parentMap[this.parentMapKey][groupId]['SYS_QUANTITY'] = groupInExcel['Duration']
+              //this.parentMap[this.parentMapKey][groupId]['SYS_DURATION'] = groupInExcel['Duration']
               //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
-              this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId // defaultMaterial
-              this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true
+              this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = group['SYS_SOURCE']
+              //this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
+              this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true // mimic submited in the form
               this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
-            })
-          } else {
-
-            console.log("group", groupId)
-            this.parentMap[this.parentMapKey][groupId] = {}
-            group.SYS_SCHEMA.forEach(schema => {
-              Object.keys(groupInExcel).forEach(key => {
-                //console.log("Schema vs. key: ", schema.SYS_LABEL, key)
-                if (schema.SYS_LABEL == key){
-                  this.parentMap[this.parentMapKey][groupId][schema.SYS_CODE] = groupInExcel[key] // overwrited by the backend data
-                }
-              })
-            })
-            //this.parentMap[this.parentMapKey][groupId]['SYS_DURATION'] = groupInExcel['Duration']
-            //this.parentMap[this.parentMapKey][groupId]['SYS_ORDER'] = groupInExcel['Order']
-            this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = group['SYS_SOURCE']
-            //this.parentMap[this.parentMapKey][groupId]['SYS_SOURCE'] = groupId
-            this.parentMap[this.parentMapKey][groupId]['SYS_CHECKED'] = true // mimic submited in the form
-            this.parentMap[this.parentMapKey][groupId]['SYS_FLOOR_ENTITY_TYPE'] = this.parentMapFloor
-          }
-        })
+              return Observable.of("1")
+            }
+          })
+          .delay(1000)
+        )
       }
     })
     console.log("NEW PARENTMAP", this.parentMap)
@@ -226,160 +235,165 @@ export class PluginExcelProcessorComponent {
     //}
     //updateExcelRaw(){
 
-    let observableList = []
 
-    this.excelResultSample.forEach(sample =>{
+    Observable.concat(...groupObs)
+    .subscribe(data => {}, err => {}, () => {
+      let observableList = []
 
-      let sampleId = sample['IDENTIFIER']
-      if (sampleId) {
-        // Convert excel-style object to database-style object.
-        // The excel-style object is formed as:
-        // 'LABEL': 'Value'
-        this.entityService.retrieveBy({
-          "_id": sampleId
-        })
-        .subscribe(data => {
-          let mergedSample = data[0]
+      this.excelResultSample.forEach(sample =>{
 
-          //
-          // For the reason of SYS_GENRE is defined from General project instead
-          // of the current workcenter in the legacy database:
-          // 1. schema: from workcenter, like sample sn
-          // 2. sample: from excel, like operator, id, exactly the workcenter
-          //
-          mergedSample.SYS_SCHEMA.forEach(schema => {
-            console.log("!!!", sample, schema)
-            if (sample[schema.SYS_LABEL]){
-              if (schema.SYS_TYPE != 'entity'){
-                mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-              } else {
-                mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
-
-                // TODO: Convert SYS_LABEL to id before commit to the database
-                //let queryObject = {}
-                //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
-                //this.entityService.retrieveBy(queryObject)
-                //.subscribe(data => {
-                //if (data[0]){
-                //console.log("Entity:", data[0])
-                //mergedSample[schema.SYS_CODE] = data[0].id
-                //} else {
-                //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
-                //}
-                //})
-              }
-            }
+        let sampleId = sample['IDENTIFIER']
+        if (sampleId) {
+          // Convert excel-style object to database-style object.
+          // The excel-style object is formed as:
+          // 'LABEL': 'Value'
+          this.entityService.retrieveBy({
+            "_id": sampleId
           })
-          this.sampleService.submitSample(
-            this.workcenter,
-            mergedSample,
-            data[0],
-            {
-              "attributeList": this.workcenterAttributeList,
-              "parentMap": this.parentMap
+          .subscribe(data => {
+            let mergedSample = data[0]
+
+            //
+            // For the reason of SYS_GENRE is defined from General project instead
+            // of the current workcenter in the legacy database:
+            // 1. schema: from workcenter, like sample sn
+            // 2. sample: from excel, like operator, id, exactly the workcenter
+            //
+            mergedSample.SYS_SCHEMA.forEach(schema => {
+              console.log("!!!", sample, schema)
+              if (sample[schema.SYS_LABEL]){
+                if (schema.SYS_TYPE != 'entity'){
+                  mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+                } else {
+                  mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
+
+                  // TODO: Convert SYS_LABEL to id before commit to the database
+                  //let queryObject = {}
+                  //queryObject[schema.SYS_LABEL] = sample[schema.SYS_LABEL]
+                  //this.entityService.retrieveBy(queryObject)
+                  //.subscribe(data => {
+                  //if (data[0]){
+                  //console.log("Entity:", data[0])
+                  //mergedSample[schema.SYS_CODE] = data[0].id
+                  //} else {
+                  //console.warn("Invalid " + schema.SYS_LABEL + sample[schema.SYS_LABEL])
+                  //}
+                  //})
+                }
+              }
             })
-        })
-      } else {
-        // issue sample
-
-        // only allow sample creation at General Project Workcenter
-        if (this.workcenter.SYS_IDENTIFIER != "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
-          console.error("Not allowed to upload samples at this workcenter", this.workcenter.SYS_IDENTIFIER)
-          return
-        }
-
-        let newSample = {}
-        this.workcenterAttributeList.forEach(attr => {
-          newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
-        })
-
-        observableList.push(
-          this.entityService.retrieveGenre(this.workcenter.id)
-          .mergeMap(data => {
-            //.subscribe(data => {
-            newSample['SYS_GENRE'] = data[0]
-            newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
-            newSample['SYS_ENTITY_TYPE'] = 'collection'
-
-            newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
-              '/' +
-              newSample['SYS_SAMPLE_CODE'] + '.' +
-              new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
-
-            return this.sampleService.createObject$(
-              newSample,
+            this.sampleService.submitSample(
+              this.workcenter,
+              mergedSample,
+              data[0],
               {
                 "attributeList": this.workcenterAttributeList,
-                "parentMap": this.parentMap,
-              },
-              true)
+                "parentMap": this.parentMap
+              })
           })
-          .delay(100)
-        )
+        } else {
+          // issue sample
 
-      }
+          // only allow sample creation at General Project Workcenter
+          if (this.workcenter.SYS_IDENTIFIER != "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
+            console.error("Not allowed to upload samples at this workcenter", this.workcenter.SYS_IDENTIFIER)
+            return
+          }
+
+          let newSample = {}
+          this.workcenterAttributeList.forEach(attr => {
+            newSample[attr.SYS_CODE] = sample[attr[attr['SYS_LABEL']]]
+          })
+
+          observableList.push(
+            this.entityService.retrieveGenre(this.workcenter.id)
+            .mergeMap(data => {
+              //.subscribe(data => {
+              newSample['SYS_GENRE'] = data[0]
+              newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+              newSample['SYS_ENTITY_TYPE'] = 'collection'
+
+              newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
+                '/' +
+                newSample['SYS_SAMPLE_CODE'] + '.' +
+                new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+
+              return this.sampleService.createObject$(
+                newSample,
+                {
+                  "attributeList": this.workcenterAttributeList,
+                  "parentMap": this.parentMap,
+                },
+                true)
+            })
+            .delay(100)
+          )
+
+        }
+      })
+
+      let targetOutput = []
+      Observable.concat(...observableList)
+      .subscribe(
+        data => {
+          targetOutput.push(data)
+          console.log("complete sample", data)
+        },
+        err => {
+        },
+        () => {
+
+          console.log("targetOutput:", targetOutput)
+          let date = new Date()
+          let msg_date = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
+
+          let message = ''
+          let sampleCode = ''
+          let sampleCount = 0
+          const MAX_TARGET_LENGTH = 22 // 3 samples x 7 workcenters
+
+          // concise message to DingTalk if more than 10 samples submitted
+          // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
+          targetOutput.forEach(target => {
+            let sample = target['sample']
+            let workcenter = target['workcenter']
+            let scheduledDate = new DatePipe('en-US')
+            .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+            if (sample['SYS_SAMPLE_CODE'] != sampleCode){
+              sampleCount += 1
+              sampleCode = sample['SYS_SAMPLE_CODE']
+              if (targetOutput.length < MAX_TARGET_LENGTH){
+                message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                  `scheduled to the following workcenters\n\n`
+              } else {
+                message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
+              }
+            }
+            if (targetOutput.length < MAX_TARGET_LENGTH){
+              message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+            }
+          })
+          if (targetOutput.length > MAX_TARGET_LENGTH){
+            message = `# **${sampleCount}** samples issued\n\n` + message
+          }
+
+          message +=`> \n\n${this.userInfo.name}\n\n` +
+            `${msg_date}`
+          this.utilService.sendNotif(
+            "actionCard",
+            message,
+            "")
+            .subscribe(() => {})
+
+            console.log("Request done.")
+            this.router.navigate(['/redirect' + this.router.url])
+        })
     })
 
-    let targetOutput = []
-    Observable.concat(...observableList)
-    .subscribe(
-      data => {
-        targetOutput.push(data)
-        console.log("complete sample", data)
-      },
-      err => {
-      },
-      () => {
-
-        console.log("targetOutput:", targetOutput)
-        let date = new Date()
-        let msg_date = date.getFullYear() + '-' +
-          (date.getMonth() + 1) + '-' +
-          date.getDate() + ' ' +
-          date.getHours() + ':' +
-          date.getMinutes()
-
-        let message = ''
-        let sampleCode = ''
-        let sampleCount = 0
-        const MAX_TARGET_LENGTH = 22 // 3 samples x 7 workcenters
-
-        // concise message to DingTalk if more than 10 samples submitted
-        // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
-        targetOutput.forEach(target => {
-          let sample = target['sample']
-          let workcenter = target['workcenter']
-          let scheduledDate = new DatePipe('en-US')
-          .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-          if (sample['SYS_SAMPLE_CODE'] != sampleCode){
-            sampleCount += 1
-            sampleCode = sample['SYS_SAMPLE_CODE']
-            if (targetOutput.length < MAX_TARGET_LENGTH){
-              message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-                `scheduled to the following workcenters\n\n`
-            } else {
-              message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
-            }
-          }
-          if (targetOutput.length < MAX_TARGET_LENGTH){
-            message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-          }
-        })
-        if (targetOutput.length > MAX_TARGET_LENGTH){
-          message = `# **${sampleCount}** samples issued\n\n` + message
-        }
-
-        message +=`> \n\n${this.userInfo.name}\n\n` +
-          `${msg_date}`
-        this.utilService.sendNotif(
-          "actionCard",
-          message,
-          "")
-          .subscribe(() => {})
-
-          console.log("Request done.")
-          this.router.navigate(['/redirect' + this.router.url])
-      })
   }
 
   updateExcel2(){
