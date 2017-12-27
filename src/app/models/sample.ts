@@ -9,6 +9,7 @@ import {MdSnackBar} from '@angular/material'
 import {UserService} from '../util/user.service'
 
 import {Router} from '@angular/router'
+import {DatePipe} from '@angular/common'
 
 @Injectable()
 export class SampleService{
@@ -538,25 +539,7 @@ export class SampleService{
             this.submitSample(workcenter, object, data, attributeInfo)
           })
         })
-
-        // Send notification to Dingtalk
-        let date = new Date()
-        let msg_date = date.getFullYear() + '-' +
-          (date.getMonth() + 1) + '-' +
-          date.getDate() + ' ' +
-          date.getHours() + ':' +
-          date.getMinutes()
-
-        this.utilService.sendNotif(
-          "actionCard",
-          `${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
-          "/workcenter-dashboard/" + workcenter.id
-        )
-        .subscribe(() => {
-          console.log("Sending notification:", data)
-        })
       })
-
     })
 
 
@@ -637,24 +620,61 @@ export class SampleService{
                 delete sample.SYS_TARGET
                 // create object after terminating samples
                 this.createObject(sample, attributeInfo, true)
-                .subscribe(
-                  data => {},
-                    err => {},
-                    () => {
-                    this.router.navigate(['/redirect' + this.router.url])
-                  })
               })
             })
       } else {
         this.createObject(sample, attributeInfo, true)
-        .subscribe(
-          data => {},
-            err => {},
-            () => {
-            this.router.navigate(['/redirect' + this.router.url])
-          })
       }
     })
+  }
+
+  submitSample$(entity: any, object: any, selectedSample: any, attributeInfo: any){
+
+    return this.entityService.retrieveBy({
+      'SYS_TARGET': selectedSample['SYS_TARGET'],
+      'sort': 'SYS_ORDER',
+    }).mergeMap(data => {
+      let sample = {}
+      let previousSample = this.parsePreviousSample(selectedSample, data)
+      return this.entityService.retrieveAttribute(previousSample.id)
+      .mergeMap(data => {
+        //data.forEach(attribute => {
+        //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+        //})
+
+        // Copy capture/lane/run code manually
+        let captureCode = 'SYS_CAPTURE_CODE'
+        let laneCode = 'SYS_LANE_CODE'
+        let runCode = 'SYS_RUN_CODE'
+        if (previousSample[captureCode]) {
+          sample[captureCode] = previousSample[captureCode]
+        }
+        if (previousSample[laneCode]) {
+          sample[laneCode] = previousSample[laneCode]
+        }
+        if (previousSample[runCode]) {
+          sample[runCode] = previousSample[runCode]
+        }
+
+        // Copy attributes from object to sample
+        Object.keys(object).forEach(key => {
+          sample[key] = object[key]
+        })
+
+        // Add customized sample attribute
+        sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
+          selectedSample['SYS_CODE']
+
+        // Add default label, including SYS_SAMPLE_CODE
+        sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+        sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
+
+        sample['SYS_DATE_COMPLETED'] = new Date()
+        sample['SYS_ENTITY_TYPE'] = 'collection'
+        return this.createObject$(sample, attributeInfo, false)
+      })
+    })
+
   }
 
   /**
@@ -711,18 +731,73 @@ export class SampleService{
         sample['SYS_DATE_COMPLETED'] = new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         this.createObject(sample, attributeInfo, false)
-        .subscribe(
-          data => {},
-            err => {},
-            () => {
-            this.router.navigate(['/redirect' + this.router.url])
-          })
       })
     })
 
   }
 
-  createObject(object: any, attributeInfo: any, issueSample: boolean){
+  createObject(sample: any, attributeInfo: any, issueSample: boolean){
+    let targetOutput = []
+    console.log(">>", sample, attributeInfo)
+    this.createObject$(sample, attributeInfo, issueSample)
+    .subscribe(
+      data => {
+        targetOutput.push(data)
+      },
+      err => {},
+        () => {
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+          (date.getMonth() + 1) + '-' +
+          date.getDate() + ' ' +
+          date.getHours() + ':' +
+          date.getMinutes()
+
+        let message = ''
+        if (issueSample){
+          message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+          message += `scheduled to the following workcenters\n\n`
+        } else {
+          message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+          attributeInfo['attributeList'].forEach(attr => {
+            if (sample.hasOwnProperty(attr.SYS_CODE)) {
+              message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+            }
+          })
+          if (targetOutput.length > 0){
+            message += `with the following materials\n\n`
+          }
+        }
+        targetOutput.forEach(target => {
+          let sample = target['sample']
+          let workcenter = target['workcenter']
+          console.log(target)
+          if (issueSample){
+            let scheduledDate = new DatePipe('en-US')
+            .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+            message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+          } else {
+
+            message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+          }
+        })
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+          `${msg_date}`
+        console.log("mmm", message)
+        this.utilService.sendNotif(
+          "actionCard",
+          message,
+          //`${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
+          ""
+        )
+        .subscribe(() => {
+          //console.log("Sending notification:", data)
+        })
+        this.router.navigate(['/redirect' + this.router.url])
+      })
+  }
+
+  createObject$(object: any, attributeInfo: any, issueSample: boolean){
 
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
 
@@ -733,6 +808,13 @@ export class SampleService{
         console.log('Issue sample:', data)
         return this.buildRelationship(data, attributeInfo)
       })
+      .retryWhen(
+        attempts => Observable.range(1, 10)
+        .zip(attempts, i => i)
+        .mergeMap(i => {
+          console.log("delay retry by " + i + " seconds")
+          return Observable.timer(i * 1000);
+        }))
     } else {
       return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
       .mergeMap(data => {
@@ -747,6 +829,13 @@ export class SampleService{
           return this.buildRelationship(data, attributeInfo)
         })
       })
+      .retryWhen(
+        attempts => Observable.range(1, 10)
+        .zip(attempts, i => i)
+        .mergeMap(i => {
+          console.log("delay retry by " + i + " seconds")
+          return Observable.timer(i * 1000);
+        }))
     }
   }
 
@@ -953,9 +1042,13 @@ export class SampleService{
         subEntity[key] = targetEntityInput[key]
       })
       return this.entityService.create(subEntity)
+      .map(entity => {
+        return {'workcenter': targetEntity, 'sample': subEntity}
+      })
+      //.delay(100)
     })
     .retryWhen(
-      attempts => Observable.range(1, 20)
+      attempts => Observable.range(1, 10)
       .zip(attempts, i => i)
       .mergeMap(i => {
         console.log("delay retry by " + i + " seconds")
@@ -969,4 +1062,6 @@ export class SampleService{
   showMessage(message: string, action: string) {
     this.snackBar.open(message, action, {duration: 4000})
   }
+
 }
+
