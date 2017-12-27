@@ -225,7 +225,7 @@ export class PluginExcelProcessorComponent {
               return Observable.of("1")
             }
           })
-          .delay(1000)
+          //.delay(1000)
         )
       }
     })
@@ -337,7 +337,7 @@ export class PluginExcelProcessorComponent {
                 },
                 true)
             })
-            .delay(100)
+            //.delay(100)
           )
 
         }
