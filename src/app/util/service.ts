@@ -93,4 +93,9 @@ export class UtilService{
     return this.http.get("/userinfo")
     .map(res => res.json())
   }
+
+  restoreDatabase(){
+    return this.http.get("/restore")
+    .map(res => res.json())
+  }
 }

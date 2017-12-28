@@ -163,6 +163,13 @@ export class AppComponent {
     this.router.navigate(['/redirect' + this.router.url])
   }
 
+  restore(){
+    this.utilService.restoreDatabase()
+    .subscribe(data => {}, err => {}, () => {
+      this.refresh()
+    })
+  }
+
   onActivate(event: any){
     this.showMessage = false
     console.log("ACTIVATE")
