@@ -26,12 +26,14 @@
                     </span>
                 </label>
                 <button
+                    *ngIf="workcenter.SYS_IDENTIFIER == '/PROJECT_MANAGEMENT/GENERAL_PROJECT'"
                     md-button
                     i18n="@@plugin-excel-button-template"
                     (click)="exportSample(true)">
                     TEMPLATE
                 </button>
                 <button
+                    [class.hidden-button]="workcenter.SYS_IDENTIFIER == '/PROJECT_MANAGEMENT/GENERAL_PROJECT'"
                     md-button
                     i18n="@@plugin-excel-button-export"
                     (click)="exportSample()">
