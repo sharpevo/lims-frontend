@@ -23,8 +23,19 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#99 修复Excel导出部分参考属性缺失bug(一定程度修复)",
+      date: "2017-12-28",
+      highlight: true,
+    },
+    {
+      title: "#152 取消自动数据库重置(前端手动重置)",
+      date: "2017-12-28",
+      highlight: true,
+    },
+    {
       title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
       date: "2017-12-27",
+      highlight: true,
     },
     {
       title: "#141 修复计划进度bug(WPS数据类型所致)",
@@ -86,10 +97,6 @@ export class AppComponent {
     },
     {
       title: "#78 工作中心文件上传(不解析)并在线预览(pdf)",
-      date: "Week: 52",
-    },
-    {
-      title: "#99 修复Excel导出部分参考属性缺失bug",
       date: "Week: 52",
     },
   ]
