@@ -118,7 +118,7 @@ export class SampleService{
         let uniqueSampleList = []
         let seen = {}
         activatedSampleList.forEach(sample => {
-          let key = attributeCode + "|" + sample[attributeCode]
+          let key = attributeCode == 'SYS_SAMPLE_CODE'?attributeCode:attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
           if (!seen[key]) {
             if (sample[attributeCode]){
               seen[key] = true
