@@ -575,6 +575,7 @@ export class SampleService{
 
       sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
       sample['SYS_ENTITY_TYPE'] = 'collection'
+      sample['SYS_DATE_COMPLETED'] = new Date()
       sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] +
         '/' +
         sample['SYS_SAMPLE_CODE'] + '.' + object.TMP_CODE
