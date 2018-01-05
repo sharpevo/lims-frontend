@@ -118,7 +118,7 @@ export class SampleService{
         let uniqueSampleList = []
         let seen = {}
         activatedSampleList.forEach(sample => {
-          let key = attributeCode + "|" + sample[attributeCode]
+          let key = attributeCode == 'SYS_SAMPLE_CODE'?attributeCode:attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
           if (!seen[key]) {
             if (sample[attributeCode]){
               seen[key] = true
@@ -575,6 +575,7 @@ export class SampleService{
 
       sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
       sample['SYS_ENTITY_TYPE'] = 'collection'
+      sample['SYS_DATE_COMPLETED'] = new Date()
       sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] +
         '/' +
         sample['SYS_SAMPLE_CODE'] + '.' + object.TMP_CODE
