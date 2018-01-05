@@ -12,3 +12,6 @@
     text-align: center;
     border-collapse:collapse;
 }
+.hidden-button {
+    display: none;
+}
