@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {UserService} from '../util/user.service'
 import {Router} from '@angular/router'
+import {Observable} from 'rxjs/Rx'
 
 @Component({
   selector: 'apps-view',
@@ -91,6 +92,65 @@ export class AppsComponent {
   }
 
   getWorkcenterList(workcenterIdentifier: string){
+    this.entityService.retrieveBy({
+      "SYS_IDENTIFIER": workcenterIdentifier,
+    }).subscribe(data => {
+      this.entityService.retrieveEntity(data[0].id, "class")
+      .subscribe(data => {
+        let workcenterList = []
+        let sampleCountList = []
+        let countSampleObs = []
+        data
+        .sort((a,b) => {
+          if (a.SYS_ORDER > b.SYS_ORDER) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+        .forEach(workcenter => {
+          workcenterList.push(workcenter)
+          countSampleObs.push(
+            this.entityService.retrieveEntity(workcenter.id, "collection")
+          )
+        })
+
+        Observable.concat(...countSampleObs)
+        .subscribe((data: any[]) => {
+
+          let count = 0
+          data.forEach(currentSample => {
+            if (currentSample.hasOwnProperty('SYS_WORKCENTER_OPERATOR') &&
+                !currentSample['SYS_DATE_TERMINATED'] &&
+                  !currentSample['SYS_DATE_COMPLETED']) {
+              count += 1
+            }
+          })
+          sampleCountList.push(count)
+
+        },
+        err => {},
+          () => {
+          workcenterList.forEach((workcenter, index) => {
+            if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
+              this.appList.push({
+                "isInternal": true,
+                "label":workcenter[workcenter['SYS_LABEL']],
+                "url":"/workcenter-dashboard/" + workcenter.id,
+                "icon": "format_color_fill",
+                "sampleCount": sampleCountList[index],
+              })
+            }
+          })
+
+        })
+
+
+      })
+    })
+  }
+
+  getWorkcenterList2(workcenterIdentifier: string){
     this.entityService.retrieveBy({
       "SYS_IDENTIFIER":workcenterIdentifier,
     }).subscribe(data => {
