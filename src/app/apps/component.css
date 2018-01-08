@@ -32,3 +32,19 @@
 ::ng-deep md-grid-tile.mat-grid-tile .mat-figure {
     align-items: initial;  /*vertical alignment*/
 }
+
+.sample-count {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+
+    padding: 1px 3px;
+    margin: -6px;
+    font-size: 10px;
+
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
+
+    /*box-shadow:0 2px 2px -1px rgba(0,0,0,.2), 0 2px 3px 1px rgba(0,0,0,.14), 0 1px 2px 1px rgba(0,0,0,.12);*/
+}
