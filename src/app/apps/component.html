@@ -17,6 +17,11 @@
                         <label class="appLabel">
                             {{app.label}}
                         </label>
+                        <span
+                            *ngIf="app.sampleCount > 0"
+                            class="sample-count">
+                            {{app.sampleCount}}
+                        </span>
                     </div>
                 </md-card>
             </md-grid-tile>
