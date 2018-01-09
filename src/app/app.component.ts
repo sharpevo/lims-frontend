@@ -23,6 +23,16 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#158 实验步骤页面显示样品数量(已分派样品数量)",
+      date: "2018-01-08",
+      highlight: true,
+    },
+    {
+      title: "#166 建库属性变更(样品投入量/剩余量引子提取实验)",
+      date: "2018-01-08",
+      highlight: true,
+    },
+    {
       title: "#163 修复样品项目参考属性bug",
       date: "2018-01-05",
       highlight: true,
@@ -116,14 +126,6 @@ export class AppComponent {
     },
     {
       title: "#78 工作中心文件上传(不解析)并在线预览(pdf) -> 欧婷",
-      date: "Week: 02",
-    },
-    {
-      title: "#166 建库步骤'样品投入量'属性为提取步骤参考属性",
-      date: "Week: 02",
-    },
-    {
-      title: "#158 App页面样品数量显示",
       date: "Week: 02",
     },
   ]
