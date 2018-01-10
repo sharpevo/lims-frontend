@@ -35,6 +35,8 @@ export class TablifyComponent{
   selectedSampleIdList: any[] = []
   isSelectAll: boolean = false
 
+  projectCodeList: any[] = []
+
   constructor(
     public dialog: MdDialog,
     private sampleService: SampleService
@@ -45,6 +47,10 @@ export class TablifyComponent{
   sampleDataSource: SampleDataSource | null
 
   ngOnInit(){
+
+    this.rawSampleList.forEach(sample => {
+      this.projectCodeList.push(sample.CONF_GENERAL_PROJECT_PROJECT_CODE)
+    })
 
     if (!this.columnList){
       // fix undefined bug
@@ -102,6 +108,14 @@ export class TablifyComponent{
       if (!this.sampleDataSource) { return; }
       this.sampleDataSource.filter = this.filter.nativeElement.value;
     })
+  }
+
+  onProjectCodeChange(event){
+    this.isSelectAll=false
+    this.clearSelectedSamples()
+
+    if (!this.sampleDataSource) { return; }
+    this.sampleDataSource.filter = event.value
   }
 
   selectSample(row: any){
