@@ -19,38 +19,38 @@ const routes: Routes = [
   {
     path: 'apps',
     component: AppsComponent,
-    canActivate: [UserService],
+    //canActivate: [UserService],
   },
   {
     path: 'view/:id',
     component: ViewComponent,
-    canActivate: [UserService],
+    //canActivate: [UserService],
   },
   {
     path: 'tree',
     component: TreeViewComponent,
-    canActivate: [UserService],
-    data: {
-      expectedRole: 'lims-admin',
-    },
+    //canActivate: [UserService],
+    //data: {
+    //expectedRole: 'lims-admin',
+    //},
   },
   {
     path: 'workcenter-overview',
     component: WorkcenterOverviewComponent,
-    canActivate: [UserService],
+    //canActivate: [UserService],
   },
   {
     path: 'workcenter-dashboard/:id',
     component: WorkcenterDashboardComponent,
-    canActivate: [UserService],
-    data: {
-      expectedRole: 'lims-workcenter-',
-    },
+    //canActivate: [UserService],
+    //data: {
+    //expectedRole: 'lims-workcenter-',
+    //},
   },
   {
     path: 'project-management',
     component: ProjectManagementComponent,
-    canActivate: [UserService],
+    //canActivate: [UserService],
   },
   {
     path: 'material-overview',
