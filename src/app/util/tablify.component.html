@@ -1,23 +1,36 @@
 <div class="simple-table-container">
-	<div class="simple-table-filter">
-		<md-input-container floatPlaceholder="never">
-			<input mdInput #filter placeholder="search...">
-		</md-input-container>
-        <span
-            style="opacity:0.5; font-size: 0.7em;padding-left: 15px;"
-            *ngIf="selectedSampleIdList.length > 0">
-            Sample selected: {{selectedSampleIdList.length}}
-            <br/>
-            {{selectedSampleIdList|json}}
-        </span>
-        <span style="opacity:0.7; font-size: 0.7em;padding-left: 15px;">
-            <br/>
-            <span *ngFor="let sample of rawSampleList">
-                <span *ngIf="sample['TMP_CHECKED']">
-                "{{sample.id}}",
-                </span>
-            </span>
-        </span>
+	<div
+     class="simple-table-filter"
+    fxLayout="row" fxLayoutAlign="space-between end" >
+        <div>
+            <md-select
+                (change)="onProjectCodeChange($event)"
+                placeholder="{{projectCodeList.length}} Projects">
+                <md-option *ngFor="let code of projectCodeList" [value]="code">
+                    {{code}}
+                </md-option>
+            </md-select>
+        </div>
+        <div>
+            <md-input-container floatPlaceholder="never">
+                <input mdInput #filter placeholder="search...">
+            </md-input-container>
+        <!--<span-->
+            <!--style="opacity:0.5; font-size: 0.7em;padding-left: 15px;"-->
+            <!--*ngIf="selectedSampleIdList.length > 0">-->
+            <!--Sample selected: {{selectedSampleIdList.length}}-->
+            <!--<br/>-->
+            <!--{{selectedSampleIdList|json}}-->
+        <!--</span>-->
+        <!--<span style="opacity:0.7; font-size: 0.7em;padding-left: 15px;">-->
+            <!--<br/>-->
+            <!--<span *ngFor="let sample of rawSampleList">-->
+                <!--<span *ngIf="sample['TMP_CHECKED']">-->
+                <!--"{{sample.id}}",-->
+                <!--</span>-->
+            <!--</span>-->
+        <!--</span>-->
+        </div>
 	</div>
 	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
 
