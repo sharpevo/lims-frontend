@@ -36,6 +36,7 @@ export class TablifyComponent{
   isSelectAll: boolean = false
 
   projectCodeList: any[] = []
+  projectCodeMap: any = {}
 
   constructor(
     public dialog: MdDialog,
@@ -49,8 +50,9 @@ export class TablifyComponent{
   ngOnInit(){
 
     this.rawSampleList.forEach(sample => {
-      this.projectCodeList.push(sample.CONF_GENERAL_PROJECT_PROJECT_CODE)
+      this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
     })
+    this.projectCodeList = Object.keys(this.projectCodeMap).sort()
 
     if (!this.columnList){
       // fix undefined bug
