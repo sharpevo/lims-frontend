@@ -47,7 +47,9 @@
                 </md-header-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell" md-sort-header>
+                <md-header-cell *cdkHeaderCellDef
+                    [style.min-width]="getMinWidth(columnKey)"
+                    class="simple-table-header-cell" md-sort-header>
                     {{columnMap[columnKey]['SYS_LABEL']}}
                 </md-header-cell>
             </span>
@@ -71,7 +73,9 @@
                 </md-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <md-cell *cdkCellDef="let row" class="simple-table-cell">
+                <md-cell *cdkCellDef="let row"
+                    class="simple-table-cell"
+                    [style.min-width]="getMinWidth(columnKey)">
                     <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
                         <span *ngIf="!targetHybridType">
                             <span *ngIf="row['SYS_RUN_CODE']">
