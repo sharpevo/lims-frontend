@@ -23,6 +23,21 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#179 调整项目编号表头及表体(完整显示)",
+      date: "2018-01-11",
+      highlight: true,
+    },
+    {
+      title: "移除全部权限检查(避免使用同一帐号测试)",
+      date: "2018-01-11",
+      highlight: true,
+    },
+    {
+      title: "#169 移除SimpleTable调试信息(样品ID)",
+      date: "2018-01-11",
+      highlight: true,
+    },
+    {
       title: "#178 增加样品表格项目过滤下拉框",
       date: "2018-01-10",
       highlight: true,
@@ -62,30 +77,30 @@ export class AppComponent {
       title: "#156 任务下达属性变更(属性顺序, 多重/液相属性区分等)",
       date: "2018-01-04",
     },
-    {
-      title: "#99 修复Excel导出部分参考属性缺失bug(一定程度修复)",
-      date: "2017-12-28",
-    },
-    {
-      title: "#152 取消自动数据库重置(前端手动重置)",
-      date: "2017-12-28",
-    },
-    {
-      title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
-      date: "2017-12-27",
-    },
-    {
-      title: "#141 修复计划进度bug(WPS数据类型所致)",
-      date: "2017-12-26",
-    },
-    {
-      title: "#140 样品Excel导出前按样品编号升序排序",
-      date: "2017-12-25",
-    },
-    {
-      title: "#138 增加缺失前端国际化字段(任务下达/插件等)",
-      date: "2017-12-25",
-    },
+    //{
+    //title: "#99 修复Excel导出部分参考属性缺失bug(一定程度修复)",
+    //date: "2017-12-28",
+    //},
+    //{
+    //title: "#152 取消自动数据库重置(前端手动重置)",
+    //date: "2017-12-28",
+    //},
+    //{
+    //title: "#15 优化钉钉通知(样品链接, CardAction链接等)",
+    //date: "2017-12-27",
+    //},
+    //{
+    //title: "#141 修复计划进度bug(WPS数据类型所致)",
+    //date: "2017-12-26",
+    //},
+    //{
+    //title: "#140 样品Excel导出前按样品编号升序排序",
+    //date: "2017-12-25",
+    //},
+    //{
+    //title: "#138 增加缺失前端国际化字段(任务下达/插件等)",
+    //date: "2017-12-25",
+    //},
     //{
     //title: "#106 增加样品查询模块(项目编号, 日期范围)",
     //date: "2017-12-24",
@@ -126,12 +141,52 @@ export class AppComponent {
   ]
   taskPlannedList: any[] = [
     {
-      title: "",
-      date: "",
+      title: "#78 工作中心文件上传(多文件/异步/不解析)并在线预览(pdf) -> 欧婷",
+      date: "Week: 02",
     },
     {
-      title: "#78 工作中心文件上传(不解析)并在线预览(pdf) -> 欧婷",
+      title: "#170 服务器迁移至先知主机",
       date: "Week: 02",
+    },
+    {
+      title: "#60 实现项目暂停机制",
+      date: "?",
+    },
+    {
+      title: "#76 多重建库UI开发(模拟8x12孔板)",
+      date: "?",
+    },
+    {
+      title: "#85 实现'生产组'相关逻辑",
+      date: "?",
+    },
+    {
+      title: "#154 实现预警机器人",
+      date: "?",
+    },
+    {
+      title: "#159 Dashboard页面显示样品数量",
+      date: "?",
+    },
+    {
+      title: "#165 样品编号校验当批量上传时",
+      date: "?",
+    },
+    {
+      title: "#167 实现'撤销'及'回滚'",
+      date: "?",
+    },
+    {
+      title: "#180 混合样品Index导出缺失Bug",
+      date: "?",
+    },
+    {
+      title: "#180 混合样品Index导出缺失Bug",
+      date: "?",
+    },
+    {
+      title: "",
+      date: "",
     },
   ]
   constructor(

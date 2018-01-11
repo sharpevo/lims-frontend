@@ -772,7 +772,7 @@ export class SampleService{
         targetOutput.forEach(target => {
           let sample = target['sample']
           let workcenter = target['workcenter']
-          console.log(target)
+          //console.log(target)
           if (issueSample){
             let scheduledDate = new DatePipe('en-US')
             .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
@@ -784,7 +784,7 @@ export class SampleService{
         })
         message +=`> \n\n${this.userInfo.name}\n\n` +
           `${msg_date}`
-        console.log("mmm", message)
+        //console.log("mmm", message)
         this.utilService.sendNotif(
           "actionCard",
           message,
