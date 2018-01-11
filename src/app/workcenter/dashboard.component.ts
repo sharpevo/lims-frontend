@@ -82,7 +82,7 @@ export class WorkcenterDashboardComponent{
       this.workcenter = data
       let roleName = "lims-workcenter-" + data['SYS_CODE'].toLowerCase()
       if (!this.userService.hasRole(roleName)){
-        this.userService.permFail()
+        //this.userService.permFail()
       }
 
     })
