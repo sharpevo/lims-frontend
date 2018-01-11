@@ -132,15 +132,15 @@ export class AppsComponent {
         err => {},
           () => {
           workcenterList.forEach((workcenter, index) => {
-            if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
-              this.appList.push({
-                "isInternal": true,
-                "label":workcenter[workcenter['SYS_LABEL']],
-                "url":"/workcenter-dashboard/" + workcenter.id,
-                "icon": "format_color_fill",
-                "sampleCount": sampleCountList[index],
-              })
-            }
+            //if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
+            this.appList.push({
+              "isInternal": true,
+              "label":workcenter[workcenter['SYS_LABEL']],
+              "url":"/workcenter-dashboard/" + workcenter.id,
+              "icon": "format_color_fill",
+              "sampleCount": sampleCountList[index],
+            })
+            //}
           })
 
         })

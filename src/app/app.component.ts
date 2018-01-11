@@ -23,6 +23,16 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#178 增加样品表格项目过滤下拉框",
+      date: "2018-01-10",
+      highlight: true,
+    },
+    {
+      title: "#176 属性变更(建库质检评级引自提取; 建库样品用量引自打断实验; Pooling文库长度引自建库;",
+      date: "2018-01-09",
+      highlight: true,
+    },
+    {
       title: "#158 实验步骤页面显示样品数量(已分派样品数量)",
       date: "2018-01-08",
       highlight: true,
@@ -35,27 +45,22 @@ export class AppComponent {
     {
       title: "#163 修复样品项目参考属性bug",
       date: "2018-01-05",
-      highlight: true,
     },
     {
       title: "#164 项目审核属性变更",
       date: "2018-01-04",
-      highlight: true,
     },
     {
       title: "#162 simple-table UI优化(overflow, 滚动条)",
       date: "2018-01-04",
-      highlight: true,
     },
     {
       title: "#161 Excel插件按钮变更(任务下达'模板'与实验流程'导出')",
       date: "2018-01-04",
-      highlight: true,
     },
     {
       title: "#156 任务下达属性变更(属性顺序, 多重/液相属性区分等)",
       date: "2018-01-04",
-      highlight: true,
     },
     {
       title: "#99 修复Excel导出部分参考属性缺失bug(一定程度修复)",
@@ -81,14 +86,14 @@ export class AppComponent {
       title: "#138 增加缺失前端国际化字段(任务下达/插件等)",
       date: "2017-12-25",
     },
-    {
-      title: "#106 增加样品查询模块(项目编号, 日期范围)",
-      date: "2017-12-24",
-    },
-    {
-      title: "#104 增加简单样品详情",
-      date: "2017-12-24",
-    },
+    //{
+    //title: "#106 增加样品查询模块(项目编号, 日期范围)",
+    //date: "2017-12-24",
+    //},
+    //{
+    //title: "#104 增加简单样品详情",
+    //date: "2017-12-24",
+    //},
     //{
     //title: "#103 增加简单物料管理",
     //date: "2017-12-23",
