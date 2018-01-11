@@ -112,6 +112,14 @@ export class TablifyComponent{
     })
   }
 
+
+  getMinWidth(columnKey: string){
+    if (columnKey == 'CONF_GENERAL_PROJECT_PROJECT_CODE') {
+      return "200px"
+    } else {
+      return "100px"
+    }
+  }
   onProjectCodeChange(event){
     this.isSelectAll=false
     this.clearSelectedSamples()
