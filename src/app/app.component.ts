@@ -23,6 +23,11 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#181 样品表性能优化",
+      date: "2018-01-12",
+      highlight: true,
+    },
+    {
       title: "#179 调整项目编号表头及表体(完整显示)",
       date: "2018-01-11",
       highlight: true,
