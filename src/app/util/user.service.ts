@@ -68,7 +68,7 @@ export class UserService {
 
   authFail(){
     this.spinnerService.start()
-    this.snackBar.open("Redirect to UIC in 3 seconds...", "OK", {duration: 3000})
+    this.snackBar.open("Redirect to UIC in 1 seconds...", "OK", {duration: 1000})
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
       window.location.href = environment.uicUrl +
