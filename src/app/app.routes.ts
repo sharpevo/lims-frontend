@@ -19,17 +19,17 @@ const routes: Routes = [
   {
     path: 'apps',
     component: AppsComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
   },
   {
     path: 'view/:id',
     component: ViewComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
   },
   {
     path: 'tree',
     component: TreeViewComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
     //data: {
     //expectedRole: 'lims-admin',
     //},
@@ -37,12 +37,12 @@ const routes: Routes = [
   {
     path: 'workcenter-overview',
     component: WorkcenterOverviewComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
   },
   {
     path: 'workcenter-dashboard/:id',
     component: WorkcenterDashboardComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
@@ -50,7 +50,7 @@ const routes: Routes = [
   {
     path: 'project-management',
     component: ProjectManagementComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
   },
   {
     path: 'material-overview',
@@ -70,7 +70,7 @@ const routes: Routes = [
   {
     path: 'sample-overview/:sample_code',
     component: SampleOverviewComponent,
-    //canActivate: [UserService],
+    canActivate: [UserService],
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
