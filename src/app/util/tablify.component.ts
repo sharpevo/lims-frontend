@@ -13,6 +13,8 @@ import 'rxjs/add/operator/map'
 import {SampleService} from '../models/sample'
 import {SimpleTableDialog} from './simple.table.dialog'
 
+import {EntityService} from '../entity/service'
+
 @Component({
   selector: 'simple-table',
   styleUrls: ['./tablify.component.css'],
@@ -38,9 +40,12 @@ export class TablifyComponent{
   projectCodeList: any[] = []
   projectCodeMap: any = {}
 
+  sampleSetMap: any = {}
+
   constructor(
     public dialog: MdDialog,
-    private sampleService: SampleService
+    private sampleService: SampleService,
+    private entityService: EntityService,
   ){
   }
 
@@ -98,7 +103,7 @@ export class TablifyComponent{
     })
 
     this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
-    this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
+    this.sampleDataSource = new SampleDataSource(this.entityService, this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
     .debounceTime(150)
     .distinctUntilChanged()
@@ -126,6 +131,7 @@ export class TablifyComponent{
 
     if (!this.sampleDataSource) { return; }
     this.sampleDataSource.filter = event.value
+
   }
 
   selectSample(row: any){
@@ -337,12 +343,14 @@ export class SampleDataSource extends DataSource<any> {
 
   dataLength: number = 0
   currentSampleList: any[] = []
+  sampleSetMap: any = {}
 
   _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
 
   constructor(
+    private entityService: EntityService,
     private _exampleDatabase: SampleDatabase,
     private _paginator: MdPaginator,
     private _sort: MdSort,
@@ -387,9 +395,14 @@ export class SampleDataSource extends DataSource<any> {
       data = data.splice(startIndex, this._paginator.pageSize)
       data = this.getSortedData(data)
       let result = []
+      let sampleSetObs = []
       let hybridMap = this._exampleDatabase.hybridMap
       data.forEach((sample, index) => {
         result.push(sample)
+        sampleSetObs.push(this.entityService.retrieveBy({
+          "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+        }).map(sampleList => sample['TMP_SAMPLE_SET'] = sampleList))
+
 
         //// Get the hybrid type
         //let hybridType = ""
@@ -405,6 +418,10 @@ export class SampleDataSource extends DataSource<any> {
         //result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
         //}
       })
+
+      Observable.concat(...sampleSetObs)
+      .subscribe()
+      //.subscribe(data => console.log(">", data))
 
       return result
     })
