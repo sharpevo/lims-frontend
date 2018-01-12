@@ -23,6 +23,11 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#170 服务器迁移至先知主机",
+      date: "2018-01-12",
+      highlight: true,
+    },
+    {
       title: "#181 样品表性能优化",
       date: "2018-01-12",
       highlight: true,
@@ -150,10 +155,6 @@ export class AppComponent {
       date: "Week: 02",
     },
     {
-      title: "#170 服务器迁移至先知主机",
-      date: "Week: 02",
-    },
-    {
       title: "#60 实现项目暂停机制",
       date: "?",
     },
@@ -179,10 +180,6 @@ export class AppComponent {
     },
     {
       title: "#167 实现'撤销'及'回滚'",
-      date: "?",
-    },
-    {
-      title: "#180 混合样品Index导出缺失Bug",
       date: "?",
     },
     {
