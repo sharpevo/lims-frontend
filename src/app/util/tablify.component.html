@@ -110,8 +110,10 @@
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
                             <show-auxiliary-attribute
+                                *ngIf="row['TMP_SAMPLE_SET']"
                                 [hybridObject]="hybridObjectMap"
                                 [sample]="row"
+                                [sampleSet]="row['TMP_SAMPLE_SET']"
                                 [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
                                 [attributeType]="columnMap[columnKey]['SYS_TYPE']"
                                 [attributeGenre]="columnMap[columnKey]['SYS_GENRE']"
@@ -131,8 +133,10 @@
                             </span>
                             <span *ngSwitchDefault>
                                 <show-auxiliary-attribute
+                                    *ngIf="row['TMP_SAMPLE_SET']"
                                     [hybridObject]="hybridObjectMap"
                                     [sample]="row"
+                                    [sampleSet]="row['TMP_SAMPLE_SET']"
                                     [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
                                     [attributeType]="columnMap[columnKey]['SYS_TYPE']"
                                     [attributeGenre]="columnMap[columnKey]['SYS_GENRE']"
