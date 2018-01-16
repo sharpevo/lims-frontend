@@ -1,28 +1,94 @@
-<table *ngIf="workcenterList.length > 0">
-    <thead>
-        <tr>
-            <th>
-                Workcenter
-            </th>
-            <th>
-                Sum
-            </th>
-            <th *ngFor="let operator of operatorMap | objectKeys">
-                {{operator}}
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
-            <td>
-                {{workcenterMap[workcenterId]['label']}}
-            </td>
-            <td>
-                {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length}}
-            </td>
-            <td *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
-                {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
-            </td>
-        </tr>
-    </tbody>
-</table>
+<h4 class="section-title">
+    Overview: 2017.12.12 - 2018.01.10
+</h4>
+<md-card>
+    <md-card-header>
+        <md-card-title></md-card-title>
+        <md-card-subtitle></md-card-subtitle>
+    </md-card-header>
+    <!--<img md-card-image src="assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+    <md-card-content>
+        <table *ngIf="workcenterList.length > 0">
+            <thead>
+                <tr>
+                    <th>
+                        Workcenter
+                    </th>
+                    <th *ngFor="let operatorId of operatorMap | objectKeys">
+                        <entity-tostring
+                            [entityId]="operatorId">
+                        </entity-tostring>
+                    </th>
+                    <th>
+                        Sum
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
+                    <td>
+                        {{workcenterMap[workcenterId]['label']}}
+                    </td>
+                    <td (click)="showDetail(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId])"
+                        *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
+                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
+                    </td>
+                    <td (click)="showDetail(workcenterMap[workcenterId]['TMP_SAMPLE_LIST'])">
+                        {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+  </md-card-content>
+
+  <md-card-actions>
+      <button md-button>LIKE</button>
+      <button md-button>SHARE</button>
+  </md-card-actions>
+</md-card>
+
+
+<h4 class="section-title">
+    Detail
+</h4>
+<md-accordion [multi]="false">
+    <md-expansion-panel
+        *ngFor="let sample of detailedSampleList">
+        <md-expansion-panel-header>
+            <md-panel-title>
+                {{sample.SYS_SAMPLE_CODE}}
+            </md-panel-title>
+            <md-panel-description>
+            </md-panel-description>
+        </md-expansion-panel-header>
+        <div fxLayout="column" fxLayoutAlign="start start" >
+            <div
+                *ngFor="let schema of sample.SYS_SCHEMA"
+                fxLayout="row" fxLayoutAlign="space-between center" >
+                <div style="opacity:0.7">
+                    {{schema.SYS_LABEL}}:
+                </div>
+                <div style="margin-left: 5px;">
+                    <b>
+                        <span
+                            *ngIf="schema.SYS_TYPE == 'date'">
+                            {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                        </span>
+                        <span
+                            *ngIf="schema.SYS_TYPE != 'date'">
+                                {{sample[schema.SYS_CODE]}}
+                        </span>
+                    </b>
+                </div>
+            </div>
+            <div style="opacity:0.7">
+                Created:
+            </div>
+            <div style="margin-left: 5px;">
+                <b>
+                    {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
+                </b>
+            </div>
+        </div>
+    </md-expansion-panel>
+</md-accordion>

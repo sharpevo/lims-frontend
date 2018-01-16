@@ -14,6 +14,7 @@ export class KPIComponent{
   workcenterList: any[] = []
   operatorMap: any = {}
   workcenterMap: any = {}
+  detailedSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -30,6 +31,11 @@ export class KPIComponent{
         let workcenterObs = []
         //this.workcenterList = workcenterList
         workcenterList.forEach(workcenter => {
+
+          // prepare for the sample counting
+          this.workcenterMap[workcenter.id] = workcenter
+          this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'] = {}
+
           workcenterObs.push(
             this.entityService.retrieveEntity(workcenter.id, "collection")
             .map(data => {
@@ -42,23 +48,18 @@ export class KPIComponent{
         .subscribe((resultList: any[][]) => {
           resultList.forEach(result => {
             let workcenter = result['workcenter']
-            workcenter['TMP_SAMPLE_LIST'] = result['samples'].filter(sample => {
+            this.workcenterMap[workcenter.id]['TMP_SAMPLE_LIST'] = result['samples'].filter(sample => {
               //result['samples'].filter(sample => {
               if (sample.hasOwnProperty('SYS_WORKCENTER_OPERATOR')){
                 let operatorId = sample['SYS_WORKCENTER_OPERATOR']
 
                 this.operatorMap[operatorId] = true
-                if (!this.workcenterMap[workcenter.id]){
-                  this.workcenterMap[workcenter.id] = workcenter
-                }
-                if (!this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST']){
-                  this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'] = {}
-                }
+
                 if (!this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'][operatorId]){
                   this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'][operatorId] = []
                 }
                 this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].push(sample)
-                console.log("..", sample.SYS_WORKCENTER_OPERATOR)
+
                 return true
               } else {
                 return false
@@ -69,5 +70,11 @@ export class KPIComponent{
         })
       })
     })
+  }
+
+  showDetail(sampleList: any[]){
+    this.detailedSampleList = sampleList
+    console.log("...", this.detailedSampleList)
+
   }
 }
