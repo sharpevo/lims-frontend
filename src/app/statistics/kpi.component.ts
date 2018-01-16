@@ -4,6 +4,7 @@ import {MdDialog, MdDialogRef} from '@angular/material'
 import {MdSnackBar} from '@angular/material'
 import {Router, ActivatedRoute} from '@angular/router'
 import {Observable} from 'rxjs/Rx'
+import {DatePipe} from '@angular/common'
 
 @Component({
   selector: 'statistics-kpi',
@@ -11,10 +12,12 @@ import {Observable} from 'rxjs/Rx'
 })
 export class KPIComponent{
 
-  workcenterList: any[] = []
+  done: boolean = false
   operatorMap: any = {}
   workcenterMap: any = {}
   detailedSampleList: any[] = []
+  queryDateStart: string = ''
+  queryDateEnd: string = ''
 
   constructor(
     private entityService: EntityService,
@@ -23,21 +26,38 @@ export class KPIComponent{
   }
 
   ngOnInit(){
+    this.getSampleList()
+  }
+  getSampleList(){
+    this.done = false
+
+    this.detailedSampleList = []
+
+    let options = ''
+    if (this.queryDateStart != '') {
+      options += '&completestart=' + this.queryDateStart
+    }
+    if (this.queryDateEnd != '') {
+      options += '&completeend=' + this.queryDateEnd
+    }
+
+
     this.entityService.retrieveBy({
       "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER"
-    }).subscribe(productWorkcenter => {
+    })
+    .subscribe(productWorkcenter => {
       this.entityService.retrieveEntity(productWorkcenter[0].id, "class")
       .subscribe(workcenterList => {
         let workcenterObs = []
-        //this.workcenterList = workcenterList
         workcenterList.forEach(workcenter => {
 
           // prepare for the sample counting
           this.workcenterMap[workcenter.id] = workcenter
           this.workcenterMap[workcenter.id]['TMP_OPERATOR_SAMPLE_LIST'] = {}
+          this.workcenterMap[workcenter.id]['TMP_SAMPLE_LIST'] = []
 
           workcenterObs.push(
-            this.entityService.retrieveEntity(workcenter.id, "collection")
+            this.entityService.retrieveEntity(workcenter.id, "collection", options)
             .map(data => {
               return {workcenter: workcenter, samples: data}
             })
@@ -65,8 +85,8 @@ export class KPIComponent{
                 return false
               }
             })
-            this.workcenterList.push(workcenter)
           })
+          this.done = true
         })
       })
     })
@@ -74,7 +94,5 @@ export class KPIComponent{
 
   showDetail(sampleList: any[]){
     this.detailedSampleList = sampleList
-    console.log("...", this.detailedSampleList)
-
   }
 }

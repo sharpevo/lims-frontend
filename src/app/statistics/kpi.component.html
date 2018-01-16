@@ -1,5 +1,42 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        KPI
+    </h3>
+    <div
+        fxLayoutGap="10px"
+        fxLayout="row"
+        fxLayoutAlign="end center">
+        <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <md-input-container>
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateStart"
+                    placeholder="starts at..."/>
+            </md-input-container>
+            <md-input-container>
+                <input
+                    mdInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateEnd"
+                    placeholder="ends at..."/>
+            </md-input-container>
+        </div>
+        <button
+            md-button
+            aria-label="Search"
+            placeholder="Search"
+            (click)="getSampleList()">
+            <md-icon>search</md-icon>
+        </button>
+    </div>
+</div>
 <h4 class="section-title">
-    Overview: 2017.12.12 - 2018.01.10
+    Overview: {{queryDateStart}} - {{queryDateEnd}}
 </h4>
 <md-card>
     <md-card-header>
@@ -8,7 +45,7 @@
     </md-card-header>
     <!--<img md-card-image src="assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
     <md-card-content>
-        <table *ngIf="workcenterList.length > 0">
+        <table *ngIf="done">
             <thead>
                 <tr>
                     <th>
@@ -26,12 +63,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
-                    <td>
+                    <td style="weight: bold;">
                         {{workcenterMap[workcenterId]['label']}}
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId])"
                         *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
-                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
+                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length>0?workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length:''}}
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_SAMPLE_LIST'])">
                         {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length}}
@@ -40,11 +77,6 @@
             </tbody>
         </table>
   </md-card-content>
-
-  <md-card-actions>
-      <button md-button>LIKE</button>
-      <button md-button>SHARE</button>
-  </md-card-actions>
 </md-card>
 
 
@@ -59,6 +91,7 @@
                 {{sample.SYS_SAMPLE_CODE}}
             </md-panel-title>
             <md-panel-description>
+                {{sample.id}}
             </md-panel-description>
         </md-expansion-panel-header>
         <div fxLayout="column" fxLayoutAlign="start start" >
