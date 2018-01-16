@@ -75,6 +75,7 @@ import {RedirectComponent} from './util/redirect.component'
 import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
+import {KPIComponent} from './statistics/kpi.component'
 
 @NgModule({
   declarations: [
@@ -121,6 +122,7 @@ import {SampleOverviewComponent} from './sample/overview.component'
     EditPMSampleDialog,
     MaterialOverviewComponent,
     SampleOverviewComponent,
+    KPIComponent,
   ],
   entryComponents:[
     GenreFormDialog,

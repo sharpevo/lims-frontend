@@ -1,0 +1,28 @@
+<table *ngIf="workcenterList.length > 0">
+    <thead>
+        <tr>
+            <th>
+                Workcenter
+            </th>
+            <th>
+                Sum
+            </th>
+            <th *ngFor="let operator of operatorMap | objectKeys">
+                {{operator}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
+            <td>
+                {{workcenterMap[workcenterId]['label']}}
+            </td>
+            <td>
+                {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length}}
+            </td>
+            <td *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
+                {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
+            </td>
+        </tr>
+    </tbody>
+</table>
