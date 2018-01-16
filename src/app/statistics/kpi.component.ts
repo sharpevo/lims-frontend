@@ -8,7 +8,36 @@ import {DatePipe} from '@angular/common'
 
 @Component({
   selector: 'statistics-kpi',
-  templateUrl: './kpi.component.html',
+  styles:[`
+    table {
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    }
+    td, th {
+    border: 1px solid transparent; /* No more visible border */
+    height: 30px;
+    transition: all 0.3s;
+    }
+    th {
+    background: #DFDFDF;
+    font-weight: bold;
+    }
+    td {
+    background: #FAFAFA;
+    text-align: center;
+    }
+    tr:nth-child(even) td { background: #F1F1F1; }
+    tr:nth-child(odd) td { background: #FEFEFE; }
+    tr td:hover { background: #666; color: #FFF; }
+    .workcenter-column{
+    width: 100px;
+    font-weight: bold;
+    }
+    `],
+    templateUrl: './kpi.component.html',
 })
 export class KPIComponent{
 

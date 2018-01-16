@@ -48,7 +48,7 @@
         <table *ngIf="done">
             <thead>
                 <tr>
-                    <th>
+                    <th class="workcenter-column">
                         Workcenter
                     </th>
                     <th *ngFor="let operatorId of operatorMap | objectKeys">
@@ -63,15 +63,17 @@
             </thead>
             <tbody>
                 <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
-                    <td style="weight: bold;">
+                    <td class="workcenter-column">
                         {{workcenterMap[workcenterId]['label']}}
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId])"
                         *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
-                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length>0?workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length:''}}
+                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
+                    </td>
+                    <td *ngIf="(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST']|objectKeys).length == 0">
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_SAMPLE_LIST'])">
-                        {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length}}
+                        {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length>0?workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length:''}}
                     </td>
                 </tr>
             </tbody>
