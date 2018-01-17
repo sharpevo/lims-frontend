@@ -31,7 +31,7 @@ import {DatePipe} from '@angular/common'
     }
     tr:nth-child(even) td { background: #F1F1F1; }
     tr:nth-child(odd) td { background: #FEFEFE; }
-    tr td:hover { background: #666; color: #FFF; }
+    tr td:hover { background: #673ab7; color: #FFF; }
     .workcenter-column{
     width: 100px;
     font-weight: bold;
