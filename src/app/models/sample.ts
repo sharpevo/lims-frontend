@@ -168,7 +168,15 @@ export class SampleService{
     let attributeObjectList = []
 
     let activatedSampleList = sampleList
-    .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+    .filter(sample => {
+      if (sample['SYS_DATE_COMPLETED']){
+        return true
+      }
+      if (!sample['SYS_DATE_COMPLETED'] && sample['SYS_IDENTIFIER'].startsWith('/PROJECT_MANAGEMENT')) {
+        return true
+      }
+      return false
+    })// &&
     //!sample['SYS_DATE_TERMINATED'])
     if (activatedSampleList.length > 0){
       let uniqueSampleList = []
