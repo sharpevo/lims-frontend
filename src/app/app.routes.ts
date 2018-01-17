@@ -9,6 +9,7 @@ import {UserService} from './util/user.service'
 import {RedirectComponent} from './util/redirect.component'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
+import {KPIComponent} from './statistics/kpi.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -74,6 +75,11 @@ const routes: Routes = [
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
+  },
+  {
+    path: 'statistics/kpi',
+    component: KPIComponent,
+    //canActivate: [UserService],
   },
 ]
 

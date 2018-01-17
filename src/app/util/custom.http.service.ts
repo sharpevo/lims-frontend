@@ -138,7 +138,7 @@ export class CustomHttpService extends Http {
       'id':res.headers.get('igenetech-user-id'),
       'email':res.headers.get('igenetech-user-email'),
       'limsid':res.headers.get('igenetech-user-limsid')|| "",
-      'name':res.headers.get('igenetech-user-name'),
+      'name':decodeURIComponent(res.headers.get('igenetech-user-name')),
       'roles':res.headers.get('igenetech-user-roles'),
       'role':JSON.parse(res.headers.get('igenetech-user-role')),
     }

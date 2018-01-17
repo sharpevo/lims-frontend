@@ -139,28 +139,28 @@
         
       <target state="final">
                     EXPORT
-                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
         <source>
                         Choose File:
                     </source>
         
       <target state="final">
                         Choose File:
-                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
         <source>
                     IMPORT
                 </source>
         
       <target state="final">
                     IMPORT
-                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
         <source>
                     TEMPLATE
                 </source>
         
       <target state="final">
                     TEMPLATE
-                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
         <source>
             Plugin: Excel Processor
         </source>
@@ -210,6 +210,36 @@
         </context-group>
       <target state="final">
             No sample selected
-        </target></trans-unit></body>
+        </target></trans-unit><trans-unit id="kpi-title" datatype="html">
+        <source>
+        KPI
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      <target state="final">
+        KPI
+    </target></trans-unit><trans-unit id="kpi-timerange" datatype="html">
+        <source>
+        Time:
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      <target state="final">
+        Time:
+    </target></trans-unit><trans-unit id="kpi-title-detail" datatype="html">
+        <source>
+    Detail
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      <target state="final">
+    Detail
+</target></trans-unit></body>
   </file>
 </xliff>
