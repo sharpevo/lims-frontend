@@ -68,10 +68,8 @@
                         {{workcenterMap[workcenterId]['label']}}
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId])"
-                        *ngFor = "let operatorId of workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'] | objectKeys">
-                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length}}
-                    </td>
-                    <td *ngIf="(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST']|objectKeys).length == 0">
+                        *ngFor = "let operatorId of operatorMap | objectKeys">
+                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'].hasOwnProperty(operatorId)?workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length:''}}
                     </td>
                     <td (click)="showDetail(workcenterMap[workcenterId]['TMP_SAMPLE_LIST'])">
                         {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length>0?workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length:''}}
