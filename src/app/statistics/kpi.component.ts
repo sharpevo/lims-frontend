@@ -55,6 +55,9 @@ export class KPIComponent{
   }
 
   ngOnInit(){
+    let date = new Date()
+    this.queryDateStart = new DatePipe('en-US').transform(new Date(date.getFullYear(), date.getMonth(), 1), 'yyyy-MM-dd')
+    this.queryDateEnd = new DatePipe('en-US').transform(new Date(date.getFullYear(), date.getMonth() + 1, 0), 'yyyy-MM-dd')
     this.getSampleList()
   }
   getSampleList(){
