@@ -78,7 +78,11 @@ export class KPIComponent{
       this.entityService.retrieveEntity(productWorkcenter[0].id, "class")
       .subscribe(workcenterList => {
         let workcenterObs = []
-        workcenterList.forEach(workcenter => {
+        workcenterList
+        .sort((a,b) => {
+          return a.SYS_ORDER > b.SYS_ORDER
+        })
+        .forEach(workcenter => {
 
           // prepare for the sample counting
           this.workcenterMap[workcenter.id] = workcenter
