@@ -18,7 +18,7 @@ export class SampleService{
 
   ignoredAttribute: any = {
     "SYS_WORKCENTER_OPREATOR":true,
-    "SYS_DATE_COMPLETED":true,
+    //"SYS_DATE_COMPLETED":false,
     "SYS_DATE_SCHEDULED":true,
   }
 
@@ -724,7 +724,7 @@ export class SampleService{
         sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
         sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
-        sample['SYS_DATE_COMPLETED'] = new Date()
+        sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED')?object['SYS_DATE_COMPLETED']:new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         return this.createObject$(sample, attributeInfo, false)
       })
@@ -783,7 +783,7 @@ export class SampleService{
         sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
         sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
-        sample['SYS_DATE_COMPLETED'] = new Date()
+        sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED')?object['SYS_DATE_COMPLETED']:new Date()
         sample['SYS_ENTITY_TYPE'] = 'collection'
         this.createObject(sample, attributeInfo, false)
       })
