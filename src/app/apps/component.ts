@@ -57,6 +57,12 @@ export class AppsComponent {
     })
     this.appList.push({
       "isInternal": true,
+      "label": "KPI",
+      "url":"/statistics/kpi",
+      "icon":"extension",
+    })
+    this.appList.push({
+      "isInternal": true,
       "label": "配置",
       "url":"/tree",
       "icon":"settings",
