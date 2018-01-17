@@ -23,6 +23,11 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#183 绩效统计及建库液相数量统计",
+      date: "2018-01-17",
+      highlight: true,
+    },
+    {
       title: "#170 服务器迁移至先知主机",
       date: "2018-01-12",
       highlight: true,
@@ -67,26 +72,26 @@ export class AppComponent {
       date: "2018-01-08",
       highlight: true,
     },
-    {
-      title: "#163 修复样品项目参考属性bug",
-      date: "2018-01-05",
-    },
-    {
-      title: "#164 项目审核属性变更",
-      date: "2018-01-04",
-    },
-    {
-      title: "#162 simple-table UI优化(overflow, 滚动条)",
-      date: "2018-01-04",
-    },
-    {
-      title: "#161 Excel插件按钮变更(任务下达'模板'与实验流程'导出')",
-      date: "2018-01-04",
-    },
-    {
-      title: "#156 任务下达属性变更(属性顺序, 多重/液相属性区分等)",
-      date: "2018-01-04",
-    },
+    //{
+    //title: "#163 修复样品项目参考属性bug",
+    //date: "2018-01-05",
+    //},
+    //{
+    //title: "#164 项目审核属性变更",
+    //date: "2018-01-04",
+    //},
+    //{
+    //title: "#162 simple-table UI优化(overflow, 滚动条)",
+    //date: "2018-01-04",
+    //},
+    //{
+    //title: "#161 Excel插件按钮变更(任务下达'模板'与实验流程'导出')",
+    //date: "2018-01-04",
+    //},
+    //{
+    //title: "#156 任务下达属性变更(属性顺序, 多重/液相属性区分等)",
+    //date: "2018-01-04",
+    //},
     //{
     //title: "#99 修复Excel导出部分参考属性缺失bug(一定程度修复)",
     //date: "2017-12-28",
@@ -184,6 +189,10 @@ export class AppComponent {
     },
     {
       title: "#180 混合样品Index导出缺失Bug",
+      date: "?",
+    },
+    {
+      title: "#189 液相多重实验分开下达",
       date: "?",
     },
     {
