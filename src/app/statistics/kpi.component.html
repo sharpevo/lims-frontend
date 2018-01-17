@@ -1,7 +1,8 @@
 <div
     fxLayout="row"
     fxLayoutAlign="space-between center" >
-    <h3>
+    <h3
+        i18n="@@kpi-title">
         KPI
     </h3>
     <div
@@ -37,7 +38,10 @@
     </div>
 </div>
 <h4 class="section-title">
-    Overview: {{queryDateStart}} - {{queryDateEnd}}
+    <span
+        i18n="@@kpi-timerange">
+        Time:
+    </span> {{queryDateStart}} - {{queryDateEnd}}
 </h4>
 <md-card>
     <md-card-header>
@@ -82,6 +86,7 @@
 
 
 <h4 class="section-title"
+    i18n="@@kpi-title-detail"
     *ngIf="detailedSampleList?.length > 0">
     Detail
 </h4>
