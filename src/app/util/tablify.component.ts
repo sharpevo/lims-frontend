@@ -429,7 +429,12 @@ export class SampleDataSource extends DataSource<any> {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
-        return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+        for (let filter of this.filter.split("&")) {
+          if (searchStr.indexOf(filter.toLowerCase()) == -1) {
+            return false
+          }
+        }
+        return true
       })
 
       // currentSampleList should be executed before pagination
