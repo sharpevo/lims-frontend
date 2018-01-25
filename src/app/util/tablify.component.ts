@@ -114,7 +114,7 @@ export class TablifyComponent{
       this.clearSelectedSamples()
 
       if (!this.sampleDataSource) { return; }
-      this.sampleDataSource.filter = this.filter.nativeElement.value;
+      this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     })
   }
 
@@ -131,7 +131,7 @@ export class TablifyComponent{
     this.clearSelectedSamples()
 
     if (!this.sampleDataSource) { return; }
-    this.sampleDataSource.filter = event.value
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
   }
 
   selectSample(row: any){
@@ -234,14 +234,7 @@ export class TablifyComponent{
     this.sampleDataSource.changePageSize(
       this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
     )
-    if (this.filter.nativeElement.value){
-
-      this.sampleDataSource.filter = this.filter.nativeElement.value
-    }
-
-    if (this.projectCode){
-      this.sampleDataSource.filter = this.projectCode
-    }
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     if (this.isSelectAll){
       this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
@@ -429,7 +422,12 @@ export class SampleDataSource extends DataSource<any> {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
-        return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+        for (let filter of this.filter.split("&")) {
+          if (searchStr.indexOf(filter.toLowerCase()) == -1) {
+            return false
+          }
+        }
+        return true
       })
 
       // currentSampleList should be executed before pagination
