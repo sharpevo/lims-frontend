@@ -118,6 +118,10 @@ export class TablifyComponent{
     })
   }
 
+  clearProjectCode(){
+    this.projectCode = ""
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+  }
 
   getMinWidth(columnKey: string){
     if (columnKey == 'CONF_GENERAL_PROJECT_PROJECT_CODE') {
