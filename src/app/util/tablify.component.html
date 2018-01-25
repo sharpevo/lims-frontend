@@ -5,6 +5,7 @@
         <div>
             <md-select
                 (change)="onProjectCodeChange($event)"
+                   [(ngModel)]="projectCode"
                 placeholder="{{projectCodeList.length}} Projects">
                 <md-option *ngFor="let code of projectCodeList" [value]="code">
                     {{code}}
