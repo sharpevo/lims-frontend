@@ -55,7 +55,7 @@ export class TablifyComponent{
 
   ngOnInit(){
 
-    this.rawSampleList.forEach(sample => {
+    this.shownSampleList.forEach(sample => {
       this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
     })
     this.projectCodeList = Object.keys(this.projectCodeMap).sort()
