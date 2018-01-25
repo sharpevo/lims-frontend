@@ -111,7 +111,7 @@
                             <span
                                 *ngIf="targetHybridType != 'SAMPLE'"
                                 (click)="openInternalSampleDialog(row)">
-                                {{row['SYS_'+targetHybridType+'_CODE']}}
+                                {{row['SYS_'+targetHybridType+'_CODE']?row['SYS_'+targetHybridType+'_CODE']:"(null)"}}
                             </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
