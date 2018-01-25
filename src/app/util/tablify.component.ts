@@ -37,6 +37,7 @@ export class TablifyComponent{
   selectedSampleIdList: any[] = []
   isSelectAll: boolean = false
 
+  projectCode: string = ''
   projectCodeList: any[] = []
   projectCodeMap: any = {}
 
@@ -131,7 +132,6 @@ export class TablifyComponent{
 
     if (!this.sampleDataSource) { return; }
     this.sampleDataSource.filter = event.value
-
   }
 
   selectSample(row: any){
@@ -234,7 +234,14 @@ export class TablifyComponent{
     this.sampleDataSource.changePageSize(
       this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
     )
-    this.sampleDataSource.filter = this.filter.nativeElement.value
+    if (this.filter.nativeElement.value){
+
+      this.sampleDataSource.filter = this.filter.nativeElement.value
+    }
+
+    if (this.projectCode){
+      this.sampleDataSource.filter = this.projectCode
+    }
     if (this.isSelectAll){
       this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
