@@ -5,11 +5,17 @@
         <div>
             <md-select
                 (change)="onProjectCodeChange($event)"
+                   [(ngModel)]="projectCode"
                 placeholder="{{projectCodeList.length}} Projects">
                 <md-option *ngFor="let code of projectCodeList" [value]="code">
                     {{code}}
                 </md-option>
             </md-select>
+            <button
+                (click)="clearProjectCode()"
+                md-icon-button>
+                <md-icon style="font-size:0.5em">close</md-icon>
+            </button>
         </div>
         <div>
             <md-input-container floatPlaceholder="never">
@@ -105,7 +111,7 @@
                             <span
                                 *ngIf="targetHybridType != 'SAMPLE'"
                                 (click)="openInternalSampleDialog(row)">
-                                {{row['SYS_'+targetHybridType+'_CODE']}}
+                                {{row['SYS_'+targetHybridType+'_CODE']?row['SYS_'+targetHybridType+'_CODE']:"(null)"}}
                             </span>
                         </span>
                         <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">

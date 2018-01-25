@@ -37,6 +37,7 @@ export class TablifyComponent{
   selectedSampleIdList: any[] = []
   isSelectAll: boolean = false
 
+  projectCode: string = ''
   projectCodeList: any[] = []
   projectCodeMap: any = {}
 
@@ -54,7 +55,7 @@ export class TablifyComponent{
 
   ngOnInit(){
 
-    this.rawSampleList.forEach(sample => {
+    this.shownSampleList.forEach(sample => {
       this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
     })
     this.projectCodeList = Object.keys(this.projectCodeMap).sort()
@@ -113,10 +114,14 @@ export class TablifyComponent{
       this.clearSelectedSamples()
 
       if (!this.sampleDataSource) { return; }
-      this.sampleDataSource.filter = this.filter.nativeElement.value;
+      this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     })
   }
 
+  clearProjectCode(){
+    this.projectCode = ""
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+  }
 
   getMinWidth(columnKey: string){
     if (columnKey == 'CONF_GENERAL_PROJECT_PROJECT_CODE') {
@@ -130,8 +135,7 @@ export class TablifyComponent{
     this.clearSelectedSamples()
 
     if (!this.sampleDataSource) { return; }
-    this.sampleDataSource.filter = event.value
-
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
   }
 
   selectSample(row: any){
@@ -162,9 +166,50 @@ export class TablifyComponent{
         let hybridType = hybridInfo['type']
         let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
 
+        let sampleSetObs = []
+
         if (this.sampleDatabase.hybridMap[hybridType][hybridCode]){
           this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
+
+            sampleSetObs.push(this.entityService.retrieveBy({
+              "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+            }).map(sampleList => {
+              sample['TMP_SAMPLE_SET'] = sampleList
+              return {
+                "sample": sample,
+                "sampleSet": sampleList}
+            }))
+
+          })
+
+          Observable.concat(...sampleSetObs)
+          .subscribe(data => {
+            let sample = data['sample']
+            let sampleSet = data['sampleSet']
+            console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
+
             sample['TMP_CHECKED'] = checked
+
+            // build auxiliary object for exporting
+            Object.keys(this.columnMap).forEach(key => {
+              // assume the inner samples hybridObjectMap is undefined
+              if (!this.hybridObjectMap){
+                this.hybridObjectMap = {}
+              }
+              if (!this.hybridObjectMap[sample['SYS_SAMPLE_CODE']]) {
+                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
+              }
+              let attributeObjectList = this.sampleService.getAuxiliaryAttributes(sample, sampleSet, key, this.columnMap[key]['SYS_GENRE'])
+              if (attributeObjectList.length > 0) {
+                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']][key] = {
+                  'value': attributeObjectList[0]['value'],
+                  'SYS_LABEL': this.columnMap[key]['SYS_LABEL'],
+                  'SYS_CODE': key,
+                  'SYS_TYPE': this.columnMap[key]['SYS_TYPE'],
+                }
+              }
+            })
+
             this.checkCurrentSample(sample, checked)
             let index = this.selectedSampleIdList.indexOf(sample.id)
             if (index != -1 && !checked) {
@@ -173,7 +218,7 @@ export class TablifyComponent{
             if (index == -1 && checked){
               this.selectedSampleIdList.push(sample.id)
             }
-          })
+          }, err => {}, () => {})
         }
       }
     } else {
@@ -193,7 +238,7 @@ export class TablifyComponent{
     this.sampleDataSource.changePageSize(
       this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
     )
-    this.sampleDataSource.filter = this.filter.nativeElement.value
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     if (this.isSelectAll){
       this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
@@ -381,7 +426,12 @@ export class SampleDataSource extends DataSource<any> {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
-        return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+        for (let filter of this.filter.split("&")) {
+          if (searchStr.indexOf(filter.toLowerCase()) == -1) {
+            return false
+          }
+        }
+        return true
       })
 
       // currentSampleList should be executed before pagination
