@@ -189,6 +189,9 @@ export class TablifyComponent{
             // build auxiliary object for exporting
             Object.keys(this.columnMap).forEach(key => {
               // assume the inner samples hybridObjectMap is undefined
+              if (!this.hybridObjectMap){
+                this.hybridObjectMap = {}
+              }
               if (!this.hybridObjectMap[sample['SYS_SAMPLE_CODE']]) {
                 this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
               }
