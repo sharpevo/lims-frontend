@@ -23,55 +23,80 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#193 修复请求体过大导致的拒绝服务",
+      date: "2018-01-25",
+      highlight: true,
+    },
+    {
+      title: "#195 修复混样样品详单编号缺失bug",
+      date: "2018-01-25",
+      highlight: true,
+    },
+    {
+      title: "#194 Simple Table多列查询",
+      date: "2018-01-25",
+      highlight: true,
+    },
+    {
+      title: "#180 修复混合样品Index导出缺失Bug",
+      date: "2018-01-25",
+      highlight: true,
+    },
+    {
+      title: "#190 Simple Table性能优化",
+      date: "2018-01-24",
+      highlight: true,
+    },
+    {
       title: "#183 绩效统计及建库液相数量统计",
       date: "2018-01-17",
       highlight: true,
     },
-    {
-      title: "#170 服务器迁移至先知主机",
-      date: "2018-01-12",
-      highlight: true,
-    },
-    {
-      title: "#181 样品表性能优化",
-      date: "2018-01-12",
-      highlight: true,
-    },
-    {
-      title: "#179 调整项目编号表头及表体(完整显示)",
-      date: "2018-01-11",
-      highlight: true,
-    },
-    {
-      title: "移除全部权限检查(避免使用同一帐号测试)",
-      date: "2018-01-11",
-      highlight: true,
-    },
-    {
-      title: "#169 移除SimpleTable调试信息(样品ID)",
-      date: "2018-01-11",
-      highlight: true,
-    },
-    {
-      title: "#178 增加样品表格项目过滤下拉框",
-      date: "2018-01-10",
-      highlight: true,
-    },
-    {
-      title: "#176 属性变更(建库质检评级引自提取; 建库样品用量引自打断实验; Pooling文库长度引自建库;",
-      date: "2018-01-09",
-      highlight: true,
-    },
-    {
-      title: "#158 实验步骤页面显示样品数量(已分派样品数量)",
-      date: "2018-01-08",
-      highlight: true,
-    },
-    {
-      title: "#166 建库属性变更(样品投入量/剩余量引子提取实验)",
-      date: "2018-01-08",
-      highlight: true,
-    },
+    //{
+    //title: "#170 服务器迁移至先知主机",
+    //date: "2018-01-12",
+    //highlight: true,
+    //},
+    //{
+    //title: "#181 样品表性能优化",
+    //date: "2018-01-12",
+    //highlight: true,
+    //},
+    //{
+    //title: "#179 调整项目编号表头及表体(完整显示)",
+    //date: "2018-01-11",
+    //highlight: true,
+    //},
+    //{
+    //title: "移除全部权限检查(避免使用同一帐号测试)",
+    //date: "2018-01-11",
+    //highlight: true,
+    //},
+    //{
+    //title: "#169 移除SimpleTable调试信息(样品ID)",
+    //date: "2018-01-11",
+    //highlight: true,
+    //},
+    //{
+    //title: "#178 增加样品表格项目过滤下拉框",
+    //date: "2018-01-10",
+    //highlight: true,
+    //},
+    //{
+    //title: "#176 属性变更(建库质检评级引自提取; 建库样品用量引自打断实验; Pooling文库长度引自建库;",
+    //date: "2018-01-09",
+    //highlight: true,
+    //},
+    //{
+    //title: "#158 实验步骤页面显示样品数量(已分派样品数量)",
+    //date: "2018-01-08",
+    //highlight: true,
+    //},
+    //{
+    //title: "#166 建库属性变更(样品投入量/剩余量引子提取实验)",
+    //date: "2018-01-08",
+    //highlight: true,
+    //},
     //{
     //title: "#163 修复样品项目参考属性bug",
     //date: "2018-01-05",
@@ -173,7 +198,7 @@ export class AppComponent {
     },
     {
       title: "#154 实现预警机器人",
-      date: "?",
+      date: "Week: 05",
     },
     {
       title: "#159 Dashboard页面显示样品数量",
@@ -188,12 +213,8 @@ export class AppComponent {
       date: "?",
     },
     {
-      title: "#180 混合样品Index导出缺失Bug",
-      date: "?",
-    },
-    {
       title: "#189 液相多重实验分开下达",
-      date: "?",
+      date: "Week: 05",
     },
     {
       title: "",
