@@ -867,6 +867,7 @@ export class SampleService{
       return this.entityService.create(object)
       .mergeMap(data => {
         delete data.SYS_WORKCENTER_OPERATOR
+        delete data.SYS_DATE_COMPLETED
         console.log('Issue sample:', data)
         return this.buildRelationship(data, attributeInfo)
       })
