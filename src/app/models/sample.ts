@@ -574,7 +574,6 @@ export class SampleService{
           "attributeList": attributeList,
           "parentMap": parentMap
         }
-        console.log("aaa", attributeInfo)
 
         if (issueSample){
           console.log("issueSample")
