@@ -23,6 +23,11 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#198(HOTFIX) 任务下达bug",
+      date: "2018-01-29",
+      highlight: true,
+    },
+    {
       title: "#193 修复请求体过大导致的拒绝服务",
       date: "2018-01-25",
       highlight: true,
@@ -214,6 +219,10 @@ export class AppComponent {
     },
     {
       title: "#189 液相多重实验分开下达",
+      date: "Week: 05",
+    },
+    {
+      title: "#197 审计",
       date: "Week: 05",
     },
     {
