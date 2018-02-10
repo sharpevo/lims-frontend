@@ -78,7 +78,7 @@ export class UtilService{
       "msgtype": msgtype,
       "title": "LIMS Notification",
       "content": content,
-      "actionurl": this.limsUrl // + sourceUrl
+      "actionurl": sourceUrl
     }
 
     return this.rawHttp.post(
