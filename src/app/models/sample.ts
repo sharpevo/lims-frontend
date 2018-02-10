@@ -862,6 +862,10 @@ export class SampleService{
   createObject$(object: any, attributeInfo: any, issueSample: boolean){
 
     object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
+    object['SYS_AUDIT_DOCSET'] = this.utilService.getDocSet(
+      this.userInfo.limsid,
+      object['SYS_SAMPLE_CODE'],
+    )
 
     if (issueSample){
       return this.entityService.create(object)
@@ -1043,6 +1047,9 @@ export class SampleService{
     subEntity[subEntity['SYS_LABEL']] = sourceEntity[sourceEntity['SYS_LABEL']]
 
     subEntity['SYS_TARGET'] = sourceEntity.id
+
+    // Assign DOCSET
+    subEntity['SYS_AUDIT_DOCSET'] = sourceEntity['SYS_AUDIT_DOCSET']
 
     // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
     // samples involved more than one time in the same workcenter
