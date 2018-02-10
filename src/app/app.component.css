@@ -23,3 +23,6 @@
 .highlight-log {
     font-weight: bold !important;
 }
+.cancelled-feature {
+    text-decoration: line-through;
+}

@@ -172,7 +172,19 @@
                         <md-icon
                             *ngIf="log.title == ''"
                             md-list-icon>more_horiz</md-icon>
-                        <h4 md-line [class.highlight-log]="log.highlight">{{log.title}}</h4>
+                        <h4
+                            md-line
+                            [class.highlight-log]="log.highlight">
+                            <a
+                                href="{{log.url}}"
+                                *ngIf="log.url">
+                                {{log.title}}
+                            </a>
+                            <span
+                                *ngIf="!log.url">
+                                {{log.title}}
+                            </span>
+                        </h4>
                         <p style="opacity:0.4;" md-line>{{log.date}}</p>
                     </md-list-item>
                     <h1 md-subheader>Issues (high and normal priority)</h1>
@@ -183,7 +195,11 @@
                         <md-icon
                             *ngIf="log.title == ''"
                             md-list-icon>more_horiz</md-icon>
-                        <h4 md-line>{{log.title}}</h4>
+                        <h4
+                            md-line
+                            [class.cancelled-feature]="log.title == '#189 液相多重实验分开下达'">
+                            {{log.title}}
+                        </h4>
                         <p style="opacity:0.4;" md-line>{{log.date}}</p>
                     </md-list-item>
                 </md-list>
