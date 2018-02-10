@@ -11,6 +11,8 @@ import {UserService} from '../util/user.service'
 import {Router} from '@angular/router'
 import {DatePipe} from '@angular/common'
 
+import {environment} from '../../environments/environment'
+
 @Injectable()
 export class SampleService{
 
@@ -846,14 +848,18 @@ export class SampleService{
         message +=`> \n\n${this.userInfo.name}\n\n` +
           `${msg_date}`
         //console.log("mmm", message)
+        let beforeDate = new Date(date)
+        beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+        let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+        let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+        let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
         this.utilService.sendNotif(
           "actionCard",
           message,
-          //`${msg_workcenter}\n\n> Submit ${msg_sampleCount} samples\n\n${msg_sampleList}\n\n> \n\n> ${this.userInfo.name}\n\n>${msg_date}`,
-          ""
+          redirectUrl
         )
         .subscribe(() => {
-          //console.log("Sending notification:", data)
+          console.log("Sending notification:", redirectUrl)
         })
         this.router.navigate(['/redirect' + this.router.url])
       })
