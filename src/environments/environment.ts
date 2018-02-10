@@ -10,5 +10,6 @@ export const environment = {
   uicUrl: "http://accounts.igenetech.cn",
   //limsbotUrl: "http://192.168.1.25:8002/send",
   limsbotUrl: "http://notif.lims.igenetech.cn/send",
+  auditUrl: "http://audit.lims.igenetech.cn",
   version: "dev",
 };
