@@ -98,4 +98,9 @@ export class UtilService{
     return this.http.get("/restore")
     .map(res => res.json())
   }
+
+  getDocSet(operatorID, sampleCode) {
+    let ts = new Date().getTime() // milliseconds since 1970-1-1
+    return operatorID + '_' + sampleCode + '_' + ts
+  }
 }
