@@ -23,6 +23,17 @@ export class AppComponent {
   showMessage: boolean = true
   taskCompletedList: any[] = [
     {
+      title: "#197 审计前端",
+      date: "2018-02-09",
+      highlight: true,
+      url: "http://audit.lims.igenetech.cn",
+    },
+    {
+      title: "#197 审计后端",
+      date: "2018-02-02",
+      highlight: true,
+    },
+    {
       title: "#198(HOTFIX) 任务下达bug",
       date: "2018-01-29",
       highlight: true,
@@ -203,7 +214,7 @@ export class AppComponent {
     },
     {
       title: "#154 实现预警机器人",
-      date: "Week: 05",
+      date: "Week: 06",
     },
     {
       title: "#159 Dashboard页面显示样品数量",
@@ -219,10 +230,6 @@ export class AppComponent {
     },
     {
       title: "#189 液相多重实验分开下达",
-      date: "Week: 05",
-    },
-    {
-      title: "#197 审计",
       date: "Week: 05",
     },
     {
