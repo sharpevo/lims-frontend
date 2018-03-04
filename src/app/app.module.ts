@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -76,6 +76,8 @@ import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
 import {KPIComponent} from './statistics/kpi.component'
+import {AppLoadModule} from './app.load.module'
+import {UserInfoService} from './util/user.info.service'
 
 @NgModule({
   declarations: [
@@ -145,8 +147,20 @@ import {KPIComponent} from './statistics/kpi.component'
 
     BrowserAnimationsModule,
     CdkTableModule,
+    AppLoadModule,
   ],
   providers: [
+    //AppLoadService,
+    //{
+    //provide: APP_INITIALIZER,
+    //useFactory: init_app,
+    //deps: [
+    //AppLoadService,
+    //UtilService,
+    //UserService,
+    //],
+    //multi: true
+    //},
     EntityService,
     GenreService,
     AttributeService,
@@ -162,9 +176,10 @@ import {KPIComponent} from './statistics/kpi.component'
         RequestOptions,
         MdSnackBar,
         SpinnerService,
-        UserService,
+        UserInfoService,
       ]
-    }
+    },
+    UserInfoService,
   ],
   bootstrap: [AppComponent]
 })

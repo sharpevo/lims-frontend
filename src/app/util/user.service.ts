@@ -8,7 +8,7 @@ import {SpinnerService} from './spinner.service'
 import {MdSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
 import { 
-  Router,
+  //Router,
   CanActivate,
   ActivatedRouteSnapshot
 } from '@angular/router'
@@ -21,7 +21,7 @@ export class UserService {
   constructor(
     private spinnerService: SpinnerService,
     public snackBar: MdSnackBar,
-    public router: Router,
+    //public router: Router,
   ){}
 
   canActivate(route: ActivatedRouteSnapshot) {
@@ -71,9 +71,9 @@ export class UserService {
     this.snackBar.open("Redirect to UIC in 1 seconds...", "OK", {duration: 1000})
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
-      window.location.href = environment.uicUrl +
-        "/profile?return_to=" +
-        environment.limsUrl.replace(/^https?:\/\//,'')
+      //window.location.href = environment.uicUrl +
+      //"/profile?return_to=" +
+      //environment.limsUrl.replace(/^https?:\/\//,'')
     })
   }
 
@@ -82,8 +82,12 @@ export class UserService {
     this.snackBar.open("Invalid permission", "OK", {duration: 3000})
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
-      this.router.navigate(['apps'])
-      return false
+      //this.router.navigate(['apps'])
+
+      window.location.href = environment.uicUrl +
+        "/profile?return_to=" +
+        environment.limsUrl.replace(/^https?:\/\//,'')
+        return false
     })
   }
 }

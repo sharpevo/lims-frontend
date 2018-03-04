@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Observable'
 import {environment} from '../../environments/environment'
 import {SpinnerService} from "./spinner.service"
 import {MdSnackBar} from '@angular/material'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 
 @Injectable()
 export class CustomHttpService extends Http {
@@ -24,7 +24,7 @@ export class CustomHttpService extends Http {
     defaultOptions: RequestOptions,
     private snackBar: MdSnackBar,
     private spinnerService: SpinnerService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
   ) {
     super(backend, defaultOptions)
   }
@@ -142,7 +142,7 @@ export class CustomHttpService extends Http {
       'roles':res.headers.get('igenetech-user-roles'),
       'role':JSON.parse(res.headers.get('igenetech-user-role')),
     }
-    this.userService.setUserInfo(userInfo)
+    this.userInfoService.setUserInfo(userInfo)
   }
 }
 
@@ -151,12 +151,12 @@ export function customHttpFactory(
   defaultOptions: RequestOptions,
   snackBar: MdSnackBar,
   spinnerService: SpinnerService,
-  userService: UserService) {
+  userInfoService: UserInfoService) {
     return new CustomHttpService(
       backend,
       defaultOptions,
       snackBar,
       spinnerService,
-      userService,
+      userInfoService,
     )
   }
