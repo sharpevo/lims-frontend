@@ -40,9 +40,9 @@ export class AuthService {
     this.snackBar.open("Redirect to UIC in 1 seconds...", "OK", {duration: 1000})
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
-      //window.location.href = environment.uicUrl +
-      //"/profile?return_to=" +
-      //environment.limsUrl.replace(/^https?:\/\//,'')
+      window.location.href = environment.uicUrl +
+        "/profile?return_to=" +
+        environment.limsUrl.replace(/^https?:\/\//,'')
     })
   }
 

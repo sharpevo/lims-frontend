@@ -34,6 +34,10 @@ export class AppLoadService {
         resolve()
       }).catch(err => {
         console.log("Error:", err)
+
+        window.location.href = environment.uicUrl +
+          "/profile?return_to=" +
+          environment.limsUrl.replace(/^https?:\/\//,'')
       })
     })
 
