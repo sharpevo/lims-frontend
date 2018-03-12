@@ -30,26 +30,6 @@ export class AuthService {
     this.userInfo = this.userInfoService.getUserInfo()
   }
 
-  canActivate(route: ActivatedRouteSnapshot) {
-    const expectedRole = route.data.expectedRole
-    console.log("expectedRole", expectedRole)
-    if (!this.userInfo) {
-      console.log("auth failed")
-      this.authFail()
-      return false
-    } else if (!expectedRole) {
-      console.log("undefined permission")
-      return true
-    } else if (expectedRole == "lims-workcenter-") {
-      console.log("transfer the perm checking to the dashboard")
-      return true
-    } else if (!this.userInfoService.hasRole(expectedRole)) {
-      console.log("denied", expectedRole)
-      this.permFail()
-      return false
-    }
-    console.log("auth successfully")
-    return true
   checkAvailability() {
     return this.http.get("/userinfo")
     .map(res => res.json())
