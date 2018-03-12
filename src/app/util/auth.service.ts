@@ -13,6 +13,7 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router'
 import {UserInfoService} from './user.info.service'
+import {CustomHttpService} from './custom.http.service'
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
   constructor(
     private spinnerService: SpinnerService,
     private userInfoService: UserInfoService,
+    private http: CustomHttpService,
     public snackBar: MdSnackBar,
     public router: Router,
   ){
@@ -48,6 +50,9 @@ export class AuthService {
     }
     console.log("auth successfully")
     return true
+  checkAvailability() {
+    return this.http.get("/userinfo")
+    .map(res => res.json())
   }
 
   authFail(){

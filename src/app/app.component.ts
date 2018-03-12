@@ -266,7 +266,7 @@ export class AppComponent {
   }
 
   checking() {
-    this.utilService.checkAvailability()
+    this.authService.checkAvailability()
     .subscribe(data => {
       console.log("check", data)
       this.userInfo = this.userInfoService.getUserInfo()
