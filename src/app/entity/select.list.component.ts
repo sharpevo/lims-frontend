@@ -1,6 +1,6 @@
 import {Component,Input} from '@angular/core'
 import {EntityService} from './service'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 import {Subscription} from 'rxjs/Subscription'
 
 @Component({
@@ -21,7 +21,7 @@ export class EntitySelectListComponent {
 
   constructor(
     private entityService: EntityService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
   ){}
 
   ngOnInit(){
@@ -33,7 +33,7 @@ export class EntitySelectListComponent {
     this.floorEntityType = this.optionLevel
     this.getEntityList()
 
-    this.userInfo = this.userService.getUserInfo()
+    this.userInfo = this.userInfoService.getUserInfo()
     if (this.attribute.SYS_CODE == "SYS_WORKCENTER_OPERATOR") {
       this.object[this.attribute.SYS_CODE] = this.userInfo.limsid
     }
