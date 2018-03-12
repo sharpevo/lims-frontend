@@ -78,6 +78,7 @@ import {SampleOverviewComponent} from './sample/overview.component'
 import {KPIComponent} from './statistics/kpi.component'
 import {AppLoadModule} from './app.load.module'
 import {UserInfoService} from './util/user.info.service'
+import {GuardService} from './util/guard.service'
 
 @NgModule({
   declarations: [
@@ -168,6 +169,7 @@ import {UserInfoService} from './util/user.info.service'
     UtilService,
     SpinnerService,
     AuthService,
+    GuardService,
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,
