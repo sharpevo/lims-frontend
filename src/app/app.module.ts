@@ -67,7 +67,7 @@ import {SpinnerComponent} from './util/spinner.component';
 
 import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
-import {UserService} from './util/user.service'
+import {AuthService} from './util/auth.service'
 
 import {MdSnackBar} from '@angular/material'
 
@@ -157,7 +157,7 @@ import {UserInfoService} from './util/user.info.service'
     //deps: [
     //AppLoadService,
     //UtilService,
-    //UserService,
+    //AuthService,
     //],
     //multi: true
     //},
@@ -167,7 +167,7 @@ import {UserInfoService} from './util/user.info.service'
     SampleService,
     UtilService,
     SpinnerService,
-    UserService,
+    AuthService,
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 //import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import {UserInfoService} from './util/user.info.service'
-import {UserService} from './util/user.service'
 
 import {environment} from '../environments/environment'
 import {Http, Headers, Response, RequestOptions, RequestOptionsArgs} from '@angular/http'
