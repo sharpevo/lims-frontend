@@ -8,21 +8,25 @@ import {SpinnerService} from './spinner.service'
 import {MdSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
 import { 
-  //Router,
+  Router,
   CanActivate,
   ActivatedRouteSnapshot
 } from '@angular/router'
+import {UserInfoService} from './user.info.service'
 
 @Injectable()
-export class UserService {
+export class AuthService {
   userInfo: any
   observable: Observable<any>
   environment = environment
   constructor(
     private spinnerService: SpinnerService,
+    private userInfoService: UserInfoService,
     public snackBar: MdSnackBar,
-    //public router: Router,
-  ){}
+    public router: Router,
+  ){
+    this.userInfo = this.userInfoService.getUserInfo()
+  }
 
   canActivate(route: ActivatedRouteSnapshot) {
     const expectedRole = route.data.expectedRole
@@ -37,33 +41,13 @@ export class UserService {
     } else if (expectedRole == "lims-workcenter-") {
       console.log("transfer the perm checking to the dashboard")
       return true
-    } else if (!this.hasRole(expectedRole)) {
+    } else if (!this.userInfoService.hasRole(expectedRole)) {
       console.log("denied", expectedRole)
       this.permFail()
       return false
     }
     console.log("auth successfully")
     return true
-  }
-
-  setUserInfo(userInfo: any) {
-    this.userInfo = userInfo
-  }
-
-  getUserInfo() {
-    console.log("get userinfo", this.userInfo)
-    return this.userInfo
-  }
-
-  hasRole(role: string): boolean{
-    if (!this.userInfo) {
-      return false
-    }
-    if (this.userInfo.email == "quwubin@gmail.com") {
-      console.log("Check role: super admin")
-      return true
-    }
-    return this.userInfo.role[role]
   }
 
   authFail(){
@@ -82,7 +66,7 @@ export class UserService {
     this.snackBar.open("Invalid permission", "OK", {duration: 3000})
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
-      //this.router.navigate(['apps'])
+      this.router.navigate(['apps'])
 
       window.location.href = environment.uicUrl +
         "/profile?return_to=" +
