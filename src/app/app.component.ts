@@ -251,9 +251,9 @@ export class AppComponent {
   ngOnInit(){
 
     //this.checking()
-    //this.interval = setInterval(() => {
-    //this.checking()
-    //}, 1000 * 60)
+    this.interval = setInterval(() => {
+      this.checking()
+    }, 1000 * 60)
     this.userInfo = this.userInfoService.getUserInfo()
     this.getParams()
   }
