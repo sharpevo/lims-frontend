@@ -28,6 +28,20 @@ export class AuthService {
     public router: Router,
   ){
     this.userInfo = this.userInfoService.getUserInfo()
+    this.initInterval()
+  }
+
+  initInterval(){
+    setInterval(() => {
+      this.checkAvailability()
+      .subscribe(data => {
+        console.log("Auth: success")
+      },
+      error => {
+        console.log("Auth: fail")
+        this.authFail()
+      })
+    },1000 * 60)
   }
 
   checkAvailability() {

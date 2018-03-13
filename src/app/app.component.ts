@@ -250,31 +250,8 @@ export class AppComponent {
 
   ngOnInit(){
 
-    //this.checking()
-    this.interval = setInterval(() => {
-      this.checking()
-    }, 1000 * 60)
     this.userInfo = this.userInfoService.getUserInfo()
     this.getParams()
-  }
-
-  ngOnDestroy() {
-    if (this.interval) {
-      console.log("clear jobs")
-      clearInterval(this.interval)
-    }
-  }
-
-  checking() {
-    this.authService.checkAvailability()
-    .subscribe(data => {
-      console.log("check", data)
-      this.userInfo = this.userInfoService.getUserInfo()
-    },
-    error => {
-      console.log("backend failded", error)
-      this.authService.authFail()
-    })
   }
 
   getParams() {
