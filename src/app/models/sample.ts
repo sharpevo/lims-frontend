@@ -6,7 +6,7 @@ import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
 import {MdSnackBar} from '@angular/material'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 
 import {Router} from '@angular/router'
 import {DatePipe} from '@angular/common'
@@ -28,11 +28,11 @@ export class SampleService{
     public snackBar: MdSnackBar,
     private genreService: GenreService,
     private utilService: UtilService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
     private router: Router,
     private entityService: EntityService
   ){
-    this.userInfo = this.userService.getUserInfo()
+    this.userInfo = this.userInfoService.getUserInfo()
   }
 
   buildSampleInlineList(sampleList: any[]): any[]{

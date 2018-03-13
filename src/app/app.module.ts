@@ -67,7 +67,7 @@ import {SpinnerComponent} from './util/spinner.component';
 
 import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
-import {UserService} from './util/user.service'
+import {AuthService} from './util/auth.service'
 
 import {MdSnackBar} from '@angular/material'
 
@@ -78,6 +78,7 @@ import {SampleOverviewComponent} from './sample/overview.component'
 import {KPIComponent} from './statistics/kpi.component'
 import {AppLoadModule} from './app.load.module'
 import {UserInfoService} from './util/user.info.service'
+import {GuardService} from './util/guard.service'
 
 @NgModule({
   declarations: [
@@ -157,7 +158,7 @@ import {UserInfoService} from './util/user.info.service'
     //deps: [
     //AppLoadService,
     //UtilService,
-    //UserService,
+    //AuthService,
     //],
     //multi: true
     //},
@@ -167,7 +168,8 @@ import {UserInfoService} from './util/user.info.service'
     SampleService,
     UtilService,
     SpinnerService,
-    UserService,
+    AuthService,
+    GuardService,
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,

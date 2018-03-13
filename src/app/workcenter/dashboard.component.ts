@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 
 //import {Observable} from 'rxjs/Observable'
 import { Observable } from 'rxjs/Rx'
@@ -54,7 +54,7 @@ export class WorkcenterDashboardComponent{
     private route: ActivatedRoute,
     private router: Router,
     private entityService: EntityService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
     private snackBar: MdSnackBar,
   ){
     this.objectId = this.route.snapshot.params['id']
@@ -81,8 +81,8 @@ export class WorkcenterDashboardComponent{
     .subscribe(data => {
       this.workcenter = data
       let roleName = "lims-workcenter-" + data['SYS_CODE'].toLowerCase()
-      if (!this.userService.hasRole(roleName)){
-        //this.userService.permFail()
+      if (!this.userInfoService.hasRole(roleName)){
+        //this.userInfoService.permFail()
       }
 
     })
