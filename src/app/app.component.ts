@@ -5,7 +5,8 @@ import {environment} from '../environments/environment'
 import {URLSearchParams} from "@angular/http"
 import {MdSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
-import {UserService} from './util/user.service'
+import {UserInfoService} from './util/user.info.service'
+import {AuthService} from './util/auth.service'
 import { Subscription } from 'rxjs/Subscription';
 import {Router} from '@angular/router'
 
@@ -240,7 +241,8 @@ export class AppComponent {
   constructor(
     public snackBar: MdSnackBar,
     private utilService: UtilService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
+    private authService: AuthService,
     private spinnerService: SpinnerService,
     private entityService: EntityService,
     private router: Router,
@@ -248,10 +250,11 @@ export class AppComponent {
 
   ngOnInit(){
 
-    this.checking()
+    //this.checking()
     this.interval = setInterval(() => {
       this.checking()
     }, 1000 * 60)
+    this.userInfo = this.userInfoService.getUserInfo()
     this.getParams()
   }
 
@@ -263,14 +266,14 @@ export class AppComponent {
   }
 
   checking() {
-    this.utilService.checkAvailability()
+    this.authService.checkAvailability()
     .subscribe(data => {
       console.log("check", data)
-      this.userInfo = this.userService.getUserInfo()
+      this.userInfo = this.userInfoService.getUserInfo()
     },
     error => {
       console.log("backend failded", error)
-      this.userService.authFail()
+      this.authService.authFail()
     })
   }
 

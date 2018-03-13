@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -67,7 +67,7 @@ import {SpinnerComponent} from './util/spinner.component';
 
 import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
-import {UserService} from './util/user.service'
+import {AuthService} from './util/auth.service'
 
 import {MdSnackBar} from '@angular/material'
 
@@ -76,6 +76,9 @@ import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
 import {KPIComponent} from './statistics/kpi.component'
+import {AppLoadModule} from './app.load.module'
+import {UserInfoService} from './util/user.info.service'
+import {GuardService} from './util/guard.service'
 
 @NgModule({
   declarations: [
@@ -145,15 +148,28 @@ import {KPIComponent} from './statistics/kpi.component'
 
     BrowserAnimationsModule,
     CdkTableModule,
+    AppLoadModule,
   ],
   providers: [
+    //AppLoadService,
+    //{
+    //provide: APP_INITIALIZER,
+    //useFactory: init_app,
+    //deps: [
+    //AppLoadService,
+    //UtilService,
+    //AuthService,
+    //],
+    //multi: true
+    //},
     EntityService,
     GenreService,
     AttributeService,
     SampleService,
     UtilService,
     SpinnerService,
-    UserService,
+    AuthService,
+    GuardService,
     {
       provide: CustomHttpService,
       useFactory: customHttpFactory,
@@ -162,9 +178,10 @@ import {KPIComponent} from './statistics/kpi.component'
         RequestOptions,
         MdSnackBar,
         SpinnerService,
-        UserService,
+        UserInfoService,
       ]
-    }
+    },
+    UserInfoService,
   ],
   bootstrap: [AppComponent]
 })
