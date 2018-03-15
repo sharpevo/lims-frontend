@@ -1,13 +1,13 @@
-<md-select
+<mat-select
     [disabled]="attribute['SYS_CODE'] === 'SYS_WORKCENTER_OPERATOR'"
     class="full-width"
     [(ngModel)]="object[attribute.SYS_CODE]"
     placeholder="{{placeholder}}">
-    <md-option
+    <mat-option
         value="{{entity.id}}"
         *ngFor="let entity of entityList">
         <entity-tostring
             [entity]="entity">
         </entity-tostring>
-    </md-option>
-</md-select>
+    </mat-option>
+</mat-select>

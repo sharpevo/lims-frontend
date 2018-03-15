@@ -1,29 +1,29 @@
-<md-expansion-panel>
-    <md-expansion-panel-header
+<mat-expansion-panel>
+    <mat-expansion-panel-header
         [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
-        <md-panel-title
+        <mat-panel-title
             i18n="@@plugin-index-validator-title"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             Plugin: Index Validator
-        </md-panel-title>
-        <md-panel-description
+        </mat-panel-title>
+        <mat-panel-description
             *ngIf="selectedSampleList.length > 0 && result"
             i18n="@@plugin-index-result-pass"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             PASS
-        </md-panel-description>
-        <md-panel-description
+        </mat-panel-description>
+        <mat-panel-description
             *ngIf="selectedSampleList.length > 0 && !result"
             i18n="@@plugin-index-result-fail"
             [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
             FAIL
-        </md-panel-description>
-        <md-panel-description
+        </mat-panel-description>
+        <mat-panel-description
             i18n="@@plugin-index-result-intro"
             *ngIf="selectedSampleList.length == 0">
             No sample selected
-        </md-panel-description>
-    </md-expansion-panel-header>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
     <span
         *ngIf="selectedSampleList.length > 0">
         <table
@@ -152,4 +152,4 @@
             </tbody>
         </table>
     </span>
-</md-expansion-panel>
+</mat-expansion-panel>

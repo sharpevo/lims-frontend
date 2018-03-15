@@ -23,6 +23,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatSortModule} from '@angular/material/sort';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatSelectModule} from '@angular/material/select';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatTableModule} from '@angular/material/table';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatSidenavModule} from '@angular/material/sidenav';
 //
 // Apps
 //
@@ -182,6 +189,12 @@ import {GuardService} from './util/guard.service'
     MatSlideToggleModule,
     MatRadioModule,
     MatToolbarModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatTableModule,
+    MatGridListModule,
+    MatSidenavModule,
   ],
   providers: [
     //AppLoadService,

@@ -1,12 +1,12 @@
-<md-expansion-panel>
-    <md-expansion-panel-header>
-        <md-panel-title
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title
             i18n="@@plugin-excel-title">
             Plugin: Excel Processor
-        </md-panel-title>
-        <md-panel-description>
-        </md-panel-description>
-    </md-expansion-panel-header>
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
     <div fxLayout="column" fxLayoutAlign="space-between center" >
         <br/>
         <div fxFlex="49">
@@ -27,14 +27,14 @@
                 </label>
                 <button
                     *ngIf="workcenter.SYS_IDENTIFIER == '/PROJECT_MANAGEMENT/GENERAL_PROJECT'"
-                    md-button
+                    mat-button
                     i18n="@@plugin-excel-button-template"
                     (click)="exportSample(true)">
                     TEMPLATE
                 </button>
                 <button
                     [class.hidden-button]="workcenter.SYS_IDENTIFIER == '/PROJECT_MANAGEMENT/GENERAL_PROJECT'"
-                    md-button
+                    mat-button
                     i18n="@@plugin-excel-button-export"
                     (click)="exportSample()">
                     EXPORT
@@ -69,7 +69,7 @@
                     </b>
                 </label>
                 <button
-                    md-button
+                    mat-button
                     i18n="@@plugin-excel-button-import"
                     (click)="updateExcel()">
                     IMPORT
@@ -120,4 +120,4 @@
             </tbody>
         </table>
     </div>
-</md-expansion-panel>
+</mat-expansion-panel>

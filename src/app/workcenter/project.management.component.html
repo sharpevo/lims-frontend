@@ -8,71 +8,71 @@
         fxLayoutGap="10px"
         fxLayout="row"
         fxLayoutAlign="end center">
-        <md-select
+        <mat-select
             *ngIf="sampleList.length > 0"
             [(ngModel)]="queryCode"
             placeholder="Attribute">
-            <md-option
+            <mat-option
                 value="{{attr.SYS_CODE}}"
                 *ngFor="let attr of sampleList[0].SYS_SCHEMA">
                 {{attr.SYS_LABEL}}
-            </md-option>
-        </md-select>
-        <md-input-container
+            </mat-option>
+        </mat-select>
+        <mat-input-container
             *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
             <button
-                md-button
-                mdPrefix
-                md-icon-button
+                mat-button
+                matPrefix
+                mat-icon-button
                 aria-label="Clear"
                 placeholder="Search"
                 (click)="getSampleList()">
-                <md-icon>search</md-icon>
+                <mat-icon>search</mat-icon>
             </button>
             <input
-                mdInput
+                matInput
                 type="text"
                 (keyup.enter)="getSampleList()"
                 [(ngModel)]="queryValue"
                 placeholder=""/>
-            <md-error *ngIf="queryCode==''">
+            <mat-error *ngIf="queryCode==''">
                 Attribute is <strong>required</strong>
-            </md-error>
+            </mat-error>
             <button
-                md-button
+                mat-button
                 *ngIf="queryValue"
-                mdSuffix
-                md-icon-button
+                matSuffix
+                mat-icon-button
                 aria-label="Clear"
                 (click)="clearQuery()">
-                <md-icon>close</md-icon>
+                <mat-icon>close</mat-icon>
             </button>
-        </md-input-container>
-        <md-input-container
+        </mat-input-container>
+        <mat-input-container
             *ngIf="queryCode == 'SYS_DATE_COMPLETED'">
             <div fxLayout="row" fxLayoutAlign="space-between center" >
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateStart"
                     placeholder="starts at..."/>
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateEnd"
                     placeholder="ends at..."/>
                 <button
-                    md-button
-                    md-icon-button
+                    mat-button
+                    mat-icon-button
                     aria-label="Search"
                     placeholder="Search"
                     (click)="getSampleList()">
-                    <md-icon>search</md-icon>
+                    <mat-icon>search</mat-icon>
                 </button>
             </div>
-        </md-input-container>
+        </mat-input-container>
     </div>
 </div>
 <div
@@ -88,22 +88,22 @@
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
-    <md-accordion [multi]="true">
+    <mat-accordion [multi]="true">
     <div *ngFor="let sample of sampleList">
-        <md-expansion-panel
+        <mat-expansion-panel
             (opened)="showHistory[sample.id] = true"
             (closed)="showHistory[sample.id] = false"
             [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
-            <md-expansion-panel-header>
-                <md-panel-title>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
                     {{sample.SYS_SAMPLE_CODE}}
                     <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
                         ({{sample.id}})
                     </span>
-                </md-panel-title>
-                <md-panel-description>
-                </md-panel-description>
-            </md-expansion-panel-header>
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
             <div fxLayout="row" fxLayoutAlign="space-between center" >
                 <div style="width:700px">
                     <sample-history
@@ -141,31 +141,31 @@
                     </div>
                 </div>
             </div>
-            <md-action-row>
-                <button md-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
-                <button md-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button md-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button md-button color="warn" (click)="showMessage('planning...')">Pause</button>
-            </md-action-row>
-        </md-expansion-panel>
+            <mat-action-row>
+                <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
+                <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
+                <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
+                <button mat-button color="warn" (click)="showMessage('planning...')">Pause</button>
+            </mat-action-row>
+        </mat-expansion-panel>
     </div>
-    </md-accordion>
+    </mat-accordion>
 </div>
 <div fxLayout="row" fxLayoutAlign="end center" >
     <button
-        md-icon-button
+        mat-icon-button
         (click)="openNewEntityDialog(entity)">
-        <md-icon>add</md-icon>
+        <mat-icon>add</mat-icon>
     </button>
     <button
-        md-icon-button
+        mat-icon-button
         (click)="prevPage()">
-        <md-icon>keyboard_arrow_left</md-icon>
+        <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <button
-        md-icon-button
+        mat-icon-button
         (click)="nextPage()">
-        <md-icon>keyboard_arrow_right</md-icon>
+        <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
 </div>
 <div

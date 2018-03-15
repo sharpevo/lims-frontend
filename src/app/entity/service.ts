@@ -6,10 +6,10 @@ import 'rxjs/add/operator/map'
 
 @Injectable()
 export class EntityService {
-  private url: string = '/entity'
-  private headers: Headers
+  public url: string = '/entity'
+  public headers: Headers
   constructor(
-    private http: CustomHttpService
+    public http: CustomHttpService
   ){
     this.headers = new Headers()
     this.headers.append('Content-Type', 'application/json')

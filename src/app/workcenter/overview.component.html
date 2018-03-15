@@ -4,42 +4,42 @@
     <li
 		style="list-style:none"
 		*ngFor="let entity of workcenterList;let i=index">
-		<md-menu #menu="mdMenu" style="font-size:9pt">
+		<mat-menu #menu="matMenu" style="font-size:9pt">
 			<button
-				md-menu-item
+				mat-menu-item
 				(click)="openNewGenreDialog(entity)">
-				<md-icon>add</md-icon>
+				<mat-icon>add</mat-icon>
 				<span>Genres of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
 			<button
-                md-menu-item
+                mat-menu-item
                 (click)="openNewAttributeDialog(entity)">
-				<md-icon>edit</md-icon>
+				<mat-icon>edit</mat-icon>
 				<span>Attributes of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
 			<button
-				md-menu-item
+				mat-menu-item
 				(click)="openNewEntityDialog(entity)">
-				<md-icon>add</md-icon>
+				<mat-icon>add</mat-icon>
 				<span>Entities of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
-            <md-divider></md-divider>
+            <mat-divider></mat-divider>
 			<button
-                md-menu-item
+                mat-menu-item
                 [routerLink]="['/workcenter-dashboard', entity.id]">
-				<md-icon>info</md-icon>
+				<mat-icon>info</mat-icon>
 				<span>Details of {{entity[entity["SYS_LABEL"]]}}</span>
 			</button>
-		</md-menu>
+		</mat-menu>
 		<span
 			fxLayout="row"
 			fxLayoutAlign="space-between center">
 			<span
 				style="width:100%"
-				mdTooltip="{{entity.SYS_IDENTIFIER}}"
-				[mdTooltipPosition]="'above'"
-				[mdTooltipShowDelay]="2000"
-                [mdTooltipHideDelay]="0">
+				matTooltip="{{entity.SYS_IDENTIFIER}}"
+				[matTooltipPosition]="'above'"
+				[matTooltipShowDelay]="2000"
+                [matTooltipHideDelay]="0">
                 {{entity.SYS_ORDER}}.
 				<span
                     (click)="entity.tmp_open = !entity.tmp_open"
@@ -55,13 +55,13 @@
                 {{workcenterSampleScheduledComponent.sampleCount}}/{{workcenterSampleActivatedComponent.sampleCount}}/{{workcenterSampleDispatchedComponent.sampleCount}}
             </span>
 			<button
-				md-icon-button
+				mat-icon-button
 				style="opacity:0.5"
-				[mdMenuTriggerFor]="menu">
-				<md-icon>more_horiz</md-icon>
+				[matMenuTriggerFor]="menu">
+				<mat-icon>more_horiz</mat-icon>
 			</button>
 		</span>
-        <md-divider></md-divider>
+        <mat-divider></mat-divider>
         <ul 
             [hidden]="!entity.tmp_open"
             style="list-style:none">
