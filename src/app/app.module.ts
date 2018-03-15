@@ -4,9 +4,28 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
-import {MaterialModule} from '@angular/material'
 import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
-
+//
+// Materilas
+//
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatDatepickerModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatToolbarModule} from '@angular/material/toolbar';
+//
+// Apps
+//
 import { AppComponent } from './app.component';
 
 import {ObjectKeysPipe} from './objectKeys.pipe'
@@ -53,7 +72,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import 'hammerjs'
 
-import { CdkTableModule } from '@angular/cdk'
+import { CdkTableModule } from '@angular/cdk/table';
 
 import {TablifyComponent} from './util/tablify.component'
 
@@ -69,7 +88,6 @@ import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
 import {AuthService} from './util/auth.service'
 
-import {MdSnackBar} from '@angular/material'
 
 import {RedirectComponent} from './util/redirect.component'
 import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
@@ -142,13 +160,28 @@ import {GuardService} from './util/guard.service'
     ReactiveFormsModule,
     HttpModule,
     FlexLayoutModule,
-    MaterialModule,
     routingModule,
     ChartsModule,
 
     BrowserAnimationsModule,
     CdkTableModule,
     AppLoadModule,
+
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    MatInputModule,
+    MatListModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatRadioModule,
+    MatToolbarModule,
   ],
   providers: [
     //AppLoadService,
@@ -176,7 +209,7 @@ import {GuardService} from './util/guard.service'
       deps: [
         XHRBackend,
         RequestOptions,
-        MdSnackBar,
+        MatSnackBarModule,
         SpinnerService,
         UserInfoService,
       ]
