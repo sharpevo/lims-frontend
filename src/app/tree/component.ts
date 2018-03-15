@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {GenreFormDialog} from '../genre/form.dialog.component'
 import {EntityFormDialog} from '../entity/form.dialog.component'
 import {AttributeFormDialog} from '../attribute/form.dialog.component'
@@ -18,7 +18,7 @@ export class TreeViewComponent {
   @Input() parentEntity
   selectedOption: string
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private entityService: EntityService
   ){
     if (!this.hierarchy){
