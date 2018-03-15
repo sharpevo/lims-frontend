@@ -13,7 +13,7 @@ import {Observable} from 'rxjs/Observable'
 //import 'rxjs/Rx'
 import {environment} from '../../environments/environment'
 import {SpinnerService} from "./spinner.service"
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {UserInfoService} from '../util/user.info.service'
 
 @Injectable()
@@ -22,7 +22,7 @@ export class CustomHttpService extends Http {
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private spinnerService: SpinnerService,
     private userInfoService: UserInfoService,
   ) {
@@ -149,7 +149,7 @@ export class CustomHttpService extends Http {
 export function customHttpFactory(
   backend: XHRBackend,
   defaultOptions: RequestOptions,
-  snackBar: MdSnackBar,
+  snackBar: MatSnackBar,
   spinnerService: SpinnerService,
   userInfoService: UserInfoService) {
     return new CustomHttpService(
