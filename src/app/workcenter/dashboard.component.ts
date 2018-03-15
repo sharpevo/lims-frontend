@@ -1,15 +1,26 @@
 import {Component, ViewChild} from '@angular/core'
 import {ActivatedRoute, Router} from '@angular/router'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
+import {UserInfoService} from '../util/user.info.service'
 
 //import {Observable} from 'rxjs/Observable'
 import { Observable } from 'rxjs/Rx'
+import {MatSnackBar} from '@angular/material'
 
 @Component({
   selector: 'workcenter-dashboard',
   templateUrl: './dashboard.component.html',
+  styles:[`
+    .disabled-panel{
+    opacity: 0.3;
+    pointer-events: none;
+    }
+    .mat-select{
+    margin-top:-9px;
+    }
+    `],
 })
 export class WorkcenterDashboardComponent{
   sub: any = {}
@@ -25,6 +36,13 @@ export class WorkcenterDashboardComponent{
   @ViewChild('dispatchedComponent') dispatchedComponent
   @ViewChild('activatedComponent') activatedComponent
   @ViewChild('completedComponent') completedComponent
+  showPanel: any = {
+    'scheduled': false,
+    'activated': false,
+    'dispatched': false,
+    'completed': false,
+    'terminated': false,
+  }
 
   sampleList: any[] = []
 
@@ -32,10 +50,12 @@ export class WorkcenterDashboardComponent{
   selectedIndex: number = 1
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
     private entityService: EntityService,
+    private userInfoService: UserInfoService,
+    private snackBar: MatSnackBar,
   ){
     this.objectId = this.route.snapshot.params['id']
   }
@@ -60,6 +80,10 @@ export class WorkcenterDashboardComponent{
     this.entityService.retrieveById(this.workcenterId)
     .subscribe(data => {
       this.workcenter = data
+      let roleName = "lims-workcenter-" + data['SYS_CODE'].toLowerCase()
+      if (!this.userInfoService.hasRole(roleName)){
+        //this.userInfoService.permFail()
+      }
 
     })
   }
@@ -104,7 +128,6 @@ export class WorkcenterDashboardComponent{
         this.entityService.retrieveEntity(this.workcenterId, 'collection')
         .subscribe(data => {
           this.sampleList = data
-          this.dispatchedComponent.getSampleList()
           this.activatedComponent.getSampleList()
         })
       })
@@ -157,11 +180,33 @@ export class WorkcenterDashboardComponent{
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
-      this.entityService.retrieveEntity(this.workcenterId, 'collection')
-      .subscribe(data => {
-        this.sampleList = data
-        this.dispatchedComponent.getSampleList()
-      })
     });
+  }
+
+  editSample(){
+    this.showMessage("planning...")
+  }
+  terminateSample(){
+    this.showMessage("planning...")
+  }
+  showMessage(msg: string) {
+    this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
+  openPanel(panel: string){
+    Object.keys(this.showPanel).forEach(key => {
+      if (key == panel){
+        this.showPanel[key] = true
+      } else {
+        this.showPanel[key] = false
+      }
+    })
+    console.log(this.showPanel)
+  }
+  closePanel(panel: string){
+    this.showPanel[panel] = false
+  }
+  isExpanded(panel: string){
+    return this.showPanel[panel]
   }
 }

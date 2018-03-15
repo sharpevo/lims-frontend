@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="dashboard-tab-scheduled" datatype="html">
+        <source>
+        Scheduled
+    </source>
+        <target>已下达</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit>
+      <trans-unit id="dashboard-tab-processing" datatype="html">
+        <source>
+        Processing
+    </source>
+        <target>处理中</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
+      <trans-unit id="dashboard-tab-completed" datatype="html">
+        <source>
+        Completed
+    </source>
+        <target>已完成</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">184</context></context-group></trans-unit>
+      <trans-unit id="dashboard-scheduled-samples" datatype="html">
+        <source>
+                    SCHEDULED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        <target>已下达</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">30</context></context-group></trans-unit>
+      <trans-unit id="dashboard-activated-samples" datatype="html">
+        <source>
+                    ACTIVATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        <target>已抵达</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
+      <trans-unit id="dashboard-operator" datatype="html">
+        <source>Operator</source>
+        <target>实验员</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
+      <trans-unit id="dashboard-btn-dispatch" datatype="html">
+        <source>
+                        DISPATCH
+                    </source>
+        <target>分派</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
+      <trans-unit id="dashboard-btn-terminate" datatype="html">
+        <source>
+                        TERMINATE
+                    </source>
+        <target>终止</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">117</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">170</context></context-group></trans-unit>
+      <trans-unit id="dashboard-dispateched-samples" datatype="html">
+        <source>
+                    DISPATCHED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        <target>已分派</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">130</context></context-group></trans-unit>
+      <trans-unit id="dashboard-completed-samples" datatype="html">
+        <source>
+                    COMPLETED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        <target>已完成</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">199</context></context-group></trans-unit>
+      <trans-unit id="dashboard-terminated-samples" datatype="html">
+        <source>
+                    TERMINATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        <target>已终止</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">237</context></context-group></trans-unit>
+      <trans-unit id="dashboard-btn-release" datatype="html">
+        <source>
+                        RELEASE
+                    </source>
+        <target state="translated">
+                重新分派
+            </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
+      <trans-unit id="dashboard-btn-process" datatype="html">
+        <source>
+                        PROCESS
+                    </source>
+        <target state="translated">记录</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit>
+    <trans-unit id="project-management-sample-section" datatype="html">
+        <source>
+        Sample List
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      <target state="new">
+        样品列表
+    </target></trans-unit><trans-unit id="project-management-util-section" datatype="html">
+        <source>
+        Utils
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+      <target state="new">
+        工具
+    </target></trans-unit><trans-unit id="plugin-excel-intro-export" datatype="html">
+        <source>
+                            Export:
+                        </source>
+        
+      <target state="new">
+                            导出样品:
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="plugin-excel-button-export" datatype="html">
+        <source>
+                    EXPORT
+                </source>
+        
+      <target state="new">
+                    导出
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
+        <source>
+                        Choose File:
+                    </source>
+        
+      <target state="new">
+                        选择文件:
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
+        <source>
+                    IMPORT
+                </source>
+        
+      <target state="new">
+                    导入
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
+        <source>
+                    TEMPLATE
+                </source>
+        
+      <target state="new">
+                    下载模板
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
+        <source>
+            Plugin: Excel Processor
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      <target state="new">
+            插件: 导出/导入
+        </target></trans-unit><trans-unit id="plugin-index-validator-title" datatype="html">
+        <source>
+            Plugin: Index Validator
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      <target state="new">
+            插件: Index校验
+        </target></trans-unit><trans-unit id="plugin-index-result-pass" datatype="html">
+        <source>
+            PASS
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      <target state="new">
+            通过
+        </target></trans-unit><trans-unit id="plugin-index-result-fail" datatype="html">
+        <source>
+            FAIL
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      <target state="new">
+            失败
+        </target></trans-unit><trans-unit id="plugin-index-result-intro" datatype="html">
+        <source>
+            No sample selected
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      <target state="new">
+            请选择样品
+        </target></trans-unit><trans-unit id="kpi-title" datatype="html">
+        <source>
+        KPI
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      <target state="new">
+        绩效统计
+    </target></trans-unit><trans-unit id="kpi-timerange" datatype="html">
+        <source>
+        Time:
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      <target state="new">
+        时间:
+    </target></trans-unit><trans-unit id="kpi-title-detail" datatype="html">
+        <source>
+    Detail
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      <target state="new">
+    详情
+</target></trans-unit></body>
+  </file>
+</xliff>

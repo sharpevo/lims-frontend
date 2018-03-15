@@ -1,0 +1,11 @@
+.msg-success {
+    background-color: #859900 !important;
+    color: white !important;
+}
+.msg-fail {
+    background-color: #dc322f !important;
+    color: white !important;
+}
+.td-warn{
+    color: red;
+}

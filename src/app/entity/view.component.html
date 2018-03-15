@@ -8,13 +8,13 @@
 {{entity | json}}
 
 <div *ngFor="let genre of entity.SYS_GENRE_LIST">
-    <md-card>
-        <md-card-title>
-        </md-card-title>
-        <md-list>
-            <p md-line>
+    <mat-card>
+        <mat-card-title>
+        </mat-card-title>
+        <mat-list>
+            <p mat-line>
                 <button
-                    md-icon-button
+                    mat-icon-button
                     [routerLink]="['/entity', genre.id]">
                     +
                 </button>
@@ -31,17 +31,17 @@
                 <!--</a>-->
                 <!--</span>-->
             </p>
-        </md-list>
-    </md-card>
+        </mat-list>
+    </mat-card>
 </div>
 <div *ngFor="let g of object.genres">
-    <md-card>
-        <md-card-title>
-        </md-card-title>
-        <md-list>
-            <p md-line>
+    <mat-card>
+        <mat-card-title>
+        </mat-card-title>
+        <mat-list>
+            <p mat-line>
                 <button
-                    md-icon-button
+                    mat-icon-button
                     [routerLink]="['/entity', g.id]">
                     +
                 </button>
@@ -57,8 +57,8 @@
                 </a>
                 </span>
             </p>
-        </md-list>
-    </md-card>
+        </mat-list>
+    </mat-card>
 </div>
 
 <!--entities without any type, i.e., not sub entities-->

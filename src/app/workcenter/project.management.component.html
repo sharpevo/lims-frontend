@@ -1,69 +1,184 @@
 <div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3>
+        任务下达
+    </h3>
+    <div
+        fxLayoutGap="10px"
+        fxLayout="row"
+        fxLayoutAlign="end center">
+        <mat-select
+            *ngIf="sampleList.length > 0"
+            [(ngModel)]="queryCode"
+            placeholder="Attribute">
+            <mat-option
+                value="{{attr.SYS_CODE}}"
+                *ngFor="let attr of sampleList[0].SYS_SCHEMA">
+                {{attr.SYS_LABEL}}
+            </mat-option>
+        </mat-select>
+        <mat-input-container
+            *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
+            <button
+                mat-button
+                matPrefix
+                mat-icon-button
+                aria-label="Clear"
+                placeholder="Search"
+                (click)="getSampleList()">
+                <mat-icon>search</mat-icon>
+            </button>
+            <input
+                matInput
+                type="text"
+                (keyup.enter)="getSampleList()"
+                [(ngModel)]="queryValue"
+                placeholder=""/>
+            <mat-error *ngIf="queryCode==''">
+                Attribute is <strong>required</strong>
+            </mat-error>
+            <button
+                mat-button
+                *ngIf="queryValue"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="clearQuery()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-input-container>
+        <mat-input-container
+            *ngIf="queryCode == 'SYS_DATE_COMPLETED'">
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+                <input
+                    matInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateStart"
+                    placeholder="starts at..."/>
+                <input
+                    matInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateEnd"
+                    placeholder="ends at..."/>
+                <button
+                    mat-button
+                    mat-icon-button
+                    aria-label="Search"
+                    placeholder="Search"
+                    (click)="getSampleList()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </mat-input-container>
+    </div>
+</div>
+<div
+    style="margin-top:20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between end" >
+    <h3
+        i18n="@@project-management-sample-section"
+        class="section-title">
+        Sample List
+    </h3>
+</div>
+<div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
-    <div
-        fxLayout="row"
-        fxLayoutAlign="space-between stretch">
-        <md-select
-            class="full-width"
-            placeholder="Client">
-            <md-option
-                *ngFor="let client of clientList"
-                (click)="getContractListByClient(client)"
-                [value]="client.id">
-                {{client.name}}
-            </md-option>
-        </md-select>
-        <md-select
-            class="full-width"
-            placeholder="Contract">
-            <md-option
-                *ngFor="let contract of contractList"
-                (click)="getBatchListByContract(contract)"
-                [value]="contract.id">
-                {{contract.name}}
-            </md-option>
-        </md-select>
-        <md-select
-            class="full-width"
-            placeholder="Batch">
-            <md-option
-                *ngFor="let batch of batchList"
-                (click)="getSampleListByBatch(batch)"
-                [value]="batch">
-                {{batch}}
-            </md-option>
-        </md-select>
-    </div>
+    <mat-accordion [multi]="true">
     <div *ngFor="let sample of sampleList">
-        <md-checkbox
-            color="primary"
-            class="example-margin"
-            [(ngModel)]="sample.TMP_CHECK">
-            {{sample.SYS_SAMPLE_CODE}}
-            -
-            {{sample.SYS_PANEL_CODE}}
-            -
-            {{sample.SYS_INDEX_CODE}}
-            -
-            {{sample.SYS_INDEX_SEQUENCE}}
-        </md-checkbox>
-        <sample-history
-            [sample]="sample">
-        </sample-history>
+        <mat-expansion-panel
+            (opened)="showHistory[sample.id] = true"
+            (closed)="showHistory[sample.id] = false"
+            [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{sample.SYS_SAMPLE_CODE}}
+                    <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
+                        ({{sample.id}})
+                    </span>
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+                <div style="width:700px">
+                    <sample-history
+                        *ngIf="showHistory[sample.id]"
+                        [sample]="sample">
+                    </sample-history>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" >
+                    <div
+                        *ngFor="let schema of sample.SYS_SCHEMA"
+                        fxLayout="row" fxLayoutAlign="space-between center" >
+                        <div style="opacity:0.7">
+                            {{schema.SYS_LABEL}}:
+                        </div>
+                        <div style="margin-left: 5px;">
+                            <b>
+                                <span
+                                    *ngIf="schema.SYS_TYPE == 'date'">
+                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                                </span>
+                                <span
+                                    *ngIf="schema.SYS_TYPE != 'date'">
+                                        {{sample[schema.SYS_CODE]}}
+                                </span>
+                            </b>
+                        </div>
+                    </div>
+                    <div style="opacity:0.7">
+                        Created:
+                    </div>
+                    <div style="margin-left: 5px;">
+                        <b>
+                            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
+                        </b>
+                    </div>
+                </div>
+            </div>
+            <mat-action-row>
+                <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
+                <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
+                <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
+                <button mat-button color="warn" (click)="showMessage('planning...')">Pause</button>
+            </mat-action-row>
+        </mat-expansion-panel>
     </div>
-    <div
-        fxLayout="row"
-        fxLayoutAlign="end end">
-        <button 
-            md-button
-            (click)="openNewEntityDialog(entity)">
-            SUBMIT
-        </button>
-        <button 
-            md-button
-            (click)="clearForm()">
-            CLEAR
-        </button>
-    </div>
+    </mat-accordion>
+</div>
+<div fxLayout="row" fxLayoutAlign="end center" >
+    <button
+        mat-icon-button
+        (click)="openNewEntityDialog(entity)">
+        <mat-icon>add</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="prevPage()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="nextPage()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+</div>
+<div
+    style="margin-top: 20px">
+    <h3
+        i18n="@@project-management-util-section"
+        class="section-title">
+        Utils
+    </h3>
+    <plugin-excel-processor
+        *ngIf="(entity | json) != '{}'"
+        [hybridObjectMap]="{}"
+        [sampleList]="sampleList"
+        [workcenter]="entity">
+    </plugin-excel-processor>
 </div>

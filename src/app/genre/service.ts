@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers} from '@angular/http'
-import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
+import {CustomHttpService} from '../util/custom.http.service'
 
 @Injectable()
 export class GenreService {
-  private url: string = environment.apiUrl + '/genre'
+  private url: string = '/genre'
   private headers: Headers
-  constructor(private http: Http){
+  constructor(
+    private http: CustomHttpService
+  ){
     this.headers = new Headers()
     this.headers.append('Content-Type', 'application/json')
     this.headers.append('Accept', 'application/json')

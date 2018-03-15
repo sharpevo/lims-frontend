@@ -7,3 +7,22 @@
 .toolbar-version {
     font-size: 0.5em;
 }
+.fixed-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%  !important;
+}
+.central-content {
+    margin: 80px auto;
+    width: 90%;
+    max-width: 800px;
+    background-color: #f1f1f1;
+}
+.highlight-log {
+    font-weight: bold !important;
+}
+.cancelled-feature {
+    text-decoration: line-through;
+}

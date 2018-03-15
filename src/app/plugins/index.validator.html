@@ -1,118 +1,155 @@
-<br/>
-<md-card>
-    <md-card-subtitle style="width:100%">
-        <div
-            *ngIf="selectedSampleList.length == 0">
-            INDEX VALIDATION
-        </div>
-        <div
-            style="width:100%"
-            *ngIf="selectedSampleList.length > 0">
-            <span
-                *ngIf="result"
-                class="msg-success">
-                INDEX VALIDATION: Passed
-            </span>
-            <span
-                *ngIf="!result"
-                class="msg-fail">
-                INDEX VALIDATION: Failed
-            </span>
-        </div>
-    </md-card-subtitle>
-    <md-card-content>
-        <p
-            style="opacity: 0.5; font-style: italic; font:0.7em; text-align: center"
+<mat-expansion-panel>
+    <mat-expansion-panel-header
+        [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+        <mat-panel-title
+            i18n="@@plugin-index-validator-title"
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            Plugin: Index Validator
+        </mat-panel-title>
+        <mat-panel-description
+            *ngIf="selectedSampleList.length > 0 && result"
+            i18n="@@plugin-index-result-pass"
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            PASS
+        </mat-panel-description>
+        <mat-panel-description
+            *ngIf="selectedSampleList.length > 0 && !result"
+            i18n="@@plugin-index-result-fail"
+            [ngClass]="selectedSampleList.length == 0 ?'':result?'msg-success':'msg-fail'">
+            FAIL
+        </mat-panel-description>
+        <mat-panel-description
+            i18n="@@plugin-index-result-intro"
             *ngIf="selectedSampleList.length == 0">
             No sample selected
-        </p>
-        <!--<md-chip-list-->
-            <!--style="font:0.7em; text-align: center"-->
-            <!--*ngIf="selectedSampleList.length > 0">-->
-            <!--<md-chip-->
-                <!--style="background:#859900; color: white;"-->
-                <!--*ngIf="result">-->
-                <!--Validation Passed-->
-            <!--</md-chip>-->
-            <!--<md-chip-->
-                <!--style="background:#cb4b16; color: white"-->
-                <!--*ngIf="!result">-->
-                <!--Validation Failed-->
-            <!--</md-chip>-->
-
-        <!--</md-chip-list>-->
-        <!--<div-->
-            <!--*ngIf="selectedSampleList.length > 0">-->
-            <!--<div-->
-                <!--*ngIf="result"-->
-                <!--class="msg-success">-->
-                <!--Validation Passed-->
-            <!--</div>-->
-            <!--<div-->
-                <!--*ngIf="!result"-->
-                <!--class="msg-fail">-->
-                <!--Validation Failed-->
-            <!--</div>-->
-        <!--</div>-->
-        <br/>
-        <span
-            *ngIf="selectedSampleList.length > 0">
-            <table
-                style="width: 100%; text-align: center; border-collapse:collapse;">
-                <thead>
-                    <tr>
-                        <th>
-                            No.
-                        </th>
-                        <th>
-                            Sample Code
-                        </th>
-                        <th>
-                            Index Sequence
-                        </th>
-                        <th>
-                            Index Code
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        *ngFor="let sample of selectedSampleList; let i = index">
-                        <td>
-                            {{i+1}}
-                        </td>
-                        <td>
-                            <span
-                                *ngIf="resultList[i]">
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </span>
-                            <span
-                                style="color:red"
-                                *ngIf="!resultList[i]">
-                                <entity-tostring
-                                    [entity]="sample">
-                                </entity-tostring>
-                            </span>
-                        </td>
-                        <td>
-                            <span
-                                *ngIf="resultList[i]">
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </span>
-                            <span
-                                style="color:red"
-                                *ngIf="!resultList[i]">
-                                {{sample.SYS_INDEX_SEQUENCE}}
-                            </span>
-                        </td>
-                        <td>
-                            {{sample.SYS_INDEX_CODE}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </span>
-    </md-card-content>
-</md-card>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <span
+        *ngIf="selectedSampleList.length > 0">
+        <table
+            style="width: 100%; text-align: center; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>
+                        No.
+                    </th>
+                    <th>
+                        Sample Code
+                    </th>
+                    <th>
+                        Index Sequence #1 I7
+                    </th>
+                    <th>
+                        Index Code #1 I7
+                    </th>
+                    <th>
+                        Index Sequence #2 I7
+                    </th>
+                    <th>
+                        Index Code #2 I7
+                    </th>
+                    <th>
+                        Index Sequence #2 I5
+                    </th>
+                    <th>
+                        Index Code #2 I5
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let sample of selectedSampleList; let i = index">
+                    <td>
+                        {{i+1}}
+                    </td>
+                    <td>
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            <entity-tostring
+                                [entity]="sample">
+                            </entity-tostring>
+                        </span>
+                    </td>
+                    <td>
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id][codeMap['SI7_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="SI7-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['SI7_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['SI7_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
+                        </span>
+                    </td>
+                    <td>
+                        {{this.sampleMap[sample.id][codeMap['SI7_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="SI7-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['SI7_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['SI7_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
+                    </td>
+                    <td>
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id][codeMap['MI7_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="MI7-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['MI7_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['MI7_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
+                        </span>
+                    </td>
+                    <td>
+                        {{this.sampleMap[sample.id][codeMap['MI7_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="MI7-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['MI7_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['MI7_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
+                    </td>
+                    <td>
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id][codeMap['MI5_SEQN_KEY']]}}
+                            <!--<show-auxiliary-attribute-->
+                                <!--[outputValue]="sampleMap"-->
+                                <!--[hybridObject]="{}"-->
+                                <!--[sample]="sample"-->
+                                <!--[attributeLabel]="MI5-SEQN"-->
+                                <!--[attributeType]="string"-->
+                                <!--[attributeGenre]="genreMap['MI5_SEQN_KEY']"-->
+                                <!--[attributeCode]="codeMap['MI5_SEQN_KEY']">-->
+                            <!--</show-auxiliary-attribute>-->
+                        </span>
+                    </td>
+                    <td>
+                        {{this.sampleMap[sample.id][codeMap['MI5_CODE_KEY']]}}
+                        <!--<show-auxiliary-attribute-->
+                            <!--[hybridObject]="{}"-->
+                            <!--[sample]="sample"-->
+                            <!--[attributeLabel]="MI5-CODE"-->
+                            <!--[attributeType]="string"-->
+                            <!--[attributeGenre]="genreMap['MI5_CODE_KEY']"-->
+                            <!--[attributeCode]="codeMap['MI5_CODE_KEY']">-->
+                        <!--</show-auxiliary-attribute>-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+</mat-expansion-panel>

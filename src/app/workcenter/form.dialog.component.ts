@@ -1,7 +1,7 @@
 import {Component} from '@angular/core'
 import {DatePipe} from '@angular/common'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
 import {GenreService} from '../genre/service'
@@ -33,12 +33,12 @@ export class SampleFormDialog {
   excelResult: any[] = []
 
   constructor(
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
     private sampleService: SampleService,
-    public dialogRef: MdDialogRef<SampleFormDialog>) {}
+    public dialogRef: MatDialogRef<SampleFormDialog>) {}
 
     ngOnInit(){
       console.log(this.parentMap)
@@ -58,7 +58,7 @@ export class SampleFormDialog {
       this.object.SYS_GENRE = this.genreId
       this.generateEntityType()
       this.generateEntityCode()
-      this.getEntity()
+      //this.getEntity()
     }
 
     generateEntityCode(){
@@ -174,6 +174,7 @@ export class SampleFormDialog {
         this.object,
         this.parentMap
       )
+      this.dialogRef.close();
     }
 
     submitObject_orginal(){
@@ -478,7 +479,7 @@ export class SampleFormDialog {
           this.generateEntityLabel()
         }
       )
-      this.getEntity()
+      //this.getEntity()
     }
 
     getEntity(){

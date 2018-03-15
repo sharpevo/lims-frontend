@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {SampleService} from '../models/sample'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
 
 @Component({
@@ -8,23 +8,25 @@ import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
   templateUrl: './auxiliary.attribute.component.html',
 })
 export class AuxiliaryAttributeComponent{
+  @Input('outputValue') outputValue: any
   @Input('hybridObject') hybridObject: any
   @Input('sample') sample: any
+  @Input('sampleSet') sampleSet: any[]
   @Input('attributeLabel') attributeLabel: string
   @Input('attributeType') attributeType: string
   @Input('attributeGenre') attributeGenre: string
   @Input('attributeCode') attributeCode: string
-  attributeObjectList: any = []
+  attributeObjectList: any[] = []
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private sampleService: SampleService
   ){}
 
   ngOnInit(){
-    this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, this.attributeGenre, attributeObjectList => {
+    if (this.sampleSet && this.sampleSet.length > 0) {
+      let attributeObjectList = this.sampleService.getAuxiliaryAttributes(this.sample, this.sampleSet, this.attributeCode, this.attributeGenre)
       this.attributeObjectList = attributeObjectList
-
       // Pass the latest value of the given attribute to the top of the
       // component structure, e.g. workcenter/sample.dispatched.component
       if (this.attributeObjectList.length > 0){
@@ -41,9 +43,48 @@ export class AuxiliaryAttributeComponent{
           'SYS_CODE': this.attributeCode,
           'SYS_TYPE': this.attributeType,
         }
+        if (!this.outputValue){
+          this.outputValue = {}
+        }
+        if (!this.outputValue[this.sample.id]){
+          this.outputValue[this.sample.id] = {}
+        }
+        this.outputValue[this.sample.id][this.attributeCode] = attributeObjectList[0]['value']
+        //console.log("OV", this.outputValue)
       }
+    } else {
+      this.sampleService.getAuxiliaryAttributeList(this.sample, this.attributeCode, this.attributeGenre, attributeObjectList => {
+        this.attributeObjectList = attributeObjectList
 
-    })
+
+        // Pass the latest value of the given attribute to the top of the
+        // component structure, e.g. workcenter/sample.dispatched.component
+        if (this.attributeObjectList.length > 0){
+          let key = this.sample['SYS_SAMPLE_CODE']
+          if (!this.hybridObject) {
+            this.hybridObject = {}
+          }
+          if (!this.hybridObject[key]) {
+            this.hybridObject[key] = {}
+          }
+          this.hybridObject[key][this.attributeCode] = {
+            'value': attributeObjectList[0]['value'],
+            'SYS_LABEL': this.attributeLabel,
+            'SYS_CODE': this.attributeCode,
+            'SYS_TYPE': this.attributeType,
+          }
+          if (!this.outputValue){
+            this.outputValue = {}
+          }
+          if (!this.outputValue[this.sample.id]){
+            this.outputValue[this.sample.id] = {}
+          }
+          this.outputValue[this.sample.id][this.attributeCode] = attributeObjectList[0]['value']
+          //console.log("OV", this.outputValue)
+        }
+
+      })
+    }
   }
 
   openAttributeHistoryDialog(){

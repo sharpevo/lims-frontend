@@ -1,13 +1,16 @@
 import {Injectable} from '@angular/core'
 import {Http, Headers} from '@angular/http'
+import {CustomHttpService} from '../util/custom.http.service'
 import {environment} from '../../environments/environment'
 import 'rxjs/add/operator/map'
 
 @Injectable()
 export class EntityService {
-  private url: string = environment.apiUrl + '/entity'
-  private headers: Headers
-  constructor(private http: Http){
+  public url: string = '/entity'
+  public headers: Headers
+  constructor(
+    public http: CustomHttpService
+  ){
     this.headers = new Headers()
     this.headers.append('Content-Type', 'application/json')
     this.headers.append('Accept', 'application/json')
@@ -87,14 +90,14 @@ export class EntityService {
     .map(res => res.json())
   }
 
-  retrieveEntity(entityId: string, entityType: string){
+  retrieveEntity(entityId: string, entityType: string, option?: string){
     //console.log(entityType)
     if (!entityType) {
       entityType = "object"
     }
     //console.log(`${this.url}/${entityId}/entity`)
     //return this.http.get(`${this.url}/${entityId}/entity`)
-    let url = `${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}`
+    let url = `${this.url}/${entityId}/entity?SYS_ENTITY_TYPE=${entityType}${option?option:''}`
     //console.log('retrieveEntity:', url)
     return this.http.get(url)
     .map(res => res.json())

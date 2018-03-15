@@ -1,7 +1,7 @@
 import {Component,Input} from '@angular/core'
 import {EntityService} from './service'
 import {GenreService} from '../genre/service'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {ActivatedRoute, Router} from '@angular/router'
 
 @Component({

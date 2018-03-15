@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 import {GenreService} from '../genre/service'
 import {AttributeService} from '../attribute/service'
 
@@ -16,8 +16,8 @@ export class SimpleTableDialog {
   constructor(
     private genreService: GenreService,
     private attributeService: AttributeService,
-    private snackBar: MdSnackBar,
-    public dialogRef: MdDialogRef<SimpleTableDialog>
+    private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<SimpleTableDialog>
   ){}
 
   ngOnInit(){
@@ -25,11 +25,11 @@ export class SimpleTableDialog {
     switch (this.config.hybridType){
       case "RUN":
         this.targetHybridType = "LANE"
-      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/LANE_PREPARE/")
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/POOLING/")
       break
       case "LANE":
         this.targetHybridType = "CAPTURE"
-      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/CAPTURE_RESULT/")
+      this.getAttributeByIdentifier("/PRODUCT_WORKCENTER/CAPTURE_PREPARE/")
       break
       case "CAPTURE":
         this.targetHybridType = "SAMPLE"

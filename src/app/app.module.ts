@@ -1,12 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
-import {MaterialModule} from '@angular/material'
 import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
-
+//
+// Materilas
+//
+import {MaterialModule} from './material.module'
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+//
+// Apps
+//
 import { AppComponent } from './app.component';
 
 import {ObjectKeysPipe} from './objectKeys.pipe'
@@ -53,7 +59,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import 'hammerjs'
 
-import { CdkTableModule } from '@angular/cdk'
+import { CdkTableModule } from '@angular/cdk/table';
 
 import {TablifyComponent} from './util/tablify.component'
 
@@ -61,6 +67,23 @@ import {SimpleTableDialog} from './util/simple.table.dialog';
 import {AuxiliaryAttributeComponent} from './util/auxiliary.attribute.component';
 import {ShowAuxiliaryAttributeDialog} from './util/auxiliary.attribute.dialog';
 import {AppsComponent} from './apps/component';
+
+import {SpinnerService} from './util/spinner.service';
+import {SpinnerComponent} from './util/spinner.component';
+
+import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
+import {XHRBackend, RequestOptions} from '@angular/http';
+import {AuthService} from './util/auth.service'
+
+
+import {RedirectComponent} from './util/redirect.component'
+import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
+import {MaterialOverviewComponent} from './material/overview.component'
+import {SampleOverviewComponent} from './sample/overview.component'
+import {KPIComponent} from './statistics/kpi.component'
+import {AppLoadModule} from './app.load.module'
+import {UserInfoService} from './util/user.info.service'
+import {GuardService} from './util/guard.service'
 
 @NgModule({
   declarations: [
@@ -102,6 +125,12 @@ import {AppsComponent} from './apps/component';
     AuxiliaryAttributeComponent,
     ShowAuxiliaryAttributeDialog,
     AppsComponent,
+    SpinnerComponent,
+    RedirectComponent,
+    EditPMSampleDialog,
+    MaterialOverviewComponent,
+    SampleOverviewComponent,
+    KPIComponent,
   ],
   entryComponents:[
     GenreFormDialog,
@@ -110,25 +139,55 @@ import {AppsComponent} from './apps/component';
     SampleFormDialog,
     SimpleTableDialog,
     ShowAuxiliaryAttributeDialog,
+    EditPMSampleDialog,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     FlexLayoutModule,
-    MaterialModule,
     routingModule,
     ChartsModule,
 
     BrowserAnimationsModule,
     CdkTableModule,
+    AppLoadModule,
+
+    MaterialModule,
   ],
   providers: [
+    //AppLoadService,
+    //{
+    //provide: APP_INITIALIZER,
+    //useFactory: init_app,
+    //deps: [
+    //AppLoadService,
+    //UtilService,
+    //AuthService,
+    //],
+    //multi: true
+    //},
     EntityService,
     GenreService,
     AttributeService,
     SampleService,
     UtilService,
+    SpinnerService,
+    AuthService,
+    GuardService,
+    {
+      provide: CustomHttpService,
+      useFactory: customHttpFactory,
+      deps: [
+        XHRBackend,
+        RequestOptions,
+        MatSnackBarModule,
+        SpinnerService,
+        UserInfoService,
+      ]
+    },
+    UserInfoService,
   ],
   bootstrap: [AppComponent]
 })

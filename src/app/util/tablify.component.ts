@@ -1,9 +1,9 @@
 import {Component, Input, ViewChild, ElementRef} from '@angular/core'
-import {MdPaginator} from '@angular/material'
-import {MdSort} from '@angular/material'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatPaginator} from '@angular/material'
+import {MatSort} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material'
 
-import { DataSource } from '@angular/cdk';
+import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
@@ -12,6 +12,8 @@ import 'rxjs/add/operator/map'
 
 import {SampleService} from '../models/sample'
 import {SimpleTableDialog} from './simple.table.dialog'
+
+import {EntityService} from '../entity/service'
 
 @Component({
   selector: 'simple-table',
@@ -25,8 +27,8 @@ export class TablifyComponent{
   @Input() columnList
   @Input() targetHybridType
   @Input() hybridObjectMap
-  @ViewChild(MdPaginator) paginator: MdPaginator
-  @ViewChild(MdSort) sort: MdSort
+  @ViewChild(MatPaginator) paginator: MatPaginator
+  @ViewChild(MatSort) sort: MatSort
   @ViewChild('filter') filter: ElementRef
 
   columnMap: any = {}
@@ -35,9 +37,16 @@ export class TablifyComponent{
   selectedSampleIdList: any[] = []
   isSelectAll: boolean = false
 
+  projectCode: string = ''
+  projectCodeList: any[] = []
+  projectCodeMap: any = {}
+
+  sampleSetMap: any = {}
+
   constructor(
-    public dialog: MdDialog,
-    private sampleService: SampleService
+    public dialog: MatDialog,
+    private sampleService: SampleService,
+    private entityService: EntityService,
   ){
   }
 
@@ -45,6 +54,11 @@ export class TablifyComponent{
   sampleDataSource: SampleDataSource | null
 
   ngOnInit(){
+
+    this.shownSampleList.forEach(sample => {
+      this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
+    })
+    this.projectCodeList = Object.keys(this.projectCodeMap).sort()
 
     if (!this.columnList){
       // fix undefined bug
@@ -90,7 +104,7 @@ export class TablifyComponent{
     })
 
     this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
-    this.sampleDataSource = new SampleDataSource(this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
+    this.sampleDataSource = new SampleDataSource(this.entityService, this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
     Observable.fromEvent(this.filter.nativeElement, 'keyup')
     .debounceTime(150)
     .distinctUntilChanged()
@@ -100,8 +114,28 @@ export class TablifyComponent{
       this.clearSelectedSamples()
 
       if (!this.sampleDataSource) { return; }
-      this.sampleDataSource.filter = this.filter.nativeElement.value;
+      this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     })
+  }
+
+  clearProjectCode(){
+    this.projectCode = ""
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+  }
+
+  getMinWidth(columnKey: string){
+    if (columnKey == 'CONF_GENERAL_PROJECT_PROJECT_CODE') {
+      return "200px"
+    } else {
+      return "100px"
+    }
+  }
+  onProjectCodeChange(event){
+    this.isSelectAll=false
+    this.clearSelectedSamples()
+
+    if (!this.sampleDataSource) { return; }
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
   }
 
   selectSample(row: any){
@@ -132,9 +166,50 @@ export class TablifyComponent{
         let hybridType = hybridInfo['type']
         let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
 
+        let sampleSetObs = []
+
         if (this.sampleDatabase.hybridMap[hybridType][hybridCode]){
           this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
+
+            sampleSetObs.push(this.entityService.retrieveBy({
+              "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+            }).map(sampleList => {
+              sample['TMP_SAMPLE_SET'] = sampleList
+              return {
+                "sample": sample,
+                "sampleSet": sampleList}
+            }))
+
+          })
+
+          Observable.concat(...sampleSetObs)
+          .subscribe(data => {
+            let sample = data['sample']
+            let sampleSet = data['sampleSet']
+            console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
+
             sample['TMP_CHECKED'] = checked
+
+            // build auxiliary object for exporting
+            Object.keys(this.columnMap).forEach(key => {
+              // assume the inner samples hybridObjectMap is undefined
+              if (!this.hybridObjectMap){
+                this.hybridObjectMap = {}
+              }
+              if (!this.hybridObjectMap[sample['SYS_SAMPLE_CODE']]) {
+                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
+              }
+              let attributeObjectList = this.sampleService.getAuxiliaryAttributes(sample, sampleSet, key, this.columnMap[key]['SYS_GENRE'])
+              if (attributeObjectList.length > 0) {
+                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']][key] = {
+                  'value': attributeObjectList[0]['value'],
+                  'SYS_LABEL': this.columnMap[key]['SYS_LABEL'],
+                  'SYS_CODE': key,
+                  'SYS_TYPE': this.columnMap[key]['SYS_TYPE'],
+                }
+              }
+            })
+
             this.checkCurrentSample(sample, checked)
             let index = this.selectedSampleIdList.indexOf(sample.id)
             if (index != -1 && !checked) {
@@ -143,7 +218,7 @@ export class TablifyComponent{
             if (index == -1 && checked){
               this.selectedSampleIdList.push(sample.id)
             }
-          })
+          }, err => {}, () => {})
         }
       }
     } else {
@@ -163,7 +238,7 @@ export class TablifyComponent{
     this.sampleDataSource.changePageSize(
       this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
     )
-    this.sampleDataSource.filter = this.filter.nativeElement.value
+    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     if (this.isSelectAll){
       this.selectedSampleIdList = []
       this.sampleDataSource.currentSampleList.forEach(sample => {
@@ -313,15 +388,17 @@ export class SampleDataSource extends DataSource<any> {
 
   dataLength: number = 0
   currentSampleList: any[] = []
+  sampleSetMap: any = {}
 
   _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
 
   constructor(
+    private entityService: EntityService,
     private _exampleDatabase: SampleDatabase,
-    private _paginator: MdPaginator,
-    private _sort: MdSort,
+    private _paginator: MatPaginator,
+    private _sort: MatSort,
     private itemKeys: any[],
   ) {
     super();
@@ -336,7 +413,7 @@ export class SampleDataSource extends DataSource<any> {
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
       this._paginator.page,
-      this._sort.mdSortChange,
+      this._sort.sortChange,
       this._filterChange,
     ]
 
@@ -349,7 +426,12 @@ export class SampleDataSource extends DataSource<any> {
           keyStr += item[key]
         })
         let searchStr = keyStr.toLowerCase()
-        return searchStr.indexOf(this.filter.toLowerCase()) != -1;
+        for (let filter of this.filter.split("&")) {
+          if (searchStr.indexOf(filter.toLowerCase()) == -1) {
+            return false
+          }
+        }
+        return true
       })
 
       // currentSampleList should be executed before pagination
@@ -363,9 +445,14 @@ export class SampleDataSource extends DataSource<any> {
       data = data.splice(startIndex, this._paginator.pageSize)
       data = this.getSortedData(data)
       let result = []
+      let sampleSetObs = []
       let hybridMap = this._exampleDatabase.hybridMap
       data.forEach((sample, index) => {
         result.push(sample)
+        sampleSetObs.push(this.entityService.retrieveBy({
+          "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
+        }).map(sampleList => sample['TMP_SAMPLE_SET'] = sampleList))
+
 
         //// Get the hybrid type
         //let hybridType = ""
@@ -381,6 +468,10 @@ export class SampleDataSource extends DataSource<any> {
         //result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
         //}
       })
+
+      Observable.concat(...sampleSetObs)
+      .subscribe()
+      //.subscribe(data => console.log(">", data))
 
       return result
     })

@@ -1,47 +1,30 @@
 <div fxLayout="row" fxLayoutAlign="space-between center"
     (window:resize)="onSizeChanged($event)">
-    <div fxFlex=10>
-    </div>
     <div fxFlex>
-        <md-grid-list
+        <mat-grid-list
             cols="{{gridCols}}"
             rowHeight="1:1">
-            <md-grid-tile
+            <mat-grid-tile
                 *ngFor="let app of appList">
-                <a
-                    *ngIf="!app.isInternal"
-                    class="appButton"
-                    href="{{app.url}}"
-                    target="_self"
-                    fxLayout="column"
-                    fxLayoutAlign="space-between center">
-                    <div>
-                        <md-icon class="appIcon">{{app.icon}}</md-icon>
-                    </div>
-                    <div>
+                <mat-card
+                    (click)="navigateTo(app)"
+                    class="square_board">
+                    <div
+                        style="height:100%"
+                        fxLayout="column"
+                        fxLayoutAlign="space-between center" >
+                        <mat-icon style="text-align: center" fxFlex=70 class="appIcon">{{app.icon}}</mat-icon>
                         <label class="appLabel">
                             {{app.label}}
                         </label>
+                        <span
+                            *ngIf="app.sampleCount > 0"
+                            class="sample-count">
+                            {{app.sampleCount}}
+                        </span>
                     </div>
-                </a>
-                <a
-                    *ngIf="app.isInternal"
-                    class="appButton"
-                    routerLink="{{app.url}}"
-                    fxLayout="column"
-                    fxLayoutAlign="space-between center">
-                    <div>
-                        <md-icon class="appIcon">{{app.icon}}</md-icon>
-                    </div>
-                    <div>
-                        <label class="appLabel">
-                            {{app.label}}
-                        </label>
-                    </div>
-                </a>
-            </md-grid-tile>
-        </md-grid-list>
-    </div>
-    <div fxFlex=10>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
     </div>
 </div>

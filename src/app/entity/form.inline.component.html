@@ -5,81 +5,81 @@
         *ngFor="let attribute of attributeList">
         <span [ngSwitch]="attribute.SYS_TYPE">
             <span *ngSwitchCase="'string'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         type="text"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'text'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <textarea
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}">
                     </textarea>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'number'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         type="number"
                         value="{{entity[attribute.SYS_CODE]}}"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'list'">
-                <md-select
+                <mat-select
 					class="full-width"
                     [(ngModel)]="object[attribute.SYS_CODE]"
                     placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                    <md-option 
+                    <mat-option 
                         value="{{o.split(':')[0]}}"
                         *ngFor="let o of attribute.typeList.split(',')">
                         {{o.split(':')[1]}}
-                    </md-option>
-                </md-select>
+                    </mat-option>
+                </mat-select>
             </span>
             <span *ngSwitchCase="'boolean'">
-                <md-checkbox
+                <mat-checkbox
                     color="primary"
                     class="example-margin"
                     [(ngModel)]="object[attribute.SYS_CODE]">
                     {{attribute[attribute['SYS_LABEL']]}}
-                </md-checkbox>
+                </mat-checkbox>
             </span>
             <span *ngSwitchCase="'date'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         type="date"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'datetime'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         type="datetime-local"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'file'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     {{attribute[attribute['SYS_LABEL']]}}
                     <input
-                        mdInput
+                        matInput
                         type="file"/>
-                </md-input-container>
+                </mat-input-container>
             </span>
             <span *ngSwitchCase="'entity'">
                 <span *ngIf="attribute.SYS_TYPE_ENTITY_REF">

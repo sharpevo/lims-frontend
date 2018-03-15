@@ -1,5 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: "http://192.168.1.99:3000",
-  version: "test",
+  limsUrl: "http://lims.igenetech.cn", // for actionUrl of limsbot
+  apiUrl: "http://api.lims.igenetech.cn",
+  uicUrl: "http://accounts.igenetech.cn",
+  limsbotUrl: "http://notif.lims.igenetech.cn/send",
+  auditUrl: "http://audit.lims.igenetech.cn",
+  version: "Build 980d500 | test 20171223_1641",
 };

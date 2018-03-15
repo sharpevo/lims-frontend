@@ -5,6 +5,11 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://192.168.1.25:3000",
+  limsUrl: "http://localhost:8000", // for actionUrl of limsbot, return_to fo UIC
+  apiUrl: "http://api.lims.igenetech.cn",
+  uicUrl: "http://accounts.igenetech.cn",
+  //limsbotUrl: "http://192.168.1.25:8002/send",
+  limsbotUrl: "http://notif.lims.igenetech.cn/send",
+  auditUrl: "http://audit.lims.igenetech.cn",
   version: "dev",
 };

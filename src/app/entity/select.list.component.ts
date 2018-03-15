@@ -1,5 +1,7 @@
 import {Component,Input} from '@angular/core'
 import {EntityService} from './service'
+import {UserInfoService} from '../util/user.info.service'
+import {Subscription} from 'rxjs/Subscription'
 
 @Component({
   selector: 'entity-select-list',
@@ -15,8 +17,11 @@ export class EntitySelectListComponent {
   placeholder: string = ""
   floorEntityType: string = ""
 
+  userInfo: any
+
   constructor(
     private entityService: EntityService,
+    private userInfoService: UserInfoService,
   ){}
 
   ngOnInit(){
@@ -27,6 +32,11 @@ export class EntitySelectListComponent {
     this.getEntityPlaceholder()
     this.floorEntityType = this.optionLevel
     this.getEntityList()
+
+    this.userInfo = this.userInfoService.getUserInfo()
+    if (this.attribute.SYS_CODE == "SYS_WORKCENTER_OPERATOR") {
+      this.object[this.attribute.SYS_CODE] = this.userInfo.limsid
+    }
   }
 
   getEntityList(){
