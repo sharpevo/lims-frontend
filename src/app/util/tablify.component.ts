@@ -1,9 +1,9 @@
 import {Component, Input, ViewChild, ElementRef} from '@angular/core'
-import {MdPaginator} from '@angular/material'
-import {MdSort} from '@angular/material'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatPaginator} from '@angular/material'
+import {MatSort} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material'
 
-import { DataSource } from '@angular/cdk';
+import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
@@ -27,8 +27,8 @@ export class TablifyComponent{
   @Input() columnList
   @Input() targetHybridType
   @Input() hybridObjectMap
-  @ViewChild(MdPaginator) paginator: MdPaginator
-  @ViewChild(MdSort) sort: MdSort
+  @ViewChild(MatPaginator) paginator: MatPaginator
+  @ViewChild(MatSort) sort: MatSort
   @ViewChild('filter') filter: ElementRef
 
   columnMap: any = {}
@@ -44,7 +44,7 @@ export class TablifyComponent{
   sampleSetMap: any = {}
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private sampleService: SampleService,
     private entityService: EntityService,
   ){
@@ -397,8 +397,8 @@ export class SampleDataSource extends DataSource<any> {
   constructor(
     private entityService: EntityService,
     private _exampleDatabase: SampleDatabase,
-    private _paginator: MdPaginator,
-    private _sort: MdSort,
+    private _paginator: MatPaginator,
+    private _sort: MatSort,
     private itemKeys: any[],
   ) {
     super();
@@ -413,7 +413,7 @@ export class SampleDataSource extends DataSource<any> {
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
       this._paginator.page,
-      this._sort.mdSortChange,
+      this._sort.sortChange,
       this._filterChange,
     ]
 
