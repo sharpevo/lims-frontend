@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {UserInfoService} from '../util/user.info.service'
 
 import {Router} from '@angular/router'
@@ -25,7 +25,7 @@ export class SampleService{
   }
 
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private genreService: GenreService,
     private utilService: UtilService,
     private userInfoService: UserInfoService,
