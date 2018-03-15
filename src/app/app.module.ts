@@ -8,28 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
 //
 // Materilas
 //
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MaterialModule} from './material.module'
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatListModule} from '@angular/material/list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatDatepickerModule} from '@angular/material';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatSortModule} from '@angular/material/sort';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatSelectModule} from '@angular/material/select';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatTableModule} from '@angular/material/table';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatSidenavModule} from '@angular/material/sidenav';
 //
 // Apps
 //
@@ -174,27 +154,7 @@ import {GuardService} from './util/guard.service'
     CdkTableModule,
     AppLoadModule,
 
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatStepperModule,
-    MatInputModule,
-    MatListModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatDatepickerModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatSlideToggleModule,
-    MatRadioModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatTableModule,
-    MatGridListModule,
-    MatSidenavModule,
+    MaterialModule,
   ],
   providers: [
     //AppLoadService,
