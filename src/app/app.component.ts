@@ -3,7 +3,7 @@ import {EntityService} from './entity/service'
 import {UtilService} from './util/service'
 import {environment} from '../environments/environment'
 import {URLSearchParams} from "@angular/http"
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
 import {UserInfoService} from './util/user.info.service'
 import {AuthService} from './util/auth.service'
@@ -239,7 +239,7 @@ export class AppComponent {
     },
   ]
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private utilService: UtilService,
     private userInfoService: UserInfoService,
     private authService: AuthService,
