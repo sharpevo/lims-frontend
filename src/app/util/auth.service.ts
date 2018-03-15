@@ -5,7 +5,7 @@ import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
 import {SpinnerService} from './spinner.service'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
 import { 
   Router,
@@ -24,7 +24,7 @@ export class AuthService {
     private spinnerService: SpinnerService,
     private userInfoService: UserInfoService,
     private http: CustomHttpService,
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     public router: Router,
   ){
     this.userInfo = this.userInfoService.getUserInfo()
