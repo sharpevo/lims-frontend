@@ -282,69 +282,6 @@ export class SampleService{
   }
 
   /**
-   * Get the latest attributes of the given sample
-   *
-   */
-  getLatestAttributes(sample: any){
-
-    // Get the latest sample
-    this.entityService.retrieveBy({
-      "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
-    })
-    .subscribe(sampleList => {
-      let latestSampleList = []
-      sampleList.forEach(sample => {
-        if (sample['SYS_DATE_COMPLETED'] && sample['SYS_DATE_TERMINATED']){
-          latestSampleList.push(sample)
-        }
-      })
-
-      // Get all the results sorted by date
-      let latestAttributeMap = {}
-      latestSampleList.sort((a,b) => {
-        if (a['SYS_DATE_COMPLETED'] > b['SYS_DATE_COMPLETED']){
-          return 1
-        } else {
-          return -1
-        }
-      }).forEach(sample => {
-        Object.keys(sample['SYS_SCHEMA']).forEach(schema => {
-          if (!latestAttributeMap[schema]){
-            latestAttributeMap[schema] = []
-          }
-          // Build result structure
-          latestAttributeMap[schema].push({
-            "ID": sample.id,
-            "DATE": sample['SYS_COMPLETED_DATE'],
-            "VALUE": sample[schema['SYS_CODE']],
-          })
-        })
-      })
-      return latestAttributeMap
-    })
-  }
-
-  /**
-   * Get all the droplets of the given sample
-   *
-   * @param sample sample of which droplets belongs to
-   */
-  getDropletList(sample: any): any{
-    this.entityService.retrieveBy({
-      "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
-    })
-    .subscribe(sampleList => {
-      let latestSampleList = []
-      sampleList.forEach(sample => {
-        if (sample['SYS_DATE_COMPLETED'] && sample['SYS_DATE_TERMINATED']){
-          latestSampleList.push(sample)
-        }
-      })
-      return latestSampleList
-    })
-  }
-
-  /**
    * Build samples in backend-friendly hybrid structure.
    *
    * With the help of the backend, each of the sample will be returned with an attribute "SYS_HYBRID_INFO" which is formed like,
