@@ -1,6 +1,8 @@
+<mat-form-field
+    class="full-width">
 <mat-select
     [disabled]="attribute['SYS_CODE'] === 'SYS_WORKCENTER_OPERATOR'"
-    class="full-width"
+    name="attr-select"
     [(ngModel)]="object[attribute.SYS_CODE]"
     placeholder="{{placeholder}}">
     <mat-option
@@ -11,3 +13,4 @@
         </entity-tostring>
     </mat-option>
 </mat-select>
+</mat-form-field>
