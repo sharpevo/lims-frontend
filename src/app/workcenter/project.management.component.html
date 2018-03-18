@@ -8,8 +8,9 @@
         fxLayoutGap="10px"
         fxLayout="row"
         fxLayoutAlign="end center">
+        <mat-form-field
+            *ngIf="sampleList.length > 0">
         <mat-select
-            *ngIf="sampleList.length > 0"
             [(ngModel)]="queryCode"
             placeholder="Attribute">
             <mat-option
@@ -18,6 +19,7 @@
                 {{attr.SYS_LABEL}}
             </mat-option>
         </mat-select>
+        </mat-form-field>
         <mat-input-container
             *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
             <button
