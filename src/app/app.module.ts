@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
-import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
+import { FlexLayoutModule } from '@angular/flex-layout';
 //
 // Materilas
 //
