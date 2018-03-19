@@ -26,11 +26,11 @@ export class SampleService{
 
     constructor(
         public snackBar: MatSnackBar,
-        private genreService: GenreService,
-        private utilService: UtilService,
-        private userInfoService: UserInfoService,
-        private router: Router,
-        private entityService: EntityService
+        public genreService: GenreService,
+        public utilService: UtilService,
+        public userInfoService: UserInfoService,
+        public router: Router,
+        public entityService: EntityService
     ){
         this.userInfo = this.userInfoService.getUserInfo()
     }
