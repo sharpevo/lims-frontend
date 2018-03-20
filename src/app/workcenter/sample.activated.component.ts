@@ -16,7 +16,6 @@ export class WorkcenterSampleActivatedComponent{
   sampleCount: number = 0
 
   activatedSampleList: any[] = []
-  builtSampleList: any[] = []
 
   constructor(
     private entityService: EntityService,
@@ -67,7 +66,6 @@ export class WorkcenterSampleActivatedComponent{
         }
       }
       this.sampleCount = this.activatedSampleList.length
-      this.builtSampleList = this.sampleService.buildSampleInlineList(this.activatedSampleList)
 
     })
   }
