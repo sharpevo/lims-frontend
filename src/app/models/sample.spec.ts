@@ -50,6 +50,7 @@ describe("SampleService test", () => {
         }
     }
 
+    // beforeEach: TestBed{{{
     beforeEach(()=> {
         TestBed.configureTestingModule({
             imports: [
@@ -109,8 +110,9 @@ describe("SampleService test", () => {
             ],
         }).compileComponents()
         backend = TestBed.get(MockBackend)
-    })
+    })// }}}
 
+    // beforeEach: Inject{{{
     beforeEach(
         // inject scope is out of the testbed
         // so the class should be the mocked one
@@ -143,11 +145,12 @@ describe("SampleService test", () => {
                 mockEntityService,
             )
         })
-    )
+    )// }}}
 
+    // submitSubEntity{{{
     it('TEST: submitSubEntity', done => {
 
-        // PREPARE{{{
+        // PREPARE
         let genreOfTargetEntity = [
             {
                 "id": "5a726c698a2bb51617825374"
@@ -183,9 +186,9 @@ describe("SampleService test", () => {
         spyOn(service.genreService, "retrieveBy").and.returnValues(
             Observable.of(genreOfTargetEntity), // test issue sample
             Observable.of({}), // test submit sample
-        )// }}}
+        )
 
-        // ISSUE{{{
+        // ISSUE
         service.submitSubEntity(
             subEntity,
             targetEntity,
@@ -199,9 +202,9 @@ describe("SampleService test", () => {
             Object.keys(targetEntityInput).forEach(attr => {
                 expect(sample[attr]).toEqual(targetEntityInput[attr])
             })
-        })// }}}
+        })
 
-        // SUBMIT{{{
+        // SUBMIT
         service.submitSubEntity(
             subEntity,
             targetEntity,
@@ -210,13 +213,14 @@ describe("SampleService test", () => {
             let sample = workcenterAndSample['sample']
             expect(sample.SYS_GENRE).toEqual(targetEntity['SYS_GENRE'])
             done()
-        })// }}}
+        })
 
-    })
+    })// }}}
 
+    // createSubEntity{{{
     it('TEST: createSubEntity', done => {
 
-        // PREPARE{{{
+        // PREPARE
         let sourceEntity = {
             id: "5ab0847f1c62422cffc9fb97",
             SYS_SAMPLE_CODE: "18R2003",
@@ -254,9 +258,9 @@ describe("SampleService test", () => {
                 targetEntity: _targetEntity,
                 targetEntityInput: _targetEntityInput,
             })
-        })// }}}
+        })
 
-        // ISSUE{{{
+        // ISSUE
         service.createSubEntity(
             sourceEntity,
             targetEntity,
@@ -275,9 +279,9 @@ describe("SampleService test", () => {
             workcenterAttributeList.forEach(attr => {
                 expect(_subEntity[attr.SYS_CODE]).toEqual(sourceEntity[attr.SYS_CODE])
             })
-        })// }}}
+        })
 
-        // SUBMIT{{{
+        // SUBMIT
         targetEntity.SYS_ENTITY_TYPE = "collection"
         targetEntity["KAPA_LOT_NUMBER"] = "1024"
         service.createSubEntity(
@@ -292,8 +296,8 @@ describe("SampleService test", () => {
                 expect(_subEntity[attr.SYS_CODE]).toEqual(targetEntity[attr.SYS_CODE])
             })
             done()
-        })// }}}
+        })
 
-    })
+    })// }}}
 
 })
