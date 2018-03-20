@@ -1001,6 +1001,7 @@ export class SampleService{
      *
      */
     submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
+        //console.log("TEST #1:", subEntity, targetEntity, targetEntityInput)
 
         //for both of BoM and Routing
         return this.genreService.retrieveBy({
@@ -1011,18 +1012,23 @@ export class SampleService{
                 // Get SYS_GENRE from the workcenter
 
                 subEntity['SYS_GENRE'] = data[0].id
+                //console.log("TEST #2 GENRE:", data)
             } else {
                 // Collection of materials may not contains any SYS_GENRE defaultly
 
                 subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
+                //console.log("TEST #2 TARGET:", subEntity['SYS_GENRE'])
             }
 
             // Assign new values to the new material object
             Object.keys(targetEntityInput).forEach(key => {
                 subEntity[key] = targetEntityInput[key]
             })
+
+            //console.log("TEST #3:", subEntity)
             return this.entityService.create(subEntity)
             .map(entity => {
+                //console.log("TEST #4:", {'workcenter': targetEntity, 'sample':subEntity})
                 return {'workcenter': targetEntity, 'sample': subEntity}
             })
             //.delay(100)
