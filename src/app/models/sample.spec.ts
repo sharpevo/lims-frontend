@@ -147,7 +147,7 @@ describe("SampleService test", () => {
 
     it('TEST: submitSubEntity', done => {
 
-        // mock data{{{
+        // PREPARE{{{
         let genreOfTargetEntity = [
             {
                 "id": "5a726c698a2bb51617825374"
@@ -185,7 +185,7 @@ describe("SampleService test", () => {
             Observable.of({}), // test submit sample
         )// }}}
 
-        // test issue sample
+        // ISSUE{{{
         service.submitSubEntity(
             subEntity,
             targetEntity,
@@ -199,9 +199,9 @@ describe("SampleService test", () => {
             Object.keys(targetEntityInput).forEach(attr => {
                 expect(sample[attr]).toEqual(targetEntityInput[attr])
             })
-        })
+        })// }}}
 
-        // test submit sample
+        // SUBMIT{{{
         service.submitSubEntity(
             subEntity,
             targetEntity,
@@ -210,7 +210,89 @@ describe("SampleService test", () => {
             let sample = workcenterAndSample['sample']
             expect(sample.SYS_GENRE).toEqual(targetEntity['SYS_GENRE'])
             done()
-        })
+        })// }}}
+
+    })
+
+    it('TEST: createSubEntity', done => {
+
+        // PREPARE{{{
+        let sourceEntity = {
+            id: "5ab0847f1c62422cffc9fb97",
+            SYS_SAMPLE_CODE: "18R2003",
+            SYS_CODE: "18R2003.GENERAL_PROJECT.20180320114800",
+            SYS_LABEL: "SYS_SAMPLE_CODE",
+            SYS_AUDIT_DOCSET: "5a726c688a2bb51617825318_18R2003_1521517695241",
+            CONF_GENERAL_PROJECT_PROJECT_CODE: "BKZN17723-17Q12V1",
+        }
+        let targetEntity = {
+            SYS_IDENTIFIER: "/PRODUCT_WORKCENTER/SEQUENCE_DATA",
+            SYS_ENTITY_TYPE: "class",
+        }
+        let workcenterAttributeList = [
+            {
+                SYS_CODE: "CONF_GENERAL_PROJECT_PROJECT_CODE",
+            },
+        ]
+        let targetEntityInput = {
+        }
+        let targetEntityAttributeList = [
+            {
+                SYS_CODE: "KAPA_LOT_NUMBER",
+            },
+        ]
+        spyOn(service.entityService, "retrieveAttribute").and.returnValue(
+            Observable.of(targetEntityAttributeList)
+        )
+        spyOn(service, "submitSubEntity").and.callFake(function(
+            _subEntity,
+            _targetEntity,
+            _targetEntityInput,
+        ){
+            return Observable.of({
+                subEntity: _subEntity,
+                targetEntity: _targetEntity,
+                targetEntityInput: _targetEntityInput,
+            })
+        })// }}}
+
+        // ISSUE{{{
+        service.createSubEntity(
+            sourceEntity,
+            targetEntity,
+            workcenterAttributeList,
+            targetEntityInput,
+        ).subscribe(submitSubEntityArgs => {
+            let _subEntity = submitSubEntityArgs.subEntity
+
+            expect(_subEntity.SYS_LABEL).toEqual(sourceEntity.SYS_LABEL)
+            expect(_subEntity[_subEntity.SYS_LABEL]).toEqual(sourceEntity[sourceEntity.SYS_LABEL])
+            expect(_subEntity.SYS_TARGET).toEqual(sourceEntity.id)
+            expect(_subEntity.SYS_AUDIT_DOCSET).toEqual(sourceEntity.SYS_AUDIT_DOCSET)
+            expect(_subEntity.SYS_IDENTIFIER).toContain(targetEntity.SYS_IDENTIFIER + "/" + sourceEntity.SYS_CODE + ".")
+
+            expect(_subEntity.SYS_ENTITY_TYPE).toEqual("collection")
+            workcenterAttributeList.forEach(attr => {
+                expect(_subEntity[attr.SYS_CODE]).toEqual(sourceEntity[attr.SYS_CODE])
+            })
+        })// }}}
+
+        // SUBMIT{{{
+        targetEntity.SYS_ENTITY_TYPE = "collection"
+        targetEntity["KAPA_LOT_NUMBER"] = "1024"
+        service.createSubEntity(
+            sourceEntity,
+            targetEntity,
+            workcenterAttributeList,
+            targetEntityInput,
+        ).subscribe(submitSubEntityArgs => {
+            let _subEntity = submitSubEntityArgs.subEntity
+            expect(_subEntity.SYS_ENTITY_TYPE).toEqual("object")
+            targetEntityAttributeList.forEach(attr => {
+                expect(_subEntity[attr.SYS_CODE]).toEqual(targetEntity[attr.SYS_CODE])
+            })
+            done()
+        })// }}}
 
     })
 
