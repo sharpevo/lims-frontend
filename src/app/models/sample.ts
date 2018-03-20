@@ -950,6 +950,7 @@ export class SampleService{
         targetEntityInput: any
     ): Observable<any> {
 
+        //console.log("TEST #1:", sourceEntity, targetEntity, workcenterAttributeList, targetEntityInput)
         let subEntity = {}
 
         // Get default label from the source entity
@@ -966,15 +967,18 @@ export class SampleService{
         subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
             sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
 
+        //console.log("TEST #2 pre pre:", Object.assign({}, subEntity))
         if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
             // Routing specific operations
 
             subEntity['SYS_ENTITY_TYPE'] = 'collection'
+            //console.log("TEST #2 pre:", Object.assign({}, subEntity))
             workcenterAttributeList.forEach(attribute => {
                 if (!this.ignoredAttribute[attribute.SYS_CODE]) {
                     subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
                 }
             })
+            //console.log("TEST #2:", subEntity)
             return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
         } else { // == 'collection'
@@ -986,6 +990,7 @@ export class SampleService{
                 attributes.forEach(attribute => {
                     subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
                 })
+                //console.log("TEST #2:", Object.assign({}, subEntity))
                 return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
             })
         }
