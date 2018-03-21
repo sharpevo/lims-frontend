@@ -826,7 +826,7 @@ export class SampleService{
      */
     buildRelationship(sourceEntity: any, attributeInfo: any){
 
-        console.log("TEST #1:", sourceEntity, attributeInfo)
+        //console.log("TEST #1:", sourceEntity, attributeInfo)
         let observableList = []
 
         let attributeList = attributeInfo['attributeList']
@@ -836,7 +836,7 @@ export class SampleService{
         Object.keys(parentMap).forEach(key => {
 
             let targetEntityMap = parentMap[key]
-            console.log("TEST #2:", targetEntityMap)
+            //console.log("TEST #2:", targetEntityMap)
 
             let SYS_DATE_SCHEDULED: Date
 
@@ -859,7 +859,7 @@ export class SampleService{
                 if (targetEntityInput['SYS_CHECKED']){
                     //console.log('process checked entry:', targetEntityInput)
 
-                    console.log("TEST #3 origin:", targetEntityInput)
+                    //console.log("TEST #3 origin:", targetEntityInput)
                     // Calculate SYS_DATE_SCHEDULED
 
                     SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
@@ -869,12 +869,12 @@ export class SampleService{
                         targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
                     }
 
-                    console.log("TEST #3:", targetEntityInput)
+                    //console.log("TEST #3:", targetEntityInput)
                     // Get the target entity from the SYS_SOURCE
                     observableList.push(
                         this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
                         .mergeMap(targetEntity => {
-                            console.log("TEST #4:", targetEntity)
+                            //console.log("TEST #4:", targetEntity)
 
                             //.subscribe(targetEntity => {
 
@@ -886,7 +886,7 @@ export class SampleService{
                                 // SYS_SOURCE has been specified manually
 
                                 //console.log("---------Entries has been specified:", targetEntity)
-                                console.log("TEST #6:", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                //console.log("TEST #6:", sourceEntity, targetEntity, attributeList, targetEntityInput)
                                 return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
 
                             } else {
@@ -898,7 +898,7 @@ export class SampleService{
                                     targetEntityInput['SYS_SOURCE'],
                                     targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
                                     .mergeMap(data => {
-                                        console.log("TEST #5:", targetEntityInput)
+                                        //console.log("TEST #5:", targetEntityInput)
 
                                         //.subscribe(data => {
                                         //console.log("---------Retrieve entries in BoM or Routing:", data[0])
@@ -907,7 +907,7 @@ export class SampleService{
                                             console.warn("None of LOT under the " +
                                                          targetEntityInput['SYS_SOURCE'])
                                         } else {
-                                            console.log("TEST #7:", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                            //console.log("TEST #7:", sourceEntity, targetEntity, attributeList, targetEntityInput)
                                             return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
                                         }
 
