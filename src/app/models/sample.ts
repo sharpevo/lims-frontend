@@ -715,59 +715,114 @@ export class SampleService{
             err => {
             },
             () => {
-                let date = new Date()
-                let msg_date = date.getFullYear() + '-' +
-                    (date.getMonth() + 1) + '-' +
-                    date.getDate() + ' ' +
-                    date.getHours() + ':' +
-                    date.getMinutes()
-
-                let message = ''
-                if (issueSample){
-                    message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
-                    message += `scheduled to the following workcenters\n\n`
-                } else {
-                    message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
-                    attributeInfo['attributeList'].forEach(attr => {
-                        if (sample.hasOwnProperty(attr.SYS_CODE)) {
-                            message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
-                        }
-                    })
-                    if (targetOutput.length > 0){
-                        message += `with the following materials\n\n`
-                    }
-                }
-                targetOutput.forEach(target => {
-                    let sample = target['sample']
-                    let workcenter = target['workcenter']
-                    //console.log(target)
-                    if (issueSample){
-                        let scheduledDate = new DatePipe('en-US')
-                        .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-                        message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-                    } else {
-
-                        message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
-                    }
-                })
-                message +=`> \n\n${this.userInfo.name}\n\n` +
-                    `${msg_date}`
-                //console.log("mmm", message)
-                let beforeDate = new Date(date)
-                beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
-                let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
-                let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
-                let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
-                this.utilService.sendNotif(
-                    "actionCard",
-                    message,
-                    redirectUrl
-                )
+                this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
                 .subscribe(() => {
-                    console.log("Sending notification:", redirectUrl)
+                    this.router.navigate(['/redirect' + this.router.url])
                 })
-                this.router.navigate(['/redirect' + this.router.url])
+                //let date = new Date()
+                //let msg_date = date.getFullYear() + '-' +
+                //(date.getMonth() + 1) + '-' +
+                //date.getDate() + ' ' +
+                //date.getHours() + ':' +
+                //date.getMinutes()
+
+                //let message = ''
+                //if (issueSample){
+                //message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+                //message += `scheduled to the following workcenters\n\n`
+                //} else {
+                //message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+                //attributeInfo['attributeList'].forEach(attr => {
+                //if (sample.hasOwnProperty(attr.SYS_CODE)) {
+                //message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+                //}
+                //})
+                //if (targetOutput.length > 0){
+                //message += `with the following materials\n\n`
+                //}
+                //}
+                //targetOutput.forEach(target => {
+                //let sample = target['sample']
+                //let workcenter = target['workcenter']
+                ////console.log(target)
+                //if (issueSample){
+                //let scheduledDate = new DatePipe('en-US')
+                //.transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                //message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+                //} else {
+
+                //message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                //}
+                //})
+                //message +=`> \n\n${this.userInfo.name}\n\n` +
+                //`${msg_date}`
+                ////console.log("mmm", message)
+                //let beforeDate = new Date(date)
+                //beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+                //let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+                //let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+                //let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+                //this.utilService.sendNotif(
+                //"actionCard",
+                //message,
+                //redirectUrl
+                //)
+                //.subscribe(() => {
+                //console.log("Sending notification:", redirectUrl)
+                //})
+                //this.router.navigate(['/redirect' + this.router.url])
             })
+    }
+
+    sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]){
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
+
+        let message = ''
+        if (issueSample){
+            message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+            message += `scheduled to the following workcenters\n\n`
+        } else {
+            message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+            attributeList.forEach(attr => {
+                if (sample.hasOwnProperty(attr.SYS_CODE)) {
+                    message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+                }
+            })
+            if (targetOutput.length > 0){
+                message += `with the following materials\n\n`
+            }
+        }
+        targetOutput.forEach(target => {
+            let sample = target['sample']
+            let workcenter = target['workcenter']
+            //console.log(target)
+            if (issueSample){
+                let scheduledDate = new DatePipe('en-US')
+                .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+            } else {
+                message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+            }
+        })
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+            `${msg_date}`
+        //console.log("mmm", message)
+        let beforeDate = new Date(date)
+        beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+        let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+        let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+        let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+        console.log("Sending notification:", redirectUrl)
+        return this.utilService.sendNotif(
+            "actionCard",
+            message,
+            redirectUrl
+        )
     }
 
     createObject$(object: any, attributeInfo: any, issueSample: boolean){
