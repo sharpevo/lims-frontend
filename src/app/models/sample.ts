@@ -936,6 +936,27 @@ export class SampleService{
         return observableList.length == 0 ? Observable.of({}) : Observable.concat(...observableList)
     }
 
+    getScheduledDate(
+        SYS_DATE_SCHEDULED: Date,
+        sourceEntityScheduledDate: Date,
+        targetEntityDuration: number,
+    ){
+        if (!SYS_DATE_SCHEDULED) {
+            if (sourceEntityScheduledDate) {
+                SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
+            } else {
+                SYS_DATE_SCHEDULED = new Date()
+            }
+        } else {
+            SYS_DATE_SCHEDULED.setDate(
+                SYS_DATE_SCHEDULED.getDate() +
+                    (targetEntityDuration?targetEntityDuration:0)
+            )
+        }
+        return SYS_DATE_SCHEDULED
+
+    }
+
     /**
      * Create subentities for the given entity. For the BoM, it's used to create
      * the droplet(object entity) under the Material, and for the routing, to

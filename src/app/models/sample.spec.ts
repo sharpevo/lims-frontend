@@ -300,4 +300,54 @@ describe("SampleService test", () => {
 
     })// }}}
 
+    // getScheduledDate{{{
+    it('TEST: getScheduledDate', done => {
+        let baseDate = new Date()
+        let SYS_DATE_SCHEDULED: Date
+        let sourceEntityScheduledDate: Date
+        let targetEntityDuration: number
+        spyOn(window, "Date").and.callFake(function() {
+            return baseDate
+        })
+
+        // generate new date for the first targetEntityInput
+        // without any sourceEntityScheduledDate
+        expect(service.getScheduledDate(
+            SYS_DATE_SCHEDULED,
+            sourceEntityScheduledDate,
+            targetEntityDuration,
+        )).toEqual(baseDate)
+
+        // generate new date for the first targetEntityInput
+        // with a sourceEntityScheduledDate
+        sourceEntityScheduledDate = new Date()
+        expect(service.getScheduledDate(
+            SYS_DATE_SCHEDULED,
+            sourceEntityScheduledDate,
+            targetEntityDuration,
+        )).toEqual(sourceEntityScheduledDate)
+
+        // get scheduled date for the left targetentityInput
+        // without duration
+        SYS_DATE_SCHEDULED = new Date()
+        expect(service.getScheduledDate(
+            SYS_DATE_SCHEDULED,
+            sourceEntityScheduledDate,
+            targetEntityDuration,
+        )).toEqual(SYS_DATE_SCHEDULED)
+
+        // get scheduled date for the left targetentityInput
+        // with duration
+        SYS_DATE_SCHEDULED = new Date()
+        targetEntityDuration = 2
+        expect(service.getScheduledDate(
+            SYS_DATE_SCHEDULED,
+            sourceEntityScheduledDate,
+            targetEntityDuration,
+        )).toEqual(new Date(SYS_DATE_SCHEDULED.getDate() + targetEntityDuration))
+
+        done()
+    })// }}}
+
+
 })
