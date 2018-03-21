@@ -6,8 +6,8 @@
     </h3>
     <button
         tabindex="-1"
-        md-icon-button
-        md-dialog-close>
+        mat-icon-button
+        mat-dialog-close>
         x 
     </button>
 </div>
@@ -17,44 +17,44 @@
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
-    <md-input-container class="full-width">
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             disabled
             tabindex="-1"
             type="text"
             [(ngModel)]="object.SYS_ENTITY"
             placeholder="{{config.entity[config.entity['SYS_LABEL']]}}"/>
-    </md-input-container>
-    <md-input-container class="full-width">
+    </mat-input-container>
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             tabindex="-1"
             required
             type="text"
             [(ngModel)]="object.SYS_IDENTIFIER"
             placeholder="IDENTIFIER"/>
-    </md-input-container>
-    <md-input-container class="full-width">
+    </mat-input-container>
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             required
             type="text"
             [(ngModel)]="object.label"
             placeholder="Label"/>
-    </md-input-container>
+    </mat-input-container>
 
 </div>
 <div
     fxLayout="row"
     fxLayoutAlign="end end">
     <button 
-        md-button
+        mat-button
         (click)="createObject()">
         SUBMIT
     </button>
     <button 
-        md-button
+        mat-button
         (click)="object = {}">
         CLEAR
     </button>
@@ -64,7 +64,7 @@
     *ngFor="let genre of genreList"
     fxLayout="column"
     fxLayoutAlign="center stretch">
-    <md-card
+    <mat-card
         fxLayout="row"
         fxLayoutAlign="space-between center">
         <div>
@@ -78,16 +78,16 @@
         </div>
         <div>
             <button
-                md-icon-button
+                mat-icon-button
                   (click)="editGenre(genre)">
-                <md-icon style="opacity:0.5">edit</md-icon>
+                <mat-icon style="opacity:0.5">edit</mat-icon>
             </button>
             <button
-                md-icon-button
+                mat-icon-button
                 (click)="deleteGenreById(genre.id)">
-                <md-icon style="opacity:0.5">delete</md-icon>
+                <mat-icon style="opacity:0.5">delete</mat-icon>
             </button>
         </div>
-    </md-card>
+    </mat-card>
     <br/>
 </div>

@@ -1,5 +1,5 @@
 import {Component, Input, ViewChild} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {GenreFormDialog} from '../genre/form.dialog.component'
 import {EntityFormDialog} from '../entity/form.dialog.component'
 import {AttributeFormDialog} from '../attribute/form.dialog.component'
@@ -28,7 +28,7 @@ export class WorkcenterOverviewComponent {
   sampleLists: any[] = []
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private entityService: EntityService
   ){
     if (!this.hierarchy){

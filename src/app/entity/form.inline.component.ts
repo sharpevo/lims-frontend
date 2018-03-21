@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {DatePipe} from '@angular/common'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
 import {GenreService} from '../genre/service'

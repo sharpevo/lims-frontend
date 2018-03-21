@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 
 @Component({
@@ -36,9 +36,9 @@ export class ProjectManagementComponent{
   queryDateEnd: string =''
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private entityService: EntityService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ){}
 
   ngOnInit(){

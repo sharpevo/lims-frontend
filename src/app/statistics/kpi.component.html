@@ -10,30 +10,30 @@
         fxLayout="row"
         fxLayoutAlign="end center">
         <div fxLayout="row" fxLayoutAlign="space-between center" >
-            <md-input-container>
+            <mat-input-container>
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateStart"
                     placeholder="starts at..."/>
-            </md-input-container>
-            <md-input-container>
+            </mat-input-container>
+            <mat-input-container>
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateEnd"
                     placeholder="ends at..."/>
-            </md-input-container>
+            </mat-input-container>
         </div>
         <button
-            md-button
+            mat-button
             color="primary"
             aria-label="Search"
             placeholder="Search"
             (click)="getSampleList()">
-            <md-icon>search</md-icon>
+            <mat-icon>search</mat-icon>
         </button>
     </div>
 </div>
@@ -43,13 +43,13 @@
         Time:
     </span> {{queryDateStart}} - {{queryDateEnd}}
 </h4>
-<md-card>
-    <md-card-header>
-        <md-card-title></md-card-title>
-        <md-card-subtitle></md-card-subtitle>
-    </md-card-header>
-    <!--<img md-card-image src="assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
-    <md-card-content>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title></mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+    <!--<img mat-card-image src="assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+    <mat-card-content>
         <table *ngIf="done">
             <thead>
                 <tr>
@@ -81,8 +81,8 @@
                 </tr>
             </tbody>
         </table>
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
 
 
 <h4 class="section-title"
@@ -90,17 +90,17 @@
     *ngIf="detailedSampleList?.length > 0">
     Detail
 </h4>
-<md-accordion [multi]="false">
-    <md-expansion-panel
+<mat-accordion [multi]="false">
+    <mat-expansion-panel
         *ngFor="let sample of detailedSampleList">
-        <md-expansion-panel-header>
-            <md-panel-title>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
                 {{sample.SYS_SAMPLE_CODE}}
-            </md-panel-title>
-            <md-panel-description>
+            </mat-panel-title>
+            <mat-panel-description>
                 {{sample.id}}
-            </md-panel-description>
-        </md-expansion-panel-header>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
         <div fxLayout="column" fxLayoutAlign="start start" >
             <div
                 *ngFor="let schema of sample.SYS_SCHEMA"
@@ -136,5 +136,5 @@
                 </b>
             </div>
         </div>
-    </md-expansion-panel>
-</md-accordion>
+    </mat-expansion-panel>
+</mat-accordion>

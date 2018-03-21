@@ -1,13 +1,13 @@
 import {Component, ViewChild} from '@angular/core'
 import {ActivatedRoute, Router} from '@angular/router'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
 import {UserInfoService} from '../util/user.info.service'
 
 //import {Observable} from 'rxjs/Observable'
 import { Observable } from 'rxjs/Rx'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 
 @Component({
   selector: 'workcenter-dashboard',
@@ -50,12 +50,12 @@ export class WorkcenterDashboardComponent{
   selectedIndex: number = 1
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
     private entityService: EntityService,
     private userInfoService: UserInfoService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ){
     this.objectId = this.route.snapshot.params['id']
   }
