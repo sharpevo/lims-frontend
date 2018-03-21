@@ -7,6 +7,7 @@ import {
     MockBackend,
 } from '@angular/http/testing'
 import {
+    Http,
     HttpModule,
     BaseRequestOptions,
     ResponseOptions,
@@ -117,6 +118,7 @@ describe("SampleService test", () => {
         // inject scope is out of the testbed
         // so the class should be the mocked one
         inject([
+            Http,
             MatSnackBar,
             GenreService,
             UtilService,
@@ -125,6 +127,7 @@ describe("SampleService test", () => {
         ],
         (
             http: CustomHttpService,
+            rawHttp: Http,
             snackbar: MatSnackBar,
             genreService: GenreService,
             utilService: UtilService,
@@ -135,11 +138,12 @@ describe("SampleService test", () => {
             let mockEntityService = new MockEntityService(http)
             let mockUserInfoService = new MockUserInfoService()
             let newGenreService = new GenreService(http)
+            let newUtilService = new UtilService(http, rawHttp)
             service = new SampleService(
                 snackbar,
                 //genreService,
                 newGenreService,
-                utilService,
+                newUtilService,
                 mockUserInfoService,
                 router,
                 mockEntityService,
@@ -466,5 +470,93 @@ describe("SampleService test", () => {
         })
 
     })// }}}
+
+    // createObject$
+    it('TEST: createObject$', done => {
+        let date = new Date()
+        let objectRequest = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: date,
+        }
+        let objectResponse = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: date,
+            SYS_AUDIT_DOCSET: "FAKE_DOCSET",
+            id: "FAKE_ID",
+            FAKE_KEY: "FAKE_VALUE",
+        }
+        let attributeInfo: any
+        let issueSample: boolean
+        service.userInfo.limsid = "FAKE_LIMSID"
+        spyOn(service.utilService, "getDocSet").and.returnValue("FAKE_DOCSET")
+        spyOn(service.entityService, "create").and.returnValue(
+            Observable.of(objectResponse)
+        )
+        spyOn(service, "buildRelationship").and.callFake(function(
+            _object,
+            _attributeInfo,
+        ){
+            return Observable.concat(Observable.of({
+                object: _object,
+                attributeInfo: _attributeInfo,
+            }))
+        })
+
+        // ISSUE
+        issueSample = true
+        attributeInfo = {
+            parentMap: {
+                ROUTING: { // targetEntityMap
+                    "5a726c698a2bb516178253d9": { // targetEntityInput
+                        SYS_CHECKED: true,
+                        SYS_ORDER: 20,
+                        SYS_SOURCE: "5a726c698a2bb51617825383",
+                        SYS_DURATION: 2,
+                        SYS_FLOOR_ENTITY_TYPE: "class"
+                    },
+                    "5a726c698a2bb516178253d8": {
+                        SYS_CHECKED: true,
+                        SYS_ORDER: 10,
+                        SYS_SOURCE: "5a726c698a2bb51617825373",
+                        SYS_DURATION: 5,
+                        SYS_FLOOR_ENTITY_TYPE: "class",
+                    },
+                }
+            },
+        }
+        service.createObject$(
+            objectRequest,
+            attributeInfo,
+            issueSample,
+        ).subscribe(data => {
+            let _object = data['object']
+            let _attributeInfo = data['attributeInfo']
+            let _issueSample = data['issueSample']
+            expect(_object.SYS_WORKCENTER_OPERATOR).toBeUndefined()
+            expect(_object.SYS_AUDIT_DOCSET).toEqual("FAKE_DOCSET")
+        })
+
+        //SUBMIT
+        issueSample = false
+        spyOn(service.entityService, "update").and.returnValue(
+            Observable.of(objectResponse)
+        )
+        spyOn(service.entityService, "retrieveByIdentifierFull").and.returnValue(
+            Observable.of([objectResponse])
+        )
+        service.createObject$(
+            objectRequest,
+            attributeInfo,
+            issueSample,
+        ).subscribe(data => {
+            let _object = data['object']
+            let _attributeInfo = data['attributeInfo']
+            let _issueSample = data['issueSample']
+            expect(_object.id).toEqual(objectResponse.id)
+            expect(_object.SYS_DATE_SCHEDULED).toEqual(objectResponse.SYS_DATE_SCHEDULED)
+            done()
+        })
+
+    })
 
 })
