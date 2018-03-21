@@ -712,8 +712,9 @@ export class SampleService{
             data => {
                 targetOutput.push(data)
             },
-            err => {},
-                () => {
+            err => {
+            },
+            () => {
                 let date = new Date()
                 let msg_date = date.getFullYear() + '-' +
                     (date.getMonth() + 1) + '-' +
