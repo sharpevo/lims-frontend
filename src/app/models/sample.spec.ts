@@ -1,3 +1,4 @@
+// imports{{{
 import {
     TestBed,
     inject,
@@ -15,7 +16,6 @@ import {Observable} from 'rxjs/Rx'
 import {MaterialModule} from '../material.module'
 import {MatSnackBar} from '@angular/material'
 
-
 // app
 import {SampleService} from './sample'
 import {UserInfoService} from '../util/user.info.service'
@@ -23,7 +23,7 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 import {SpinnerService} from '../util/spinner.service'
-import {CustomHttpService} from '../util/custom.http.service'
+import {CustomHttpService} from '../util/custom.http.service'// }}}
 
 class MockEntityService extends EntityService {
     create(sample: any){
@@ -349,5 +349,122 @@ describe("SampleService test", () => {
         done()
     })// }}}
 
+    // buildRelationship{{{
+    it('TEST: buildRelationship', done => {
+        let date = new Date()
+        let sourceEntity = {
+            SYS_DATE_SCHEDULED: date,
+        }
+        let attributeInfo = {
+            attributeList: [],
+            parentMap: {
+                ROUTING: { // targetEntityMap
+                    "5a726c698a2bb516178253d9": { // targetEntityInput
+                        SYS_CHECKED: true,
+                        SYS_ORDER: 20,
+                        SYS_SOURCE: "5a726c698a2bb51617825383",
+                        SYS_DURATION: 2,
+                        SYS_FLOOR_ENTITY_TYPE: "class"
+                    },
+                    "5a726c698a2bb516178253d8": {
+                        SYS_CHECKED: true,
+                        SYS_ORDER: 10,
+                        SYS_SOURCE: "5a726c698a2bb51617825373",
+                        SYS_DURATION: 5,
+                        SYS_FLOOR_ENTITY_TYPE: "class",
+                    },
+                }
+            },
+        }
+        let targetEntity = {
+            SYS_ENTITY_TYPE: "class",
+        }
+        let materialKapa = {
+            "_id": "5a726c688a2bb51617825336",
+            "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT160806",
+            "SYS_ENTITY_TYPE": "collection",
+            "SYS_GENRE": "5a726c688a2bb51617825335",
+            "label": "LOT160806",
+            "__v": 0,
+            "updatedAt": "2018-02-01T01:24:56.997Z",
+            "createdAt": "2018-02-01T01:24:56.997Z",
+            "SYS_PARENT_LIST": [],
+            "SYS_LABEL": "label",
+            "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+            "SYS_CODE": "LOT160806",
+            "id": "5a726c688a2bb51617825336",
+            "SYS_SCHEMA": []
+        }
+        spyOn(service.entityService, "retrieveById").and.returnValue(
+            Observable.of(targetEntity)
+        )
+        spyOn(service.entityService, "retrieveEntity").and.returnValue(
+            Observable.of([materialKapa])
+        )
+        spyOn(service, "createSubEntity").and.callFake(function(
+            _sourceEntity,
+            _targetEntity,
+            _attributeList,
+            _targetEntityInput,
+        ){
+            return Observable.of({
+                sourceEntity: _sourceEntity,
+                targetEntity: _targetEntity,
+                attributeList: _attributeList,
+                targetEntityInput: _targetEntityInput,
+            })
+        })
+
+        let count = 0
+        let SYS_DATE_SCHEDULED: Date
+        service.buildRelationship(
+            sourceEntity,
+            attributeInfo,
+        ).subscribe(concatedObservable => {
+            let _sourceEntity = concatedObservable['sourceEntity']
+            let _targetEntity = concatedObservable['targetEntity']
+            let _attributeList = concatedObservable['attributeList']
+            let _targetEntityInput = concatedObservable['targetEntityInput']
+            switch (count) {
+                case 0:
+                    expect(_targetEntityInput.SYS_ORDER).toEqual(10)
+                SYS_DATE_SCHEDULED = _targetEntityInput.SYS_DATE_SCHEDULED
+                expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
+                    _sourceEntity.SYS_DATE_SCHEDULED
+                )
+                expect(_targetEntityInput.SYS_DATE_ARRIVED).toEqual(
+                    _targetEntityInput.SYS_DATE_SCHEDULED
+                )
+                count += 1
+                break
+                case 1:
+                    SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() + _targetEntityInput.SYS_DURATION)
+                expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
+                    SYS_DATE_SCHEDULED
+                )
+                expect(_targetEntityInput.SYS_DATE_ARRIVED).not.toEqual(
+                    _targetEntityInput.SYS_DATE_SCHEDULED
+                )
+                break
+            }
+            expect(_targetEntity).toEqual(targetEntity)
+        })
+
+        done()
+        targetEntity.SYS_ENTITY_TYPE = "collection"
+        service.buildRelationship(
+            sourceEntity,
+            attributeInfo,
+        ).subscribe(concatedObservable => {
+            let _sourceEntity = concatedObservable['sourceEntity']
+            let _targetEntity = concatedObservable['targetEntity']
+            let _attributeList = concatedObservable['attributeList']
+            let _targetEntityInput = concatedObservable['targetEntityInput']
+            expect(_targetEntity).toEqual(materialKapa)
+            expect(_targetEntity).not.toEqual(targetEntity)
+
+        })
+
+    })// }}}
 
 })
