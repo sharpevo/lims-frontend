@@ -838,8 +838,7 @@ export class SampleService{
             let targetEntityMap = parentMap[key]
             console.log("TEST #2:", targetEntityMap)
 
-            let SYS_DATE_SCHEDULED = new Date()
-            let DATE_EXISTS = false
+            let SYS_DATE_SCHEDULED: Date
 
             // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
             Object.keys(targetEntityMap)
@@ -862,21 +861,10 @@ export class SampleService{
 
                     console.log("TEST #3 origin:", targetEntityInput)
                     // Calculate SYS_DATE_SCHEDULED
-                    if (!DATE_EXISTS){
-                        if (sourceEntity['SYS_DATE_SCHEDULED']){
-                            SYS_DATE_SCHEDULED = new Date(sourceEntity['SYS_DATE_SCHEDULED'])
-                            //console.log('DATE not exists, but object exist', SYS_DATE_SCHEDULED)
-                        }
-                        DATE_EXISTS = true
-                    }
 
-                    // The date object is address-reference, so that if not assigned with
-                    // "new Date", all the targetEntityInput date is the final one
+                    SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
                     targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-                    SYS_DATE_SCHEDULED.setDate(
-                        SYS_DATE_SCHEDULED.getDate() +
-                            (targetEntityInput['SYS_DURATION']?Number(targetEntityInput['SYS_DURATION']):0)
-                    )
+
                     if (index == 0){
                         targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
                     }
