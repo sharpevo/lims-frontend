@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from '../workcenter/form.dialog.component'
 
 @Component({
@@ -90,7 +90,7 @@ export class SampleHistoryComponent {
   public lineChartType:string = 'line';
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private entityService: EntityService
   ){}
 

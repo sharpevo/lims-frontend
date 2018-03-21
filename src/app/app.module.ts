@@ -4,9 +4,15 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {routingModule} from './app.routes'
-import {MaterialModule} from '@angular/material'
-import { FlexLayoutModule } from '@angular/flex-layout/flexbox';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
+//
+// Materilas
+//
+import {MaterialModule} from './material.module'
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+//
+// Apps
+//
 import { AppComponent } from './app.component';
 
 import {ObjectKeysPipe} from './objectKeys.pipe'
@@ -53,7 +59,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import 'hammerjs'
 
-import { CdkTableModule } from '@angular/cdk'
+import { CdkTableModule } from '@angular/cdk/table';
 
 import {TablifyComponent} from './util/tablify.component'
 
@@ -69,7 +75,6 @@ import {CustomHttpService, customHttpFactory} from './util/custom.http.service'
 import {XHRBackend, RequestOptions} from '@angular/http';
 import {AuthService} from './util/auth.service'
 
-import {MdSnackBar} from '@angular/material'
 
 import {RedirectComponent} from './util/redirect.component'
 import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
@@ -81,108 +86,109 @@ import {UserInfoService} from './util/user.info.service'
 import {GuardService} from './util/guard.service'
 
 @NgModule({
-  declarations: [
-    ObjectKeysPipe,
+    declarations: [
+        ObjectKeysPipe,
 
-    AppComponent,
-    ViewComponent,
-    EntityCollectionExpansionComponent,
-    EntitySelectListComponent,
-    EntityFormInlineComponent,
-    EntityToStringComponent,
+        AppComponent,
+        ViewComponent,
+        EntityCollectionExpansionComponent,
+        EntitySelectListComponent,
+        EntityFormInlineComponent,
+        EntityToStringComponent,
 
-    TreeViewComponent,
-    GenreFormDialog,
-    EntityFormDialog,
-    AttributeFormDialog,
+        TreeViewComponent,
+        GenreFormDialog,
+        EntityFormDialog,
+        AttributeFormDialog,
 
-    WorkcenterOverviewComponent,
-    EntityInfoInlineComponent,
-    WorkcenterDashboardComponent,
-    WorkcenterSampleScheduledComponent,
-    WorkcenterSampleActivatedComponent,
-    WorkcenterSampleCompletedComponent,
-    WorkcenterSampleTerminatedComponent,
-    WorkcenterSampleDispatchedComponent,
-    SampleFormDialog,
-    ProjectManagementComponent,
+        WorkcenterOverviewComponent,
+        EntityInfoInlineComponent,
+        WorkcenterDashboardComponent,
+        WorkcenterSampleScheduledComponent,
+        WorkcenterSampleActivatedComponent,
+        WorkcenterSampleCompletedComponent,
+        WorkcenterSampleTerminatedComponent,
+        WorkcenterSampleDispatchedComponent,
+        SampleFormDialog,
+        ProjectManagementComponent,
 
-    SampleInfoInlineComponent,
-    HybridSampleDestructorComponent,
+        SampleInfoInlineComponent,
+        HybridSampleDestructorComponent,
 
-    SampleHistoryComponent,
-    PluginIndexIndicatorComponent,
-    PluginIndexValidatorComponent,
-    PluginPanelIndicatorComponent,
-    PluginExcelProcessorComponent,
-    TablifyComponent,
-    SimpleTableDialog,
-    AuxiliaryAttributeComponent,
-    ShowAuxiliaryAttributeDialog,
-    AppsComponent,
-    SpinnerComponent,
-    RedirectComponent,
-    EditPMSampleDialog,
-    MaterialOverviewComponent,
-    SampleOverviewComponent,
-    KPIComponent,
-  ],
-  entryComponents:[
-    GenreFormDialog,
-    EntityFormDialog,
-    AttributeFormDialog,
-    SampleFormDialog,
-    SimpleTableDialog,
-    ShowAuxiliaryAttributeDialog,
-    EditPMSampleDialog,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpModule,
-    FlexLayoutModule,
-    MaterialModule,
-    routingModule,
-    ChartsModule,
+        SampleHistoryComponent,
+        PluginIndexIndicatorComponent,
+        PluginIndexValidatorComponent,
+        PluginPanelIndicatorComponent,
+        PluginExcelProcessorComponent,
+        TablifyComponent,
+        SimpleTableDialog,
+        AuxiliaryAttributeComponent,
+        ShowAuxiliaryAttributeDialog,
+        AppsComponent,
+        SpinnerComponent,
+        RedirectComponent,
+        EditPMSampleDialog,
+        MaterialOverviewComponent,
+        SampleOverviewComponent,
+        KPIComponent,
+    ],
+    entryComponents:[
+        GenreFormDialog,
+        EntityFormDialog,
+        AttributeFormDialog,
+        SampleFormDialog,
+        SimpleTableDialog,
+        ShowAuxiliaryAttributeDialog,
+        EditPMSampleDialog,
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpModule,
+        FlexLayoutModule,
+        routingModule,
+        ChartsModule,
 
-    BrowserAnimationsModule,
-    CdkTableModule,
-    AppLoadModule,
-  ],
-  providers: [
-    //AppLoadService,
-    //{
-    //provide: APP_INITIALIZER,
-    //useFactory: init_app,
-    //deps: [
-    //AppLoadService,
-    //UtilService,
-    //AuthService,
-    //],
-    //multi: true
-    //},
-    EntityService,
-    GenreService,
-    AttributeService,
-    SampleService,
-    UtilService,
-    SpinnerService,
-    AuthService,
-    GuardService,
-    {
-      provide: CustomHttpService,
-      useFactory: customHttpFactory,
-      deps: [
-        XHRBackend,
-        RequestOptions,
-        MdSnackBar,
+        BrowserAnimationsModule,
+        CdkTableModule,
+        AppLoadModule,
+
+        MaterialModule,
+    ],
+    providers: [
+        //AppLoadService,
+        //{
+        //provide: APP_INITIALIZER,
+        //useFactory: init_app,
+        //deps: [
+        //AppLoadService,
+        //UtilService,
+        //AuthService,
+        //],
+        //multi: true
+        //},
+        EntityService,
+        GenreService,
+        AttributeService,
+        SampleService,
+        UtilService,
         SpinnerService,
+        AuthService,
+        GuardService,
+        {
+            provide: CustomHttpService,
+            useFactory: customHttpFactory,
+            deps: [
+                XHRBackend,
+                RequestOptions,
+                MatSnackBarModule,
+                SpinnerService,
+                UserInfoService,
+            ]
+        },
         UserInfoService,
-      ]
-    },
-    UserInfoService,
-  ],
-  bootstrap: [AppComponent]
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
-import {MdDialog, MdDialogRef} from '@angular/material'
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {Router, ActivatedRoute} from '@angular/router'
 
 @Component({
@@ -36,9 +36,9 @@ export class SampleOverviewComponent{
   showPanel: any = {}
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private entityService: EntityService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
   ){

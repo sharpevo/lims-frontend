@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
-import {MdDialog, MdDialogRef} from '@angular/material'
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {Router, ActivatedRoute} from '@angular/router'
 import {Observable} from 'rxjs/Rx'
 import {DatePipe} from '@angular/common'
@@ -50,7 +50,7 @@ export class KPIComponent{
 
   constructor(
     private entityService: EntityService,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
   ){
   }
 

@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {SampleService} from '../models/sample'
-import {MdDialog, MdDialogRef} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material'
 import {ShowAuxiliaryAttributeDialog} from './auxiliary.attribute.dialog'
 
 @Component({
@@ -19,7 +19,7 @@ export class AuxiliaryAttributeComponent{
   attributeObjectList: any[] = []
 
   constructor(
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private sampleService: SampleService
   ){}
 

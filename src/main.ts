@@ -7,10 +7,9 @@ import { AppModule } from './app/app.module';
 import { getTranslationProviders } from './app/i18n-providers'
 
 if (environment.production) {
-  enableProdMode();
+    enableProdMode();
 }
 
 getTranslationProviders().then(providers => {
-  const options = { providers }
-  platformBrowserDynamic().bootstrapModule(AppModule, options)
+    platformBrowserDynamic().bootstrapModule(AppModule)
 })
