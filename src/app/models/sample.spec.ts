@@ -559,4 +559,62 @@ describe("SampleService test", () => {
 
     })
 
+    // terminateSampleObs{{{
+    it('TEST: terminateSampleObs', done => {
+        let dateNow = new Date()
+        let dateAfter = new Date(dateNow)
+        dateAfter.setDate(dateNow.getDate() + 5)
+        let dateBefore = new Date(dateNow)
+        dateBefore.setDate(dateNow.getDate() - 5)
+        let sample = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateNow,
+        }
+        let sampleBefore = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateBefore,
+        }
+        let sampleBeforeButGeneralProject = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateBefore,
+            SYS_GENRE_IDENTIFIER: "/PROJECT_MANAGEMENT/GENERAL_PROJECT/",
+        }
+        let sampleNow = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateNow,
+        }
+        let sampleAfter = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateAfter,
+        }
+        let sampleList = [
+            sampleBefore,
+            sampleBeforeButGeneralProject,
+            sampleNow,
+            sampleAfter,
+        ]
+        spyOn(window, "Date").and.callFake(function() {
+            if (arguments[0]) {
+                return arguments[0]
+            } else {
+                return dateNow
+            }
+        })
+        spyOn(service.entityService, "retrieveBy").and.returnValue(
+            Observable.of(sampleList)
+        )
+        spyOn(service.entityService, "update").and.callFake(function(_sample){
+            return Observable.of(_sample)
+        })
+
+        service.terminateSampleObs(sample)
+        .subscribe(sample => {
+            expect(sampleBefore['SYS_DATE_TERMINATED']).toBeUndefined()
+            expect(sampleBeforeButGeneralProject['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            expect(sampleNow['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            expect(sampleAfter['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            done()
+        })
+    })// }}}
+
 })
