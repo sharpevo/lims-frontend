@@ -471,7 +471,7 @@ describe("SampleService test", () => {
 
     })// }}}
 
-    // createObject$
+    // createObject${{{
     it('TEST: createObject$', done => {
         let date = new Date()
         let objectRequest = {
@@ -557,7 +557,7 @@ describe("SampleService test", () => {
             done()
         })
 
-    })
+    })// }}}
 
     // terminateSampleObs{{{
     it('TEST: terminateSampleObs', done => {
