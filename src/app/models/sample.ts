@@ -873,26 +873,36 @@ export class SampleService{
                     return Observable.timer(i * 1000);
                 }))
         } else {
-            return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-            .mergeMap(data => {
-                //console.log("retrive chained sample:", data)
-                object.id = data[0].id
-                object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
-                // Using update instead of create since the identifier /workcenter/17R001
-                // has been assigned to the scheduled sample
-                return this.entityService.update(object)
-                .mergeMap(data => {
-                    console.log('Add Entity:', data)
-                    return this.buildRelationship(data, attributeInfo)
-                })
+            let sampleCode = object['SYS_SAMPLE_CODE']
+            return Observable.of(this.isSuspended(sampleCode))
+            .mergeMap(isSuspended => {
+                console.log("SUSPEND CHECKING:", isSuspended)
+                if (isSuspended) {
+                    return Observable.throw("Sample '" + sampleCode + "' is suspended")
+                } else {
+                    return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+                    .mergeMap(data => {
+                        //console.log("retrive chained sample:", data)
+                        object.id = data[0].id
+                        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+                        // Using update instead of create since the identifier /workcenter/17R001
+                        // has been assigned to the scheduled sample
+                        return this.entityService.update(object)
+                        .mergeMap(data => {
+                            console.log('Add Entity:', data)
+                            return this.buildRelationship(data, attributeInfo)
+                        })
+                    })
+                    .retryWhen(
+                        attempts => Observable.range(1, 10)
+                        .zip(attempts, i => i)
+                        .mergeMap(i => {
+                            console.log("delay retry by " + i + " seconds")
+                            return Observable.timer(i * 1000);
+                        }))
+
+                }
             })
-            .retryWhen(
-                attempts => Observable.range(1, 10)
-                .zip(attempts, i => i)
-                .mergeMap(i => {
-                    console.log("delay retry by " + i + " seconds")
-                    return Observable.timer(i * 1000);
-                }))
         }
     }
 

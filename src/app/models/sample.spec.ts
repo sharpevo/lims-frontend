@@ -501,6 +501,11 @@ describe("SampleService test", () => {
                 attributeInfo: _attributeInfo,
             }))
         })
+        spyOn(service, "isSuspended").and.returnValues(
+            // not called if issueSample
+            false,
+            true,
+        )
 
         // ISSUE
         issueSample = true
@@ -554,8 +559,15 @@ describe("SampleService test", () => {
             let _issueSample = data['issueSample']
             expect(_object.id).toEqual(objectResponse.id)
             expect(_object.SYS_DATE_SCHEDULED).toEqual(objectResponse.SYS_DATE_SCHEDULED)
-            done()
         })
+
+        expect(() => service.createObject$(
+            objectRequest,
+            attributeInfo,
+            issueSample,
+        ).subscribe()).toThrow("Sample '" + objectRequest['SYS_SAMPLE_CODE'] + "' is suspended")
+        done()
+
 
     })// }}}
 
