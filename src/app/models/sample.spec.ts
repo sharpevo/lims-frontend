@@ -617,4 +617,44 @@ describe("SampleService test", () => {
         })
     })// }}}
 
+    // suspendSample{{{
+    it('TEST: suspendSample', done => {
+        let dateNow = new Date()
+        spyOn(window, "Date").and.callFake(() => {
+            return dateNow
+        })
+        let limsid = "FAKE_ID"
+        service.userInfo.limsid = limsid
+        let suspendRemark = "FAKE_SUSPEND_REMARK"
+        spyOn(service.entityService, "update").and.callFake((_sample) => {
+            return Observable.of(_sample)
+        })
+        let sample = {
+            "SYS_SAMPLE_CODE": "1",
+        }
+
+        // SUSPEND
+        let suspension = {}
+        service.suspendSample(sample, suspendRemark)
+        .subscribe(sample => {
+            suspension = sample['SYS_SUSPENSION']
+            expect(suspension['DATE']).toBe(dateNow)
+            expect(suspension['OPERATOR']).toBe(limsid)
+            expect(suspension['REMARK']).toBe(suspendRemark)
+        })
+
+        // RESUME
+        let resumeRemark = "FAKE_RESUME_REMARK"
+        service.resumeSample(sample, resumeRemark)
+        .subscribe(sample => {
+            let resumption = sample['SYS_RESUMPTION'][sample['SYS_RESUMPTION'].length - 1]
+            let suspensionShot = resumption['SUSPENSION']
+            expect(resumption['DATE']).toBe(dateNow)
+            expect(resumption['OPERATOR']).toBe(limsid)
+            expect(resumption['REMARK']).toBe(resumeRemark)
+            expect(suspensionShot).toBe(suspension)
+            done()
+        })
+    })// }}}
+
 })

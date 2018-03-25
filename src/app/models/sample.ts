@@ -346,6 +346,30 @@ export class SampleService{
         return this.entityService.update(sample)
     }
 
+    suspendSample(sample: any, remark?: string): Observable<any> {
+        sample['SYS_SUSPENSION'] = {
+            DATE: new Date(),
+            OPERATOR: this.userInfo.limsid,
+            REMARK: remark,
+        }
+        return this.entityService.update(sample)
+    }
+
+    resumeSample(sample: any, remark?: string): Observable<any> {
+        let resumption = {
+            SUSPENSION: sample['SYS_SUSPENSION'],
+            DATE: new Date(),
+            OPERATOR: this.userInfo.limsid,
+            REMARK: remark,
+        }
+        if (!sample['SYS_RESUMPTION']){
+            sample['SYS_RESUMPTION'] = []
+        }
+        sample['SYS_RESUMPTION'].push(resumption)
+        delete sample['SYS_SUSPENSION']
+        return this.entityService.update(sample)
+    }
+
     terminateSampleObs(sample): Observable<any>{
         return this.entityService.retrieveBy(
             {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
