@@ -350,7 +350,7 @@ export class SampleService{
         return this.entityService.retrieveBy(
             {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
                 'sort': 'SYS_DATE_SCHEDULED'}
-        ).concatMap(samples => {
+        ).map(samples => {
             let terminateObs = []
             samples.forEach(sampleItem => {
                 let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
@@ -548,12 +548,15 @@ export class SampleService{
             sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
             sample['SYS_ENTITY_TYPE'] = 'collection'
             sample['SYS_DATE_COMPLETED'] = new Date()
+            // identifier should be generated for submitting samples,
+            // or updated for terminated samples.
             sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] +
                 '/' +
-                sample['SYS_SAMPLE_CODE'] + '.' + object.TMP_CODE
-
-            // retain the date for the sample
-            let originalSampleSchuduledDate = sample['SYS_DATE_SCHEDULED']
+                sample['SYS_SAMPLE_CODE'] +
+                '.' +
+                new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss') +
+                '.' +
+                Math.random().toString().substr(2, 4)
 
             // process samples already in the LIMS delete id before creation if the
             // sample is inside of LIMS
@@ -561,13 +564,17 @@ export class SampleService{
                 //Observable.forkJoin(this.terminateSampleObs(sample))
                 //.subscribe((data: any[][]) => {
                 this.terminateSampleObs(sample)
-                .subscribe(data => {
-                    console.log("---->", data)
-                    delete sample.id
-                    delete sample._id
-                    delete sample.SYS_TARGET
-                    // create object after terminating samples
-                    this.createObject(sample, attributeInfo, true)
+                .subscribe(terminatedObs => {
+                    Observable.forkJoin(terminatedObs).subscribe(data => {
+                        //console.log("---->", data)
+                        console.log("---->", data)
+                        delete sample.id
+                        delete sample._id
+                        delete sample.SYS_TARGET
+                        // create object after terminating samples
+                        this.createObject(sample, attributeInfo, true)
+
+                    })
                 })
             } else {
                 this.createObject(sample, attributeInfo, true)
