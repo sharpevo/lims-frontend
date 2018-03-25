@@ -4,6 +4,7 @@ import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
 import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
+import {SampleService} from '../models/sample'
 
 @Component({
   selector: 'project-management',
@@ -15,6 +16,9 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
     .mat-select{
     margin-top:-9px;
     }
+        .suspend-panel{
+        background: #ffd740;
+        }
     `
   ],
   templateUrl: './project.management.component.html',
@@ -38,6 +42,7 @@ export class ProjectManagementComponent{
   constructor(
     public dialog: MatDialog,
     private entityService: EntityService,
+        public sampleService: SampleService,
     private snackBar: MatSnackBar,
   ){}
 
@@ -154,4 +159,19 @@ export class ProjectManagementComponent{
     this.queryValue = ''
     this.getSampleList()
   }
+
+    suspendSample(sample: any){
+        this.sampleService.suspendSample(sample)
+        .subscribe(data => {
+            console.log("SUSPEND", data)
+            this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been suspended")
+        })
+    }
+
+    resumeSample(sample: any){
+        this.sampleService.resumeSample(sample)
+        .subscribe(data => {
+            this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been resumed")
+        })
+    }
 }

@@ -95,6 +95,7 @@
         <mat-expansion-panel
             (opened)="showHistory[sample.id] = true"
             (closed)="showHistory[sample.id] = false"
+            [class.suspend-panel]="sample.SYS_SUSPENSION"
             [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -147,7 +148,8 @@
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
                 <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button mat-button color="warn" (click)="showMessage('planning...')">Pause</button>
+                <button mat-button color="accent" (click)="suspendSample(sample)">Suspend</button>
+                <button mat-button color="primary" (click)="resumeSample(sample)">Resume</button>
             </mat-action-row>
         </mat-expansion-panel>
     </div>
