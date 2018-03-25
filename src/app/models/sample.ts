@@ -1026,7 +1026,8 @@ export class SampleService{
         // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
         // samples involved more than one time in the same workcenter
         subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
-            sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
+            sourceEntity['SYS_CODE'] + '.' + new Date().getTime() + '.' +
+            Math.random().toString().substr(2, 4)
 
         //console.log("TEST #2 pre pre:", Object.assign({}, subEntity))
         if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
