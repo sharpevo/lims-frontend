@@ -657,4 +657,50 @@ describe("SampleService test", () => {
         })
     })// }}}
 
+    // isSuspended{{{
+    it('TEST: isSuspended', done => {
+        let sampleA = {
+            SYS_SAMPLE_CODE: "1",
+        }
+        let sampleAList = [
+            sampleA,
+            {
+                id: "A-1",
+                SYS_SUSPENSION: {},
+            },
+            {
+                id: "A-2",
+            },
+        ]
+        let sampleB = {
+            SYS_SAMPLE_CODE: "2",
+        }
+        let sampleBList = [
+            sampleB,
+            {
+                id: "B-1",
+                SYS_SUSPENSION: {
+                    OPERATOR: "FAKE_OPERATOR",
+                },
+            },
+            {
+                id: "B-2",
+                SYS_SUSPENSION: {},
+            },
+        ]
+        spyOn(service.entityService, "retrieveBy").and.returnValues(
+            Observable.of(sampleAList),
+            Observable.of(sampleBList),
+        )
+        service.isSuspended(sampleA.SYS_SAMPLE_CODE)
+        .subscribe(result => {
+            expect(result).toBeFalsy()
+        })
+        service.isSuspended(sampleB.SYS_SAMPLE_CODE)
+        .subscribe(result => {
+            expect(result).toBeTruthy()
+            done()
+        })
+    })// }}}
+
 })

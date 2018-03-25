@@ -370,6 +370,20 @@ export class SampleService{
         return this.entityService.update(sample)
     }
 
+    isSuspended(sampleCode: any): Observable<any>{
+        return this.entityService.retrieveBy({
+            SYS_SAMPLE_CODE: sampleCode
+        }).map(samples => {
+            for (let sample of samples){
+                if (sample.hasOwnProperty('SYS_SUSPENSION') &&
+                    Object.keys(sample['SYS_SUSPENSION']).length > 0) {
+                    return true
+                }
+            }
+            return false
+        })
+    }
+
     terminateSampleObs(sample): Observable<any>{
         return this.entityService.retrieveBy(
             {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
