@@ -82,3 +82,7 @@
 .mat-cell:hover {
     overflow: visible;
 }
+
+.suspended-sample{
+    color: #ffa600;
+}

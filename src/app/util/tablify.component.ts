@@ -451,7 +451,15 @@ export class SampleDataSource extends DataSource<any> {
         result.push(sample)
         sampleSetObs.push(this.entityService.retrieveBy({
           "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
-        }).map(sampleList => sample['TMP_SAMPLE_SET'] = sampleList))
+                }).map(sampleList => {
+                    for (let s of sampleList){
+                        if (s.hasOwnProperty('SYS_SUSPENSION') && Object.keys(s['SYS_SUSPENSION']).length > 0) {
+                            sample['TMP_SUSPENDED'] = true
+                            break
+                        }
+                    }
+                    sample['TMP_SAMPLE_SET'] = sampleList
+                })
 
 
         //// Get the hybrid type
