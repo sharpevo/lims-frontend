@@ -7,10 +7,12 @@ module.exports = function (config) {
         frameworks: ['jasmine', '@angular/cli'],
         plugins: [
             require('karma-jasmine'),
+            require('karma-jasmine-html-reporter'),
             require('karma-chrome-launcher'),
             require('karma-script-launcher'),
             require('karma-remap-istanbul'),
-            require('@angular/cli/plugins/karma')
+            require('@angular/cli/plugins/karma'),
+            require('karma-coverage-istanbul-reporter'),
         ],
         files: [
             { pattern: './src/test.ts', watched: false }
@@ -31,9 +33,7 @@ module.exports = function (config) {
             config: './angular-cli.json',
             environment: 'dev'
         },
-        reporters: config.angularCli && config.angularCli.codeCoverage
-        ? ['progress', 'karma-remap-istanbul']
-        : ['progress'],
+        reporters: ['coverage-istanbul'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
