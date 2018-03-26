@@ -3,14 +3,16 @@
      class="simple-table-filter"
     fxLayout="row" fxLayoutAlign="space-between end" >
         <div>
-            <mat-select
-                (change)="onProjectCodeChange($event)"
-                   [(ngModel)]="projectCode"
-                placeholder="{{projectCodeList.length}} Projects">
-                <mat-option *ngFor="let code of projectCodeList" [value]="code">
-                    {{code}}
-                </mat-option>
-            </mat-select>
+            <mat-form-field>
+                <mat-select
+                    (change)="onProjectCodeChange($event)"
+                    [(ngModel)]="projectCode"
+                    placeholder="{{projectCodeList.length}} Projects">
+                    <mat-option *ngFor="let code of projectCodeList" [value]="code">
+                        {{code}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <button
                 (click)="clearProjectCode()"
                 mat-icon-button>

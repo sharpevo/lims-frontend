@@ -8,16 +8,18 @@
         fxLayoutGap="10px"
         fxLayout="row"
         fxLayoutAlign="end center">
-        <mat-select
-            *ngIf="materialObjectList.length > 0"
-            [(ngModel)]="queryCode"
-            placeholder="Attribute">
-            <mat-option
-                value="{{attr.SYS_CODE}}"
-                *ngFor="let attr of materialObjectList[0].SYS_SCHEMA">
-                {{attr.SYS_LABEL}}
-            </mat-option>
-        </mat-select>
+        <mat-form-field
+            *ngIf="materialObjectList.length > 0">
+            <mat-select
+                [(ngModel)]="queryCode"
+                placeholder="Attribute">
+                <mat-option
+                    value="{{attr.SYS_CODE}}"
+                    *ngFor="let attr of materialObjectList[0].SYS_SCHEMA">
+                    {{attr.SYS_LABEL}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
         <mat-input-container>
             <button
                 mat-button

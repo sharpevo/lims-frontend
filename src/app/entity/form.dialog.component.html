@@ -17,17 +17,19 @@
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
-    <mat-select
-        class="full-width"
-        placeholder="Entity Genre (identifier)"
-        [(ngModel)]="object.SYS_GENRE">
-        <mat-option
-            *ngFor="let genre of genreList"
-            (click)="getAttributesByGenreId(genre.id)"
-            [value]="genre.id">
-            {{genre[genre["SYS_LABEL"]]}}
-        </mat-option>
-    </mat-select>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            placeholder="Entity Genre (identifier)"
+            [(ngModel)]="object.SYS_GENRE">
+            <mat-option
+                *ngFor="let genre of genreList"
+                (click)="getAttributesByGenreId(genre.id)"
+                [value]="genre.id">
+                {{genre[genre["SYS_LABEL"]]}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <br/>
     <mat-input-container class="full-width">
         <input
@@ -38,17 +40,19 @@
             placeholder="CODE"/>
     </mat-input-container>
 	<br/>
-	<mat-select
-		class="full-width"
-		[(ngModel)]="object.SYS_ENTITY_TYPE"
-		placeholder="Entity Type">
-		<!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
-		<mat-option
-			*ngFor="let category of categoryList"
-			[value]="category.value">
-			{{category.title}}
-		</mat-option>
-	</mat-select>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            [(ngModel)]="object.SYS_ENTITY_TYPE"
+            placeholder="Entity Type">
+            <!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
+            <mat-option
+                *ngFor="let category of categoryList"
+                [value]="category.value">
+                {{category.title}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 	<br/>
 	<br/>
     <div
@@ -86,16 +90,18 @@
             </div>
             <div *ngSwitchCase="'list'">
                 <br/>
-                <mat-select
-					class="full-width"
-                    [(ngModel)]="object[attribute.SYS_CODE]"
-                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                    <mat-option 
-                        value="{{o.split(':')[0]}}"
-                        *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
-                        {{o.split(':')[1]}}
-                    </mat-option>
-                </mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                        <mat-option 
+                            value="{{o.split(':')[0]}}"
+                            *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                            {{o.split(':')[1]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
                 <br/>
                 <br/>
             </div>
@@ -167,43 +173,49 @@
 			fxLayoutGap="20px"
 			fxLayoutAlign="space-between stretch">
 			<div class="full-width">
-				<mat-select
-					class="full-width"
-					[(ngModel)]="genericWorkcenter"
-					placeholder="Workcenter">
-					<mat-option
-						value="{{workcenter.id}}"
-						(click)="getGenericGenreList(workcenter.id)"
-						*ngFor="let workcenter of genericWorkcenterList">
-						{{workcenter[workcenter['SYS_LABEL']]}}
-					</mat-option>
-				</mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="genericWorkcenter"
+                        placeholder="Workcenter">
+                        <mat-option
+                            value="{{workcenter.id}}"
+                            (click)="getGenericGenreList(workcenter.id)"
+                            *ngFor="let workcenter of genericWorkcenterList">
+                            {{workcenter[workcenter['SYS_LABEL']]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 			</div>
 			<div class="full-width">
-				<mat-select
-					class="full-width"
-					[(ngModel)]="genericGenre"
-					placeholder="Attribute Group">
-					<mat-option
-						value="{{genre.id}}"
-						(click)="getGenericAttributeList(genre.id)"
-						*ngFor="let genre of genericGenreList">
-						{{genre[genre['SYS_LABEL']]}}
-					</mat-option>
-				</mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="genericGenre"
+                        placeholder="Attribute Group">
+                        <mat-option
+                            value="{{genre.id}}"
+                            (click)="getGenericAttributeList(genre.id)"
+                            *ngFor="let genre of genericGenreList">
+                            {{genre[genre['SYS_LABEL']]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 			</div>
 			<div class="full-width">
-				<mat-select
-					class="full-width"
-					[(ngModel)]="genericAttribute"
-					placeholder="Attribute">
-					<mat-option
-						value="{{attribute.id}}"
-						(click)="addGenericAttribute(attribute)"
-						*ngFor="let attribute of genericAttributeList">
-						{{attribute[attribute['SYS_LABEL']]}}
-					</mat-option>
-				</mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="genericAttribute"
+                        placeholder="Attribute">
+                        <mat-option
+                            value="{{attribute.id}}"
+                            (click)="addGenericAttribute(attribute)"
+                            *ngFor="let attribute of genericAttributeList">
+                            {{attribute[attribute['SYS_LABEL']]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 			</div>
 		</div>
 		<br/>
