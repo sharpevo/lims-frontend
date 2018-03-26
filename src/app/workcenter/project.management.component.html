@@ -91,8 +91,8 @@
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
     <mat-accordion [multi]="true">
-    <div *ngFor="let sample of sampleList">
         <mat-expansion-panel
+            *ngFor="let sample of sampleList"
             (opened)="showHistory[sample.id] = true"
             (closed)="showHistory[sample.id] = false"
             [class.suspend-panel]="sample.SYS_SUSPENSION"
@@ -152,7 +152,6 @@
                 <button mat-button color="primary" (click)="resumeSample(sample)">Resume</button>
             </mat-action-row>
         </mat-expansion-panel>
-    </div>
     </mat-accordion>
 </div>
 <div fxLayout="row" fxLayoutAlign="end center" >
