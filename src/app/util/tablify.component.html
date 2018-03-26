@@ -66,6 +66,7 @@
                     *cdkCellDef="let row"
                     [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
                     <mat-checkbox
+                        [disabled]="row['TMP_SUSPENDED']"
                         [(ngModel)]="row['TMP_CHECKED']"
                         (ngModelChange)="selectSample(row)"
                         color="primary">
