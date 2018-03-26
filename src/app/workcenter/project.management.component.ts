@@ -58,7 +58,11 @@ export class ProjectManagementComponent{
     getSampleList(){
         let sortStart = ''
         let sortEnd = ''
-        let option = "&limit=10&sort=-createdAt&skip=" + this.skip
+        let option = `&where={"SYS_DATE_TERMINATED":{"exists":false}}` +
+            "&limit=10" +
+            "&sort=-createdAt" +
+            "&skip=" +
+            this.skip
         if (this.queryCode == '' && this.queryCode != "") {
             this.showMessage("Please take an attribute.")
             return
