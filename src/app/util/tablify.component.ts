@@ -459,7 +459,7 @@ export class SampleDataSource extends DataSource<any> {
                         }
                     }
                     sample['TMP_SAMPLE_SET'] = sampleList
-                })
+                }))
 
 
                 //// Get the hybrid type
