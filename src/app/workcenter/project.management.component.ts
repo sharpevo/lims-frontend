@@ -171,13 +171,13 @@ export class ProjectManagementComponent{
             width: '50%',
             data: data,
         })
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                if (isSuspended) {
-                    this.suspendSample(sample, data.remark)
-                } else {
-                    this.resumeSample(sample, data.remark)
-                }
+        dialogRef.afterClosed()
+        .filter(confirmed => !!confirmed)
+        .subscribe(confirmed => {
+            if (isSuspended) {
+                this.suspendSample(sample, data.remark)
+            } else {
+                this.resumeSample(sample, data.remark)
             }
         })
     }
