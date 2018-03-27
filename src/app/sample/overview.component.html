@@ -190,36 +190,52 @@
     <div
         fxLayout="column" fxLayoutAlign="start star"
         *ngFor="let resumption of sampleProjectManagementList[0].SYS_RESUMPTION">
-        <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <div style="opacity:0.7">
                 <mat-icon>pause</mat-icon>
             </div>
             <div
                 fxLayout="column" fxLayoutAlign="start start">
                 <div
-                    *ngFor="let key of (resumption.SUSPENSION | objectKeys)"
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
                     fxLayout="row"
                     fxLayoutAlign="start start">
                     <div style="opacity:0.7">
                         {{key}}:
                     </div>
-                    <div>
-                        <b>
-                            {{resumption.SUSPENSION[key]}}
-                        </b>
+                    <div
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
+                        <span *ngSwitchCase="'REMARK'">
+                            <b>
+                                {{resumption.SUSPENSION[key]}}
+                            </b>
+                        </span>
+                        <span *ngSwitchCase="'OPERATOR'">
+                            <b>
+                                <entity-tostring
+                                    [entityId]="resumption.SUSPENSION[key]">
+                                </entity-tostring>
+                            </b>
+                        </span>
+                        <span *ngSwitchCase="'DATE'">
+                            <b>
+                                {{resumption.SUSPENSION[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </b>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
         <br/>
-        <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <div style="opacity:0.7">
                 <mat-icon>play_arrow</mat-icon>
             </div>
             <div
                 fxLayout="column" fxLayoutAlign="start start">
                 <div
-                    *ngFor="let key of (resumption | objectKeys)"
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
                     fxLayout="row"
                     fxLayoutAlign="start start">
                     <div
@@ -228,9 +244,20 @@
                         {{key}}:
                     </div>
                     <div
-                        *ngIf="key != 'SUSPENSION'">
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
                         <b>
-                            {{resumption.SUSPENSION[key]}}
+                            <span *ngSwitchCase="'REMARK'">
+                                {{resumption[key]}}
+                            </span>
+                            <span *ngSwitchCase="'OPERATOR'">
+                                <entity-tostring
+                                    [entityId]="resumption[key]">
+                                </entity-tostring>
+                            </span>
+                            <span *ngSwitchCase="'DATE'">
+                                {{resumption[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </span>
                         </b>
                     </div>
                 </div>
@@ -240,21 +267,33 @@
     </div>
     <br/>
     <div *ngIf="sampleProjectManagementList[0].SYS_SUSPENSION">
-        <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <div style="opacity:0.7">
                 <mat-icon>pause</mat-icon>
             </div>
             <div fxLayout="column" fxLayoutAlign="start start" >
                 <div
-                    *ngFor="let key of (sampleProjectManagementList[0].SYS_SUSPENSION | objectKeys)"
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
                     fxLayout="row"
                     fxLayoutAlign="start start">
                     <div style="opacity:0.7">
                         {{key}}:
                     </div>
-                    <div>
+                    <div
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
                         <b>
-                            {{sampleProjectManagementList[0].SYS_SUSPENSION[key]}}
+                            <span *ngSwitchCase="'REMARK'">
+                                {{sampleProjectManagementList[0].SYS_SUSPENSION[key]}}
+                            </span>
+                            <span *ngSwitchCase="'OPERATOR'">
+                                <entity-tostring
+                                    [entityId]="sampleProjectManagementList[0].SYS_SUSPENSION[key]">
+                                </entity-tostring>
+                            </span>
+                            <span *ngSwitchCase="'DATE'">
+                                {{sampleProjectManagementList[0].SYS_SUSPENSION[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </span>
                         </b>
                     </div>
                 </div>
