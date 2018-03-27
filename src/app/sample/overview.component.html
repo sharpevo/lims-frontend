@@ -20,8 +20,8 @@
         fxLayout="column"
         fxLayoutAlign="space-between stretch">
         <mat-accordion [multi]="false">
-        <div *ngFor="let sample of sampleProductWorkcenterList.slice(skipMap['workcenter'], skipMap['workcenter'] + 10)">
             <mat-expansion-panel
+                *ngFor="let sample of sampleProductWorkcenterList.slice(skipMap['workcenter'], skipMap['workcenter'] + 10)"
                 [expanded]="isExpanded(sample.id + '-workcenter')"
                 (opened)="openPanel(sample.id + '-workcenter')"
                 (closed)="closePanel(sample.id + '-workcenter')">
@@ -65,7 +65,6 @@
                     </div>
                 </div>
             </mat-expansion-panel>
-        </div>
         </mat-accordion>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" >
@@ -94,8 +93,8 @@
         fxLayout="column"
         fxLayoutAlign="space-between stretch">
         <mat-accordion [multi]="false">
-        <div *ngFor="let sample of sampleMaterialList.slice(skipMap['material'], skipMap['material'] + 10)">
             <mat-expansion-panel
+                *ngFor="let sample of sampleMaterialList.slice(skipMap['material'], skipMap['material'] + 10)"
                 [expanded]="isExpanded(sample.id + '-material')"
                 (opened)="openPanel(sample.id + '-material')"
                 (closed)="closePanel(sample.id + '-material')">
@@ -134,7 +133,6 @@
                     </div>
                 </div>
             </mat-expansion-panel>
-        </div>
         </mat-accordion>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" >
