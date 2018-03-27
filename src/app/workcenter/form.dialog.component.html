@@ -65,10 +65,9 @@
                 </mat-input-container>
             </div>
             <div *ngSwitchCase="'list'">
-                <br/>
-                <mat-form-field>
+                <mat-form-field
+                    class="full-width">
                     <mat-select
-                        class="full-width"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}">
                         <mat-option 
@@ -78,8 +77,6 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <br/>
-                <br/>
             </div>
             <div *ngSwitchCase="'boolean'">
                 <mat-checkbox
