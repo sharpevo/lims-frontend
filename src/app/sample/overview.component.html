@@ -180,4 +180,85 @@
             {{sampleProjectManagementList[0].createdAt | date: 'yyyy.MM.dd HH:mm'}}
         </b>
     </div>
+    <mat-list>
+    <mat-divider></mat-divider>
+    </mat-list>
+    <div style="opacity:0.7">
+        SUSPENSION LOG:
+    </div>
+    <br/>
+    <div
+        fxLayout="column" fxLayoutAlign="start star"
+        *ngFor="let resumption of sampleProjectManagementList[0].SYS_RESUMPTION">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <div style="opacity:0.7">
+                <mat-icon>pause</mat-icon>
+            </div>
+            <div
+                fxLayout="column" fxLayoutAlign="start start">
+                <div
+                    *ngFor="let key of (resumption.SUSPENSION | objectKeys)"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div>
+                        <b>
+                            {{resumption.SUSPENSION[key]}}
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <div style="opacity:0.7">
+                <mat-icon>play_arrow</mat-icon>
+            </div>
+            <div
+                fxLayout="column" fxLayoutAlign="start start">
+                <div
+                    *ngFor="let key of (resumption | objectKeys)"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div
+                        *ngIf="key != 'SUSPENSION'"
+                        style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div
+                        *ngIf="key != 'SUSPENSION'">
+                        <b>
+                            {{resumption.SUSPENSION[key]}}
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <br/>
+    <div *ngIf="sampleProjectManagementList[0].SYS_SUSPENSION">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <div style="opacity:0.7">
+                <mat-icon>pause</mat-icon>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start start" >
+                <div
+                    *ngFor="let key of (sampleProjectManagementList[0].SYS_SUSPENSION | objectKeys)"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div>
+                        <b>
+                            {{sampleProjectManagementList[0].SYS_SUSPENSION[key]}}
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
