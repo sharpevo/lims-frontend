@@ -242,13 +242,17 @@ export class TablifyComponent{
         if (this.isSelectAll){
             this.selectedSampleIdList = []
             this.sampleDataSource.currentSampleList.forEach(sample => {
-                sample['TMP_CHECKED'] = true
-                this.setSampleChecked(sample, true)
+                if (!sample['TMP_SUSPENDED']){
+                    sample['TMP_CHECKED'] = true
+                    this.setSampleChecked(sample, true)
+                }
             })
         } else {
             this.sampleDataSource.currentSampleList.forEach(sample => {
-                sample['TMP_CHECKED'] = false
-                this.checkCurrentSample(sample, false)
+                if (!sample['TMP_SUSPENDED']){
+                    sample['TMP_CHECKED'] = false
+                    this.checkCurrentSample(sample, false)
+                }
             })
             this.clearSelectedSamples()
         }
