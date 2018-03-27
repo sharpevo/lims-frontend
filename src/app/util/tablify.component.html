@@ -83,7 +83,6 @@
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
                 <mat-cell *cdkCellDef="let row"
-                    [class.suspended-sample]="row['TMP_SUSPENDED']"
                     class="simple-table-cell"
                     [style.min-width]="getMinWidth(columnKey)">
                     <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
@@ -162,7 +161,9 @@
 		<mat-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
 		</mat-header-row>
 
-		<mat-row *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
+		<mat-row
+            [class.suspended-sample]="row['TMP_SUSPENDED']"
+            *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
 		</mat-row>
 	</mat-table>
 	<mat-paginator #paginator

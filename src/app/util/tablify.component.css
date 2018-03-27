@@ -84,5 +84,7 @@
 }
 
 .suspended-sample{
-    color: #ffa600;
+    background: rgba(255,215,64,0.3); /* #ffd740 */
+    float: left;
+    min-width: 100%;
 }
