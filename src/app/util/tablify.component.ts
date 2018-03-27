@@ -457,7 +457,7 @@ export class SampleDataSource extends DataSource<any> {
                     "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
                 }).map(sampleList => {
                     for (let s of sampleList){
-                        if (s.hasOwnProperty('SYS_SUSPENSION') && Object.keys(s['SYS_SUSPENSION']).length > 0) {
+                        if (s['SYS_SUSPENSION'] && Object.keys(s['SYS_SUSPENSION']).length > 0) {
                             sample['TMP_SUSPENDED'] = true
                             break
                         }
