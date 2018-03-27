@@ -366,7 +366,7 @@ export class SampleService{
             sample['SYS_RESUMPTION'] = []
         }
         sample['SYS_RESUMPTION'].push(resumption)
-        delete sample['SYS_SUSPENSION']
+        sample['SYS_SUSPENSION'] = null
         return this.entityService.update(sample)
     }
 

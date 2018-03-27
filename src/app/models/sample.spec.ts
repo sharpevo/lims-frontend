@@ -664,6 +664,7 @@ describe("SampleService test", () => {
             expect(resumption['DATE']).toBe(dateNow)
             expect(resumption['OPERATOR']).toBe(limsid)
             expect(resumption['REMARK']).toBe(resumeRemark)
+            expect(sample['SYS_SUSPENSION']).toBeNull()
             expect(suspensionShot).toBe(suspension)
             done()
         })
