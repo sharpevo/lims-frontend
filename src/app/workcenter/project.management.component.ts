@@ -17,7 +17,7 @@ import {SampleService} from '../models/sample'
         margin-top:-9px;
         }
         .suspend-panel{
-        background: #ffd740;
+        background: rgba(255,215,64,0.3);
         }
         `
     ],
