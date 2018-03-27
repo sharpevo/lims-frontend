@@ -4,6 +4,7 @@ import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
 import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
+import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
 
 @Component({
@@ -164,16 +165,33 @@ export class ProjectManagementComponent{
         this.getSampleList()
     }
 
-    suspendSample(sample: any){
-        this.sampleService.suspendSample(sample)
+    openSuspendSampleDialog(sample: any, isSuspended: boolean){
+        let data = {sample: sample, isSuspended: isSuspended, remark: ""}
+        let dialogRef = this.dialog.open(SuspendSampleDialog, {
+            width: '50%',
+            data: data,
+        })
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (isSuspended) {
+                    this.suspendSample(sample, data.remark)
+                } else {
+                    this.resumeSample(sample, data.remark)
+                }
+            }
+        })
+    }
+
+    suspendSample(sample: any, remark: string){
+        this.sampleService.suspendSample(sample, remark)
         .subscribe(data => {
             console.log("SUSPEND", data)
             this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been suspended")
         })
     }
 
-    resumeSample(sample: any){
-        this.sampleService.resumeSample(sample)
+    resumeSample(sample: any, remark: string){
+        this.sampleService.resumeSample(sample, remark)
         .subscribe(data => {
             this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been resumed")
         })
