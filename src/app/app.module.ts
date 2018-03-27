@@ -78,6 +78,7 @@ import {AuthService} from './util/auth.service'
 
 import {RedirectComponent} from './util/redirect.component'
 import {EditPMSampleDialog} from './workcenter/project.management.edit.dialog'
+import {SuspendSampleDialog} from './workcenter/project.management.suspend.dialog'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
 import {KPIComponent} from './statistics/kpi.component'
@@ -128,6 +129,7 @@ import {GuardService} from './util/guard.service'
         SpinnerComponent,
         RedirectComponent,
         EditPMSampleDialog,
+        SuspendSampleDialog,
         MaterialOverviewComponent,
         SampleOverviewComponent,
         KPIComponent,
@@ -140,6 +142,7 @@ import {GuardService} from './util/guard.service'
         SimpleTableDialog,
         ShowAuxiliaryAttributeDialog,
         EditPMSampleDialog,
+        SuspendSampleDialog,
     ],
     imports: [
         BrowserModule,
