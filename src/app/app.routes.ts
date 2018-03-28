@@ -5,7 +5,7 @@ import {WorkcenterOverviewComponent} from './workcenter/overview.component'
 import {WorkcenterDashboardComponent} from './workcenter/dashboard.component'
 import {ProjectManagementComponent} from './workcenter/project.management.component'
 import {AppsComponent} from './apps/component'
-import {UserService} from './util/user.service'
+import {GuardService} from './util/guard.service'
 import {RedirectComponent} from './util/redirect.component'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
@@ -20,17 +20,17 @@ const routes: Routes = [
   {
     path: 'apps',
     component: AppsComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'view/:id',
     component: ViewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'tree',
     component: TreeViewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
     //data: {
     //expectedRole: 'lims-admin',
     //},
@@ -38,12 +38,12 @@ const routes: Routes = [
   {
     path: 'workcenter-overview',
     component: WorkcenterOverviewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'workcenter-dashboard/:id',
     component: WorkcenterDashboardComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
@@ -51,7 +51,7 @@ const routes: Routes = [
   {
     path: 'project-management',
     component: ProjectManagementComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'material-overview',
@@ -71,7 +71,7 @@ const routes: Routes = [
   {
     path: 'sample-overview/:sample_code',
     component: SampleOverviewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
@@ -79,7 +79,7 @@ const routes: Routes = [
   {
     path: 'statistics/kpi',
     component: KPIComponent,
-    //canActivate: [UserService],
+    //canActivate: [GuardService],
   },
 ]
 

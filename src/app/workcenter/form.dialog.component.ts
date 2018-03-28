@@ -1,7 +1,7 @@
 import {Component} from '@angular/core'
 import {DatePipe} from '@angular/common'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
 import {GenreService} from '../genre/service'
@@ -33,12 +33,12 @@ export class SampleFormDialog {
   excelResult: any[] = []
 
   constructor(
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
     private sampleService: SampleService,
-    public dialogRef: MdDialogRef<SampleFormDialog>) {}
+    public dialogRef: MatDialogRef<SampleFormDialog>) {}
 
     ngOnInit(){
       console.log(this.parentMap)

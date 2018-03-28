@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 import {Router} from '@angular/router'
 import {Observable} from 'rxjs/Rx'
 
@@ -17,12 +17,12 @@ export class AppsComponent {
 
   constructor(
     private entityService: EntityService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
     private router: Router,
   ){}
 
   ngOnInit(){
-    this.userInfo = this.userService.getUserInfo()
+    this.userInfo = this.userInfoService.getUserInfo()
     this.getWorkcenterList("/PRODUCT_WORKCENTER")
     //this.getWorkcenterList("/PROJECT_MANAGEMENT")
     //this.appList.push({
@@ -138,7 +138,7 @@ export class AppsComponent {
         err => {},
           () => {
           workcenterList.forEach((workcenter, index) => {
-            //if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
+            //if (this.userInfoService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
             this.appList.push({
               "isInternal": true,
               "label":workcenter[workcenter['SYS_LABEL']],
@@ -171,7 +171,7 @@ export class AppsComponent {
           }
         })
         .forEach(workcenter => {
-          if (this.userService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
+          if (this.userInfoService.hasRole("lims-workcenter-" + workcenter['SYS_CODE'].toLowerCase())) {
             this.appList.push({
               "isInternal": true,
               "label":workcenter[workcenter['SYS_LABEL']],

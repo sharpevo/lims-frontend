@@ -5,65 +5,48 @@ import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
 import {SpinnerService} from './spinner.service'
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {environment} from '../../environments/environment'
 import { 
   Router,
   CanActivate,
   ActivatedRouteSnapshot
 } from '@angular/router'
+import {UserInfoService} from './user.info.service'
+import {CustomHttpService} from './custom.http.service'
 
 @Injectable()
-export class UserService {
+export class AuthService {
   userInfo: any
   observable: Observable<any>
   environment = environment
   constructor(
     private spinnerService: SpinnerService,
-    public snackBar: MdSnackBar,
+    private userInfoService: UserInfoService,
+    private http: CustomHttpService,
+    public snackBar: MatSnackBar,
     public router: Router,
-  ){}
-
-  canActivate(route: ActivatedRouteSnapshot) {
-    const expectedRole = route.data.expectedRole
-    console.log("expectedRole", expectedRole)
-    if (!this.userInfo) {
-      console.log("auth failed")
-      this.authFail()
-      return false
-    } else if (!expectedRole) {
-      console.log("undefined permission")
-      return true
-    } else if (expectedRole == "lims-workcenter-") {
-      console.log("transfer the perm checking to the dashboard")
-      return true
-    } else if (!this.hasRole(expectedRole)) {
-      console.log("denied", expectedRole)
-      this.permFail()
-      return false
-    }
-    console.log("auth successfully")
-    return true
+  ){
+    this.userInfo = this.userInfoService.getUserInfo()
+    this.initInterval()
   }
 
-  setUserInfo(userInfo: any) {
-    this.userInfo = userInfo
+  initInterval(){
+    setInterval(() => {
+      this.checkAvailability()
+      .subscribe(data => {
+        console.log("Auth: success")
+      },
+      error => {
+        console.log("Auth: fail")
+        this.authFail()
+      })
+    },1000 * 60)
   }
 
-  getUserInfo() {
-    console.log("get userinfo", this.userInfo)
-    return this.userInfo
-  }
-
-  hasRole(role: string): boolean{
-    if (!this.userInfo) {
-      return false
-    }
-    if (this.userInfo.email == "quwubin@gmail.com") {
-      console.log("Check role: super admin")
-      return true
-    }
-    return this.userInfo.role[role]
+  checkAvailability() {
+    return this.http.get("/userinfo")
+    .map(res => res.json())
   }
 
   authFail(){
@@ -83,7 +66,11 @@ export class UserService {
     .afterDismissed().subscribe(() => {
       this.spinnerService.stop()
       this.router.navigate(['apps'])
-      return false
+
+      window.location.href = environment.uicUrl +
+        "/profile?return_to=" +
+        environment.limsUrl.replace(/^https?:\/\//,'')
+        return false
     })
   }
 }

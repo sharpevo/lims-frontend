@@ -89,11 +89,6 @@ export class UtilService{
     //.map(res => res.json())
   }
 
-  checkAvailability() {
-    return this.http.get("/userinfo")
-    .map(res => res.json())
-  }
-
   restoreDatabase(){
     return this.http.get("/restore")
     .map(res => res.json())

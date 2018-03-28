@@ -3,24 +3,26 @@
      class="simple-table-filter"
     fxLayout="row" fxLayoutAlign="space-between end" >
         <div>
-            <md-select
-                (change)="onProjectCodeChange($event)"
-                   [(ngModel)]="projectCode"
-                placeholder="{{projectCodeList.length}} Projects">
-                <md-option *ngFor="let code of projectCodeList" [value]="code">
-                    {{code}}
-                </md-option>
-            </md-select>
+            <mat-form-field>
+                <mat-select
+                    (change)="onProjectCodeChange($event)"
+                    [(ngModel)]="projectCode"
+                    placeholder="{{projectCodeList.length}} Projects">
+                    <mat-option *ngFor="let code of projectCodeList" [value]="code">
+                        {{code}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <button
                 (click)="clearProjectCode()"
-                md-icon-button>
-                <md-icon style="font-size:0.5em">close</md-icon>
+                mat-icon-button>
+                <mat-icon style="font-size:0.5em">close</mat-icon>
             </button>
         </div>
         <div>
-            <md-input-container floatPlaceholder="never">
-                <input mdInput #filter placeholder="search...">
-            </md-input-container>
+            <mat-input-container floatPlaceholder="never">
+                <input matInput #filter placeholder="search...">
+            </mat-input-container>
         <!--<span-->
             <!--style="opacity:0.5; font-size: 0.7em;padding-left: 15px;"-->
             <!--*ngIf="selectedSampleIdList.length > 0">-->
@@ -38,32 +40,33 @@
         <!--</span>-->
         </div>
 	</div>
-	<md-table #table [dataSource]="sampleDataSource" class="simple-table" mdSort>
+	<mat-table #table [dataSource]="sampleDataSource" class="simple-table" matSort>
 
 		<ng-container
 			cdkColumnDef="{{columnKey}}"
 			*ngFor="let columnKey of columnMapKeys">
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <md-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
-                    <md-checkbox
+                <mat-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
+                    <mat-checkbox
                         [(ngModel)]="isSelectAll"
                         (ngModelChange)="selectAllSamples()"
                         color="primary">
-                    </md-checkbox>
-                </md-header-cell>
+                    </mat-checkbox>
+                </mat-header-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <md-header-cell *cdkHeaderCellDef
+                <mat-header-cell *cdkHeaderCellDef
                     [style.min-width]="getMinWidth(columnKey)"
-                    class="simple-table-header-cell" md-sort-header>
+                    class="simple-table-header-cell" mat-sort-header>
                     {{columnMap[columnKey]['SYS_LABEL']}}
-                </md-header-cell>
+                </mat-header-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <md-cell
+                <mat-cell
                     *cdkCellDef="let row"
                     [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
-                    <md-checkbox
+                    <mat-checkbox
+                        [disabled]="row['TMP_SUSPENDED']"
                         [(ngModel)]="row['TMP_CHECKED']"
                         (ngModelChange)="selectSample(row)"
                         color="primary">
@@ -75,11 +78,11 @@
                             <!--for example, samples in the scheduled/completed-->
                             <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX]?.id.substr(21)}})-->
                         <!--</span>-->
-                    </md-checkbox>
-                </md-cell>
+                    </mat-checkbox>
+                </mat-cell>
             </span>
             <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <md-cell *cdkCellDef="let row"
+                <mat-cell *cdkCellDef="let row"
                     class="simple-table-cell"
                     [style.min-width]="getMinWidth(columnKey)">
                     <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
@@ -151,20 +154,22 @@
                             </span>
                         </span>
                     </span>
-                </md-cell>
+                </mat-cell>
             </span>
 		</ng-container>
 
-		<md-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
-		</md-header-row>
+		<mat-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
+		</mat-header-row>
 
-		<md-row *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
-		</md-row>
-	</md-table>
-	<md-paginator #paginator
+		<mat-row
+            [class.suspended-sample]="row['TMP_SUSPENDED']"
+            *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
+		</mat-row>
+	</mat-table>
+	<mat-paginator #paginator
 		[length]="sampleDataSource.dataLength"
 		[pageIndex]="0"
 		[pageSize]="10"
 		[pageSizeOptions]="[1,2, 10, 25, 100]">
-	</md-paginator>
+	</mat-paginator>
 </div>

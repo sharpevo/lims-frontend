@@ -6,8 +6,8 @@
     </h3>
     <button
         tabindex="-1"
-        md-icon-button
-        md-dialog-close>
+        mat-icon-button
+        mat-dialog-close>
         x 
     </button>
 </div>
@@ -35,83 +35,82 @@
         *ngFor="let attribute of attributeList">
         <div [ngSwitch]="attribute.SYS_TYPE">
             <div *ngSwitchCase="'string'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         type="text"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'text'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <textarea
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}">
                     </textarea>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'number'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         [required]="attribute.SYS_REQUIRED"
                         type="number"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'list'">
-                <br/>
-                <md-select
-					class="full-width"
-                    [(ngModel)]="object[attribute.SYS_CODE]"
-                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                    <md-option 
-                        value="{{o.split(':')[0]}}"
-                        *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
-                        {{o.split(':')[1]}}
-                    </md-option>
-                </md-select>
-                <br/>
-                <br/>
+                <mat-form-field
+                    class="full-width">
+                    <mat-select
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                        <mat-option 
+                            value="{{o.split(':')[0]}}"
+                            *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                            {{o.split(':')[1]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
             <div *ngSwitchCase="'boolean'">
-                <md-checkbox
+                <mat-checkbox
                     color="primary"
                     class="example-margin"
                     [(ngModel)]="object[attribute.SYS_CODE]">
                     {{attribute[attribute['SYS_LABEL']]}}
-                </md-checkbox>
+                </mat-checkbox>
             </div>
             <div *ngSwitchCase="'date'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         type="date"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'datetime'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     <input
-                        mdInput
+                        matInput
                         type="datetime-local"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'file'">
-                <md-input-container class="full-width">
+                <mat-input-container class="full-width">
                     {{attribute[attribute['SYS_LABEL']]}}
                     <input
-                        mdInput
+                        matInput
                         type="file"/>
-                </md-input-container>
+                </mat-input-container>
             </div>
             <div *ngSwitchCase="'entity'">
                 <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
@@ -144,12 +143,12 @@
     fxLayout="row"
     fxLayoutAlign="end end">
     <button 
-        md-button
+        mat-button
         (click)="submitObject()">
         SUBMIT
     </button>
     <button 
-        md-button
+        mat-button
         (click)="clearForm()">
         CLEAR
     </button>
@@ -158,7 +157,7 @@
     *ngFor="let entity of entityList"
     fxLayout="column"
     fxLayoutAlign="center stretch">
-    <md-card
+    <mat-card
         fxLayout="row"
         fxLayoutAlign="space-between center">
         <div>
@@ -174,16 +173,16 @@
         </div>
         <div>
             <button
-                md-icon-button
+                mat-icon-button
                   (click)="editEntity(entity)">
-                <md-icon style="opacity:0.5">edit</md-icon>
+                <mat-icon style="opacity:0.5">edit</mat-icon>
             </button>
             <button
-                md-icon-button
+                mat-icon-button
                 (click)="deleteEntityById(entity.id)">
-                <md-icon style="opacity:0.5">delete</md-icon>
+                <mat-icon style="opacity:0.5">delete</mat-icon>
             </button>
         </div>
-    </md-card>
+    </mat-card>
     <br/>
 </div>

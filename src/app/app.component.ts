@@ -3,9 +3,10 @@ import {EntityService} from './entity/service'
 import {UtilService} from './util/service'
 import {environment} from '../environments/environment'
 import {URLSearchParams} from "@angular/http"
-import {MdSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
-import {UserService} from './util/user.service'
+import {UserInfoService} from './util/user.info.service'
+import {AuthService} from './util/auth.service'
 import { Subscription } from 'rxjs/Subscription';
 import {Router} from '@angular/router'
 
@@ -238,9 +239,10 @@ export class AppComponent {
     },
   ]
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private utilService: UtilService,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
+    private authService: AuthService,
     private spinnerService: SpinnerService,
     private entityService: EntityService,
     private router: Router,
@@ -248,30 +250,8 @@ export class AppComponent {
 
   ngOnInit(){
 
-    this.checking()
-    this.interval = setInterval(() => {
-      this.checking()
-    }, 1000 * 60)
+    this.userInfo = this.userInfoService.getUserInfo()
     this.getParams()
-  }
-
-  ngOnDestroy() {
-    if (this.interval) {
-      console.log("clear jobs")
-      clearInterval(this.interval)
-    }
-  }
-
-  checking() {
-    this.utilService.checkAvailability()
-    .subscribe(data => {
-      console.log("check", data)
-      this.userInfo = this.userService.getUserInfo()
-    },
-    error => {
-      console.log("backend failded", error)
-      this.userService.authFail()
-    })
   }
 
   getParams() {

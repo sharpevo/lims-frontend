@@ -7,7 +7,7 @@ import 'rxjs/Rx' ;
 import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
 import { Observable } from 'rxjs/Rx'
-import {UserService} from '../util/user.service'
+import {UserInfoService} from '../util/user.info.service'
 
 @Component({
   selector: 'plugin-excel-processor',
@@ -36,9 +36,9 @@ export class PluginExcelProcessorComponent {
     private genreService: GenreService,
     private sampleService: SampleService,
     private router: Router,
-    private userService: UserService,
+    private userInfoService: UserInfoService,
   ){
-    this.userInfo = this.userService.getUserInfo()
+    this.userInfo = this.userInfoService.getUserInfo()
   }
 
   ngOnInit(){

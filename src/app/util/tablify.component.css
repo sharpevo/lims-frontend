@@ -2,7 +2,7 @@
   white-space: nowrap;
   display: flex;
   flex-direction: column;
-  min-width:800px;
+  min-width:500px;
   width: 100%;
   max-height:800px;
 }
@@ -81,4 +81,10 @@
 
 .mat-cell:hover {
     overflow: visible;
+}
+
+.suspended-sample{
+    background: rgba(255,215,64,0.3); /* #ffd740 */
+    float: left;
+    min-width: 100%;
 }
