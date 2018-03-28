@@ -693,13 +693,13 @@ describe("SampleService test", () => {
             sampleB,
             {
                 id: "B-1",
-                SYS_SUSPENSION: {
-                    OPERATOR: "FAKE_OPERATOR",
-                },
+                SYS_SUSPENSION: null,
             },
             {
                 id: "B-2",
-                SYS_SUSPENSION: {},
+                SYS_SUSPENSION: {
+                    OPERATOR: "FAKE_OPERATOR",
+                },
             },
         ]
         spyOn(service.entityService, "retrieveBy").and.returnValues(
