@@ -501,10 +501,11 @@ describe("SampleService test", () => {
                 attributeInfo: _attributeInfo,
             }))
         })
+
         spyOn(service, "isSuspended").and.returnValues(
             // not called if issueSample
-            false,
-            true,
+            Observable.of(false),
+            Observable.of(true),
         )
 
         // ISSUE
