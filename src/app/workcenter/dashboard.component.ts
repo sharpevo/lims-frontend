@@ -180,6 +180,7 @@ export class WorkcenterDashboardComponent{
     dialogRef.componentInstance.config.entity = entity
     dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample['TMP_CHECKED'])
     dialogRef.afterClosed().subscribe(result => {
+            this.router.navigate(['/redirect' + this.router.url])
     });
   }
 
