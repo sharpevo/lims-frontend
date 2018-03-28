@@ -10,15 +10,15 @@
         fxLayoutAlign="end center">
         <mat-form-field
             *ngIf="sampleList.length > 0">
-        <mat-select
-            [(ngModel)]="queryCode"
-            placeholder="Attribute">
-            <mat-option
-                value="{{attr.SYS_CODE}}"
-                *ngFor="let attr of sampleList[0].SYS_SCHEMA">
-                {{attr.SYS_LABEL}}
-            </mat-option>
-        </mat-select>
+            <mat-select
+                [(ngModel)]="queryCode"
+                placeholder="Attribute">
+                <mat-option
+                    value="{{attr.SYS_CODE}}"
+                    *ngFor="let attr of sampleList[0].SYS_SCHEMA">
+                    {{attr.SYS_LABEL}}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
         <mat-input-container
             *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
@@ -91,10 +91,11 @@
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
     <mat-accordion [multi]="true">
-    <div *ngFor="let sample of sampleList">
         <mat-expansion-panel
+            *ngFor="let sample of sampleList"
             (opened)="showHistory[sample.id] = true"
             (closed)="showHistory[sample.id] = false"
+            [class.suspend-panel]="sample.SYS_SUSPENSION"
             [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -147,10 +148,10 @@
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
                 <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button mat-button color="warn" (click)="showMessage('planning...')">Pause</button>
+                <button mat-button color="accent" (click)="openSuspendSampleDialog(sample, true)">Suspend</button>
+                <button mat-button color="primary" (click)="openSuspendSampleDialog(sample,false)">Resume</button>
             </mat-action-row>
         </mat-expansion-panel>
-    </div>
     </mat-accordion>
 </div>
 <div fxLayout="row" fxLayoutAlign="end center" >

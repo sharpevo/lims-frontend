@@ -3,14 +3,16 @@
      class="simple-table-filter"
     fxLayout="row" fxLayoutAlign="space-between end" >
         <div>
-            <mat-select
-                (change)="onProjectCodeChange($event)"
-                   [(ngModel)]="projectCode"
-                placeholder="{{projectCodeList.length}} Projects">
-                <mat-option *ngFor="let code of projectCodeList" [value]="code">
-                    {{code}}
-                </mat-option>
-            </mat-select>
+            <mat-form-field>
+                <mat-select
+                    (change)="onProjectCodeChange($event)"
+                    [(ngModel)]="projectCode"
+                    placeholder="{{projectCodeList.length}} Projects">
+                    <mat-option *ngFor="let code of projectCodeList" [value]="code">
+                        {{code}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <button
                 (click)="clearProjectCode()"
                 mat-icon-button>
@@ -64,6 +66,7 @@
                     *cdkCellDef="let row"
                     [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
                     <mat-checkbox
+                        [disabled]="row['TMP_SUSPENDED']"
                         [(ngModel)]="row['TMP_CHECKED']"
                         (ngModelChange)="selectSample(row)"
                         color="primary">
@@ -158,7 +161,9 @@
 		<mat-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
 		</mat-header-row>
 
-		<mat-row *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
+		<mat-row
+            [class.suspended-sample]="row['TMP_SUSPENDED']"
+            *cdkRowDef="let row; columns: columnMapKeys;" class="simple-table-row">
 		</mat-row>
 	</mat-table>
 	<mat-paginator #paginator

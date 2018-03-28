@@ -346,21 +346,64 @@ export class SampleService{
         return this.entityService.update(sample)
     }
 
-    //terminateSamples(leadingSample: any): any[]{
+    suspendSample(sample: any, remark?: string): Observable<any> {
+        sample['SYS_SUSPENSION'] = {
+            DATE: new Date(),
+            OPERATOR: this.userInfo.limsid,
+            REMARK: remark,
+        }
+        return this.entityService.update(sample)
+    }
 
-    //let terminateObs = []
-    //this.entityService.retrieveBy(
-    //{'SYS_SAMPLE_CODE': leadingSample['SYS_SAMPLE_CODE']})
-    //.subscribe(samples => {
-    //samples.forEach(sample => {
-    //console.log("-->", sample.id)
-    //sample['SYS_DATE_TERMINATED'] = new Date()
-    //terminateObs.push(
-    //this.entityService.update(sample))
-    //})
-    //})
-    //return terminateObs
-    //}
+    resumeSample(sample: any, remark?: string): Observable<any> {
+        let resumption = {
+            SUSPENSION: sample['SYS_SUSPENSION'],
+            DATE: new Date(),
+            OPERATOR: this.userInfo.limsid,
+            REMARK: remark,
+        }
+        if (!sample['SYS_RESUMPTION']){
+            sample['SYS_RESUMPTION'] = []
+        }
+        sample['SYS_RESUMPTION'].push(resumption)
+        sample['SYS_SUSPENSION'] = null
+        return this.entityService.update(sample)
+    }
+
+    isSuspended(sampleCode: any): Observable<any>{
+        return this.entityService.retrieveBy({
+            SYS_SAMPLE_CODE: sampleCode
+        }).map(samples => {
+            for (let sample of samples){
+                if (sample['SYS_SUSPENSION'] &&
+                    Object.keys(sample['SYS_SUSPENSION']).length > 0) {
+                    return true
+                }
+            }
+            return false
+        })
+    }
+
+    terminateSampleObs(sample): Observable<any>{
+        return this.entityService.retrieveBy(
+            {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
+                'sort': 'SYS_DATE_SCHEDULED'}
+        ).map(samples => {
+            let terminateObs = []
+            samples.forEach(sampleItem => {
+                let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
+                let refSampleDate = new Date(sample['SYS_DATE_SCHEDULED'])
+                if (sampleDate >= refSampleDate ||
+                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
+                    sampleItem['SYS_DATE_TERMINATED'] = new Date()
+                terminateObs.push(
+                    this.entityService.update(sampleItem))
+                }
+            })
+            return terminateObs
+        })
+
+    }
 
     retrieveRootTarget(sampleId: string): string{
         this.entityService.retrieveBy({id: sampleId})
@@ -543,53 +586,34 @@ export class SampleService{
             sample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
             sample['SYS_ENTITY_TYPE'] = 'collection'
             sample['SYS_DATE_COMPLETED'] = new Date()
+            // identifier should be generated for submitting samples,
+            // or updated for terminated samples.
             sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] +
                 '/' +
-                sample['SYS_SAMPLE_CODE'] + '.' + object.TMP_CODE
-
-            // retain the date for the sample
-            let originalSampleSchuduledDate = sample['SYS_DATE_SCHEDULED']
+                sample['SYS_SAMPLE_CODE'] +
+                '.' +
+                new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss') +
+                '.' +
+                Math.random().toString().substr(2, 4)
 
             // process samples already in the LIMS delete id before creation if the
             // sample is inside of LIMS
             if (sample.id){
+                //Observable.forkJoin(this.terminateSampleObs(sample))
+                //.subscribe((data: any[][]) => {
+                this.terminateSampleObs(sample)
+                .subscribe(terminatedObs => {
+                    Observable.forkJoin(terminatedObs).subscribe(data => {
+                        //console.log("---->", data)
+                        console.log("---->", data)
+                        delete sample.id
+                        delete sample._id
+                        delete sample.SYS_TARGET
+                        // create object after terminating samples
+                        this.createObject(sample, attributeInfo, true)
 
-                // terminate other uncompleted samples in the system
-                let terminateObs = []
-                this.entityService.retrieveBy(
-                    {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
-                        'sort': 'SYS_DATE_SCHEDULED'})
-                        .subscribe(samples => {
-                            samples.forEach(sampleItem => {
-                                // only process samples after the current sample
-                                // including other pathway
-
-                                let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
-                                let refSampleDate = new Date(originalSampleSchuduledDate)
-                                //console.log("==", sampleItem['SYS_DATE_SCHEDULED'], sample['SYS_DATE_SCHEDULED'])
-                                if (sampleDate >= refSampleDate ||
-                                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
-
-                                    console.log( sampleDate, ">", refSampleDate)
-                                    //console.log("-->", sampleItem.id)
-                                    sampleItem['SYS_DATE_TERMINATED'] = new Date()
-                                    terminateObs.push(
-                                        this.entityService.update(sampleItem))
-                                }
-                            })
-
-                            console.log(">>", terminateObs)
-                            Observable
-                            .forkJoin(terminateObs)
-                            .subscribe((data: any[][]) => {
-                                console.log("---->", data)
-                                delete sample.id
-                                delete sample._id
-                                delete sample.SYS_TARGET
-                                // create object after terminating samples
-                                this.createObject(sample, attributeInfo, true)
-                            })
-                        })
+                    })
+                })
             } else {
                 this.createObject(sample, attributeInfo, true)
             }
@@ -706,13 +730,13 @@ export class SampleService{
 
     createObject(sample: any, attributeInfo: any, issueSample: boolean){
         let targetOutput = []
-        console.log(">>", sample, attributeInfo)
         this.createObject$(sample, attributeInfo, issueSample)
         .subscribe(
             data => {
                 targetOutput.push(data)
             },
             err => {
+                console.log("ERROR", err)
             },
             () => {
                 this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
@@ -849,26 +873,36 @@ export class SampleService{
                     return Observable.timer(i * 1000);
                 }))
         } else {
-            return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-            .mergeMap(data => {
-                //console.log("retrive chained sample:", data)
-                object.id = data[0].id
-                object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
-                // Using update instead of create since the identifier /workcenter/17R001
-                // has been assigned to the scheduled sample
-                return this.entityService.update(object)
-                .mergeMap(data => {
-                    console.log('Add Entity:', data)
-                    return this.buildRelationship(data, attributeInfo)
-                })
+            let sampleCode = object['SYS_SAMPLE_CODE']
+            return this.isSuspended(sampleCode)
+            .mergeMap(isSuspended => {
+                console.log("SUSPEND CHECKING:", isSuspended)
+                if (isSuspended) {
+                    return Observable.throw("Sample '" + sampleCode + "' is suspended")
+                } else {
+                    return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+                    .mergeMap(data => {
+                        //console.log("retrive chained sample:", data)
+                        object.id = data[0].id
+                        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+                        // Using update instead of create since the identifier /workcenter/17R001
+                        // has been assigned to the scheduled sample
+                        return this.entityService.update(object)
+                        .mergeMap(data => {
+                            console.log('Add Entity:', data)
+                            return this.buildRelationship(data, attributeInfo)
+                        })
+                    })
+                    .retryWhen(
+                        attempts => Observable.range(1, 10)
+                        .zip(attempts, i => i)
+                        .mergeMap(i => {
+                            console.log("delay retry by " + i + " seconds")
+                            return Observable.timer(i * 1000);
+                        }))
+
+                }
             })
-            .retryWhen(
-                attempts => Observable.range(1, 10)
-                .zip(attempts, i => i)
-                .mergeMap(i => {
-                    console.log("delay retry by " + i + " seconds")
-                    return Observable.timer(i * 1000);
-                }))
         }
     }
 
@@ -1040,7 +1074,8 @@ export class SampleService{
         // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
         // samples involved more than one time in the same workcenter
         subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
-            sourceEntity['SYS_CODE'] + '.' + new Date().getTime()
+            sourceEntity['SYS_CODE'] + '.' + new Date().getTime() + '.' +
+            Math.random().toString().substr(2, 4)
 
         //console.log("TEST #2 pre pre:", Object.assign({}, subEntity))
         if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){

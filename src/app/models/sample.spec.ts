@@ -471,7 +471,7 @@ describe("SampleService test", () => {
 
     })// }}}
 
-    // createObject$
+    // createObject${{{
     it('TEST: createObject$', done => {
         let date = new Date()
         let objectRequest = {
@@ -501,6 +501,12 @@ describe("SampleService test", () => {
                 attributeInfo: _attributeInfo,
             }))
         })
+
+        spyOn(service, "isSuspended").and.returnValues(
+            // not called if issueSample
+            Observable.of(false),
+            Observable.of(true),
+        )
 
         // ISSUE
         issueSample = true
@@ -554,9 +560,161 @@ describe("SampleService test", () => {
             let _issueSample = data['issueSample']
             expect(_object.id).toEqual(objectResponse.id)
             expect(_object.SYS_DATE_SCHEDULED).toEqual(objectResponse.SYS_DATE_SCHEDULED)
-            done()
         })
 
-    })
+        expect(() => service.createObject$(
+            objectRequest,
+            attributeInfo,
+            issueSample,
+        ).subscribe()).toThrow("Sample '" + objectRequest['SYS_SAMPLE_CODE'] + "' is suspended")
+        done()
+
+
+    })// }}}
+
+    // terminateSampleObs{{{
+    it('TEST: terminateSampleObs', done => {
+        let dateNow = new Date()
+        let dateAfter = new Date(dateNow)
+        dateAfter.setDate(dateNow.getDate() + 5)
+        let dateBefore = new Date(dateNow)
+        dateBefore.setDate(dateNow.getDate() - 5)
+        let sample = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateNow,
+        }
+        let sampleBefore = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateBefore,
+        }
+        let sampleBeforeButGeneralProject = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateBefore,
+            SYS_GENRE_IDENTIFIER: "/PROJECT_MANAGEMENT/GENERAL_PROJECT/",
+        }
+        let sampleNow = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateNow,
+        }
+        let sampleAfter = {
+            SYS_SAMPLE_CODE: "FAKE_SAMPLE_CODE",
+            SYS_DATE_SCHEDULED: dateAfter,
+        }
+        let sampleList = [
+            sampleBefore,
+            sampleBeforeButGeneralProject,
+            sampleNow,
+            sampleAfter,
+        ]
+        spyOn(window, "Date").and.callFake(function() {
+            if (arguments[0]) {
+                return arguments[0]
+            } else {
+                return dateNow
+            }
+        })
+        spyOn(service.entityService, "retrieveBy").and.returnValue(
+            Observable.of(sampleList)
+        )
+        spyOn(service.entityService, "update").and.callFake(function(_sample){
+            return Observable.of(_sample)
+        })
+
+        service.terminateSampleObs(sample)
+        .subscribe(sample => {
+            expect(sampleBefore['SYS_DATE_TERMINATED']).toBeUndefined()
+            expect(sampleBeforeButGeneralProject['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            expect(sampleNow['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            expect(sampleAfter['SYS_DATE_TERMINATED']).toEqual(dateNow)
+            done()
+        })
+    })// }}}
+
+    // suspendSample{{{
+    it('TEST: suspendSample', done => {
+        let dateNow = new Date()
+        spyOn(window, "Date").and.callFake(() => {
+            return dateNow
+        })
+        let limsid = "FAKE_ID"
+        service.userInfo.limsid = limsid
+        let suspendRemark = "FAKE_SUSPEND_REMARK"
+        spyOn(service.entityService, "update").and.callFake((_sample) => {
+            return Observable.of(_sample)
+        })
+        let sample = {
+            "SYS_SAMPLE_CODE": "1",
+        }
+
+        // SUSPEND
+        let suspension = {}
+        service.suspendSample(sample, suspendRemark)
+        .subscribe(sample => {
+            suspension = sample['SYS_SUSPENSION']
+            expect(suspension['DATE']).toBe(dateNow)
+            expect(suspension['OPERATOR']).toBe(limsid)
+            expect(suspension['REMARK']).toBe(suspendRemark)
+        })
+
+        // RESUME
+        let resumeRemark = "FAKE_RESUME_REMARK"
+        service.resumeSample(sample, resumeRemark)
+        .subscribe(sample => {
+            let resumption = sample['SYS_RESUMPTION'][sample['SYS_RESUMPTION'].length - 1]
+            let suspensionShot = resumption['SUSPENSION']
+            expect(resumption['DATE']).toBe(dateNow)
+            expect(resumption['OPERATOR']).toBe(limsid)
+            expect(resumption['REMARK']).toBe(resumeRemark)
+            expect(sample['SYS_SUSPENSION']).toBeNull()
+            expect(suspensionShot).toBe(suspension)
+            done()
+        })
+    })// }}}
+
+    // isSuspended{{{
+    it('TEST: isSuspended', done => {
+        let sampleA = {
+            SYS_SAMPLE_CODE: "1",
+        }
+        let sampleAList = [
+            sampleA,
+            {
+                id: "A-1",
+                SYS_SUSPENSION: {},
+            },
+            {
+                id: "A-2",
+            },
+        ]
+        let sampleB = {
+            SYS_SAMPLE_CODE: "2",
+        }
+        let sampleBList = [
+            sampleB,
+            {
+                id: "B-1",
+                SYS_SUSPENSION: null,
+            },
+            {
+                id: "B-2",
+                SYS_SUSPENSION: {
+                    OPERATOR: "FAKE_OPERATOR",
+                },
+            },
+        ]
+        spyOn(service.entityService, "retrieveBy").and.returnValues(
+            Observable.of(sampleAList),
+            Observable.of(sampleBList),
+        )
+        service.isSuspended(sampleA.SYS_SAMPLE_CODE)
+        .subscribe(result => {
+            expect(result).toBeFalsy()
+        })
+        service.isSuspended(sampleB.SYS_SAMPLE_CODE)
+        .subscribe(result => {
+            expect(result).toBeTruthy()
+            done()
+        })
+    })// }}}
 
 })

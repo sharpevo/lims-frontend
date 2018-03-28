@@ -92,18 +92,20 @@
             <mat-action-row>
                 <div
                     *ngIf="(workcenter | json) != '{}'">
-                    <mat-select
-                        i18n-placeholder="@@dashboard-operator"
-                        [(ngModel)]="operator"
-                        placeholder="Operator">
-                        <mat-option
-                            *ngFor="let operator of operatorList"
-                            [value]="operator.id">
-                            <entity-tostring
-                                [entity]="operator">
-                            </entity-tostring>
-                        </mat-option>
-                    </mat-select>
+                    <mat-form-field>
+                        <mat-select
+                            i18n-placeholder="@@dashboard-operator"
+                            [(ngModel)]="operator"
+                            placeholder="Operator">
+                            <mat-option
+                                *ngFor="let operator of operatorList"
+                                [value]="operator.id">
+                                <entity-tostring
+                                    [entity]="operator">
+                                </entity-tostring>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                     <button
                         i18n="@@dashboard-btn-dispatch"
                         mat-button

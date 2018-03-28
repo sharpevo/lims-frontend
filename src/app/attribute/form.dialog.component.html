@@ -26,17 +26,19 @@
             [(ngModel)]="object.id"
             placeholder="Key"/>
     </mat-input-container>
-    <mat-select
-        class="full-width"
-        placeholder="Entity Type"
-        [(ngModel)]="object.SYS_GENRE">
-        <mat-option
-            *ngFor="let genre of genreList"
-            (click)="getAttributesByGenre(genre.id)"
-            [value]="genre.id">
-            {{genre[genre["SYS_LABEL"]]}}
-        </mat-option>
-    </mat-select>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            placeholder="Entity Type"
+            [(ngModel)]="object.SYS_GENRE">
+            <mat-option
+                *ngFor="let genre of genreList"
+                (click)="getAttributesByGenre(genre.id)"
+                [value]="genre.id">
+                {{genre[genre["SYS_LABEL"]]}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <br/>
     <mat-input-container class="full-width">
         <input
@@ -62,54 +64,62 @@
             placeholder="Nubmer of order"/>
     </mat-input-container>
     <br/>
-    <mat-select
-        class="full-width"
-        placeholder="Attribute data type"
-        [(ngModel)]="object.SYS_TYPE">
-        <mat-option
-            *ngFor="let type of objectTypeList"
-            [value]="type.value">
-            {{type.title}}
-        </mat-option>
-    </mat-select>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            placeholder="Attribute data type"
+            [(ngModel)]="object.SYS_TYPE">
+            <mat-option
+                *ngFor="let type of objectTypeList"
+                [value]="type.value">
+                {{type.title}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <br/>
     <span [ngSwitch]="object.SYS_TYPE">
         <span *ngSwitchCase="'entity'">
-            <mat-select
-                class="full-width"
-                placeholder="Entity Level">
-                <!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
-                <mat-option
-                *ngFor="let category of categoryList"
-                (click)="getEntityListByType(category.value)"
-                [value]="category.value">
-                    {{category.title}}
-                </mat-option>
-            </mat-select>
-            <br/>
-            <br/>
-            <mat-select
-                class="full-width"
-                placeholder="Select the entity (single)"
-                [(ngModel)]="object.SYS_TYPE_ENTITY">
-                <mat-option
-                *ngFor="let entity of entityCandidateList"
-                [value]="entity.id">
-                    {{entity[entity["SYS_LABEL"]]}}
-                </mat-option>
-            </mat-select>
-            <br/>
-            <br/>
-            <mat-select
-                class="full-width"
-                placeholder="Target Entity"
-                [(ngModel)]="object.SYS_FLOOR_ENTITY_TYPE">
-                <mat-option
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Entity Level">
+                    <!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
+                    <mat-option
                     *ngFor="let category of categoryList"
+                    (click)="getEntityListByType(category.value)"
                     [value]="category.value">
-                    {{category.title}}
-                </mat-option>
-            </mat-select>
+                        {{category.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br/>
+            <br/>
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Select the entity (single)"
+                    [(ngModel)]="object.SYS_TYPE_ENTITY">
+                    <mat-option
+                    *ngFor="let entity of entityCandidateList"
+                    [value]="entity.id">
+                        {{entity[entity["SYS_LABEL"]]}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br/>
+            <br/>
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Target Entity"
+                    [(ngModel)]="object.SYS_FLOOR_ENTITY_TYPE">
+                    <mat-option
+                        *ngFor="let category of categoryList"
+                        [value]="category.value">
+                        {{category.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <br/>
             <br/>
             <mat-checkbox

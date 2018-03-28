@@ -36,16 +36,18 @@
                 </mat-input-container>
             </span>
             <span *ngSwitchCase="'list'">
-                <mat-select
-					class="full-width"
-                    [(ngModel)]="object[attribute.SYS_CODE]"
-                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                    <mat-option 
-                        value="{{o.split(':')[0]}}"
-                        *ngFor="let o of attribute.typeList.split(',')">
-                        {{o.split(':')[1]}}
-                    </mat-option>
-                </mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                        <mat-option 
+                            value="{{o.split(':')[0]}}"
+                            *ngFor="let o of attribute.typeList.split(',')">
+                            {{o.split(':')[1]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </span>
             <span *ngSwitchCase="'boolean'">
                 <mat-checkbox

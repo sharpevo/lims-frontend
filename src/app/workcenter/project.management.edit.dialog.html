@@ -53,16 +53,18 @@
             </div>
             <div *ngSwitchCase="'list'">
                 <br/>
-                <mat-select
-					class="full-width"
-                    [(ngModel)]="object[attribute.SYS_CODE]"
-                    placeholder="{{attribute[attribute['SYS_LABEL']]}}">
-                    <mat-option 
-                        value="{{o.split(':')[0]}}"
-                        *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
-                        {{o.split(':')[1]}}
-                    </mat-option>
-                </mat-select>
+                <mat-form-field>
+                    <mat-select
+                        class="full-width"
+                        [(ngModel)]="object[attribute.SYS_CODE]"
+                        placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                        <mat-option 
+                            value="{{o.split(':')[0]}}"
+                            *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                            {{o.split(':')[1]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
                 <br/>
                 <br/>
             </div>
