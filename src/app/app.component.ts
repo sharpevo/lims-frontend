@@ -23,6 +23,21 @@ export class AppComponent {
   interval: any
   showMessage: boolean = true
   taskCompletedList: any[] = [
+        {
+            title: "#60 样品暂停及恢复",
+            date: "2018-03-27",
+            highlight: true,
+        },
+        {
+            title: "#217 SampleService单元测试(部分)",
+            date: "2018-03-21",
+            highlight: true,
+        },
+        {
+            title: "#212 重构会话服务",
+            date: "2018-03-13",
+            highlight: true,
+        },
     {
       title: "#197 审计前端",
       date: "2018-02-09",
