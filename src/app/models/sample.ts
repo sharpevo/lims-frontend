@@ -375,7 +375,7 @@ export class SampleService{
             SYS_SAMPLE_CODE: sampleCode
         }).map(samples => {
             for (let sample of samples){
-                if (sample.hasOwnProperty('SYS_SUSPENSION') &&
+                if (sample['SYS_SUSPENSION'] &&
                     Object.keys(sample['SYS_SUSPENSION']).length > 0) {
                     return true
                 }
@@ -730,13 +730,13 @@ export class SampleService{
 
     createObject(sample: any, attributeInfo: any, issueSample: boolean){
         let targetOutput = []
-        console.log(">>", sample, attributeInfo)
         this.createObject$(sample, attributeInfo, issueSample)
         .subscribe(
             data => {
                 targetOutput.push(data)
             },
             err => {
+                console.log("ERROR", err)
             },
             () => {
                 this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
@@ -874,7 +874,7 @@ export class SampleService{
                 }))
         } else {
             let sampleCode = object['SYS_SAMPLE_CODE']
-            return Observable.of(this.isSuspended(sampleCode))
+            return this.isSuspended(sampleCode)
             .mergeMap(isSuspended => {
                 console.log("SUSPEND CHECKING:", isSuspended)
                 if (isSuspended) {
