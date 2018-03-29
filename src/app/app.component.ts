@@ -24,6 +24,11 @@ export class AppComponent {
     showMessage: boolean = true
     taskCompletedList: any[] = [
         {
+            title: "#60 支持混样样品暂停",
+            date: "2018-03-29",
+            highlight: true,
+        },
+        {
             title: "#60 样品暂停及恢复",
             date: "2018-03-27",
             highlight: true,
@@ -215,10 +220,6 @@ export class AppComponent {
         {
             title: "#78 工作中心文件上传(多文件/异步/不解析)并在线预览(pdf) -> 欧婷",
             date: "Week: 02",
-        },
-        {
-            title: "#60 实现项目暂停机制",
-            date: "?",
         },
         {
             title: "#76 多重建库UI开发(模拟8x12孔板)",
