@@ -423,6 +423,7 @@ export class SampleDataSource extends DataSource<any> {
 
         this.dataLength = this._exampleDatabase.data.length
 
+        //TODO: called twice initially
         return Observable.merge(...displayDataChanges).map(() => {
             let data = this._exampleDatabase.data.slice().filter((item) => {
                 let keyStr = ""
@@ -448,46 +449,59 @@ export class SampleDataSource extends DataSource<any> {
             const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
             data = data.splice(startIndex, this._paginator.pageSize)
             data = this.getSortedData(data)
+
             let result = []
-            let sampleSetObs = []
-            let hybridMap = this._exampleDatabase.hybridMap
-            data.forEach((sample, index) => {
-                result.push(sample)
-                sampleSetObs.push(this.entityService.retrieveBy({
-                    "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
-                }).map(sampleList => {
-                    for (let s of sampleList){
-                        if (s['SYS_SUSPENSION'] && Object.keys(s['SYS_SUSPENSION']).length > 0) {
-                            sample['TMP_SUSPENDED'] = true
-                            break
-                        }
+            Observable.forkJoin(
+                data.map(sample => {
+                    console.log("SAMPLE", sample.TMP_HYBRID_TYPE)
+                    result.push(sample)
+                    let queryObject = {}
+                    let hybridKey = sample['SYS_HYBRID_INFO']['HYBRID_KEY']
+                    let hybridValue = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
+                    queryObject[hybridKey] = hybridValue
+
+                    if (sample['TMP_HYBRID_TYPE'] != 'SAMPLE'){ // HYBRID, requireds inner sample query
+                        return this.entityService.retrieveBy(queryObject)
+                        .mergeMap(innerSampleList => {
+                            console.log("INNER SAMPLE", innerSampleList)
+
+                            return Observable.forkJoin(
+                                innerSampleList.map(innerSample => {
+                                    return this.isSuspended(sample, innerSample['SYS_SAMPLE_CODE'])
+                                })
+                            )
+
+                        })
+                    } else { // SAMPLE, not query inner samples
+                        return this.isSuspended(sample, sample['SYS_SAMPLE_CODE'])
                     }
-                    sample['TMP_SAMPLE_SET'] = sampleList
-                }))
 
-
-                //// Get the hybrid type
-                //let hybridType = ""
-                //let hybridCode = ""
-                //if (sample['SYS_RUN_CODE']) {
-                //hybridType = "RUN"
-                //} else if (sample['SYS_LANE_CODE']) {
-                //hybridType = "LANE"
-                //} else if (sample['SYS_CAPTURE_CODE']){
-                //hybridType = "CAPTURE"
-                //}
-                //if (sample['TMP_LIST_SAMPLE']){
-                //result = result.concat(hybridMap[hybridType][sample['SYS_'+hybridType+'_CODE']])
-                //}
-            })
-
-            Observable.concat(...sampleSetObs)
-            .subscribe()
-            //.subscribe(data => console.log(">", data))
+                })
+            ).subscribe(error => console.log("SimpleTable:", error))
 
             return result
         })
     }
+
+    isSuspended(sample: any, queryCode: string){
+        return this.entityService.retrieveBy({
+            "SYS_SAMPLE_CODE": queryCode
+        })
+        .map(sampleList => {
+            console.log("SUB SAMPLE", sampleList)
+            if (sampleList[0]['SYS_SAMPLE_CODE'] == sample['SYS_SAMPLE_CODE']) {
+                sample['TMP_SAMPLE_SET'] = sampleList
+            }
+            for (let s of sampleList){
+                if (s['SYS_SUSPENSION'] && Object.keys(s['SYS_SUSPENSION']).length > 0) {
+                    sample['TMP_SUSPENDED'] = true
+                    break
+                }
+            }
+
+        })
+    }
+
     disconnect() {}
     getSortedData(data: any[]): any[] {
         if (!this._sort.active || this._sort.direction == '') { return data; }
