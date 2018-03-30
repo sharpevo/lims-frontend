@@ -24,6 +24,11 @@ export class AppComponent {
     showMessage: boolean = true
     taskCompletedList: any[] = [
         {
+            title: "#60(hotfix) 修复相关bug(非混样及钉钉消息)",
+            date: "2018-03-30",
+            highlight: true,
+        },
+        {
             title: "#60 支持混样样品暂停",
             date: "2018-03-29",
             highlight: true,
