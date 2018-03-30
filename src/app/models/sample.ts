@@ -824,13 +824,15 @@ export class SampleService{
         targetOutput.forEach(target => {
             let sample = target['sample']
             let workcenter = target['workcenter']
-            //console.log(target)
+            //console.log("MSG:", target)
             if (issueSample){
                 let scheduledDate = new DatePipe('en-US')
                 .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
                 message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
             } else {
-                message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                if (workcenter){
+                    message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                }
             }
         })
         message +=`> \n\n${this.userInfo.name}\n\n` +
