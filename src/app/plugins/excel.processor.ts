@@ -3,10 +3,9 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {SampleService} from '../models/sample'
 import {UtilService} from '../util/service'
-import 'rxjs/Rx' ;
 import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
-import { Observable } from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 import {UserInfoService} from '../util/user.info.service'
 
 @Component({

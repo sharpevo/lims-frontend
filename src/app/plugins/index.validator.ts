@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {AttributeService} from '../attribute/service'
 import {SampleService} from '../models/sample'
-import {Observable} from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'plugin-index-validator',

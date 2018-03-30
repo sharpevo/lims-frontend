@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {UserInfoService} from '../util/user.info.service'
 import {Router} from '@angular/router'
-import {Observable} from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'apps-view',

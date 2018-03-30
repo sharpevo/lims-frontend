@@ -3,7 +3,7 @@ import {EntityService} from '../entity/service'
 import {MatDialog, MatDialogRef} from '@angular/material'
 import {MatSnackBar} from '@angular/material'
 import {Router, ActivatedRoute} from '@angular/router'
-import {Observable} from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 import {DatePipe} from '@angular/common'
 
 @Component({

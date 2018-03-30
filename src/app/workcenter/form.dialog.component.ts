@@ -8,8 +8,7 @@ import {GenreService} from '../genre/service'
 import {EntityService} from '../entity/service'
 import {SampleService} from '../models/sample'
 
-//import {Observable} from 'rxjs/Observable'
-import { Observable } from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
   selector: 'sample-form-dialog',

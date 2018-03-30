@@ -10,7 +10,9 @@ import {
   Request
 } from '@angular/http'
 import {Observable} from 'rxjs/Observable'
-//import 'rxjs/Rx'
+import 'rxjs/add/operator/catch'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/finally'
 import {environment} from '../../environments/environment'
 import {SpinnerService} from "./spinner.service"
 import {MatSnackBar} from '@angular/material'

@@ -1,7 +1,15 @@
 import {Injectable} from '@angular/core'
 import {EntityService} from '../entity/service'
 
-import { Observable } from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/forkJoin'
+import 'rxjs/add/observable/range'
+import 'rxjs/add/observable/timer'
+import 'rxjs/add/observable/concat'
+import 'rxjs/add/operator/mergeMap'
+import 'rxjs/add/operator/zip'
+import 'rxjs/add/operator/retryWhen'
+
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 

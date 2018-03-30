@@ -13,7 +13,7 @@ import {
     ResponseOptions,
 } from '@angular/http'
 import {Router} from '@angular/router'
-import {Observable} from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 import {MaterialModule} from '../material.module'
 import {MatSnackBar} from '@angular/material'
 

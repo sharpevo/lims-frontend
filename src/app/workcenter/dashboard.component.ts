@@ -5,8 +5,7 @@ import {EntityService} from '../entity/service'
 import {SampleFormDialog} from './form.dialog.component'
 import {UserInfoService} from '../util/user.info.service'
 
-//import {Observable} from 'rxjs/Observable'
-import { Observable } from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
 import {MatSnackBar} from '@angular/material'
 
 @Component({
