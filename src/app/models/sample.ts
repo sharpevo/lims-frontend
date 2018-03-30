@@ -35,56 +35,6 @@ export class SampleService{
         this.userInfo = this.userInfoService.getUserInfo()
     }
 
-    buildSampleInlineList(sampleList: any[]): any[]{
-        let resultList: any = {}
-
-        for (let i = 0; i < sampleList.length; i++){
-            let capCode = sampleList[i]['SYS_CAPTURE_CODE']
-            let laneCode = sampleList[i]['SYS_LANE_CODE']
-            let runCode = sampleList[i]['SYS_RUN_CODE']
-            let sampleCode = 'SAMPLES'
-            if (runCode) {
-                if (!resultList[runCode]){
-                    resultList[runCode] = {}
-                }
-                if (!resultList[runCode][laneCode]){
-                    resultList[runCode][laneCode] = {}
-                }
-                if (!resultList[runCode][laneCode][capCode]){
-                    resultList[runCode][laneCode][capCode] = {}
-                    resultList[runCode][laneCode][capCode][sampleCode] = []
-                }
-                resultList[runCode][laneCode][capCode][sampleCode].push(sampleList[i])
-            } else if (laneCode){
-                if (!resultList[laneCode]){
-                    resultList[laneCode] = {}
-                }
-                if (!resultList[laneCode][capCode]){
-                    resultList[laneCode][capCode] = {}
-                    resultList[laneCode][capCode][sampleCode] = []
-                }
-                resultList[laneCode][capCode][sampleCode].push(sampleList[i])
-            } else if (capCode) {
-                // treat general samples as the 'undefined' caps
-                if (!resultList[capCode]){
-                    resultList[capCode] = {}
-                    resultList[capCode][sampleCode] = []
-                }
-                // expression changed error occured w/o the following initialization
-                // in the sample.inline.component
-                sampleList[i]['TMP_CHECKED'] = false
-                resultList[capCode][sampleCode].push(sampleList[i])
-            } else {
-                if (!resultList[sampleCode]) {
-                    resultList[sampleCode] = []
-                }
-                resultList[sampleCode].push(sampleList[i])
-            }
-
-        }
-        return resultList
-    }
-
     /**
      * Get all the attributes of the given sample and SYS_CODE, including history
      * values.
