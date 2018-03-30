@@ -453,25 +453,26 @@ export class SampleDataSource extends DataSource<any> {
             let result = []
             Observable.forkJoin(
                 data.map(sample => {
-                    console.log("SAMPLE", sample.TMP_HYBRID_TYPE)
+                    console.log("SAMPLE", sample)
                     result.push(sample)
-                    let queryObject = {}
+                    if (sample['TMP_HYBRID_TYPE'] &&
+                        sample['TMP_HYBRID_TYPE'] != 'SAMPLE'){ // HYBRID, requireds inner sample query
+                        let queryObject = {}
                     let hybridKey = sample['SYS_HYBRID_INFO']['HYBRID_KEY']
                     let hybridValue = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
                     queryObject[hybridKey] = hybridValue
 
-                    if (sample['TMP_HYBRID_TYPE'] != 'SAMPLE'){ // HYBRID, requireds inner sample query
-                        return this.entityService.retrieveBy(queryObject)
-                        .mergeMap(innerSampleList => {
-                            console.log("INNER SAMPLE", innerSampleList)
+                    return this.entityService.retrieveBy(queryObject)
+                    .mergeMap(innerSampleList => {
+                        console.log("INNER SAMPLE", innerSampleList)
 
-                            return Observable.forkJoin(
-                                innerSampleList.map(innerSample => {
-                                    return this.isSuspended(sample, innerSample['SYS_SAMPLE_CODE'])
-                                })
-                            )
+                        return Observable.forkJoin(
+                            innerSampleList.map(innerSample => {
+                                return this.isSuspended(sample, innerSample['SYS_SAMPLE_CODE'])
+                            })
+                        )
 
-                        })
+                    })
                     } else { // SAMPLE, not query inner samples
                         return this.isSuspended(sample, sample['SYS_SAMPLE_CODE'])
                     }
