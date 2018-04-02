@@ -7,6 +7,8 @@ import {EditPMSampleDialog} from './project.management.edit.dialog'
 import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
 
+import 'rxjs/add/operator/filter'
+
 @Component({
     selector: 'project-management',
     styles: [`

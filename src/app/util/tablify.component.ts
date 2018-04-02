@@ -5,10 +5,12 @@ import {MatDialog, MatDialogRef} from '@angular/material'
 
 import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/map'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/merge'
+import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
 
 import {SampleService} from '../models/sample'
 import {SimpleTableDialog} from './simple.table.dialog'
