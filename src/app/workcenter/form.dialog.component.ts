@@ -166,12 +166,36 @@ export class SampleFormDialog {
             })
         }
         submitObject(){
-            this.sampleService.submitObject(
+            this.sampleService.submitObject$(
                 this.config.entity,
                 this.config.sampleList,
                 this.config.issueSample,
                 this.object,
                 this.parentMap
+            ).subscribe(
+            (data: any[]) => {
+                console.log("SO-data", data)
+                console.log(
+                    "test>>>",
+                    this.config.issueSample,
+                    Array(this.config.sampleList.length).fill(this.object),
+                    this.attributeList,
+                    data
+                )
+                this.sampleService.sendMessageToDingTalk$(
+                    this.config.issueSample,
+                    this.config.sampleList,
+                    Array(this.config.sampleList.length).fill(this.object),
+                    this.attributeList,
+                    data,
+                )//.subscribe()
+            },
+            error => {
+                console.log("SO-error", error)
+            },
+            () => {
+                console.log("SO-complete")
+            }
             )
             this.dialogRef.close();
         }
