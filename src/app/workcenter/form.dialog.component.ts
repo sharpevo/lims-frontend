@@ -188,7 +188,7 @@ export class SampleFormDialog {
                     Array(this.config.sampleList.length).fill(this.object),
                     this.attributeList,
                     data,
-                )//.subscribe()
+                ).subscribe()
             },
             error => {
                 console.log("SO-error", error)
