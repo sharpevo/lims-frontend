@@ -156,6 +156,7 @@ describe("SampleService test", () => {
                 mockUserInfoService,
                 router,
                 mockEntityService,
+		logger,
             )
         })
     )// }}}
