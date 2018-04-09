@@ -1880,19 +1880,2228 @@ describe("SampleService test", () => {
 
         2018-4-9 11:15
         `
-    })
+    })// }}}
 
-    // sendMessageDingtalk with 2 samples{{{
-    it('TEST: sendMessageDingtalk with issued 2 samples', done => {
-        //let selectedSampleList = [
-        //{
-        //}
-        //]
-        //let submittedSampleList = [
-        //let attributeList = [
-        //let targetOutputList = [
-        //let output = 
-    })
+    // sendMessageDingtalk with 1 samples{{{
+    it('TEST: sendMessageDingtalk with issued 1 samples', done => {
+        let sample = 
+            {
+            "TMP_CODE": "GENERAL_PROJECT.20180409132428",
+            "SYS_ENTITY_TYPE": "collection",
+            "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+            "SYS_LABEL": "SYS_SAMPLE_CODE",
+            "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+            "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+            "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+            "SYS_SAMPLE_CODE": "18R0033",
+            "SYS_DATE_COMPLETED": "2018-04-09T05:24:49.340Z",
+            "SYS_IDENTIFIER": "/PROJECT_MANAGEMENT/GENERAL_PROJECT/18R0033.20180409132449.2084",
+            "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340"
+        }
+
+
+        let attributeList = 
+            [
+            {
+                "_id": "5ab88e01d98a70566c707ca1",
+                "label": "序号",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_SERIAL_NUMBER",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.945Z",
+                "createdAt": "2018-03-26T06:06:57.945Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 10,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca1"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca2",
+                "label": "项目负责人",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.946Z",
+                "createdAt": "2018-03-26T06:06:57.946Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 20,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca2"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca3",
+                "label": "项目编号",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.947Z",
+                "createdAt": "2018-03-26T06:06:57.947Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 30,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca3"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca4",
+                "label": "Panel名称",
+                "SYS_CODE": "SYS_PANEL_CODE",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.947Z",
+                "createdAt": "2018-03-26T06:06:57.947Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 40,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca4"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca5",
+                "label": "测序深度",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.948Z",
+                "createdAt": "2018-03-26T06:06:57.948Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 50,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca5"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca6",
+                "label": "数据量",
+                "SYS_CODE": "SYS_DATA_SIZE",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.949Z",
+                "createdAt": "2018-03-26T06:06:57.949Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 60,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca6"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca7",
+                "label": "样品名称",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.949Z",
+                "createdAt": "2018-03-26T06:06:57.949Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 70,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca7"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca8",
+                "label": "样品编号",
+                "SYS_CODE": "SYS_SAMPLE_CODE",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.950Z",
+                "createdAt": "2018-03-26T06:06:57.950Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": true,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 80,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca8"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ca9",
+                "label": "样品类型",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_TYPE",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.951Z",
+                "createdAt": "2018-03-26T06:06:57.951Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 90,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ca9"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707caa",
+                "label": "样品物种",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_SPECIES",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.952Z",
+                "createdAt": "2018-03-26T06:06:57.952Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 100,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707caa"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cab",
+                "label": "保存介质",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_MEDIUM",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.953Z",
+                "createdAt": "2018-03-26T06:06:57.953Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 110,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cab"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cac",
+                "label": "样品浓度(ng/ul)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_CONC",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.953Z",
+                "createdAt": "2018-03-26T06:06:57.953Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 120,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cac"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cad",
+                "label": "样品体积(ul)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_VOLUME",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.954Z",
+                "createdAt": "2018-03-26T06:06:57.954Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 130,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cad"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cae",
+                "label": "质检启动时间(液相)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_QC_START_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.954Z",
+                "createdAt": "2018-03-26T06:06:57.954Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 140,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cae"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707caf",
+                "label": "报告交付时间(液相)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_REPORT_DELIVERY_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.955Z",
+                "createdAt": "2018-03-26T06:06:57.955Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 150,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707caf"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb0",
+                "label": "项目预警时间(多重)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_WARN_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.956Z",
+                "createdAt": "2018-03-26T06:06:57.956Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 160,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb0"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb1",
+                "label": "项目交付时间(多重)",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_DELIVERY_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.956Z",
+                "createdAt": "2018-03-26T06:06:57.956Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 170,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb1"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb2",
+                "label": "备注",
+                "SYS_CODE": "CONF_GENERAL_PROJECT_REMARK",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.957Z",
+                "createdAt": "2018-03-26T06:06:57.957Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 180,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb2"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb3",
+                "label": "计划进度",
+                "SYS_CODE": "SYS_DATE_SCHEDULED",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.958Z",
+                "createdAt": "2018-03-26T06:06:57.958Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 190,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb3"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb4",
+                "label": "操作人",
+                "SYS_CODE": "SYS_WORKCENTER_OPERATOR",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e01d98a70566c707c5c",
+                    "SYS_IDENTIFIER": "/HUMAN_RESOURCE/IGENETECH",
+                    "SYS_ENTITY_TYPE": "class",
+                    "SYS_GENRE": "5ab88e01d98a70566c707c5b",
+                    "label": "Staff",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:57.701Z",
+                    "createdAt": "2018-03-26T06:06:57.701Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "label",
+                    "SYS_GENRE_IDENTIFIER": "/HUMAN_RESOURCE/",
+                    "SYS_CODE": "IGENETECH",
+                    "id": "5ab88e01d98a70566c707c5c"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.958Z",
+                "createdAt": "2018-03-26T06:06:57.958Z",
+                "SYS_TYPE_ENTITY_REF": true,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 200,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb4"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cb5",
+                "label": "操作日期",
+                "SYS_CODE": "SYS_DATE_COMPLETED",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.959Z",
+                "createdAt": "2018-03-26T06:06:57.959Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 210,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cb5"
+            },
+            {
+                "_id": "5ab88e02d98a70566c707d1e",
+                "label": "Routing",
+                "SYS_CODE": "ROUTING",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e02d98a70566c707d1d",
+                    "SYS_IDENTIFIER": "/ROUTING/PRODUCT_ROUTING/ROUTING_V1",
+                    "SYS_ENTITY_TYPE": "collection",
+                    "PRODUCT_ROUTING_ATTR_TITLE": "Routing V1",
+                    "SYS_GENRE": "5ab88e02d98a70566c707d1b",
+                    "label": "Routing V1",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:58.025Z",
+                    "createdAt": "2018-03-26T06:06:58.025Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "PRODUCT_ROUTING_ATTR_TITLE",
+                    "SYS_GENRE_IDENTIFIER": "/ROUTING/PRODUCT_ROUTING/",
+                    "SYS_CODE": "ROUTING_V1",
+                    "id": "5ab88e02d98a70566c707d1d"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "class",
+                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:58.026Z",
+                "createdAt": "2018-03-26T06:06:58.026Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 500,
+                "SYS_LABEL": "label",
+                "id": "5ab88e02d98a70566c707d1e"
+            }
+        ]
+        let targetOutputList =
+            [
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707cbf",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/DNA_EXTRACTION",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 10,
+                        "label": "样品提取",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.945Z",
+                                "updatedAt": "2018-03-26T06:06:57.945Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SERIAL_NUMBER",
+                                "label": "序号",
+                                "_id": "5ab88e01d98a70566c707ca1"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.946Z",
+                                "updatedAt": "2018-03-26T06:06:57.946Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                                "label": "项目负责人",
+                                "_id": "5ab88e01d98a70566c707ca2"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                                "label": "项目编号",
+                                "_id": "5ab88e01d98a70566c707ca3"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.948Z",
+                                "updatedAt": "2018-03-26T06:06:57.948Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                                "label": "测序深度",
+                                "_id": "5ab88e01d98a70566c707ca5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": true,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.950Z",
+                                "updatedAt": "2018-03-26T06:06:57.950Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_SAMPLE_CODE",
+                                "label": "样品编号",
+                                "_id": "5ab88e01d98a70566c707ca8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 110,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.953Z",
+                                "updatedAt": "2018-03-26T06:06:57.953Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_MEDIUM",
+                                "label": "保存介质",
+                                "_id": "5ab88e01d98a70566c707cab"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.952Z",
+                                "updatedAt": "2018-03-26T06:06:57.952Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_SPECIES",
+                                "label": "样品物种",
+                                "_id": "5ab88e01d98a70566c707caa"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 140,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.954Z",
+                                "updatedAt": "2018-03-26T06:06:57.954Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_QC_START_DATE",
+                                "label": "质检启动时间(液相)",
+                                "_id": "5ab88e01d98a70566c707cae"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 150,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.955Z",
+                                "updatedAt": "2018-03-26T06:06:57.955Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_REPORT_DELIVERY_DATE",
+                                "label": "报告交付时间(液相)",
+                                "_id": "5ab88e01d98a70566c707caf"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "DNA_EXTRACTION",
+                        "id": "5ab88e01d98a70566c707cbf",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:57.962Z",
+                        "createdAt": "2018-03-26T06:06:57.962Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/DNA_EXTRACTION/18R0033.20180409132449.2084.1523251489414.0873",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 10,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707cbf",
+                        "SYS_DURATION": 2,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-09T05:24:49.360Z",
+                        "SYS_DATE_ARRIVED": "2018-04-09T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707ccf",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/PROJECT_APPROVE",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 20,
+                        "label": "项目审核",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.945Z",
+                                "updatedAt": "2018-03-26T06:06:57.945Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SERIAL_NUMBER",
+                                "label": "序号",
+                                "_id": "5ab88e01d98a70566c707ca1"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.946Z",
+                                "updatedAt": "2018-03-26T06:06:57.946Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                                "label": "项目负责人",
+                                "_id": "5ab88e01d98a70566c707ca2"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                                "label": "项目编号",
+                                "_id": "5ab88e01d98a70566c707ca3"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.948Z",
+                                "updatedAt": "2018-03-26T06:06:57.948Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                                "label": "测序深度",
+                                "_id": "5ab88e01d98a70566c707ca5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 150,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.955Z",
+                                "updatedAt": "2018-03-26T06:06:57.955Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_REPORT_DELIVERY_DATE",
+                                "label": "报告交付时间(液相)",
+                                "_id": "5ab88e01d98a70566c707caf"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.970Z",
+                                "updatedAt": "2018-03-26T06:06:57.970Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE_LIST": "A:A,B:B,Ca:C-a,Cb:C-b,Cd:C-d,D:D",
+                                "SYS_TYPE": "list",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_RESULT",
+                                "label": "质检结论",
+                                "_id": "5ab88e01d98a70566c707cc8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.970Z",
+                                "updatedAt": "2018-03-26T06:06:57.970Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_AMOUNT",
+                                "label": "样品总量(ng)",
+                                "_id": "5ab88e01d98a70566c707cc7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.951Z",
+                                "updatedAt": "2018-03-26T06:06:57.951Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_TYPE",
+                                "label": "样品类型",
+                                "_id": "5ab88e01d98a70566c707ca9"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "PROJECT_APPROVE",
+                        "id": "5ab88e01d98a70566c707ccf",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:57.975Z",
+                        "createdAt": "2018-03-26T06:06:57.975Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/PROJECT_APPROVE/18R0033.20180409132449.2084.1523251489401.3157",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cd0",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 20,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707ccf",
+                        "SYS_DURATION": 2,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-11T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707cd7",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/SHEAR",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 30,
+                        "label": "打断",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.945Z",
+                                "updatedAt": "2018-03-26T06:06:57.945Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SERIAL_NUMBER",
+                                "label": "序号",
+                                "_id": "5ab88e01d98a70566c707ca1"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.946Z",
+                                "updatedAt": "2018-03-26T06:06:57.946Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                                "label": "项目负责人",
+                                "_id": "5ab88e01d98a70566c707ca2"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                                "label": "项目编号",
+                                "_id": "5ab88e01d98a70566c707ca3"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.948Z",
+                                "updatedAt": "2018-03-26T06:06:57.948Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                                "label": "测序深度",
+                                "_id": "5ab88e01d98a70566c707ca5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": true,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.950Z",
+                                "updatedAt": "2018-03-26T06:06:57.950Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_SAMPLE_CODE",
+                                "label": "样品编号",
+                                "_id": "5ab88e01d98a70566c707ca8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.966Z",
+                                "updatedAt": "2018-03-26T06:06:57.966Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_NANODROP",
+                                "label": "Nanodrop ng/ul",
+                                "_id": "5ab88e01d98a70566c707cc2"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.967Z",
+                                "updatedAt": "2018-03-26T06:06:57.967Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_QUBIT",
+                                "label": "Qubit ng/ul",
+                                "_id": "5ab88e01d98a70566c707cc3"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.968Z",
+                                "updatedAt": "2018-03-26T06:06:57.968Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_OD280",
+                                "label": "OD 260/280",
+                                "_id": "5ab88e01d98a70566c707cc5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.968Z",
+                                "updatedAt": "2018-03-26T06:06:57.968Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_OD230",
+                                "label": "OD 260/230",
+                                "_id": "5ab88e01d98a70566c707cc4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.969Z",
+                                "updatedAt": "2018-03-26T06:06:57.969Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_VOLUME",
+                                "label": "样品体积(ul)",
+                                "_id": "5ab88e01d98a70566c707cc6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.970Z",
+                                "updatedAt": "2018-03-26T06:06:57.970Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_AMOUNT",
+                                "label": "样品总量(ng)",
+                                "_id": "5ab88e01d98a70566c707cc7"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "SHEAR",
+                        "id": "5ab88e01d98a70566c707cd7",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:57.980Z",
+                        "createdAt": "2018-03-26T06:06:57.980Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/SHEAR/18R0033.20180409132449.2084.1523251489485.2890",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cd8",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 30,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707cd7",
+                        "SYS_DURATION": 2,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-13T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707ce1",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/LIBRARY_PREPARE",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 40,
+                        "label": "文库制备",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.982Z",
+                                "updatedAt": "2018-03-26T06:06:57.982Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cd8",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_SHEAR_CODE",
+                                "label": "打断编号",
+                                "_id": "5ab88e01d98a70566c707cda"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.948Z",
+                                "updatedAt": "2018-03-26T06:06:57.948Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                                "label": "测序深度",
+                                "_id": "5ab88e01d98a70566c707ca5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": true,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.950Z",
+                                "updatedAt": "2018-03-26T06:06:57.950Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_SAMPLE_CODE",
+                                "label": "样品编号",
+                                "_id": "5ab88e01d98a70566c707ca8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.951Z",
+                                "updatedAt": "2018-03-26T06:06:57.951Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_TYPE",
+                                "label": "样品类型",
+                                "_id": "5ab88e01d98a70566c707ca9"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.983Z",
+                                "updatedAt": "2018-03-26T06:06:57.983Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cd8",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_USAGE_AMOUNT",
+                                "label": "样品投入量",
+                                "_id": "5ab88e01d98a70566c707cdb"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.984Z",
+                                "updatedAt": "2018-03-26T06:06:57.984Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cd8",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_REMAIN_AMOUNT",
+                                "label": "样品剩余量",
+                                "_id": "5ab88e01d98a70566c707cdc"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.977Z",
+                                "updatedAt": "2018-03-26T06:06:57.977Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cd0",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_PROJECT_APPROVE_START_DATE",
+                                "label": "项目启动时间",
+                                "_id": "5ab88e01d98a70566c707cd1"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.978Z",
+                                "updatedAt": "2018-03-26T06:06:57.978Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cd0",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_PROJECT_APPROVE_WARN_DATE",
+                                "label": "项目预警时间",
+                                "_id": "5ab88e01d98a70566c707cd2"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.970Z",
+                                "updatedAt": "2018-03-26T06:06:57.970Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE_LIST": "A:A,B:B,Ca:C-a,Cb:C-b,Cd:C-d,D:D",
+                                "SYS_TYPE": "list",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_RESULT",
+                                "label": "质检结论",
+                                "_id": "5ab88e01d98a70566c707cc8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.972Z",
+                                "updatedAt": "2018-03-26T06:06:57.972Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE_LIST": "1:合格,0:只电泳检测,-1:不合格",
+                                "SYS_TYPE": "list",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_REMARK",
+                                "label": "质检备注",
+                                "_id": "5ab88e01d98a70566c707cc9"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "LIBRARY_PREPARE",
+                        "id": "5ab88e01d98a70566c707ce1",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:57.988Z",
+                        "createdAt": "2018-03-26T06:06:57.988Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/LIBRARY_PREPARE/18R0033.20180409132449.2084.1523251489469.0090",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 40,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707ce1",
+                        "SYS_DURATION": 5,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-18T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707cf0",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/CAPTURE_PREPARE",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 50,
+                        "label": "文库捕获",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 10,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.991Z",
+                                "updatedAt": "2018-03-26T06:06:57.991Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "date",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_DATE",
+                                "label": "建库日期",
+                                "_id": "5ab88e01d98a70566c707ce3"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 20,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.991Z",
+                                "updatedAt": "2018-03-26T06:06:57.991Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_LIBRARY_CODE",
+                                "label": "建库编号",
+                                "_id": "5ab88e01d98a70566c707ce4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.948Z",
+                                "updatedAt": "2018-03-26T06:06:57.948Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_DEPTH",
+                                "label": "测序深度",
+                                "_id": "5ab88e01d98a70566c707ca5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": true,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.950Z",
+                                "updatedAt": "2018-03-26T06:06:57.950Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_SAMPLE_CODE",
+                                "label": "样品编号",
+                                "_id": "5ab88e01d98a70566c707ca8"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.951Z",
+                                "updatedAt": "2018-03-26T06:06:57.951Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_TYPE",
+                                "label": "样品类型",
+                                "_id": "5ab88e01d98a70566c707ca9"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.996Z",
+                                "updatedAt": "2018-03-26T06:06:57.996Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_S_INDEX_CODE_I7",
+                                "label": "Index编号 #1 (I7)",
+                                "_id": "5ab88e01d98a70566c707ceb"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.997Z",
+                                "updatedAt": "2018-03-26T06:06:57.997Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_S_INDEX_SEQUENCE_I7",
+                                "label": "Index序列 #1 (I7)",
+                                "_id": "5ab88e01d98a70566c707cec"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 30,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.992Z",
+                                "updatedAt": "2018-03-26T06:06:57.992Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_QUBIT",
+                                "label": "Qubit(ng/ul)",
+                                "_id": "5ab88e01d98a70566c707ce5"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.993Z",
+                                "updatedAt": "2018-03-26T06:06:57.993Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_VOLUME",
+                                "label": "体积",
+                                "_id": "5ab88e01d98a70566c707ce6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 50,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.994Z",
+                                "updatedAt": "2018-03-26T06:06:57.994Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_AMOUNT",
+                                "label": "Total(ng)",
+                                "_id": "5ab88e01d98a70566c707ce7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.995Z",
+                                "updatedAt": "2018-03-26T06:06:57.995Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_CYCLE",
+                                "label": "循环数",
+                                "_id": "5ab88e01d98a70566c707ce9"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.996Z",
+                                "updatedAt": "2018-03-26T06:06:57.996Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE_LIST": "1:合格,0:风险,-1:不合格",
+                                "SYS_TYPE": "list",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_RESULT",
+                                "label": "建库结论",
+                                "_id": "5ab88e01d98a70566c707cea"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.970Z",
+                                "updatedAt": "2018-03-26T06:06:57.970Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                                "SYS_TYPE_LIST": "A:A,B:B,Ca:C-a,Cb:C-b,Cd:C-d,D:D",
+                                "SYS_TYPE": "list",
+                                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_RESULT",
+                                "label": "质检结论",
+                                "_id": "5ab88e01d98a70566c707cc8"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "CAPTURE_PREPARE",
+                        "id": "5ab88e01d98a70566c707cf0",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:57.998Z",
+                        "createdAt": "2018-03-26T06:06:57.998Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/CAPTURE_PREPARE/18R0033.20180409132449.2084.1523251489428.7971",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e02d98a70566c707cf1",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 50,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707cf0",
+                        "SYS_DURATION": 5,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-23T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e02d98a70566c707d0a",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/POOLING",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 70,
+                        "label": "Pooling",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.952Z",
+                                "updatedAt": "2018-03-26T06:06:57.952Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_SPECIES",
+                                "label": "样品物种",
+                                "_id": "5ab88e01d98a70566c707caa"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.996Z",
+                                "updatedAt": "2018-03-26T06:06:57.996Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_S_INDEX_CODE_I7",
+                                "label": "Index编号 #1 (I7)",
+                                "_id": "5ab88e01d98a70566c707ceb"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.997Z",
+                                "updatedAt": "2018-03-26T06:06:57.997Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_S_INDEX_SEQUENCE_I7",
+                                "label": "Index序列 #1 (I7)",
+                                "_id": "5ab88e01d98a70566c707cec"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 80,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:58.008Z",
+                                "updatedAt": "2018-03-26T06:06:58.008Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e02d98a70566c707cfb",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_M_INDEX_CODE_I7",
+                                "label": "Index编号 #1 (I7)",
+                                "_id": "5ab88e02d98a70566c707d03"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 90,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:58.011Z",
+                                "updatedAt": "2018-03-26T06:06:58.011Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e02d98a70566c707cfb",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_M_INDEX_SEQUENCE_I7",
+                                "label": "Index序列 #1 (I7)",
+                                "_id": "5ab88e02d98a70566c707d04"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:58.011Z",
+                                "updatedAt": "2018-03-26T06:06:58.011Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e02d98a70566c707cfb",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_M_INDEX_CODE_I5",
+                                "label": "Index编号 #2 (I5)",
+                                "_id": "5ab88e02d98a70566c707d05"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 110,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:58.012Z",
+                                "updatedAt": "2018-03-26T06:06:58.012Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e02d98a70566c707cfb",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_M_INDEX_SEQUENCE_I5",
+                                "label": "Index序列 #2 (I5)",
+                                "_id": "5ab88e02d98a70566c707d06"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.995Z",
+                                "updatedAt": "2018-03-26T06:06:57.995Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ce2",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "CONF_LIBRARY_PREPARE_LENGTH",
+                                "label": "文库长度",
+                                "_id": "5ab88e01d98a70566c707ce8"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "POOLING",
+                        "id": "5ab88e02d98a70566c707d0a",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:58.013Z",
+                        "createdAt": "2018-03-26T06:06:58.013Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/POOLING/18R0033.20180409132449.2084.1523251489448.2997",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e02d98a70566c707d0b",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 70,
+                        "SYS_SOURCE": "5ab88e02d98a70566c707d0a",
+                        "SYS_DURATION": 5,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-04-28T05:24:49.360Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e02d98a70566c707d13",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/SEQUENCE_DATA",
+                        "SYS_ENTITY_TYPE": "class",
+                        "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                        "SYS_ORDER": 80,
+                        "label": "数据下机",
+                        "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR": true,
+                        "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR": true,
+                        "SYS_AUXILIARY_ATTRIBUTE_LIST": [
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 70,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_NAME",
+                                "label": "样品名称",
+                                "_id": "5ab88e01d98a70566c707ca7"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 40,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.947Z",
+                                "updatedAt": "2018-03-26T06:06:57.947Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "SYS_PANEL_CODE",
+                                "label": "Panel名称",
+                                "_id": "5ab88e01d98a70566c707ca4"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 60,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.949Z",
+                                "updatedAt": "2018-03-26T06:06:57.949Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_DATA_SIZE",
+                                "label": "数据量",
+                                "_id": "5ab88e01d98a70566c707ca6"
+                            },
+                            {
+                                "SYS_LABEL": "label",
+                                "SYS_ORDER": 100,
+                                "SYS_REQUIRED": false,
+                                "SYS_IS_ENTITY_LABEL": false,
+                                "SYS_TYPE_ENTITY_REF": false,
+                                "createdAt": "2018-03-26T06:06:57.952Z",
+                                "updatedAt": "2018-03-26T06:06:57.952Z",
+                                "__v": 0,
+                                "SYS_GENRE": "5ab88e01d98a70566c707ca0",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "CONF_GENERAL_PROJECT_SAMPLE_SPECIES",
+                                "label": "样品物种",
+                                "_id": "5ab88e01d98a70566c707caa"
+                            }
+                        ],
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/PRODUCT_WORKCENTER/",
+                        "SYS_CODE": "SEQUENCE_DATA",
+                        "id": "5ab88e02d98a70566c707d13",
+                        "SYS_SCHEMA": [
+                            {
+                                "SYS_LABEL": "Order",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "number",
+                                "SYS_CODE": "SYS_ORDER"
+                            },
+                            {
+                                "SYS_LABEL": "工作中心名称",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "string",
+                                "SYS_CODE": "label"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Panel Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_PANEL_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Indicator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_INDICATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Index Validator",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_INDEX_VALIDATOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Excel Processor",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR"
+                            },
+                            {
+                                "SYS_LABEL": "Plugin: Auxiliary Attribute Manager",
+                                "SYS_GENRE": "5ab88e01d98a70566c707cb7",
+                                "SYS_TYPE": "boolean",
+                                "SYS_CODE": "SYS_WORKCENTER_PLUGIN_ATTRIBUTE_INTRODUCER"
+                            }
+                        ],
+                        "updatedAt": "2018-03-26T06:06:58.016Z",
+                        "createdAt": "2018-03-26T06:06:58.016Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0033",
+                        "SYS_TARGET": "5acaf9214421e536ebf5ec05",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0033_1523251489340",
+                        "SYS_IDENTIFIER": "/PRODUCT_WORKCENTER/SEQUENCE_DATA/18R0033.20180409132449.2084.1523251489502.4171",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "testpm",
+                        "CONF_GENERAL_PROJECT_PROJECT_CODE": "testpmcode",
+                        "SYS_GENRE": "5ab88e02d98a70566c707d14",
+                        "SYS_CHECKED": true,
+                        "SYS_ORDER": 80,
+                        "SYS_SOURCE": "5ab88e02d98a70566c707d13",
+                        "SYS_DURATION": 7,
+                        "SYS_FLOOR_ENTITY_TYPE": "class",
+                        "SYS_DATE_SCHEDULED": "2018-05-05T05:24:49.360Z"
+                    }
+                }
+            ]
+        ]
+        let output = 
+            `
+        # **18R0020**
+
+        testpcode | testpm
+
+        issued as:
+
+        >- 项目负责人: testpm
+
+        >- 项目编号: testpcode
+
+        >- 样品编号: 18R0020
+
+        >- 操作人: 5ab88e01d98a70566c707c64
+
+        >- 操作日期: Mon Apr 09 2018 13:19:53 GMT+0800 (CST)
+
+        workcenters:
+
+        >- 04月09日: 样品提取
+
+        >- 04月11日: 项目审核
+
+        >- 04月13日: 打断
+
+        >- 04月18日: 文库制备
+
+        >- 04月23日: 文库捕获
+
+        >- 04月28日: Pooling
+
+        >- 05月05日: 数据下机
+
+        > 
+
+        吴洋
+
+        2018-4-9 13:19
+        `
+    })// }}}
 
     // sendMessageDingtalk with 5 samples{{{
     it('TEST: sendMessageDingtalk with issued 5 samples', done => {
@@ -1904,7 +4113,7 @@ describe("SampleService test", () => {
         //let attributeList = [
         //let targetOutputList = [
         //let output = 
-    })
+    })// }}}
 
     // sendMessageDingtalk with excel {{{
     it('TEST: sendMessageDingtalk with submitted 5 samples', done => {
@@ -1916,5 +4125,5 @@ describe("SampleService test", () => {
         //let attributeList = [
         //let targetOutputList = [
         //let output = 
-    })
+    })// }}}
 })
