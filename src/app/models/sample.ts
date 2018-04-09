@@ -513,6 +513,81 @@ export class SampleService{
 
     }
 
+    submitObject$(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any): Observable<any>{
+        if (!this.userInfo.limsid){
+            console.log("illegal user", this.userInfo)
+            this.showMessage("Invalid user: " + this.userInfo.email, "OK")
+            return Observable.throw("Invalid user: " + this.userInfo.email)
+        }
+
+        return this.entityService.retrieveGenre(workcenter.id)
+        .mergeMap(data => {
+            // Take the first genre as default
+            return this.genreService.retrieveAttribute(data[0].id)
+            .mergeMap(data => {
+                let attributeList = data.sort((a,b) => {
+                    if (a.SYS_ORDER > b.SYS_ORDER) {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                })
+                let attributeInfo = {
+                    "attributeList": attributeList,
+                    "parentMap": parentMap
+                }
+
+                if (issueSample){
+                    console.log("issueSample")
+                    this.issueSample(workcenter, object, sampleList, attributeInfo)
+                    return
+                }
+                console.log("submitObject")
+
+                let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
+                let msg_sampleCount = sampleList.length
+                // samples from the previous workcenter or the current one in the first
+                // workcenter with workcenter-specific attributes:
+                // - for the attributes defined by administrator, if they are same, use
+                //   the previous one
+                // - for the attributes starts with SYS, use current workcenter
+                //return Observable.forkJoin(
+                ////return Observable.concat(
+                //sampleList.map(sample => {
+                //console.log('processing candidate sample', sample)
+                ////this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+                //return this.entityService.retrieveById(sample.id)
+                ////.map(data => {
+                //.mergeMap(data => {
+                //console.log("processing sample:", data)
+                //return this.submitSample$(workcenter, object, data, attributeInfo)
+                //})
+                //})
+                //)
+                //.map(data => {
+                //console.log("FORKJOIN", data)
+                //return data
+                //})
+
+
+                let obs = []
+
+                sampleList.forEach(sample => {
+                    obs.push(this.entityService.retrieveById(sample.id)
+                             .mergeMap(data => {
+                                 console.log("processing sample:", data)
+                                 return this.submitSample$(workcenter, object, data, attributeInfo)
+                             }))
+                })
+                return Observable.forkJoin(obs)
+
+
+
+            })
+        })
+
+    }
+
     /**
      * issueSample will build samples for the General Project workcenter,
      * manipulated by product manager
@@ -756,7 +831,103 @@ export class SampleService{
             })
     }
 
+    sendMessageToDingTalk$(
+        issueSample: boolean,
+        selectedSampleList: any[],
+        submittedSampleList: any[],
+        attributeList: any[],
+        targetOutputList: any[]){
+
+            console.log("TO", targetOutputList)
+            const MAX_LENGTH_OF_SAMPLELIST = 3
+
+            let VERB = ''
+            let WITH = ''
+            if (issueSample) {
+                VERB = "issued"
+                WITH = "workcenters"
+            } else {
+                VERB = "submitted"
+                WITH = "materials"
+            }
+            let message = ''
+
+            if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
+                message += `# **${submittedSampleList.length}** samples are ${VERB}:\n\n`
+                submittedSampleList.forEach((submittedSample, index) => {
+                    message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
+                })
+            } else {
+                submittedSampleList.forEach((submittedSample, index) => {
+                    message += `# **${selectedSampleList[index].SYS_SAMPLE_CODE}**\n\n${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_CODE} | ${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                        `${VERB} as:\n\n`
+
+                    attributeList.forEach(attr => {
+                        if (submittedSample.hasOwnProperty(attr.SYS_CODE)) {
+                            message += `>- ${attr[attr['SYS_LABEL']]}: ${submittedSample[attr.SYS_CODE]}\n\n`
+                        }
+                    })
+
+
+                    message += `${WITH}:\n\n`
+                    for (let targetOutput of targetOutputList) {
+
+
+                        console.log("targetOutput:", targetOutput)
+                        if (targetOutput.length == 0) {
+                            break
+                        }
+
+
+                        for (let target of targetOutput){
+                            console.log("target:", target)
+                            let sample = target['sample']
+                            let workcenter = target['workcenter']
+
+                            // forkJoin returns value arbitrarily
+                            if (sample['SYS_SAMPLE_CODE'] == selectedSampleList[index]['SYS_SAMPLE_CODE']) {
+                                console.log("sample:", sample)
+                                if (issueSample){
+                                    let scheduledDate = new DatePipe('en-US')
+                                    .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                                    message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+                                } else {
+                                    message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                                }
+
+                                continue
+
+                            }
+                        }
+                    }
+                })
+            }
+
+            let date = new Date()
+            let msg_date = date.getFullYear() + '-' +
+                (date.getMonth() + 1) + '-' +
+                date.getDate() + ' ' +
+                date.getHours() + ':' +
+                date.getMinutes()
+
+            message +=`> \n\n${this.userInfo.name}\n\n` +
+                `${msg_date}`
+            let beforeDate = new Date(date)
+            beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+            let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+            let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+            let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+            console.log("Sending notification:", redirectUrl)
+
+            console.log("<<<", message)
+            //return this.utilService.sendNotif(
+            //"actionCard",
+            //message,
+            //redirectUrl)
+        }
+
     sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]){
+
         let date = new Date()
         let msg_date = date.getFullYear() + '-' +
             (date.getMonth() + 1) + '-' +
@@ -970,8 +1141,9 @@ export class SampleService{
             })
 
         })
-        //return Observable.of(...observableList).concatAll()
-        return observableList.length == 0 ? Observable.of({}) : Observable.concat(...observableList)
+
+            //return Observable.concat(...observableList)
+            return Observable.forkJoin(observableList)
     }
 
     getScheduledDate(
@@ -1103,8 +1275,9 @@ export class SampleService{
             //console.log("TEST #3:", subEntity)
             return this.entityService.create(subEntity)
             .map(entity => {
+                    //.mergeMap(entity => {
                 //console.log("TEST #4:", {'workcenter': targetEntity, 'sample':subEntity})
-                return {'workcenter': targetEntity, 'sample': subEntity}
+                    return Observable.of({'workcenter': targetEntity, 'sample': subEntity})
             })
             //.delay(100)
         })
