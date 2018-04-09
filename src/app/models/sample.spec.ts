@@ -720,4 +720,1201 @@ describe("SampleService test", () => {
         })
     })// }}}
 
+    // sendMessageDingtalk with 2 samples{{{
+    it('TEST: sendMessageDingtalk with submitted 2 samples', done => {
+        let selectedSampleList = [
+            {
+            }
+        ]
+        let submittedSampleList = [
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409105857",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_NANODROP": 1,
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-13"
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409105857",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_NANODROP": 1,
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-13"
+            }
+        ]
+
+
+        let attributeList = [
+            {
+                "_id": "5ab88e01d98a70566c707cc2",
+                "label": "Nanodrop ng/ul",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_NANODROP",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.966Z",
+                "createdAt": "2018-03-26T06:06:57.966Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 10,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc2"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc3",
+                "label": "Qubit ng/ul",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QUBIT",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.967Z",
+                "createdAt": "2018-03-26T06:06:57.967Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 20,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc3"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc4",
+                "label": "OD 260/230",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD230",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.968Z",
+                "createdAt": "2018-03-26T06:06:57.968Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 30,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc4"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc5",
+                "label": "OD 260/280",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD280",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.968Z",
+                "createdAt": "2018-03-26T06:06:57.968Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 40,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc5"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc6",
+                "label": "样品体积(ul)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_VOLUME",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.969Z",
+                "createdAt": "2018-03-26T06:06:57.969Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 50,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc6"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc7",
+                "label": "样品总量(ng)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_AMOUNT",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.970Z",
+                "createdAt": "2018-03-26T06:06:57.970Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 60,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc7"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc8",
+                "label": "质检结论",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_RESULT",
+                "SYS_TYPE": "list",
+                "SYS_TYPE_LIST": "A:A,B:B,Ca:C-a,Cb:C-b,Cd:C-d,D:D",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.970Z",
+                "createdAt": "2018-03-26T06:06:57.970Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 90,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc8"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc9",
+                "label": "质检备注",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_REMARK",
+                "SYS_TYPE": "list",
+                "SYS_TYPE_LIST": "1:合格,0:只电泳检测,-1:不合格",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.972Z",
+                "createdAt": "2018-03-26T06:06:57.972Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 100,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc9"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cca",
+                "label": "样品提取时间",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_EXTRACT_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 110,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cca"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccb",
+                "label": "质检完成时间",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_COMPLETE_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 120,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccb"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccc",
+                "label": "备注(DNA提取来源)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_REMARK",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 130,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccc"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccd",
+                "label": "操作人",
+                "SYS_CODE": "SYS_WORKCENTER_OPERATOR",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e01d98a70566c707c5c",
+                    "SYS_IDENTIFIER": "/HUMAN_RESOURCE/IGENETECH",
+                    "SYS_ENTITY_TYPE": "class",
+                    "SYS_GENRE": "5ab88e01d98a70566c707c5b",
+                    "label": "Staff",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:57.701Z",
+                    "createdAt": "2018-03-26T06:06:57.701Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "label",
+                    "SYS_GENRE_IDENTIFIER": "/HUMAN_RESOURCE/",
+                    "SYS_CODE": "IGENETECH",
+                    "id": "5ab88e01d98a70566c707c5c"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.975Z",
+                "createdAt": "2018-03-26T06:06:57.975Z",
+                "SYS_TYPE_ENTITY_REF": true,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 140,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccd"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cce",
+                "label": "操作日期",
+                "SYS_CODE": "SYS_DATE_COMPLETED",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.975Z",
+                "createdAt": "2018-03-26T06:06:57.975Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 150,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cce"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc1",
+                "label": "BoM",
+                "SYS_CODE": "BOM",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e01d98a70566c707c95",
+                    "SYS_IDENTIFIER": "/BOM/MANUFACTURING/EXTRACT_V1",
+                    "SYS_ENTITY_TYPE": "collection",
+                    "SYS_GENRE": "5ab88e01d98a70566c707c94",
+                    "label": "Extract V1 Manufacturing BoMs",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:57.938Z",
+                    "createdAt": "2018-03-26T06:06:57.938Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "label",
+                    "SYS_GENRE_IDENTIFIER": "/BOM/MANUFACTURING/",
+                    "SYS_CODE": "EXTRACT_V1",
+                    "id": "5ab88e01d98a70566c707c95"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.966Z",
+                "createdAt": "2018-03-26T06:06:57.966Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 500,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc1"
+            }
+        ]
+
+        let targetOutputList = [
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_TARGET": "5ac19eaf6c208011bc40679f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0011_1523242792316",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0011.20180402110831.1522638511070.3684.1523242792577.7473",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 2.1,
+                        "REMARK": "kapa remark",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.246Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.246Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_TARGET": "5ac19eaf6c208011bc40679f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0011_1523242792316",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0011.20180402110831.1522638511070.3684.1523242792618.4944",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.246Z"
+                    }
+                }
+            ],
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067a7",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0012_1523242792328",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0012.20180402110831.1522638511256.4565.1523242792643.3523",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 2.1,
+                        "REMARK": "kapa remark",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.246Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.246Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067a7",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0012_1523242792328",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0012.20180402110831.1522638511256.4565.1523242792672.9944",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.246Z"
+                    }
+                }
+            ]
+        ]
+
+        let output = `
+        # **18R0011**
+
+        undefined | undefined
+
+        submitted as:
+
+        >- Nanodrop ng/ul: 1
+
+        >- OD 260/230: 2.3
+
+        >- 样品提取时间: 2018-04-13
+
+        >- 操作人: 5ab88e01d98a70566c707c64
+
+        materials:
+
+        >- LOT170312: 2.1
+
+        >- Tip#1: 2
+
+        # **18R0012**
+
+        undefined | undefined
+
+        submitted as:
+
+        >- Nanodrop ng/ul: 1
+
+        >- OD 260/230: 2.3
+
+        >- 样品提取时间: 2018-04-13
+
+        >- 操作人: 5ab88e01d98a70566c707c64
+
+        materials:
+
+        >- LOT170312: 2.1
+
+        >- Tip#1: 2
+
+        > 
+
+        吴洋
+
+        2018-4-9 10:59
+        `
+
+    })// }}}
+
+    // sendMessageDingtalk with 5 samples{{{
+    it('TEST: sendMessageDingtalk with submitted 5 samples', done => {
+        let selectedSampleList = [
+            {
+            }
+        ]
+        let submittedSampleList = [
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409111449",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_QC_RESULT": "Ca",
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-19"
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409111449",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_QC_RESULT": "Ca",
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-19"
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409111449",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_QC_RESULT": "Ca",
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-19"
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409111449",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_QC_RESULT": "Ca",
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-19"
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.20180409111449",
+                "SYS_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_QC_RESULT": "Ca",
+                "CONF_DNA_EXTRACTION_EXTRACT_DATE": "2018-04-19"
+            }
+        ]
+        let attributeList = [
+            {
+                "_id": "5ab88e01d98a70566c707cc2",
+                "label": "Nanodrop ng/ul",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_NANODROP",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.966Z",
+                "createdAt": "2018-03-26T06:06:57.966Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 10,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc2"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc3",
+                "label": "Qubit ng/ul",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QUBIT",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.967Z",
+                "createdAt": "2018-03-26T06:06:57.967Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 20,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc3"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc4",
+                "label": "OD 260/230",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD230",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.968Z",
+                "createdAt": "2018-03-26T06:06:57.968Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 30,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc4"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc5",
+                "label": "OD 260/280",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD280",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.968Z",
+                "createdAt": "2018-03-26T06:06:57.968Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 40,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc5"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc6",
+                "label": "样品体积(ul)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_VOLUME",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.969Z",
+                "createdAt": "2018-03-26T06:06:57.969Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 50,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc6"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc7",
+                "label": "样品总量(ng)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_AMOUNT",
+                "SYS_TYPE": "number",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.970Z",
+                "createdAt": "2018-03-26T06:06:57.970Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 60,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc7"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc8",
+                "label": "质检结论",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_RESULT",
+                "SYS_TYPE": "list",
+                "SYS_TYPE_LIST": "A:A,B:B,Ca:C-a,Cb:C-b,Cd:C-d,D:D",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.970Z",
+                "createdAt": "2018-03-26T06:06:57.970Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 90,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc8"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc9",
+                "label": "质检备注",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_REMARK",
+                "SYS_TYPE": "list",
+                "SYS_TYPE_LIST": "1:合格,0:只电泳检测,-1:不合格",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.972Z",
+                "createdAt": "2018-03-26T06:06:57.972Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 100,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc9"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cca",
+                "label": "样品提取时间",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_EXTRACT_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 110,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cca"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccb",
+                "label": "质检完成时间",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QC_COMPLETE_DATE",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 120,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccb"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccc",
+                "label": "备注(DNA提取来源)",
+                "SYS_CODE": "CONF_DNA_EXTRACTION_REMARK",
+                "SYS_TYPE": "string",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.973Z",
+                "createdAt": "2018-03-26T06:06:57.973Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 130,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccc"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707ccd",
+                "label": "操作人",
+                "SYS_CODE": "SYS_WORKCENTER_OPERATOR",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e01d98a70566c707c5c",
+                    "SYS_IDENTIFIER": "/HUMAN_RESOURCE/IGENETECH",
+                    "SYS_ENTITY_TYPE": "class",
+                    "SYS_GENRE": "5ab88e01d98a70566c707c5b",
+                    "label": "Staff",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:57.701Z",
+                    "createdAt": "2018-03-26T06:06:57.701Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "label",
+                    "SYS_GENRE_IDENTIFIER": "/HUMAN_RESOURCE/",
+                    "SYS_CODE": "IGENETECH",
+                    "id": "5ab88e01d98a70566c707c5c"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.975Z",
+                "createdAt": "2018-03-26T06:06:57.975Z",
+                "SYS_TYPE_ENTITY_REF": true,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 140,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707ccd"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cce",
+                "label": "操作日期",
+                "SYS_CODE": "SYS_DATE_COMPLETED",
+                "SYS_TYPE": "date",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.975Z",
+                "createdAt": "2018-03-26T06:06:57.975Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 150,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cce"
+            },
+            {
+                "_id": "5ab88e01d98a70566c707cc1",
+                "label": "BoM",
+                "SYS_CODE": "BOM",
+                "SYS_TYPE": "entity",
+                "SYS_TYPE_ENTITY": {
+                    "_id": "5ab88e01d98a70566c707c95",
+                    "SYS_IDENTIFIER": "/BOM/MANUFACTURING/EXTRACT_V1",
+                    "SYS_ENTITY_TYPE": "collection",
+                    "SYS_GENRE": "5ab88e01d98a70566c707c94",
+                    "label": "Extract V1 Manufacturing BoMs",
+                    "__v": 0,
+                    "updatedAt": "2018-03-26T06:06:57.938Z",
+                    "createdAt": "2018-03-26T06:06:57.938Z",
+                    "SYS_PARENT_LIST": [],
+                    "SYS_LABEL": "label",
+                    "SYS_GENRE_IDENTIFIER": "/BOM/MANUFACTURING/",
+                    "SYS_CODE": "EXTRACT_V1",
+                    "id": "5ab88e01d98a70566c707c95"
+                },
+                "SYS_FLOOR_ENTITY_TYPE": "collection",
+                "SYS_GENRE": "5ab88e01d98a70566c707cc0",
+                "__v": 0,
+                "updatedAt": "2018-03-26T06:06:57.966Z",
+                "createdAt": "2018-03-26T06:06:57.966Z",
+                "SYS_TYPE_ENTITY_REF": false,
+                "SYS_IS_ENTITY_LABEL": false,
+                "SYS_REQUIRED": false,
+                "SYS_ORDER": 500,
+                "SYS_LABEL": "label",
+                "id": "5ab88e01d98a70566c707cc1"
+            }
+        ]
+        let targetOutputList = [
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0009",
+                        "SYS_TARGET": "5ac19eae6c208011bc40678f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0009_1523243716259",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0009.20180402110830.1522638510612.0252.1523243716702.0056",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 20,
+                        "REMARK": "test1",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.428Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0009",
+                        "SYS_TARGET": "5ac19eae6c208011bc40678f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0009_1523243716259",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0009.20180402110830.1522638510612.0252.1523243716837.8842",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z"
+                    }
+                }
+            ],
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0010",
+                        "SYS_TARGET": "5ac19eae6c208011bc406797",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0010_1523243716278",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0010.20180402110830.1522638510880.1309.1523243716723.7736",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 20,
+                        "REMARK": "test1",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.428Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0010",
+                        "SYS_TARGET": "5ac19eae6c208011bc406797",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0010_1523243716278",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0010.20180402110830.1522638510880.1309.1523243716870.6778",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z"
+                    }
+                }
+            ],
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_TARGET": "5ac19eaf6c208011bc40679f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0011_1523243716323",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0011.20180402110831.1522638511070.3684.1523243716774.0327",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 20,
+                        "REMARK": "test1",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.428Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_TARGET": "5ac19eaf6c208011bc40679f",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0011_1523243716323",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0011.20180402110831.1522638511070.3684.1523243716938.6752",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z"
+                    }
+                }
+            ],
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067a7",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0012_1523243716299",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0012.20180402110831.1522638511256.4565.1523243716751.9680",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 20,
+                        "REMARK": "test1",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.428Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067a7",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0012_1523243716299",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0012.20180402110831.1522638511256.4565.1523243716903.1197",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z"
+                    }
+                }
+            ],
+            [
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c83",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "label": "LOT170312",
+                        "__v": 0,
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/KAPA_HIFI/",
+                        "SYS_CODE": "LOT170312",
+                        "id": "5ab88e01d98a70566c707c83",
+                        "SYS_SCHEMA": [],
+                        "updatedAt": "2018-03-26T06:06:57.928Z",
+                        "createdAt": "2018-03-26T06:06:57.928Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label"
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0013",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067af",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0013_1523243716416",
+                        "SYS_IDENTIFIER": "/MATERIAL/KAPA_HIFI/LOT170312/18R0013.20180402110831.1522638511439.8182.1523243716964.2867",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c81",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c83",
+                        "SYS_QUANTITY": 20,
+                        "REMARK": "test1",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z",
+                        "SYS_DATE_ARRIVED": "2018-04-02T03:08:31.428Z"
+                    }
+                },
+                {
+                    "workcenter": {
+                        "_id": "5ab88e01d98a70566c707c8c",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1",
+                        "SYS_ENTITY_TYPE": "collection",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "label": "Tip#1",
+                        "__v": 0,
+                        "updatedAt": "2018-03-26T06:06:57.933Z",
+                        "createdAt": "2018-03-26T06:06:57.933Z",
+                        "SYS_PARENT_LIST": [],
+                        "SYS_LABEL": "label",
+                        "SYS_GENRE_IDENTIFIER": "/MATERIAL/TIP/",
+                        "SYS_CODE": "Tip_1",
+                        "id": "5ab88e01d98a70566c707c8c",
+                        "SYS_SCHEMA": []
+                    },
+                    "sample": {
+                        "SYS_LABEL": "SYS_SAMPLE_CODE",
+                        "SYS_SAMPLE_CODE": "18R0013",
+                        "SYS_TARGET": "5ac19eaf6c208011bc4067af",
+                        "SYS_AUDIT_DOCSET": "5ab88e01d98a70566c707c64_18R0013_1523243716416",
+                        "SYS_IDENTIFIER": "/MATERIAL/TIP/Tip_1/18R0013.20180402110831.1522638511439.8182.1523243717167.6189",
+                        "SYS_ENTITY_TYPE": "object",
+                        "SYS_GENRE": "5ab88e01d98a70566c707c8b",
+                        "SYS_CHECKED": true,
+                        "SYS_SOURCE": "5ab88e01d98a70566c707c8a",
+                        "SYS_QUANTITY": 2,
+                        "REMARK": "初始化生成",
+                        "SYS_FLOOR_ENTITY_TYPE": "collection",
+                        "SYS_DATE_SCHEDULED": "2018-04-02T03:08:31.428Z"
+                    }
+                }
+            ]
+        ]
+        let output = 
+            `
+        # **5** samples are submitted:
+
+        >- 18R0009
+
+        >- 18R0010
+
+        >- 18R0011
+
+        >- 18R0012
+
+        >- 18R0013
+
+        > 
+
+        吴洋
+
+        2018-4-9 11:15
+        `
+    })
+
+    // sendMessageDingtalk with 2 samples{{{
+    it('TEST: sendMessageDingtalk with issued 2 samples', done => {
+        //let selectedSampleList = [
+        //{
+        //}
+        //]
+        //let submittedSampleList = [
+        //let attributeList = [
+        //let targetOutputList = [
+        //let output = 
+    })
+
+    // sendMessageDingtalk with 5 samples{{{
+    it('TEST: sendMessageDingtalk with issued 5 samples', done => {
+        //let selectedSampleList = [
+        //{
+        //}
+        //]
+        //let submittedSampleList = [
+        //let attributeList = [
+        //let targetOutputList = [
+        //let output = 
+    })
+
+    // sendMessageDingtalk with excel {{{
+    it('TEST: sendMessageDingtalk with submitted 5 samples', done => {
+        //let selectedSampleList = [
+        //{
+        //}
+        //]
+        //let submittedSampleList = [
+        //let attributeList = [
+        //let targetOutputList = [
+        //let output = 
+    })
 })
