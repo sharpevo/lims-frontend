@@ -27,7 +27,11 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 import {SpinnerService} from '../util/spinner.service'
-import {CustomHttpService} from '../util/custom.http.service'// }}}
+import {CustomHttpService} from '../util/custom.http.service'
+
+import {LogService, LogLevel} from '../log/log.service'
+
+// }}}
 
 class MockEntityService extends EntityService {
     create(sample: any){
@@ -127,6 +131,7 @@ describe("SampleService test", () => {
             UtilService,
             Router,
             EntityService,
+            LogService,
         ],
         (
             http: CustomHttpService,
@@ -137,6 +142,7 @@ describe("SampleService test", () => {
             userInfoService: UserInfoService,
             router: Router,
             entityService: EntityService,
+            logger: LogService,
         ) => {
             let mockEntityService = new MockEntityService(http)
             let mockUserInfoService = new MockUserInfoService()
@@ -150,6 +156,7 @@ describe("SampleService test", () => {
                 mockUserInfoService,
                 router,
                 mockEntityService,
+                logger,
             )
         })
     )// }}}

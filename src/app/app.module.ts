@@ -85,6 +85,10 @@ import {AppLoadModule} from './app.load.module'
 import {UserInfoService} from './util/user.info.service'
 import {GuardService} from './util/guard.service'
 
+import {LogService} from './log/log.service'
+import {LogPublisher} from './log/publisher'
+import {LogPublisherService} from './log/publisher.service'
+
 @NgModule({
     declarations: [
         ObjectKeysPipe,
@@ -189,6 +193,8 @@ import {GuardService} from './util/guard.service'
             ]
         },
         UserInfoService,
+        LogService,
+        LogPublisherService,
     ],
     bootstrap: [AppComponent]
 })
