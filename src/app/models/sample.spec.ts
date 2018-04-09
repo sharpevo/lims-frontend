@@ -145,7 +145,7 @@ describe("SampleService test", () => {
             logger: LogService,
         ) => {
             let mockEntityService = new MockEntityService(http)
-            let mockUserInfoService = new MockUserInfoService()
+            let mockUserInfoService = new MockUserInfoService(logger)
             let newGenreService = new GenreService(http)
             let newUtilService = new UtilService(http, rawHttp)
             service = new SampleService(
@@ -156,7 +156,6 @@ describe("SampleService test", () => {
                 mockUserInfoService,
                 router,
                 mockEntityService,
-                logger,
             )
         })
     )// }}}

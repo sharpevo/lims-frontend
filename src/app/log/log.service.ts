@@ -19,15 +19,24 @@ export class LogEntry {
     extraInfo: any[] = []
     logWithDate: boolean = true
 
+    getTimeStamp(){
+        let date = new Date()
+        return date.getHours() + ':' +
+            date.getMinutes() + ':' +
+            date.getSeconds() + '.' +
+            date.getMilliseconds()
+    }
+
     buildLogString(): string {
         let result = ''
+        result += "[" + LogLevel[this.level] + "] "
         if (this.logWithDate) {
-            result += new Date() + " - "
+            result += this.getTimeStamp()
         }
-        result += "Type: " + LogLevel[this.level]
-        result += " - Message: " + JSON.stringify(this.message)
+        result += " :: "
+        result += JSON.stringify(this.message)
         if (this.extraInfo.length) {
-            result += " - Extra Info: " + this.formatParams(this.extraInfo)
+            result += " :: " + this.formatParams(this.extraInfo)
         }
         return result
     }
@@ -35,15 +44,17 @@ export class LogEntry {
     buildLogObject(){
         let ret = []
         let result = ''
+        result += "[" + LogLevel[this.level] + "] "
         if (this.logWithDate) {
-            result += new Date() + " - "
+            result += this.getTimeStamp()
         }
-        result += "Type: " + LogLevel[this.level]
-        result += " - Message: "
+        result += " ::"
         ret = [result, this.message]
         if (this.extraInfo.length) {
-            ret.push(" - Extra Info: ")
-            ret.push(this.extraInfo)
+            ret.push(":: ")
+            this.extraInfo.forEach(info => {
+                ret.push(info)
+            })
         }
         return ret
     }
@@ -77,7 +88,7 @@ export class LogService {
         return false
     }
 
-    writeToLog(msg: any, level: LogLevel, ...params: any[]) {
+    writeToLog(msg: any, level: LogLevel, params: any) {
         if (!this.shouldLog(level)){
             return
         }
