@@ -8,8 +8,8 @@ export const environment = {
   limsUrl: "http://localhost:8000", // for actionUrl of limsbot, return_to fo UIC
   apiUrl: "http://api.lims.igenetech.cn",
   uicUrl: "http://accounts.igenetech.cn",
-  //limsbotUrl: "http://192.168.1.25:8002/send",
-  limsbotUrl: "http://notif.lims.igenetech.cn/send",
+    limsbotUrl: "http://192.168.1.25:8002/send",
+    //limsbotUrl: "http://notif.lims.igenetech.cn/send",
   auditUrl: "http://audit.lims.igenetech.cn",
   version: "dev",
 };
