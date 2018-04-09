@@ -11,7 +11,8 @@ export abstract class LogPublisher {
 export class LogConsole extends LogPublisher {
 
     log(record: LogEntry): Observable<boolean> {
-        console.log(record.buildLogString())
+        //console.log(record.buildLogString())
+        console.log(...record.buildLogObject())
         return Observable.of(true)
     }
 

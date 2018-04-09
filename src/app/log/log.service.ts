@@ -32,6 +32,22 @@ export class LogEntry {
         return result
     }
 
+    buildLogObject(){
+        let ret = []
+        let result = ''
+        if (this.logWithDate) {
+            result += new Date() + " - "
+        }
+        result += "Type: " + LogLevel[this.level]
+        result += " - Message: "
+        ret = [result, this.message]
+        if (this.extraInfo.length) {
+            ret.push(" - Extra Info: ")
+            ret.push(this.extraInfo)
+        }
+        return ret
+    }
+
     formatParams(params: any[]): string {
         if (params.some(p => typeof p == "object")) {
             let result = ""
@@ -74,7 +90,7 @@ export class LogService {
         logEntry.logWithDate = this.logWithDate
 
         for (let logger of this.publishers) {
-            logger.log(logEntry).subscribe(res => console.log(res))
+            logger.log(logEntry).subscribe()
         }
 
         //console.log(logEntry.buildLogString())
