@@ -772,10 +772,24 @@ export class SampleService{
                 console.log("ERROR", err)
             },
             () => {
-                this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
-                .subscribe(() => {
-                    this.router.navigate(['/redirect' + this.router.url])
-                })
+                //this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
+                //.subscribe(() => {
+                //this.router.navigate(['/redirect' + this.router.url])
+                //})
+
+                console.log(">>>", sample, attributeInfo['attributeList'],targetOutput)
+
+                this.sendMessageToDingTalk$(
+                    issueSample,
+                    [sample],
+                    [sample],
+                    attributeInfo['attributeList'],
+                    targetOutput
+                )
+                //.subscribe(() => {
+                //this.router.navigate(['/redirect' + this.router.url])
+                //})
+
                 //let date = new Date()
                 //let msg_date = date.getFullYear() + '-' +
                 //(date.getMonth() + 1) + '-' +
@@ -1274,8 +1288,8 @@ export class SampleService{
 
                 //console.log("TEST #3:", subEntity)
                 return this.entityService.create(subEntity)
-                .map(entity => {
-                    //.mergeMap(entity => {
+                //.map(entity => {
+                .mergeMap(entity => {
                     //console.log("TEST #4:", {'workcenter': targetEntity, 'sample':subEntity})
                     return Observable.of({'workcenter': targetEntity, 'sample': subEntity})
                 })
