@@ -867,7 +867,8 @@ export class SampleService{
             let message = ''
 
             if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
-                message += `# **${submittedSampleList.length}** samples are ${VERB}:\n\n`
+                message += `# **${submittedSampleList[0]['TMP_CODE'].split('.')[0]}**\n\n`
+                message += `**${submittedSampleList.length}** samples are ${VERB}:\n\n`
                 submittedSampleList.forEach((submittedSample, index) => {
                     message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
                 })
