@@ -855,220 +855,220 @@ export class SampleService{
     ){
         this.logger.debug("args", issueSample, selectedSampleList, submittedSampleList, attributeList, targetOutputList)
 
-            this.logger.debug("targetOutputList", targetOutputList)
-            const MAX_LENGTH_OF_SAMPLELIST = 3
+        this.logger.debug("targetOutputList", targetOutputList)
+        const MAX_LENGTH_OF_SAMPLELIST = 3
 
-            let VERB = ''
-            let WITH = ''
-            if (issueSample) {
-                VERB = "issued"
-                WITH = "workcenters"
-            } else {
-                VERB = "submitted"
-                WITH = "materials"
-            }
-            let message = ''
+        let VERB = ''
+        let WITH = ''
+        if (issueSample) {
+            VERB = "issued"
+            WITH = "workcenters"
+        } else {
+            VERB = "submitted"
+            WITH = "materials"
+        }
+        let message = ''
 
-            if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
+        if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
             if (workcenter){
                 message += `# **${workcenter[workcenter['SYS_LABEL']]}**\n\n`
             } else {
                 message += `# **${submittedSampleList[0]['TMP_CODE'].split('.')[0]}**\n\n`
             }
-                message += `**${submittedSampleList.length}** samples are ${VERB}:\n\n`
-                submittedSampleList.forEach((submittedSample, index) => {
-                    message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
-                })
-            } else {
-                submittedSampleList.forEach((submittedSample, index) => {
-                    message += `# **${selectedSampleList[index].SYS_SAMPLE_CODE}**\n\n${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_CODE} | ${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-                        `${VERB} as:\n\n`
+            message += `**${submittedSampleList.length}** samples are ${VERB}:\n\n`
+            submittedSampleList.forEach((submittedSample, index) => {
+                message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
+            })
+        } else {
+            submittedSampleList.forEach((submittedSample, index) => {
+                message += `# **${selectedSampleList[index].SYS_SAMPLE_CODE}**\n\n${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_CODE} | ${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                    `${VERB} as:\n\n`
 
-                    attributeList.forEach(attr => {
-                        if (submittedSample.hasOwnProperty(attr.SYS_CODE)) {
-                            message += `>- ${attr[attr['SYS_LABEL']]}: ${submittedSample[attr.SYS_CODE]}\n\n`
-                        }
-                    })
-
-
-                    message += `${WITH}:\n\n`
-                    for (let targetOutput of targetOutputList) {
-
-
-                        this.logger.debug("targetOutput:", targetOutput)
-                        if (targetOutput.length == 0) {
-                            break
-                        }
-
-
-                        for (let target of targetOutput){
-                            this.logger.debug("target:", target)
-                            let sample = target['sample']
-                            let workcenter = target['workcenter']
-
-                            // forkJoin returns value arbitrarily
-                            if (sample['SYS_SAMPLE_CODE'] == selectedSampleList[index]['SYS_SAMPLE_CODE']) {
-                                this.logger.debug("sample:", sample)
-                                if (issueSample){
-                                    let scheduledDate = new DatePipe('en-US')
-                                    .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-                                    message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-                                } else {
-                                    message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
-                                }
-
-                                continue
-
-                            }
-                        }
-                    }
-                })
-            }
-
-            let date = new Date()
-            let msg_date = date.getFullYear() + '-' +
-                (date.getMonth() + 1) + '-' +
-                date.getDate() + ' ' +
-                date.getHours() + ':' +
-                date.getMinutes()
-
-            message +=`> \n\n${this.userInfo.name}\n\n` +
-                `${msg_date}`
-            let beforeDate = new Date(date)
-            beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
-            let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
-            let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
-            let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
-            this.logger.info("Sending notification:", redirectUrl)
-
-            this.logger.debug("Message", message)
-            return this.utilService.sendNotif(
-                "actionCard",
-                message,
-                redirectUrl)
-        }
-
-        sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]){
-
-            let date = new Date()
-            let msg_date = date.getFullYear() + '-' +
-                (date.getMonth() + 1) + '-' +
-                date.getDate() + ' ' +
-                date.getHours() + ':' +
-                date.getMinutes()
-
-            let message = ''
-            if (issueSample){
-                message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
-                message += `scheduled to the following workcenters\n\n`
-            } else {
-                message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
                 attributeList.forEach(attr => {
-                    if (sample.hasOwnProperty(attr.SYS_CODE)) {
-                        message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+                    if (submittedSample.hasOwnProperty(attr.SYS_CODE)) {
+                        message += `>- ${attr[attr['SYS_LABEL']]}: ${submittedSample[attr.SYS_CODE]}\n\n`
                     }
                 })
-                if (targetOutput.length > 0){
-                    message += `with the following materials\n\n`
-                }
-            }
-            targetOutput.forEach(target => {
-                let sample = target['sample']
-                let workcenter = target['workcenter']
-                this.logger.debug("target", target)
-                if (issueSample){
-                    let scheduledDate = new DatePipe('en-US')
-                    .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-                    message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-                } else {
-                    if (workcenter){
-                        message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+
+
+                message += `${WITH}:\n\n`
+                for (let targetOutput of targetOutputList) {
+
+
+                    this.logger.debug("targetOutput:", targetOutput)
+                    if (targetOutput.length == 0) {
+                        break
+                    }
+
+
+                    for (let target of targetOutput){
+                        this.logger.debug("target:", target)
+                        let sample = target['sample']
+                        let workcenter = target['workcenter']
+
+                        // forkJoin returns value arbitrarily
+                        if (sample['SYS_SAMPLE_CODE'] == selectedSampleList[index]['SYS_SAMPLE_CODE']) {
+                            this.logger.debug("sample:", sample)
+                            if (issueSample){
+                                let scheduledDate = new DatePipe('en-US')
+                                .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+                            } else {
+                                message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                            }
+
+                            continue
+
+                        }
                     }
                 }
             })
-            message +=`> \n\n${this.userInfo.name}\n\n` +
-                `${msg_date}`
-            let beforeDate = new Date(date)
-            beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
-            let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
-            let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
-            let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
-            this.logger.info("Sending notification:", redirectUrl)
-            return this.utilService.sendNotif(
-                "actionCard",
-                message,
-                redirectUrl
-            )
         }
 
-        createObject$(object: any, attributeInfo: any, issueSample: boolean){
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
 
-            object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
-            object['SYS_AUDIT_DOCSET'] = this.utilService.getDocSet(
-                this.userInfo.limsid,
-                object['SYS_SAMPLE_CODE'],
-            )
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+            `${msg_date}`
+        let beforeDate = new Date(date)
+        beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+        let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+        let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+        let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+        this.logger.info("Sending notification:", redirectUrl)
 
-            if (issueSample){
-                return this.entityService.create(object)
-                .mergeMap(data => {
-                    delete data.SYS_WORKCENTER_OPERATOR
-                    delete data.SYS_DATE_COMPLETED
-                    this.logger.debug('Issue sample:', data)
-                    return this.buildRelationship(data, attributeInfo)
-                })
-                .retryWhen(
-                    attempts => Observable.range(1, 10)
-                    .zip(attempts, i => i)
-                    .mergeMap(i => {
-                        this.logger.info("delay retry by " + i + " seconds")
-                        return Observable.timer(i * 1000);
-                    }))
-            } else {
-                let sampleCode = object['SYS_SAMPLE_CODE']
-                return this.isSuspended(sampleCode)
-                .mergeMap(isSuspended => {
-                    this.logger.debug("SUSPEND CHECKING:", isSuspended)
-                    if (isSuspended) {
-                        return Observable.throw("Sample '" + sampleCode + "' is suspended")
-                    } else {
-                        return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-                        .mergeMap(data => {
-                            //this.logger.debug("retrive chained sample:", data)
-                            object.id = data[0].id
-                            object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
-                            // Using update instead of create since the identifier /workcenter/17R001
-                            // has been assigned to the scheduled sample
-                            return this.entityService.update(object)
-                            .mergeMap(data => {
-                                this.logger.debug('Add Entity:', data)
-                                return this.buildRelationship(data, attributeInfo)
-                            })
-                        })
-                        .retryWhen(
-                            attempts => Observable.range(1, 10)
-                            .zip(attempts, i => i)
-                            .mergeMap(i => {
-                                this.logger.info("delay retry by " + i + " seconds")
-                                return Observable.timer(i * 1000);
-                            }))
+        this.logger.debug("Message", message)
+        return this.utilService.sendNotif(
+            "actionCard",
+            message,
+            redirectUrl)
+    }
 
-                    }
-                })
+    sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]){
+
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
+
+        let message = ''
+        if (issueSample){
+            message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+            message += `scheduled to the following workcenters\n\n`
+        } else {
+            message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+            attributeList.forEach(attr => {
+                if (sample.hasOwnProperty(attr.SYS_CODE)) {
+                    message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+                }
+            })
+            if (targetOutput.length > 0){
+                message += `with the following materials\n\n`
             }
         }
+        targetOutput.forEach(target => {
+            let sample = target['sample']
+            let workcenter = target['workcenter']
+            this.logger.debug("target", target)
+            if (issueSample){
+                let scheduledDate = new DatePipe('en-US')
+                .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+            } else {
+                if (workcenter){
+                    message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                }
+            }
+        })
+        message +=`> \n\n${this.userInfo.name}\n\n` +
+            `${msg_date}`
+        let beforeDate = new Date(date)
+        beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+        let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+        let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+        let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+        this.logger.info("Sending notification:", redirectUrl)
+        return this.utilService.sendNotif(
+            "actionCard",
+            message,
+            redirectUrl
+        )
+    }
 
-        /**
-         * buildRelationship is designed for planning in routing or records usage of
-         * material in BoM, from sourceEntity to the targetEntity.
-         *
-         * @param sourceEntity The manipulated entity.
-         * @param attributeInfo argument map
-         *
-         */
-        buildRelationship(sourceEntity: any, attributeInfo: any){
+    createObject$(object: any, attributeInfo: any, issueSample: boolean){
 
-            this.logger.debug("Args", sourceEntity, attributeInfo)
+        object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
+        object['SYS_AUDIT_DOCSET'] = this.utilService.getDocSet(
+            this.userInfo.limsid,
+            object['SYS_SAMPLE_CODE'],
+        )
+
+        if (issueSample){
+            return this.entityService.create(object)
+            .mergeMap(data => {
+                delete data.SYS_WORKCENTER_OPERATOR
+                delete data.SYS_DATE_COMPLETED
+                this.logger.debug('Issue sample:', data)
+                return this.buildRelationship(data, attributeInfo)
+            })
+            .retryWhen(
+                attempts => Observable.range(1, 10)
+                .zip(attempts, i => i)
+                .mergeMap(i => {
+                    this.logger.info("delay retry by " + i + " seconds")
+                    return Observable.timer(i * 1000);
+                }))
+        } else {
+            let sampleCode = object['SYS_SAMPLE_CODE']
+            return this.isSuspended(sampleCode)
+            .mergeMap(isSuspended => {
+                this.logger.debug("SUSPEND CHECKING:", isSuspended)
+                if (isSuspended) {
+                    return Observable.throw("Sample '" + sampleCode + "' is suspended")
+                } else {
+                    return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+                    .mergeMap(data => {
+                        //this.logger.debug("retrive chained sample:", data)
+                        object.id = data[0].id
+                        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+                        // Using update instead of create since the identifier /workcenter/17R001
+                        // has been assigned to the scheduled sample
+                        return this.entityService.update(object)
+                        .mergeMap(data => {
+                            this.logger.debug('Add Entity:', data)
+                            return this.buildRelationship(data, attributeInfo)
+                        })
+                    })
+                    .retryWhen(
+                        attempts => Observable.range(1, 10)
+                        .zip(attempts, i => i)
+                        .mergeMap(i => {
+                            this.logger.info("delay retry by " + i + " seconds")
+                            return Observable.timer(i * 1000);
+                        }))
+
+                }
+            })
+        }
+    }
+
+    /**
+     * buildRelationship is designed for planning in routing or records usage of
+     * material in BoM, from sourceEntity to the targetEntity.
+     *
+     * @param sourceEntity The manipulated entity.
+     * @param attributeInfo argument map
+     *
+     */
+    buildRelationship(sourceEntity: any, attributeInfo: any){
+
+        this.logger.debug("Args", sourceEntity, attributeInfo)
             let observableList = []
 
             let attributeList = attributeInfo['attributeList']
@@ -1077,133 +1077,133 @@ export class SampleService{
             // Get the keys for each kind of BoM/Routing, e.g., "bom", "bill_of_material".
             Object.keys(parentMap).forEach(key => {
 
-                let targetEntityMap = parentMap[key]
-                this.logger.debug("targetEntityMap", targetEntityMap)
+                    let targetEntityMap = parentMap[key]
+                    this.logger.debug("targetEntityMap", targetEntityMap)
 
-                let SYS_DATE_SCHEDULED: Date
+                    let SYS_DATE_SCHEDULED: Date
 
-                // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
-                Object.keys(targetEntityMap)
-                .sort((a,b) => {
-                    // sort target entities by SYS_ORDER which is manipulated by admins.
-                    if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
-                        return 1
-                    } else {
-                        return -1
-                    }
-                })
-                .forEach((entityId, index) =>{
-
-                    // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
-                    let targetEntityInput = targetEntityMap[entityId]
-
-                    // only process checked Material or Workcenter
-                    if (targetEntityInput['SYS_CHECKED']){
-
-                        this.logger.debug("targetEntityInput", targetEntityInput)
-                        // Calculate SYS_DATE_SCHEDULED
-
-                        SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
-                        targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-
-                        if (index == 0){
-                            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
-                        }
-
-                        this.logger.debug("new targetEntityInput", targetEntityInput)
-                        // Get the target entity from the SYS_SOURCE
-                        observableList.push(
-                            this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
-                            .mergeMap(targetEntity => {
-                                this.logger.debug("targetEntity", targetEntity)
-
-                                //.subscribe(targetEntity => {
-
-                                // check whether SYS_SOURCE has been specified manually
-                                // BoM: 'class' == 'collection'
-                                // Routing: 'class' == 'class', since it's only one option and the
-                                // checkbox is another way to detect checked or not
-                                if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
-                                    // SYS_SOURCE has been specified manually
-
-                                    //console.log("---------Entries has been specified:", targetEntity)
-                                    this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                    return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
-
-                                } else {
-                                    // SYS_SORUCE is not selected, and it happens only when BoM
-                                    // (checked but not selected)
-
-                                    // Get the LOTs of targetEntity and take the first one as the default
-                                    return this.entityService.retrieveEntity(
-                                        targetEntityInput['SYS_SOURCE'],
-                                        targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
-                                        .mergeMap(data => {
-                                            this.logger.debug("targetEntityInput", targetEntityInput)
-
-                                            //.subscribe(data => {
-                                            //console.log("---------Retrieve entries in BoM or Routing:", data[0])
-                                            //console.log("merge from entity:", targetEntity)
-                                            if (!data[0]) {
-                                                this.logger.warn("None of LOT under the " +
-                                                                 targetEntityInput['SYS_SOURCE'])
-                                            } else {
-                                                this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                                return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
-                                            }
-
-                                        })
-
-                                }
+                    // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
+                    Object.keys(targetEntityMap)
+                    .sort((a,b) => {
+                            // sort target entities by SYS_ORDER which is manipulated by admins.
+                            if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
+                            return 1
+                            } else {
+                            return -1
+                            }
                             })
-                        )
+                    .forEach((entityId, index) =>{
+
+                            // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
+                            let targetEntityInput = targetEntityMap[entityId]
+
+                            // only process checked Material or Workcenter
+                            if (targetEntityInput['SYS_CHECKED']){
+
+                            this.logger.debug("targetEntityInput", targetEntityInput)
+                            // Calculate SYS_DATE_SCHEDULED
+
+                            SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
+                            targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
+
+                            if (index == 0){
+                            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
+                            }
+
+                            this.logger.debug("new targetEntityInput", targetEntityInput)
+                            // Get the target entity from the SYS_SOURCE
+                            observableList.push(
+                                    this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+                                    .mergeMap(targetEntity => {
+                                        this.logger.debug("targetEntity", targetEntity)
+
+                                        //.subscribe(targetEntity => {
+
+                                        // check whether SYS_SOURCE has been specified manually
+                                        // BoM: 'class' == 'collection'
+                                        // Routing: 'class' == 'class', since it's only one option and the
+                                        // checkbox is another way to detect checked or not
+                                        if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+                                        // SYS_SOURCE has been specified manually
+
+                                        //console.log("---------Entries has been specified:", targetEntity)
+                                        this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                        return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
+
+                                        } else {
+                                        // SYS_SORUCE is not selected, and it happens only when BoM
+                                        // (checked but not selected)
+
+                                        // Get the LOTs of targetEntity and take the first one as the default
+                                            return this.entityService.retrieveEntity(
+                                                    targetEntityInput['SYS_SOURCE'],
+                                                    targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                                                .mergeMap(data => {
+                                                        this.logger.debug("targetEntityInput", targetEntityInput)
+
+                                                        //.subscribe(data => {
+                                                        //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                                                        //console.log("merge from entity:", targetEntity)
+                                                        if (!data[0]) {
+                                                        this.logger.warn("None of LOT under the " +
+                                                                targetEntityInput['SYS_SOURCE'])
+                                                        } else {
+                                                        this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                                        return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                                                        }
+
+                                                        })
+
+                                                        }
+                                                        })
+                                        )
+                                    }
+                                    })
+
+                            })
+
+                            //return Observable.concat(...observableList)
+                            return Observable.forkJoin(observableList)
                     }
-                })
 
-            })
+                    getScheduledDate(
+                            SYS_DATE_SCHEDULED: Date,
+                            sourceEntityScheduledDate: Date,
+                            targetEntityDuration: number,
+                            ){
+                        if (!SYS_DATE_SCHEDULED) {
+                            if (sourceEntityScheduledDate) {
+                                SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
+                            } else {
+                                SYS_DATE_SCHEDULED = new Date()
+                            }
+                        } else {
+                            SYS_DATE_SCHEDULED.setDate(
+                                    SYS_DATE_SCHEDULED.getDate() +
+                                    (targetEntityDuration?targetEntityDuration:0)
+                                    )
+                        }
+                        return SYS_DATE_SCHEDULED
 
-            //return Observable.concat(...observableList)
-            return Observable.forkJoin(observableList)
-        }
+                    }
 
-        getScheduledDate(
-            SYS_DATE_SCHEDULED: Date,
-            sourceEntityScheduledDate: Date,
-            targetEntityDuration: number,
-        ){
-            if (!SYS_DATE_SCHEDULED) {
-                if (sourceEntityScheduledDate) {
-                    SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
-                } else {
-                    SYS_DATE_SCHEDULED = new Date()
-                }
-            } else {
-                SYS_DATE_SCHEDULED.setDate(
-                    SYS_DATE_SCHEDULED.getDate() +
-                        (targetEntityDuration?targetEntityDuration:0)
-                )
-            }
-            return SYS_DATE_SCHEDULED
-
-        }
-
-        /**
-         * Create subentities for the given entity. For the BoM, it's used to create
-         * the droplet(object entity) under the Material, and for the routing, to
-         * create the sample(collection entity) under the Workcenter.
-         *
-         * For the creation of subEntity, Routing copies "attributeList" from the
-         * current workcenter(Project Management) to the subEntity for the target
-         * workcenter(Sample Extraction for example), e.g., index, panel, routing,
-         * etc.; BoM copies "attrbiutes" from the target material to the subEntity
-         * for the target Material(Kapa Hifi for example).
-         *
-         * @param sourceEntity The SYS_SOURCE object under the Project Management.
-         * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
-         * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
-         * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
-         * @return nill
-         */
+                    /**
+                     * Create subentities for the given entity. For the BoM, it's used to create
+                     * the droplet(object entity) under the Material, and for the routing, to
+                     * create the sample(collection entity) under the Workcenter.
+                     *
+                     * For the creation of subEntity, Routing copies "attributeList" from the
+                     * current workcenter(Project Management) to the subEntity for the target
+                     * workcenter(Sample Extraction for example), e.g., index, panel, routing,
+                     * etc.; BoM copies "attrbiutes" from the target material to the subEntity
+                     * for the target Material(Kapa Hifi for example).
+                     *
+                     * @param sourceEntity The SYS_SOURCE object under the Project Management.
+                     * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
+                     * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
+                     * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
+                     * @return nill
+                     */
         @LogFunc
         createSubEntity(
             sourceEntity:any,
@@ -1318,5 +1318,5 @@ export class SampleService{
             this.snackBar.open(message, action, {duration: 4000})
         }
 
-}
+    }
 
