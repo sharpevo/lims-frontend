@@ -3,19 +3,19 @@ import {LogPublisher} from './publisher'
 import {LogPublisherService} from './publisher.service'
 
 export enum LogLevel {
-    All = 0,
-        Debug = 1,
-        Info = 2,
-        Warn = 3,
-        Error = 4,
-        Fatal = 5,
-        Off = 6
+    ALL = 0,
+        DEBUG = 1,
+        INFO = 2,
+        WARN = 3,
+        ERROR = 4,
+        FATAL = 5,
+        OFF = 6
 }
 
 export class LogEntry {
     entryDate: Date = new Date()
     message: string = ""
-    level: LogLevel = LogLevel.Debug
+    level: LogLevel = LogLevel.DEBUG
     extraInfo: any[] = []
     logWithDate: boolean = true
 
@@ -73,7 +73,7 @@ export class LogEntry {
 
 @Injectable()
 export class LogService {
-    level: LogLevel = LogLevel.All
+    level: LogLevel = LogLevel.ALL
     logWithDate: boolean = true
     publishers: LogPublisher[]
 
@@ -82,7 +82,7 @@ export class LogService {
     }
 
     shouldLog(level: LogLevel): boolean {
-        if (this.level !== LogLevel.Off && level >= this.level) {
+        if (this.level !== LogLevel.OFF && level >= this.level) {
             return true
         }
         return false
@@ -108,27 +108,27 @@ export class LogService {
     }
 
     log(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.All, optionalParams)
+        this.writeToLog(msg, LogLevel.ALL, optionalParams)
     }
 
     debug(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.Debug, optionalParams)
+        this.writeToLog(msg, LogLevel.DEBUG, optionalParams)
     }
 
     info(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.Info, optionalParams)
+        this.writeToLog(msg, LogLevel.INFO, optionalParams)
     }
 
     warn(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.Warn, optionalParams)
+        this.writeToLog(msg, LogLevel.WARN, optionalParams)
     }
 
     error(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.Error, optionalParams)
+        this.writeToLog(msg, LogLevel.ERROR, optionalParams)
     }
 
     fatal(msg: any, ...optionalParams: any[]){
-        this.writeToLog(msg, LogLevel.Fatal, optionalParams)
+        this.writeToLog(msg, LogLevel.FATAL, optionalParams)
     }
 
 }
