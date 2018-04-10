@@ -850,7 +850,10 @@ export class SampleService{
         selectedSampleList: any[],
         submittedSampleList: any[],
         attributeList: any[],
-        targetOutputList: any[]){
+        targetOutputList: any[],
+        workcenter?: any
+    ){
+        this.logger.debug("args", issueSample, selectedSampleList, submittedSampleList, attributeList, targetOutputList)
 
             this.logger.debug("targetOutputList", targetOutputList)
             const MAX_LENGTH_OF_SAMPLELIST = 3
@@ -867,7 +870,11 @@ export class SampleService{
             let message = ''
 
             if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
+            if (workcenter){
+                message += `# **${workcenter[workcenter['SYS_LABEL']]}**\n\n`
+            } else {
                 message += `# **${submittedSampleList[0]['TMP_CODE'].split('.')[0]}**\n\n`
+            }
                 message += `**${submittedSampleList.length}** samples are ${VERB}:\n\n`
                 submittedSampleList.forEach((submittedSample, index) => {
                     message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
