@@ -1069,254 +1069,254 @@ export class SampleService{
     buildRelationship(sourceEntity: any, attributeInfo: any){
 
         this.logger.debug("Args", sourceEntity, attributeInfo)
-            let observableList = []
+        let observableList = []
 
-            let attributeList = attributeInfo['attributeList']
-            let parentMap = attributeInfo['parentMap']
+        let attributeList = attributeInfo['attributeList']
+        let parentMap = attributeInfo['parentMap']
 
-            // Get the keys for each kind of BoM/Routing, e.g., "bom", "bill_of_material".
-            Object.keys(parentMap).forEach(key => {
+        // Get the keys for each kind of BoM/Routing, e.g., "bom", "bill_of_material".
+        Object.keys(parentMap).forEach(key => {
 
-                    let targetEntityMap = parentMap[key]
-                    this.logger.debug("targetEntityMap", targetEntityMap)
+            let targetEntityMap = parentMap[key]
+            this.logger.debug("targetEntityMap", targetEntityMap)
 
-                    let SYS_DATE_SCHEDULED: Date
+            let SYS_DATE_SCHEDULED: Date
 
-                    // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
-                    Object.keys(targetEntityMap)
-                    .sort((a,b) => {
-                            // sort target entities by SYS_ORDER which is manipulated by admins.
-                            if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
-                            return 1
+            // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
+            Object.keys(targetEntityMap)
+            .sort((a,b) => {
+                // sort target entities by SYS_ORDER which is manipulated by admins.
+                if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
+                    return 1
+                } else {
+                    return -1
+                }
+            })
+            .forEach((entityId, index) =>{
+
+                // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
+                let targetEntityInput = targetEntityMap[entityId]
+
+                // only process checked Material or Workcenter
+                if (targetEntityInput['SYS_CHECKED']){
+
+                    this.logger.debug("targetEntityInput", targetEntityInput)
+                    // Calculate SYS_DATE_SCHEDULED
+
+                    SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
+                    targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
+
+                    if (index == 0){
+                        targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
+                    }
+
+                    this.logger.debug("new targetEntityInput", targetEntityInput)
+                    // Get the target entity from the SYS_SOURCE
+                    observableList.push(
+                        this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+                        .mergeMap(targetEntity => {
+                            this.logger.debug("targetEntity", targetEntity)
+
+                            //.subscribe(targetEntity => {
+
+                            // check whether SYS_SOURCE has been specified manually
+                            // BoM: 'class' == 'collection'
+                            // Routing: 'class' == 'class', since it's only one option and the
+                            // checkbox is another way to detect checked or not
+                            if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+                                // SYS_SOURCE has been specified manually
+
+                                //console.log("---------Entries has been specified:", targetEntity)
+                                this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
+
                             } else {
-                            return -1
-                            }
-                            })
-                    .forEach((entityId, index) =>{
+                                // SYS_SORUCE is not selected, and it happens only when BoM
+                                // (checked but not selected)
 
-                            // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
-                            let targetEntityInput = targetEntityMap[entityId]
+                                // Get the LOTs of targetEntity and take the first one as the default
+                                return this.entityService.retrieveEntity(
+                                    targetEntityInput['SYS_SOURCE'],
+                                    targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                                    .mergeMap(data => {
+                                        this.logger.debug("targetEntityInput", targetEntityInput)
 
-                            // only process checked Material or Workcenter
-                            if (targetEntityInput['SYS_CHECKED']){
-
-                            this.logger.debug("targetEntityInput", targetEntityInput)
-                            // Calculate SYS_DATE_SCHEDULED
-
-                            SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
-                            targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-
-                            if (index == 0){
-                            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
-                            }
-
-                            this.logger.debug("new targetEntityInput", targetEntityInput)
-                            // Get the target entity from the SYS_SOURCE
-                            observableList.push(
-                                    this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
-                                    .mergeMap(targetEntity => {
-                                        this.logger.debug("targetEntity", targetEntity)
-
-                                        //.subscribe(targetEntity => {
-
-                                        // check whether SYS_SOURCE has been specified manually
-                                        // BoM: 'class' == 'collection'
-                                        // Routing: 'class' == 'class', since it's only one option and the
-                                        // checkbox is another way to detect checked or not
-                                        if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
-                                        // SYS_SOURCE has been specified manually
-
-                                        //console.log("---------Entries has been specified:", targetEntity)
-                                        this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                        return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
-
+                                        //.subscribe(data => {
+                                        //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                                        //console.log("merge from entity:", targetEntity)
+                                        if (!data[0]) {
+                                            this.logger.warn("None of LOT under the " +
+                                                             targetEntityInput['SYS_SOURCE'])
                                         } else {
-                                        // SYS_SORUCE is not selected, and it happens only when BoM
-                                        // (checked but not selected)
+                                            this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                            return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                                        }
 
-                                        // Get the LOTs of targetEntity and take the first one as the default
-                                            return this.entityService.retrieveEntity(
-                                                    targetEntityInput['SYS_SOURCE'],
-                                                    targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
-                                                .mergeMap(data => {
-                                                        this.logger.debug("targetEntityInput", targetEntityInput)
-
-                                                        //.subscribe(data => {
-                                                        //console.log("---------Retrieve entries in BoM or Routing:", data[0])
-                                                        //console.log("merge from entity:", targetEntity)
-                                                        if (!data[0]) {
-                                                        this.logger.warn("None of LOT under the " +
-                                                                targetEntityInput['SYS_SOURCE'])
-                                                        } else {
-                                                        this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                                        return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
-                                                        }
-
-                                                        })
-
-                                                        }
-                                                        })
-                                        )
-                                    }
                                     })
 
-                            })
-
-                            //return Observable.concat(...observableList)
-                            return Observable.forkJoin(observableList)
-                    }
-
-                    getScheduledDate(
-                            SYS_DATE_SCHEDULED: Date,
-                            sourceEntityScheduledDate: Date,
-                            targetEntityDuration: number,
-                            ){
-                        if (!SYS_DATE_SCHEDULED) {
-                            if (sourceEntityScheduledDate) {
-                                SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
-                            } else {
-                                SYS_DATE_SCHEDULED = new Date()
                             }
-                        } else {
-                            SYS_DATE_SCHEDULED.setDate(
-                                    SYS_DATE_SCHEDULED.getDate() +
-                                    (targetEntityDuration?targetEntityDuration:0)
-                                    )
-                        }
-                        return SYS_DATE_SCHEDULED
-
-                    }
-
-                    /**
-                     * Create subentities for the given entity. For the BoM, it's used to create
-                     * the droplet(object entity) under the Material, and for the routing, to
-                     * create the sample(collection entity) under the Workcenter.
-                     *
-                     * For the creation of subEntity, Routing copies "attributeList" from the
-                     * current workcenter(Project Management) to the subEntity for the target
-                     * workcenter(Sample Extraction for example), e.g., index, panel, routing,
-                     * etc.; BoM copies "attrbiutes" from the target material to the subEntity
-                     * for the target Material(Kapa Hifi for example).
-                     *
-                     * @param sourceEntity The SYS_SOURCE object under the Project Management.
-                     * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
-                     * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
-                     * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
-                     * @return nill
-                     */
-        @LogFunc
-        createSubEntity(
-            sourceEntity:any,
-            targetEntity:any,
-            workcenterAttributeList: any[],
-            targetEntityInput: any
-        ): Observable<any> {
-
-            this.logger.debug("args", sourceEntity, targetEntity, workcenterAttributeList, targetEntityInput)
-            let subEntity = {}
-
-            // Get default label from the source entity
-            subEntity['SYS_LABEL'] = sourceEntity['SYS_LABEL']
-            subEntity[subEntity['SYS_LABEL']] = sourceEntity[sourceEntity['SYS_LABEL']]
-
-            subEntity['SYS_TARGET'] = sourceEntity.id
-
-            // Assign DOCSET
-            subEntity['SYS_AUDIT_DOCSET'] = sourceEntity['SYS_AUDIT_DOCSET']
-
-            // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
-            // samples involved more than one time in the same workcenter
-            subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
-                sourceEntity['SYS_CODE'] + '.' + new Date().getTime() + '.' +
-                Math.random().toString().substr(2, 4)
-
-            this.logger.debug("subEntity", Object.assign({}, subEntity))
-            if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
-                // Routing specific operations
-
-                subEntity['SYS_ENTITY_TYPE'] = 'collection'
-                workcenterAttributeList.forEach(attribute => {
-                    if (!this.ignoredAttribute[attribute.SYS_CODE]) {
-                        subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
-                    }
-                })
-                this.logger.debug("new subEntity", subEntity)
-                return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
-
-            } else { // == 'collection'
-                // BoM specific operations
-
-                subEntity['SYS_ENTITY_TYPE'] = 'object'
-                return this.entityService.retrieveAttribute(targetEntity.id)
-                .mergeMap(attributes => {
-                    attributes.forEach(attribute => {
-                        subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
-                    })
-                    this.logger.debug("new subEntity", Object.assign({}, subEntity))
-                    return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
-                })
-            }
-        }
-
-        /**
-         * submitSubEntity is created only for reusing logics and avoid to introduce
-         * async for BoM and Routing
-         *
-         * The SYS_GENRE should be the default genre of the workcenter/material
-         * instead of targetEntity['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/", and
-         * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
-         *
-         */
-        @LogFunc
-        submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
-            this.logger.debug("args", subEntity, targetEntity, targetEntityInput)
-
-            //for both of BoM and Routing
-            return this.genreService.retrieveBy({
-                "SYS_ENTITY": targetEntity.id
-            })
-            .mergeMap(data => {
-                if (data[0]) {
-                    // Get SYS_GENRE from the workcenter
-
-                    subEntity['SYS_GENRE'] = data[0].id
-                    this.logger.debug("genre", data)
-                } else {
-                    // Collection of materials may not contains any SYS_GENRE defaultly
-
-                    subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
-                    this.logger.debug("genre", subEntity['SYS_GENRE'])
+                        })
+                    )
                 }
-
-                // Assign new values to the new material object
-                Object.keys(targetEntityInput).forEach(key => {
-                    subEntity[key] = targetEntityInput[key]
-                })
-
-                this.logger.debug("subEntity", subEntity)
-                return this.entityService.create(subEntity)
-                //.map(entity => {
-                .mergeMap(entity => {
-                    this.logger.debug("result", {'workcenter': targetEntity, 'sample':subEntity})
-                    return Observable.of({'workcenter': targetEntity, 'sample': subEntity})
-                })
-                //.delay(100)
             })
-            .retryWhen(
-                attempts => Observable.range(1, 10)
-                .zip(attempts, i => i)
-                .mergeMap(i => {
-                    this.logger.info("delay retry by " + i + " seconds")
-                    return Observable.timer(i * 1000);
-                }))
-        }
-        openSnackBar(message: string, action: string) {
-            this.snackBar.open(message, action)
-        }
 
-        showMessage(message: string, action: string) {
-            this.snackBar.open(message, action, {duration: 4000})
+        })
+
+        //return Observable.concat(...observableList)
+        return Observable.forkJoin(observableList)
+    }
+
+    getScheduledDate(
+        SYS_DATE_SCHEDULED: Date,
+        sourceEntityScheduledDate: Date,
+        targetEntityDuration: number,
+    ){
+        if (!SYS_DATE_SCHEDULED) {
+            if (sourceEntityScheduledDate) {
+                SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
+            } else {
+                SYS_DATE_SCHEDULED = new Date()
+            }
+        } else {
+            SYS_DATE_SCHEDULED.setDate(
+                SYS_DATE_SCHEDULED.getDate() +
+                    (targetEntityDuration?targetEntityDuration:0)
+            )
         }
+        return SYS_DATE_SCHEDULED
 
     }
+
+    /**
+     * Create subentities for the given entity. For the BoM, it's used to create
+     * the droplet(object entity) under the Material, and for the routing, to
+     * create the sample(collection entity) under the Workcenter.
+     *
+     * For the creation of subEntity, Routing copies "attributeList" from the
+     * current workcenter(Project Management) to the subEntity for the target
+     * workcenter(Sample Extraction for example), e.g., index, panel, routing,
+     * etc.; BoM copies "attrbiutes" from the target material to the subEntity
+     * for the target Material(Kapa Hifi for example).
+     *
+     * @param sourceEntity The SYS_SOURCE object under the Project Management.
+     * @param targetEntity Material(collection, in BoM) or Workcenter(class, in Routing).
+     * @param workcenterAttributeList Attributes of the sub entity of the current workcenter.
+     * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
+     * @return nill
+     */
+    @LogFunc
+    createSubEntity(
+        sourceEntity:any,
+        targetEntity:any,
+        workcenterAttributeList: any[],
+        targetEntityInput: any
+    ): Observable<any> {
+
+        this.logger.debug("args", sourceEntity, targetEntity, workcenterAttributeList, targetEntityInput)
+        let subEntity = {}
+
+        // Get default label from the source entity
+        subEntity['SYS_LABEL'] = sourceEntity['SYS_LABEL']
+        subEntity[subEntity['SYS_LABEL']] = sourceEntity[sourceEntity['SYS_LABEL']]
+
+        subEntity['SYS_TARGET'] = sourceEntity.id
+
+        // Assign DOCSET
+        subEntity['SYS_AUDIT_DOCSET'] = sourceEntity['SYS_AUDIT_DOCSET']
+
+        // The tail timestamp is used to avoid duplicated SYS_IDENTIFIER for the
+        // samples involved more than one time in the same workcenter
+        subEntity['SYS_IDENTIFIER'] = targetEntity.SYS_IDENTIFIER + "/" +
+            sourceEntity['SYS_CODE'] + '.' + new Date().getTime() + '.' +
+            Math.random().toString().substr(2, 4)
+
+        this.logger.debug("subEntity", Object.assign({}, subEntity))
+        if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
+            // Routing specific operations
+
+            subEntity['SYS_ENTITY_TYPE'] = 'collection'
+            workcenterAttributeList.forEach(attribute => {
+                if (!this.ignoredAttribute[attribute.SYS_CODE]) {
+                    subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
+                }
+            })
+            this.logger.debug("new subEntity", subEntity)
+            return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+
+        } else { // == 'collection'
+            // BoM specific operations
+
+            subEntity['SYS_ENTITY_TYPE'] = 'object'
+            return this.entityService.retrieveAttribute(targetEntity.id)
+            .mergeMap(attributes => {
+                attributes.forEach(attribute => {
+                    subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
+                })
+                this.logger.debug("new subEntity", Object.assign({}, subEntity))
+                return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
+            })
+        }
+    }
+
+    /**
+     * submitSubEntity is created only for reusing logics and avoid to introduce
+     * async for BoM and Routing
+     *
+     * The SYS_GENRE should be the default genre of the workcenter/material
+     * instead of targetEntity['SYS_GENRE'] which is "/PRODUCT_WORKCENTER/", and
+     * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
+     *
+     */
+    @LogFunc
+    submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
+        this.logger.debug("args", subEntity, targetEntity, targetEntityInput)
+
+        //for both of BoM and Routing
+        return this.genreService.retrieveBy({
+            "SYS_ENTITY": targetEntity.id
+        })
+        .mergeMap(data => {
+            if (data[0]) {
+                // Get SYS_GENRE from the workcenter
+
+                subEntity['SYS_GENRE'] = data[0].id
+                this.logger.debug("genre", data)
+            } else {
+                // Collection of materials may not contains any SYS_GENRE defaultly
+
+                subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
+                this.logger.debug("genre", subEntity['SYS_GENRE'])
+            }
+
+            // Assign new values to the new material object
+            Object.keys(targetEntityInput).forEach(key => {
+                subEntity[key] = targetEntityInput[key]
+            })
+
+            this.logger.debug("subEntity", subEntity)
+            return this.entityService.create(subEntity)
+            //.map(entity => {
+            .mergeMap(entity => {
+                this.logger.debug("result", {'workcenter': targetEntity, 'sample':subEntity})
+                return Observable.of({'workcenter': targetEntity, 'sample': subEntity})
+            })
+            //.delay(100)
+        })
+        .retryWhen(
+            attempts => Observable.range(1, 10)
+            .zip(attempts, i => i)
+            .mergeMap(i => {
+                this.logger.info("delay retry by " + i + " seconds")
+                return Observable.timer(i * 1000);
+            }))
+    }
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action)
+    }
+
+    showMessage(message: string, action: string) {
+        this.snackBar.open(message, action, {duration: 4000})
+    }
+
+}
 
