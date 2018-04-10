@@ -29,7 +29,7 @@ import {UtilService} from '../util/service'
 import {SpinnerService} from '../util/spinner.service'
 import {CustomHttpService} from '../util/custom.http.service'
 
-import {LogService, LogLevel} from '../log/log.service'
+import {LogService} from '../log/log.service'
 
 // }}}
 

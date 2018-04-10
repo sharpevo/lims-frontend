@@ -1,16 +1,7 @@
 import {Injectable} from '@angular/core'
 import {LogPublisher} from './publisher'
 import {LogPublisherService} from './publisher.service'
-
-export enum LogLevel {
-    ALL = 0,
-        DEBUG = 1,
-        INFO = 2,
-        WARN = 3,
-        ERROR = 4,
-        FATAL = 5,
-        OFF = 6
-}
+import {LogLevel} from './log'
 
 export class LogEntry {
     entryDate: Date = new Date()

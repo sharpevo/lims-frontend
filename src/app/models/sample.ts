@@ -21,7 +21,7 @@ import {DatePipe} from '@angular/common'
 
 import {environment} from '../../environments/environment'
 
-import {LogService, LogLevel, LogFunc} from '../log/log.service'
+import {LogService, LogFunc} from '../log/log.service'
 
 @Injectable()
 export class SampleService{
