@@ -236,6 +236,7 @@ export class PluginExcelProcessorComponent {
 
         console.log(">>>>>>>>>>>>>>>", this.excelResultSample)
 
+        let mergedSampleList = []
         Observable.concat(...groupObservableList)
         .subscribe(data => {}, err => {}, () => {
 
@@ -287,7 +288,9 @@ export class PluginExcelProcessorComponent {
                             })
 
 
-                            sampleMessageList.push('>- ' + mergedSample.SYS_SAMPLE_CODE + '\n\n')
+                            //sampleMessageList.push('>- ' + mergedSample.SYS_SAMPLE_CODE + '\n\n')
+                            sampleMessageList.push(mergedSample.SYS_SAMPLE_CODE)
+                            mergedSampleList.push(mergedSample)
                             return this.sampleService.submitSample$(
                                 this.workcenter,
                                 mergedSample,
@@ -328,6 +331,7 @@ export class PluginExcelProcessorComponent {
                                 newSample['SYS_SAMPLE_CODE'] + '.' +
                                 new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
 
+                            mergedSampleList.push(newSample)
                             return this.sampleService.createObject$(
                                 newSample,
                                 {
@@ -347,70 +351,20 @@ export class PluginExcelProcessorComponent {
             .subscribe(
                 data => {
                     targetOutput.push(data)
-                    console.log("complete sample", data)
                 },
                 err => {
                 },
                 () => {
+                    this.sampleService.sendMessageToDingTalk$(
+                        sampleMessageList.length == 0,
+                        mergedSampleList,
+                        this.excelResultSample,
+                        this.workcenterAttributeList,
+                        targetOutput,
+                        this.workcenter,
+                    ).subscribe()
 
-                    console.log("targetOutput:", targetOutput)
-                    let date = new Date()
-                    let msg_date = date.getFullYear() + '-' +
-                        (date.getMonth() + 1) + '-' +
-                        date.getDate() + ' ' +
-                        date.getHours() + ':' +
-                        date.getMinutes()
-
-                    let message = ''
-                    let sampleCode = ''
-                    let sampleCount = 0
-                    const MAX_TARGET_LENGTH = 22 // 3 samples x 7 workcenters
-
-                    if (sampleMessageList.length == 0) {
-                        // concise message to DingTalk if more than 10 samples submitted
-                        // althogh 50 samples is acceptable on desktop and 30 samples on mobile.
-                        targetOutput.forEach(target => {
-                            let sample = target['sample']
-                            let workcenter = target['workcenter']
-                            let scheduledDate = new DatePipe('en-US')
-                            .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-                            if (sample['SYS_SAMPLE_CODE'] != sampleCode){
-                                sampleCount += 1
-                                sampleCode = sample['SYS_SAMPLE_CODE']
-                                if (targetOutput.length < MAX_TARGET_LENGTH){
-                                    message += `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
-                                        `scheduled to the following workcenters\n\n`
-                                } else {
-                                    message += `>- ${sample.SYS_SAMPLE_CODE}\n\n`
-                                }
-                            }
-                            if (targetOutput.length < MAX_TARGET_LENGTH){
-                                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-                            }
-                        })
-                        if (targetOutput.length > MAX_TARGET_LENGTH){
-                            message = `# **${sampleCount}** samples issued\n\n` + message
-                        }
-                    } else {
-                        message = `# **${this.workcenter[this.workcenter['SYS_LABEL']]}:** ${sampleMessageList.length} samples submitted\n\n`
-                        sampleMessageList.forEach(msg => {
-                            message += msg
-                        })
-                    }
-
-                    message +=`> \n\n${this.userInfo.name}\n\n` +
-                        `${msg_date}`
-                    //console.log("<<", this.workcenter)
-
-                    console.log("<<<", sampleMessageList, message)
-                    this.utilService.sendNotif(
-                        "actionCard",
-                        message,
-                        "")
-                        .subscribe(() => {})
-
-                        console.log("Request done.")
-                        this.router.navigate(['/redirect' + this.router.url])
+                    this.router.navigate(['/redirect' + this.router.url])
                 })
         })
 
