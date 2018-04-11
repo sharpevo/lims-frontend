@@ -744,6 +744,7 @@ describe("SampleService test", () => {
 
     // buildDingTalkMessage with 2 samples{{{
     it('TEST: buildDingTalkMessage with submitted 2 samples', done => {
+        let date = new Date()
         let selectedSampleList = [
             {
                 "SYS_SAMPLE_CODE": "18R0011",
@@ -755,18 +756,45 @@ describe("SampleService test", () => {
                 "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_2",
                 "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_2",
             },
+
+            // samples used for issuing
+            {
+                "SYS_SAMPLE_CODE": "18R0013",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_3",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_3",
+            },
+            {
+                "SYS_SAMPLE_CODE": "18R0014",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_4",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_4",
+            },
         ]
 
         let submittedSampleList = [
             {
                 "TMP_CODE": "DNA_EXTRACTION.18R0011",
-                "CONF_DNA_EXTRACTION_NANODROP": 1.1,
-                "CONF_DNA_EXTRACTION_OD230": 2.3,
+                "CONF_DNA_EXTRACTION_NANODROP": 1.11,
+                "CONF_DNA_EXTRACTION_OD230": 2.31,
             },
             {
                 "TMP_CODE": "DNA_EXTRACTION.18R0012",
                 "CONF_DNA_EXTRACTION_NANODROP": 1.12,
                 "CONF_DNA_EXTRACTION_OD230": 2.32,
+            },
+
+            // samples used for issuing
+            {
+                "TMP_CODE": "GENERAL_PROJECT.20180409132428",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "PM-3",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "UXTC-20180409",
+                "SYS_SAMPLE_CODE": "18R0013",
+
+            },
+            {
+                "TMP_CODE": "GENERAL_PROJECT.20180409132529",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "PM-3",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "UXTC-20180409",
+                "SYS_SAMPLE_CODE": "18R0014",
             },
         ]
 
@@ -781,8 +809,29 @@ describe("SampleService test", () => {
                 "SYS_LABEL": 'label',
                 "label": "Nanodrop ng/ul",
             },
+
+            // attribute used for issuing
+            {
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                "SYS_LABEL": 'label',
+                "label": "项目负责人",
+            },
+            {
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                "SYS_LABEL": 'label',
+                "label": "项目编号",
+            },
+            {
+                "SYS_CODE": "SYS_SAMPLE_CODE",
+                "SYS_LABEL": 'label',
+                "label": "样品编号",
+            },
         ]
 
+        let date2 = new Date(date)
+        date2.setDate(date.getDate() + 5)
+        let date3 = new Date(date)
+        date3.setDate(date.getDate() + 7)
         let targetOutputList = [
             [
                 {
@@ -828,17 +877,63 @@ describe("SampleService test", () => {
                     },
                 },
             ],
+
+            // targetOutput for issuing
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "样品提取",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date,
+                        "SYS_SAMPLE_CODE": "18R0013",
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "项目审核",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date2,
+                        "SYS_SAMPLE_CODE": "18R0013",
+                    },
+                },
+            ],
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "样品提取",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date,
+                        "SYS_SAMPLE_CODE": "18R0014",
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "项目审核",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date3,
+                        "SYS_SAMPLE_CODE": "18R0014",
+                    },
+                },
+            ],
         ]
 
-        let output = `# **18R0011**
+        let outputSubmitDetailed = `# **18R0011**
 
 FAKE_PC_1 | FAKE_PM_1
 
 submitted as:
 
->- OD 260/230: 2.3
+>- OD 260/230: 2.31
 
->- Nanodrop ng/ul: 1.1
+>- Nanodrop ng/ul: 1.11
 
 materials:
 
@@ -863,8 +958,96 @@ materials:
 >- Tip#1: 11
 
 `
-        expect(output).toEqual(service.buildDingTalkMessage(
+
+        let outputSubmitConcise = `# **DNA_EXTRACTION**
+
+**4** samples are submitted:
+
+>- 18R0011
+
+>- 18R0012
+
+>- 18R0013
+
+>- 18R0014
+
+`
+        let outputIssueDetailed = `# **18R0013**
+
+FAKE_PC_3 | FAKE_PM_3
+
+issued as:
+
+>- 项目负责人: PM-3
+
+>- 项目编号: UXTC-20180409
+
+>- 样品编号: 18R0013
+
+workcenters:
+
+>- 04月11日: 样品提取
+
+>- 04月16日: 项目审核
+
+# **18R0014**
+
+FAKE_PC_4 | FAKE_PM_4
+
+issued as:
+
+>- 项目负责人: PM-3
+
+>- 项目编号: UXTC-20180409
+
+>- 样品编号: 18R0014
+
+workcenters:
+
+>- 04月11日: 样品提取
+
+>- 04月18日: 项目审核
+
+`
+
+        let outputIssueConcise = `# **DNA_EXTRACTION**
+
+**4** samples are issued:
+
+>- 18R0011
+
+>- 18R0012
+
+>- 18R0013
+
+>- 18R0014
+
+`
+        expect(outputSubmitDetailed).toEqual(service.buildDingTalkMessage(
             false,
+            selectedSampleList.slice(0, 2),
+            submittedSampleList.slice(0, 2),
+            attributeList,
+            targetOutputList,
+        ))
+
+        expect(outputSubmitConcise).toEqual(service.buildDingTalkMessage(
+            false,
+            selectedSampleList,
+            submittedSampleList,
+            attributeList,
+            targetOutputList,
+        ))
+
+        expect(outputIssueDetailed).toEqual(service.buildDingTalkMessage(
+            true,
+            selectedSampleList.slice(2, 4),
+            submittedSampleList.slice(2, 4),
+            attributeList,
+            targetOutputList,
+        ))
+        expect(outputIssueConcise).toEqual(service.buildDingTalkMessage(
+            true,
             selectedSampleList,
             submittedSampleList,
             attributeList,
