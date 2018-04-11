@@ -12,26 +12,26 @@ import {
     BaseRequestOptions,
     ResponseOptions,
 } from '@angular/http'
-import { Router } from '@angular/router'
-import { Observable } from 'rxjs/Observable'
+import {Router} from '@angular/router'
+import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/throw'
 
-import { MaterialModule } from '../material.module'
-import { MatSnackBar } from '@angular/material'
+import {MaterialModule} from '../material.module'
+import {MatSnackBar} from '@angular/material'
 
 // app
-import { SampleService } from './sample'
-import { UserInfoService } from '../util/user.info.service'
-import { EntityService } from '../entity/service'
-import { GenreService } from '../genre/service'
-import { UtilService } from '../util/service'
-import { SpinnerService } from '../util/spinner.service'
-import { CustomHttpService } from '../util/custom.http.service'
+import {SampleService} from './sample'
+import {UserInfoService} from '../util/user.info.service'
+import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
+import {UtilService} from '../util/service'
+import {SpinnerService} from '../util/spinner.service'
+import {CustomHttpService} from '../util/custom.http.service'
 
-import { LogLevel } from '../log/log'
-import { LogService } from '../log/log.service'
-import { LogPublisherService } from '../log/publisher.service'
+import {LogLevel} from '../log/log'
+import {LogService} from '../log/log.service'
+import {LogPublisherService} from '../log/publisher.service'
 
 // }}}
 
@@ -52,9 +52,9 @@ class MockUserInfoService extends UserInfoService {
 
 class MockLogService extends LogService {
     level: LogLevel.OFF
-    log(msg: any, ...optionalParams: any[]) { }
-    info(msg: any, ...optionalParams: any[]) { }
-    debug(msg: any, ...optionalParams: any[]) { }
+    log(msg: any, ...optionalParams: any[]) {}
+    info(msg: any, ...optionalParams: any[]) {}
+    debug(msg: any, ...optionalParams: any[]) {}
 }
 
 describe("SampleService test", () => {
