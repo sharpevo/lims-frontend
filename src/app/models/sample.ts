@@ -347,8 +347,10 @@ export class SampleService{
 
     terminateSampleObs(sample): Observable<any>{
         return this.entityService.retrieveBy(
-            {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
-                'sort': 'SYS_DATE_SCHEDULED'}
+            {
+                'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
+                'sort': 'SYS_DATE_SCHEDULED'
+            }
         ).map(samples => {
             let terminateObs = []
             samples.forEach(sampleItem => {
@@ -845,7 +847,7 @@ export class SampleService{
             })
     }
 
-    sendMessageToDingTalk$(
+    buildDingTalkMessage(
         issueSample: boolean,
         selectedSampleList: any[],
         submittedSampleList: any[],
@@ -925,6 +927,27 @@ export class SampleService{
             })
         }
 
+        this.logger.debug("Message", message)
+        return message
+    }
+
+    sendMessageToDingTalk$(
+        issueSample: boolean,
+        selectedSampleList: any[],
+        submittedSampleList: any[],
+        attributeList: any[],
+        targetOutputList: any[],
+        workcenter?: any
+    ) {
+
+        let message = this.buildDingTalkMessage(
+            issueSample,
+            selectedSampleList,
+            submittedSampleList,
+            attributeList,
+            targetOutputList,
+            workcenter
+        )
         let date = new Date()
         let msg_date = date.getFullYear() + '-' +
             (date.getMonth() + 1) + '-' +
@@ -940,8 +963,6 @@ export class SampleService{
         let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
         let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
         this.logger.info("Sending notification:", redirectUrl)
-
-        this.logger.debug("Message", message)
         return this.utilService.sendNotif(
             "actionCard",
             message,
@@ -1162,8 +1183,8 @@ export class SampleService{
 
         })
 
-        //return Observable.concat(...observableList)
-        return Observable.forkJoin(observableList)
+        return Observable.concat(...observableList)
+        //return Observable.forkJoin(observableList)
     }
 
     getScheduledDate(
