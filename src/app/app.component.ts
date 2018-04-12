@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {DatePipe} from '@angular/common';
 import {EntityService} from './entity/service'
 import {UtilService} from './util/service'
 import {environment} from '../environments/environment'
@@ -9,6 +10,8 @@ import {UserInfoService} from './util/user.info.service'
 import {AuthService} from './util/auth.service'
 import { Subscription } from 'rxjs/Subscription';
 import {Router} from '@angular/router'
+import {LogService, LogEntry} from './log/log.service'
+import {LogLocalStorage} from './log/publisher'
 
 @Component({
     selector: 'app-root',
@@ -16,6 +19,7 @@ import {Router} from '@angular/router'
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+    logEntryList = []
     serviceList: any[] = []
     environment = environment
     userInfo: any
@@ -267,12 +271,14 @@ export class AppComponent {
         private spinnerService: SpinnerService,
         private entityService: EntityService,
         private router: Router,
+        public logger: LogService,
     ){}
 
     ngOnInit(){
 
         this.userInfo = this.userInfoService.getUserInfo()
         this.getParams()
+        this.logger.clear()
     }
 
     getParams() {
@@ -322,5 +328,26 @@ export class AppComponent {
     onDeactivate(event: any){
         this.showMessage = true
         console.log("DEACTIVATE")
+    }
+
+    getLocalStorage() {
+        let tmp = this.logger.publishers.find(p => p.constructor.name === "LogLocalStorage")
+        if (tmp != null) {
+            let local = tmp as LogLocalStorage
+            local.getAll().subscribe(res => this.logEntryList = res)
+        }
+    }
+
+    downloadLog() {
+        this.getLocalStorage()
+
+        var blob = new Blob([JSON.stringify(this.logEntryList)], {type: 'application/json'})
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+
+        let timestamp = new DatePipe('en-US').transform(new Date(), 'yyyyMMdd.HHmmss')
+        anchor.download = 'log' + '.' + timestamp + '.json';
+        anchor.href = url;
+        anchor.click()
     }
 }
