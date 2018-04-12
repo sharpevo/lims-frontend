@@ -323,11 +323,9 @@ export class AppComponent {
 
     onActivate(event: any) {
         this.showMessage = false
-        console.log("ACTIVATE")
     }
     onDeactivate(event: any) {
         this.showMessage = true
-        console.log("DEACTIVATE")
     }
 
     getLocalStorage() {
