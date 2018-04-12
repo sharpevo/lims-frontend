@@ -23,7 +23,7 @@ export class LogEntry {
         result += " | "
         result += JSON.stringify(this.message)
         if (this.extraInfo.length) {
-            result += " < " + this.formatParams(this.extraInfo)
+            result += " | " + this.formatParams(this.extraInfo)
         }
         return result
     }
@@ -36,9 +36,11 @@ export class LogEntry {
             result += this.getTimeStamp()
         }
         result += " | "
-        ret = [result, this.message]
+        result += this.message
+        ret = [result]
         if (this.extraInfo.length) {
-            ret.push("<")
+            // result += " | " not work
+            ret[0] += " | "
             this.extraInfo.forEach(info => {
                 ret.push(info)
             })
