@@ -10,7 +10,7 @@ import {UserInfoService} from './util/user.info.service'
 import {AuthService} from './util/auth.service'
 import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router'
-import {LogService, LogEntry} from './log/log.service'
+import {LogService} from './log/log.service'
 import {LogLocalStorage} from './log/publisher'
 
 @Component({
