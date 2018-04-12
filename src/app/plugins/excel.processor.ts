@@ -7,6 +7,8 @@ import {DatePipe} from '@angular/common'
 import {Router} from '@angular/router'
 import {Observable} from 'rxjs/Observable'
 import {UserInfoService} from '../util/user.info.service'
+import {LogService} from '../log/log.service'
+import {LogCall} from '../log/decorator'
 
 @Component({
     selector: 'plugin-excel-processor',
@@ -36,6 +38,7 @@ export class PluginExcelProcessorComponent {
         private sampleService: SampleService,
         private router: Router,
         private userInfoService: UserInfoService,
+        public logger: LogService,
     ){
         this.userInfo = this.userInfoService.getUserInfo()
     }
@@ -66,7 +69,7 @@ export class PluginExcelProcessorComponent {
                         // the "object" entity type which is implemented in the entityService.
                         this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
                         .subscribe(data => {
-                            console.log("--", data)
+                                        this.logger.debug("ExcelPlugin: Get BoM or Routing", data)
                             data.forEach(material => {
                                 this.parentMap[attr.SYS_CODE][material.id] = {}
                                 material['SYS_SCHEMA'].forEach(materialAttr => {
@@ -84,10 +87,10 @@ export class PluginExcelProcessorComponent {
         })
     }
 
+    @LogCall
     submitExcel(event){
         let file = event.srcElement.files;
         let postData = {field1:"field1", field2:"field2"}; // Put your form data variable. This is only example.
-        console.log(file)
         this.utilService.postExcel(file)
         .subscribe(data => {
             this.excelResultSample = data[0]
@@ -104,7 +107,7 @@ export class PluginExcelProcessorComponent {
     exportSample(template?: boolean){
         this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
         let hybridSampleList = this.sampleService.buildHybridSampleList(this.selectedSampleList, this.hybridObjectMap)
-        console.log("hybridSampleList:", hybridSampleList)
+        this.logger.debug("HybridSampleList", hybridSampleList)
 
         if (this.selectedSampleList.length > 0 || template){
             if (template){
@@ -112,7 +115,6 @@ export class PluginExcelProcessorComponent {
             }
             this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
             .subscribe(data => {
-                console.log(data)
                 var blob = new Blob([data['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'} )
                 //var file = new File([blob], 'report.xlsx',{ type: 'application/vnd.ms-excel' } )
                 //var url= window.URL.createObjectURL(file)
@@ -128,9 +130,10 @@ export class PluginExcelProcessorComponent {
                 anchor.click()
             })
         }
-        console.log("PARENTMAP", this.parentMap)
+        this.logger.debug("ParentMap", this.parentMap)
     }
 
+    @LogCall
     updateExcel(){
 
         // update the parentMap according to the excel if another sheets provides some.
@@ -143,7 +146,7 @@ export class PluginExcelProcessorComponent {
         //console.log("excelResultGroup: ", this.excelResultGroup)
         this.excelResultGroup.forEach(groupInExcel => {
 
-            console.log("groupInExcel", groupInExcel)
+            this.logger.debug("GroupInExcel", groupInExcel)
             // groupId indicates the workcenter or the material itself
             let groupId = groupInExcel['IDENTIFIER']
             if (groupId) {
@@ -155,7 +158,7 @@ export class PluginExcelProcessorComponent {
                         //.subscribe(data => {
                         let group = data[0]
 
-                        console.log("GROUP", group)
+                            this.logger.debug("Group", group)
                         if (this.parentMapFloor == "collection"){
                             // bom, get the first lot for uploading / default
                             // sort by the lot label
@@ -165,7 +168,7 @@ export class PluginExcelProcessorComponent {
                             .mergeMap(data => {
                                 //.subscribe(data => {
 
-                                console.log("material", data)
+                                        this.logger.debug("Material", data)
                                 // get the delfault lot in the array sorted by the SYS_CODE
                                 // e.g. LOT160810
                                 let defaultMaterial = {}
@@ -186,7 +189,7 @@ export class PluginExcelProcessorComponent {
                                 }
                                 groupId = defaultMaterial['id']
 
-                                console.log("group", groupId)
+                                        this.logger.debug("GroupId", groupId)
                                 this.parentMap[this.parentMapKey][groupId] = {}
                                 group.SYS_SCHEMA.forEach(schema => {
                                     Object.keys(groupInExcel).forEach(key => {
@@ -205,7 +208,7 @@ export class PluginExcelProcessorComponent {
                             })
                         } else {
 
-                            console.log("group", groupId)
+                                this.logger.debug("GroupId", groupId)
                             this.parentMap[this.parentMapKey][groupId] = {}
                             group.SYS_SCHEMA.forEach(schema => {
                                 Object.keys(groupInExcel).forEach(key => {
@@ -228,13 +231,14 @@ export class PluginExcelProcessorComponent {
                 )
             }
         })
-        console.log("NEW PARENTMAP", this.parentMap)
+
+        this.logger.debug("ParentMap New", this.parentMap)
 
         //return
         //}
         //updateExcelRaw(){
 
-        console.log(">>>>>>>>>>>>>>>", this.excelResultSample)
+        this.logger.debug("ExcelResultSample", this.excelResultSample)
 
         let mergedSampleList = []
         Observable.concat(...groupObservableList)
@@ -264,7 +268,8 @@ export class PluginExcelProcessorComponent {
                             // 2. sample: from excel, like operator, id, exactly the workcenter
                             //
                             mergedSample.SYS_SCHEMA.forEach(schema => {
-                                console.log("!!!", sample, schema)
+
+                                        this.logger.debug("SampleSchema", sample, schema)
                                 if (sample[schema.SYS_LABEL]){
                                     if (schema.SYS_TYPE != 'entity'){
                                         mergedSample[schema.SYS_CODE] = sample[schema.SYS_LABEL]
