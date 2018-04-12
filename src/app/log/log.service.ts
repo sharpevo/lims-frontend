@@ -3,6 +3,9 @@ import {LogPublisher} from './publisher'
 import {LogPublisherService} from './publisher.service'
 import {LogLevel, LogEntry} from './log'
 
+import {ReflectiveInjector} from '@angular/core';
+
+
 @Injectable()
 export class LogService {
     level: LogLevel = LogLevel.ALL
@@ -71,6 +74,22 @@ export class LogService {
 
 }
 
+const injector = ReflectiveInjector.resolveAndCreate([
+    LogService,
+    LogPublisherService,
+]);
+
+const logService = injector.get(LogService);
+
+export function LogCall(target, propertyKey, descriptor) {
+    const originalMethod = descriptor.value
+    descriptor.value = function(...args: any[]) {
+        logService.info("Step: " + propertyKey)
+        const result = originalMethod.apply(this, args)
+        return result
+    }
+    return descriptor
+}
 export function LogFunc(target, propertyKey, descriptor) {
     const originalMethod = descriptor.value
 
