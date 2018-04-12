@@ -4,9 +4,9 @@ import {LogService} from '../log/log.service'
 @Injectable()
 export class UserInfoService {
     userInfo: any
-    constructor (
+    constructor(
         public logger: LogService
-    ){}
+    ) {}
     setUserInfo(userInfo: any) {
         this.userInfo = userInfo
     }
@@ -15,7 +15,7 @@ export class UserInfoService {
         return this.userInfo
     }
 
-    hasRole(role: string): boolean{
+    hasRole(role: string): boolean {
         this.logger.debug("CheckPerm", role)
         if (!this.userInfo) {
             return false
