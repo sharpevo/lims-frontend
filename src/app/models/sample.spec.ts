@@ -13,6 +13,8 @@ import {
     ResponseOptions,
 } from '@angular/http'
 import {Router} from '@angular/router'
+import {DatePipe} from '@angular/common'
+
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/throw'
@@ -745,6 +747,10 @@ describe("SampleService test", () => {
     // buildDingTalkMessage with 2 samples{{{
     it('TEST: buildDingTalkMessage with submitted 2 samples', done => {
         let date = new Date()
+
+        let dateOutput = new DatePipe('en-US')
+            .transform(date, 'MM月dd日')
+
         let selectedSampleList = [
             {
                 "SYS_SAMPLE_CODE": "18R0011",
@@ -830,8 +836,13 @@ describe("SampleService test", () => {
 
         let date2 = new Date(date)
         date2.setDate(date.getDate() + 5)
+
+        let date2Output = new DatePipe('en-US')
+            .transform(date2, 'MM月dd日')
         let date3 = new Date(date)
         date3.setDate(date.getDate() + 7)
+        let date3Output = new DatePipe('en-US')
+            .transform(date3, 'MM月dd日')
         let targetOutputList = [
             [
                 {
@@ -986,9 +997,9 @@ issued as:
 
 workcenters:
 
->- 04月11日: 样品提取
+>- ${dateOutput}: 样品提取
 
->- 04月16日: 项目审核
+>- ${date2Output}: 项目审核
 
 # **18R0014**
 
@@ -1004,9 +1015,9 @@ issued as:
 
 workcenters:
 
->- 04月11日: 样品提取
+>- ${dateOutput}: 样品提取
 
->- 04月18日: 项目审核
+>- ${date3Output}: 项目审核
 
 `
 
