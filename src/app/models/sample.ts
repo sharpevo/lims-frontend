@@ -519,7 +519,6 @@ export class SampleService {
 
     @LogCall
     submitObject$(workcenter: any, sampleList: any[], issueSample: boolean, object: any, parentMap: any): Observable<any> {
-        this.logger.debug("args", workcenter, sampleList, issueSample, object, parentMap)
         if (!this.userInfo.limsid) {
             this.logger.error("Illegal user", this.userInfo)
             this.showMessage("Invalid user: " + this.userInfo.email, "OK")
@@ -856,7 +855,6 @@ export class SampleService {
         targetOutputList: any[],
         workcenter?: any
     ) {
-        this.logger.debug("args", issueSample, selectedSampleList, submittedSampleList, attributeList, targetOutputList)
 
         this.logger.debug("targetOutputList", targetOutputList)
         const MAX_LENGTH_OF_SAMPLELIST = 3
@@ -1234,7 +1232,6 @@ export class SampleService {
         targetEntityInput: any
     ): Observable<any> {
 
-        this.logger.debug("args", sourceEntity, targetEntity, workcenterAttributeList, targetEntityInput)
         let subEntity = {}
 
         // Get default label from the source entity
@@ -1291,7 +1288,6 @@ export class SampleService {
      */
     @LogCall
     submitSubEntity(subEntity: any, targetEntity: any, targetEntityInput: any): Observable<any> {
-        this.logger.debug("args", subEntity, targetEntity, targetEntityInput)
 
         //for both of BoM and Routing
         return this.genreService.retrieveBy({
