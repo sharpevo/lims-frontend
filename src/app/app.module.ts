@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule, APP_INITIALIZER} from '@angular/core';
+import {NgModule, APP_INITIALIZER, Injector} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -88,6 +88,8 @@ import {GuardService} from './util/guard.service'
 import {LogService} from './log/log.service'
 import {LogPublisher} from './log/publisher'
 import {LogPublisherService} from './log/publisher.service'
+
+import {setAppInjector} from './app.injector'
 
 @NgModule({
     declarations: [
@@ -198,4 +200,8 @@ import {LogPublisherService} from './log/publisher.service'
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(injector: Injector) {
+        setAppInjector(injector)
+    }
+}
