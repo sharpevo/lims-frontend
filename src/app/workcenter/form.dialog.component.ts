@@ -9,6 +9,8 @@ import {EntityService} from '../entity/service'
 import {SampleService} from '../models/sample'
 
 import {Observable} from 'rxjs/Observable'
+import {LogService} from '../log/log.service'
+import {LogCall} from '../log/decorator'
 
 @Component({
     selector: 'sample-form-dialog',
@@ -37,10 +39,10 @@ export class SampleFormDialog {
         private entityService: EntityService,
         private attributeService: AttributeService,
         private sampleService: SampleService,
+        public logger: LogService,
         public dialogRef: MatDialogRef<SampleFormDialog>) {}
 
         ngOnInit(){
-            console.log(this.parentMap)
             this.getGenreList()
             this.generateEntityCode()
             this.generateEntityType()
@@ -60,11 +62,14 @@ export class SampleFormDialog {
             //this.getEntity()
         }
 
+    @LogCall
         generateEntityCode(){
             this.object.TMP_CODE = this.config.entity.SYS_CODE + '.' +
                 new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+        this.logger.debug("EntityCode", this.object.TMP_CODE)
         }
 
+    @LogCall
         generateEntityType(){
             switch (this.config.entity.SYS_ENTITY_TYPE) {
                 case "domain":
@@ -79,13 +84,15 @@ export class SampleFormDialog {
                 default:
                     this.object.SYS_ENTITY_TYPE = ""
             }
+        this.logger.debug("EntityType", this.object.SYS_ENTITY_TYPE)
         }
 
+    @LogCall
         generateEntityLabel(){
             this.attributeList.forEach(attribute => {
                 if (attribute.SYS_IS_ENTITY_LABEL) {
-                    //console.log("get label attribute:", attribute.SYS_CODE)
                     this.object.SYS_LABEL = attribute.SYS_CODE
+                this.logger.debug("EntityLabel", this.object.SYS_LABEL)
                 }
             })
             if (!this.object.SYS_LABEL) {
@@ -127,8 +134,10 @@ export class SampleFormDialog {
 
                     let terminateObs = []
                     this.entityService.retrieveBy(
-                        {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
-                            'sort': 'SYS_DATE_SCHEDULED'})
+                    {
+                        'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
+                        'sort': 'SYS_DATE_SCHEDULED'
+                    })
                             .subscribe(samples => {
                                 samples.forEach(sampleItem => {
                                     // only process samples after the current sample
@@ -174,14 +183,7 @@ export class SampleFormDialog {
                 this.parentMap
             ).subscribe(
             (data: any[]) => {
-                console.log("SO-data", data)
-                console.log(
-                    "test>>>",
-                    this.config.issueSample,
-                    Array(this.config.sampleList.length).fill(this.object),
-                    this.attributeList,
-                    data
-                )
+                this.logger.debug("SubmitObject Return Value", data)
                 this.sampleService.sendMessageToDingTalk$(
                     this.config.issueSample,
                     this.config.sampleList,
@@ -191,10 +193,10 @@ export class SampleFormDialog {
                 ).subscribe()
             },
             error => {
-                console.log("SO-error", error)
+                this.logger.error("SubmitObject", error)
             },
             () => {
-                console.log("SO-complete")
+                this.logger.debug("SubmitObject Completed")
             }
             )
             this.dialogRef.close();
@@ -423,6 +425,7 @@ export class SampleFormDialog {
             )
         }
 
+    @LogCall
         getGenreList(){
             // Get all sibling genres only if the specific entity is collection
             if (this.config.entity.SYS_ENTITY_TYPE == 'collection'){
@@ -431,12 +434,14 @@ export class SampleFormDialog {
                 // Get genres start with the given identifier
                 this.genreService.retrieveByIdentifierPrefix(genreIdentifier)
                 .subscribe(data => {
+                    this.logger.debug("GenreList", data)
                     this.genreList = data
                 })
             } else {
                 // Get the exclusive genre for other type of entity
                 this.entityService.retrieveGenre(this.config.entity.id)
                 .subscribe(data => {
+                    this.logger.debug("GenreList", data)
                     this.genreList = data
                     this.object.SYS_GENRE = this.genreList[0].id
                     this.getAttributesByGenreId(this.object.SYS_GENRE)
@@ -445,6 +450,7 @@ export class SampleFormDialog {
             }
         }
 
+    @LogCall
         getAttributesByGenreId(genreId: string){
             this.genreId = genreId
             //let genreId = genre.id
@@ -499,6 +505,7 @@ export class SampleFormDialog {
                             }
                         }
                     )
+                    this.logger.debug("AttributeList", this.attributeList)
                     this.generateEntityLabel()
                 }
             )
