@@ -10,7 +10,7 @@ export class LogEntry {
     extraInfo: any[] = []
     logWithDate: boolean = true
 
-    getTimeStamp(){
+    getTimeStamp() {
         let date = new Date()
         return date.getHours() + ':' +
             date.getMinutes() + ':' +
@@ -32,7 +32,7 @@ export class LogEntry {
         return result
     }
 
-    buildLogObject(){
+    buildLogObject() {
         let ret = []
         let result = ''
         result += "[" + LogLevel[this.level] + "] "
@@ -80,7 +80,7 @@ export class LogService {
     }
 
     writeToLog(msg: any, level: LogLevel, params: any) {
-        if (!this.shouldLog(level)){
+        if (!this.shouldLog(level)) {
             return
         }
 
@@ -98,7 +98,7 @@ export class LogService {
         //console.log(logEntry.buildLogString())
     }
 
-    log(msg: any, ...optionalParams: any[]){
+    log(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.ALL, optionalParams)
     }
 
@@ -108,32 +108,32 @@ export class LogService {
         }
     }
 
-    debug(msg: any, ...optionalParams: any[]){
+    debug(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.DEBUG, optionalParams)
     }
 
-    info(msg: any, ...optionalParams: any[]){
+    info(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.INFO, optionalParams)
     }
 
-    warn(msg: any, ...optionalParams: any[]){
+    warn(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.WARN, optionalParams)
     }
 
-    error(msg: any, ...optionalParams: any[]){
+    error(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.ERROR, optionalParams)
     }
 
-    fatal(msg: any, ...optionalParams: any[]){
+    fatal(msg: any, ...optionalParams: any[]) {
         this.writeToLog(msg, LogLevel.FATAL, optionalParams)
     }
 
 }
 
-export function LogFunc(target, propertyKey, descriptor){
+export function LogFunc(target, propertyKey, descriptor) {
     const originalMethod = descriptor.value
 
-    descriptor.value = function (...args: any[]) {
+    descriptor.value = function(...args: any[]) {
         console.log("<<< " + propertyKey)
         const result = originalMethod.apply(this, args)
         console.log(">>> " + propertyKey)
