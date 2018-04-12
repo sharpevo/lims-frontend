@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {EntityService} from './entity/service'
 import {UtilService} from './util/service'
@@ -8,7 +8,7 @@ import {MatSnackBar} from '@angular/material'
 import {SpinnerService} from './util/spinner.service'
 import {UserInfoService} from './util/user.info.service'
 import {AuthService} from './util/auth.service'
-import { Subscription } from 'rxjs/Subscription';
+import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router'
 import {LogService, LogEntry} from './log/log.service'
 import {LogLocalStorage} from './log/publisher'
@@ -272,9 +272,9 @@ export class AppComponent {
         private entityService: EntityService,
         private router: Router,
         public logger: LogService,
-    ){}
+    ) {}
 
-    ngOnInit(){
+    ngOnInit() {
 
         this.userInfo = this.userInfoService.getUserInfo()
         this.getParams()
@@ -296,36 +296,36 @@ export class AppComponent {
         location.reload(true)
     }
 
-    setCookie(name: string, value: string, remember: string, path: string = ""){
+    setCookie(name: string, value: string, remember: string, path: string = "") {
         let date = new Date()
         let minutes: number
-        if (remember == "true"){
+        if (remember == "true") {
             minutes = 7200 // 5 * 24 * 60
         } else {
             minutes = 30
         }
         date.setTime(date.getTime() + minutes * 60 * 1000)
         let expires = "expires=" + date.toUTCString()
-        document.cookie = name + "=" + value + "; " +  expires + (path.length > 0 ? "; path=" + path : "")
+        document.cookie = name + "=" + value + "; " + expires + (path.length > 0 ? "; path=" + path : "")
         console.log("cookie", document.cookie)
     }
 
-    refresh(){
+    refresh() {
         this.router.navigate(['/redirect' + this.router.url])
     }
 
-    restore(){
+    restore() {
         this.utilService.restoreDatabase()
-        .subscribe(data => {}, err => {}, () => {
-            this.refresh()
-        })
+            .subscribe(data => {}, err => {}, () => {
+                this.refresh()
+            })
     }
 
-    onActivate(event: any){
+    onActivate(event: any) {
         this.showMessage = false
         console.log("ACTIVATE")
     }
-    onDeactivate(event: any){
+    onDeactivate(event: any) {
         this.showMessage = true
         console.log("DEACTIVATE")
     }
