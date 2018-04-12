@@ -12,7 +12,6 @@ export class UserInfoService {
     }
 
     getUserInfo() {
-        this.logger.debug("UserInfo", this.userInfo)
         return this.userInfo
     }
 
