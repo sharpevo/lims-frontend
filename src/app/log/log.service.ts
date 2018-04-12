@@ -102,6 +102,12 @@ export class LogService {
         this.writeToLog(msg, LogLevel.ALL, optionalParams)
     }
 
+    clear() {
+        for (let logger of this.publishers) {
+            logger.clear()
+        }
+    }
+
     debug(msg: any, ...optionalParams: any[]){
         this.writeToLog(msg, LogLevel.DEBUG, optionalParams)
     }
