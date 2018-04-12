@@ -6,7 +6,7 @@ export function LogCall(target, propertyKey, descriptor) {
     descriptor.value = function(...args: any[]) {
         // undefined if called outof the function
         const logService = AppInjector.get(LogService)
-        logService.info("Step: " + propertyKey)
+        logService.info("Step: " + propertyKey, args)
         const result = originalMethod.apply(this, args)
         return result
     }
