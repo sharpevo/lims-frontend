@@ -14,6 +14,7 @@ import {
 } from '@angular/router'
 import {UserInfoService} from './user.info.service'
 import {CustomHttpService} from './custom.http.service'
+import {LogService} from '../log/log.service'
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     private http: CustomHttpService,
     public snackBar: MatSnackBar,
     public router: Router,
+        public logger: LogService,
   ){
     this.userInfo = this.userInfoService.getUserInfo()
     this.initInterval()
@@ -35,10 +37,10 @@ export class AuthService {
     setInterval(() => {
       this.checkAvailability()
       .subscribe(data => {
-        console.log("Auth: success")
+                    this.logger.info("SessionChecking", "success")
       },
       error => {
-        console.log("Auth: fail")
+                        this.logger.error("SessionChecking", "fail")
         this.authFail()
       })
     },1000 * 60)
@@ -61,6 +63,7 @@ export class AuthService {
   }
 
   permFail() {
+        this.logger.warn("AuthChecking", "fail")
     this.spinnerService.start()
     this.snackBar.open("Invalid permission", "OK", {duration: 3000})
     .afterDismissed().subscribe(() => {
