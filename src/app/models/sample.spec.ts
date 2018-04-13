@@ -13,6 +13,8 @@ import {
     ResponseOptions,
 } from '@angular/http'
 import {Router} from '@angular/router'
+import {DatePipe} from '@angular/common'
+
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/throw'
@@ -27,21 +29,34 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 import {SpinnerService} from '../util/spinner.service'
-import {CustomHttpService} from '../util/custom.http.service'// }}}
+import {CustomHttpService} from '../util/custom.http.service'
+
+import {LogLevel} from '../log/log'
+import {LogService} from '../log/log.service'
+import {LogPublisherService} from '../log/publisher.service'
+
+// }}}
 
 class MockEntityService extends EntityService {
-    create(sample: any){
+    create(sample: any) {
         return Observable.of(sample)
     }
 }
 
 class MockUserInfoService extends UserInfoService {
-    getUserInfo(){
+    getUserInfo() {
         return {
             name: "test",
             id: "1111",
         }
     }
+}
+
+class MockLogService extends LogService {
+    level: LogLevel.OFF
+    log(msg: any, ...optionalParams: any[]) {}
+    info(msg: any, ...optionalParams: any[]) {}
+    debug(msg: any, ...optionalParams: any[]) {}
 }
 
 describe("SampleService test", () => {
@@ -55,7 +70,7 @@ describe("SampleService test", () => {
     }
 
     // beforeEach: TestBed{{{
-    beforeEach(()=> {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 HttpModule,
@@ -110,7 +125,11 @@ describe("SampleService test", () => {
                         navigate = jasmine.createSpy("navigate")
                     },
                 },
-
+                {
+                    provide: LogService,
+                    useClass: MockLogService,
+                },
+                LogPublisherService,
             ],
         }).compileComponents()
         backend = TestBed.get(MockBackend)
@@ -127,31 +146,36 @@ describe("SampleService test", () => {
             UtilService,
             Router,
             EntityService,
+            LogService,
         ],
-        (
-            http: CustomHttpService,
-            rawHttp: Http,
-            snackbar: MatSnackBar,
-            genreService: GenreService,
-            utilService: UtilService,
-            userInfoService: UserInfoService,
-            router: Router,
-            entityService: EntityService,
-        ) => {
-            let mockEntityService = new MockEntityService(http)
-            let mockUserInfoService = new MockUserInfoService()
-            let newGenreService = new GenreService(http)
-            let newUtilService = new UtilService(http, rawHttp)
-            service = new SampleService(
-                snackbar,
-                //genreService,
-                newGenreService,
-                newUtilService,
-                mockUserInfoService,
-                router,
-                mockEntityService,
-            )
-        })
+            (
+                http: CustomHttpService,
+                rawHttp: Http,
+                snackbar: MatSnackBar,
+                genreService: GenreService,
+                utilService: UtilService,
+                userInfoService: UserInfoService,
+                router: Router,
+                entityService: EntityService,
+                logger: LogService,
+            ) => {
+                let mockEntityService = new MockEntityService(http)
+                let mockUserInfoService = new MockUserInfoService(logger)
+                let newGenreService = new GenreService(http)
+                let newUtilService = new UtilService(http, rawHttp)
+                let newPublisher = new LogPublisherService()
+                let newLogger = new MockLogService(newPublisher)
+                service = new SampleService(
+                    snackbar,
+                    //genreService,
+                    newGenreService,
+                    newUtilService,
+                    mockUserInfoService,
+                    router,
+                    mockEntityService,
+                    newLogger,
+                )
+            })
     )// }}}
 
     // submitSubEntity{{{
@@ -259,7 +283,7 @@ describe("SampleService test", () => {
             _subEntity,
             _targetEntity,
             _targetEntityInput,
-        ){
+        ) {
             return Observable.of({
                 subEntity: _subEntity,
                 targetEntity: _targetEntity,
@@ -413,7 +437,7 @@ describe("SampleService test", () => {
             _targetEntity,
             _attributeList,
             _targetEntityInput,
-        ){
+        ) {
             return Observable.of({
                 sourceEntity: _sourceEntity,
                 targetEntity: _targetEntity,
@@ -435,24 +459,24 @@ describe("SampleService test", () => {
             switch (count) {
                 case 0:
                     expect(_targetEntityInput.SYS_ORDER).toEqual(10)
-                SYS_DATE_SCHEDULED = _targetEntityInput.SYS_DATE_SCHEDULED
-                expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
-                    _sourceEntity.SYS_DATE_SCHEDULED
-                )
-                expect(_targetEntityInput.SYS_DATE_ARRIVED).toEqual(
-                    _targetEntityInput.SYS_DATE_SCHEDULED
-                )
-                count += 1
-                break
+                    SYS_DATE_SCHEDULED = _targetEntityInput.SYS_DATE_SCHEDULED
+                    expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
+                        _sourceEntity.SYS_DATE_SCHEDULED
+                    )
+                    expect(_targetEntityInput.SYS_DATE_ARRIVED).toEqual(
+                        _targetEntityInput.SYS_DATE_SCHEDULED
+                    )
+                    count += 1
+                    break
                 case 1:
                     SYS_DATE_SCHEDULED.setDate(SYS_DATE_SCHEDULED.getDate() + _targetEntityInput.SYS_DURATION)
-                expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
-                    SYS_DATE_SCHEDULED
-                )
-                expect(_targetEntityInput.SYS_DATE_ARRIVED).not.toEqual(
-                    _targetEntityInput.SYS_DATE_SCHEDULED
-                )
-                break
+                    expect(_targetEntityInput.SYS_DATE_SCHEDULED).toEqual(
+                        SYS_DATE_SCHEDULED
+                    )
+                    expect(_targetEntityInput.SYS_DATE_ARRIVED).not.toEqual(
+                        _targetEntityInput.SYS_DATE_SCHEDULED
+                    )
+                    break
             }
             expect(_targetEntity).toEqual(targetEntity)
         })
@@ -498,7 +522,7 @@ describe("SampleService test", () => {
         spyOn(service, "buildRelationship").and.callFake(function(
             _object,
             _attributeInfo,
-        ){
+        ) {
             return Observable.concat(Observable.of({
                 object: _object,
                 attributeInfo: _attributeInfo,
@@ -619,18 +643,18 @@ describe("SampleService test", () => {
         spyOn(service.entityService, "retrieveBy").and.returnValue(
             Observable.of(sampleList)
         )
-        spyOn(service.entityService, "update").and.callFake(function(_sample){
+        spyOn(service.entityService, "update").and.callFake(function(_sample) {
             return Observable.of(_sample)
         })
 
         service.terminateSampleObs(sample)
-        .subscribe(sample => {
-            expect(sampleBefore['SYS_DATE_TERMINATED']).toBeUndefined()
-            expect(sampleBeforeButGeneralProject['SYS_DATE_TERMINATED']).toEqual(dateNow)
-            expect(sampleNow['SYS_DATE_TERMINATED']).toEqual(dateNow)
-            expect(sampleAfter['SYS_DATE_TERMINATED']).toEqual(dateNow)
-            done()
-        })
+            .subscribe(sample => {
+                expect(sampleBefore['SYS_DATE_TERMINATED']).toBeUndefined()
+                expect(sampleBeforeButGeneralProject['SYS_DATE_TERMINATED']).toEqual(dateNow)
+                expect(sampleNow['SYS_DATE_TERMINATED']).toEqual(dateNow)
+                expect(sampleAfter['SYS_DATE_TERMINATED']).toEqual(dateNow)
+                done()
+            })
     })// }}}
 
     // suspendSample{{{
@@ -652,26 +676,26 @@ describe("SampleService test", () => {
         // SUSPEND
         let suspension = {}
         service.suspendSample(sample, suspendRemark)
-        .subscribe(sample => {
-            suspension = sample['SYS_SUSPENSION']
-            expect(suspension['DATE']).toBe(dateNow)
-            expect(suspension['OPERATOR']).toBe(limsid)
-            expect(suspension['REMARK']).toBe(suspendRemark)
-        })
+            .subscribe(sample => {
+                suspension = sample['SYS_SUSPENSION']
+                expect(suspension['DATE']).toBe(dateNow)
+                expect(suspension['OPERATOR']).toBe(limsid)
+                expect(suspension['REMARK']).toBe(suspendRemark)
+            })
 
         // RESUME
         let resumeRemark = "FAKE_RESUME_REMARK"
         service.resumeSample(sample, resumeRemark)
-        .subscribe(sample => {
-            let resumption = sample['SYS_RESUMPTION'][sample['SYS_RESUMPTION'].length - 1]
-            let suspensionShot = resumption['SUSPENSION']
-            expect(resumption['DATE']).toBe(dateNow)
-            expect(resumption['OPERATOR']).toBe(limsid)
-            expect(resumption['REMARK']).toBe(resumeRemark)
-            expect(sample['SYS_SUSPENSION']).toBeNull()
-            expect(suspensionShot).toBe(suspension)
-            done()
-        })
+            .subscribe(sample => {
+                let resumption = sample['SYS_RESUMPTION'][sample['SYS_RESUMPTION'].length - 1]
+                let suspensionShot = resumption['SUSPENSION']
+                expect(resumption['DATE']).toBe(dateNow)
+                expect(resumption['OPERATOR']).toBe(limsid)
+                expect(resumption['REMARK']).toBe(resumeRemark)
+                expect(sample['SYS_SUSPENSION']).toBeNull()
+                expect(suspensionShot).toBe(suspension)
+                done()
+            })
     })// }}}
 
     // isSuspended{{{
@@ -710,14 +734,337 @@ describe("SampleService test", () => {
             Observable.of(sampleBList),
         )
         service.isSuspended(sampleA.SYS_SAMPLE_CODE)
-        .subscribe(result => {
-            expect(result).toBeFalsy()
-        })
+            .subscribe(result => {
+                expect(result).toBeFalsy()
+            })
         service.isSuspended(sampleB.SYS_SAMPLE_CODE)
-        .subscribe(result => {
-            expect(result).toBeTruthy()
-            done()
-        })
+            .subscribe(result => {
+                expect(result).toBeTruthy()
+                done()
+            })
+    })// }}}
+
+    // buildDingTalkMessage with 2 samples{{{
+    it('TEST: buildDingTalkMessage with submitted 2 samples', done => {
+        let date = new Date()
+
+        let dateOutput = new DatePipe('en-US')
+            .transform(date, 'MM月dd日')
+
+        let selectedSampleList = [
+            {
+                "SYS_SAMPLE_CODE": "18R0011",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_1",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_1",
+            },
+            {
+                "SYS_SAMPLE_CODE": "18R0012",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_2",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_2",
+            },
+
+            // samples used for issuing
+            {
+                "SYS_SAMPLE_CODE": "18R0013",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_3",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_3",
+            },
+            {
+                "SYS_SAMPLE_CODE": "18R0014",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "FAKE_PC_4",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "FAKE_PM_4",
+            },
+        ]
+
+        let submittedSampleList = [
+            {
+                "TMP_CODE": "DNA_EXTRACTION.18R0011",
+                "CONF_DNA_EXTRACTION_NANODROP": 1.11,
+                "CONF_DNA_EXTRACTION_OD230": 2.31,
+            },
+            {
+                "TMP_CODE": "DNA_EXTRACTION.18R0012",
+                "CONF_DNA_EXTRACTION_NANODROP": 1.12,
+                "CONF_DNA_EXTRACTION_OD230": 2.32,
+            },
+
+            // samples used for issuing
+            {
+                "TMP_CODE": "GENERAL_PROJECT.20180409132428",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "PM-3",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "UXTC-20180409",
+                "SYS_SAMPLE_CODE": "18R0013",
+
+            },
+            {
+                "TMP_CODE": "GENERAL_PROJECT.20180409132529",
+                "CONF_GENERAL_PROJECT_PROJECT_MANAGER": "PM-3",
+                "CONF_GENERAL_PROJECT_PROJECT_CODE": "UXTC-20180409",
+                "SYS_SAMPLE_CODE": "18R0014",
+            },
+        ]
+
+        let attributeList = [
+            {
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD230",
+                "SYS_LABEL": 'label',
+                "label": "OD 260/230",
+            },
+            {
+                "SYS_CODE": "CONF_DNA_EXTRACTION_NANODROP",
+                "SYS_LABEL": 'label',
+                "label": "Nanodrop ng/ul",
+            },
+
+            // attribute used for issuing
+            {
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_MANAGER",
+                "SYS_LABEL": 'label',
+                "label": "项目负责人",
+            },
+            {
+                "SYS_CODE": "CONF_GENERAL_PROJECT_PROJECT_CODE",
+                "SYS_LABEL": 'label',
+                "label": "项目编号",
+            },
+            {
+                "SYS_CODE": "SYS_SAMPLE_CODE",
+                "SYS_LABEL": 'label',
+                "label": "样品编号",
+            },
+        ]
+
+        let date2 = new Date(date)
+        date2.setDate(date.getDate() + 5)
+
+        let date2Output = new DatePipe('en-US')
+            .transform(date2, 'MM月dd日')
+        let date3 = new Date(date)
+        date3.setDate(date.getDate() + 7)
+        let date3Output = new DatePipe('en-US')
+            .transform(date3, 'MM月dd日')
+        let targetOutputList = [
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "LOT170312",
+                    },
+                    "sample": {
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_QUANTITY": 20,
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "Tip#1",
+                    },
+                    "sample": {
+                        "SYS_SAMPLE_CODE": "18R0011",
+                        "SYS_QUANTITY": 10,
+                    },
+                },
+            ],
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "LOT170312",
+                    },
+                    "sample": {
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_QUANTITY": 21,
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "Tip#1",
+                    },
+                    "sample": {
+                        "SYS_SAMPLE_CODE": "18R0012",
+                        "SYS_QUANTITY": 11,
+                    },
+                },
+            ],
+
+            // targetOutput for issuing
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "样品提取",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date,
+                        "SYS_SAMPLE_CODE": "18R0013",
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "项目审核",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date2,
+                        "SYS_SAMPLE_CODE": "18R0013",
+                    },
+                },
+            ],
+            [
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "样品提取",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date,
+                        "SYS_SAMPLE_CODE": "18R0014",
+                    },
+                },
+                {
+                    "workcenter": {
+                        "SYS_LABEL": "label",
+                        "label": "项目审核",
+                    },
+                    "sample": {
+                        "SYS_DATE_SCHEDULED": date3,
+                        "SYS_SAMPLE_CODE": "18R0014",
+                    },
+                },
+            ],
+        ]
+
+        let outputSubmitDetailed = `# **18R0011**
+
+FAKE_PC_1 | FAKE_PM_1
+
+submitted as:
+
+>- OD 260/230: 2.31
+
+>- Nanodrop ng/ul: 1.11
+
+materials:
+
+>- LOT170312: 20
+
+>- Tip#1: 10
+
+# **18R0012**
+
+FAKE_PC_2 | FAKE_PM_2
+
+submitted as:
+
+>- OD 260/230: 2.32
+
+>- Nanodrop ng/ul: 1.12
+
+materials:
+
+>- LOT170312: 21
+
+>- Tip#1: 11
+
+`
+
+        let outputSubmitConcise = `# **DNA_EXTRACTION**
+
+**4** samples are submitted:
+
+>- 18R0011
+
+>- 18R0012
+
+>- 18R0013
+
+>- 18R0014
+
+`
+        let outputIssueDetailed = `# **18R0013**
+
+FAKE_PC_3 | FAKE_PM_3
+
+issued as:
+
+>- 项目负责人: PM-3
+
+>- 项目编号: UXTC-20180409
+
+>- 样品编号: 18R0013
+
+workcenters:
+
+>- ${dateOutput}: 样品提取
+
+>- ${date2Output}: 项目审核
+
+# **18R0014**
+
+FAKE_PC_4 | FAKE_PM_4
+
+issued as:
+
+>- 项目负责人: PM-3
+
+>- 项目编号: UXTC-20180409
+
+>- 样品编号: 18R0014
+
+workcenters:
+
+>- ${dateOutput}: 样品提取
+
+>- ${date3Output}: 项目审核
+
+`
+
+        let outputIssueConcise = `# **DNA_EXTRACTION**
+
+**4** samples are issued:
+
+>- 18R0011
+
+>- 18R0012
+
+>- 18R0013
+
+>- 18R0014
+
+`
+        expect(outputSubmitDetailed).toEqual(service.buildDingTalkMessage(
+            false,
+            selectedSampleList.slice(0, 2),
+            submittedSampleList.slice(0, 2),
+            attributeList,
+            targetOutputList,
+        ))
+
+        expect(outputSubmitConcise).toEqual(service.buildDingTalkMessage(
+            false,
+            selectedSampleList,
+            submittedSampleList,
+            attributeList,
+            targetOutputList,
+        ))
+
+        expect(outputIssueDetailed).toEqual(service.buildDingTalkMessage(
+            true,
+            selectedSampleList.slice(2, 4),
+            submittedSampleList.slice(2, 4),
+            attributeList,
+            targetOutputList,
+        ))
+        expect(outputIssueConcise).toEqual(service.buildDingTalkMessage(
+            true,
+            selectedSampleList,
+            submittedSampleList,
+            attributeList,
+            targetOutputList,
+        ))
+        done()
     })// }}}
 
 })

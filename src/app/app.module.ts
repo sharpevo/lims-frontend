@@ -1,10 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
-import {NgModule, APP_INITIALIZER} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule, APP_INITIALIZER, Injector} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import {HttpModule} from '@angular/http';
 
 import {routingModule} from './app.routes'
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
 //
 // Materilas
 //
@@ -13,7 +13,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 //
 // Apps
 //
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 
 import {ObjectKeysPipe} from './objectKeys.pipe'
 
@@ -58,7 +58,7 @@ import {PluginExcelProcessorComponent} from './plugins/excel.processor'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import 'hammerjs'
 
-import { CdkTableModule } from '@angular/cdk/table';
+import {CdkTableModule} from '@angular/cdk/table';
 
 import {TablifyComponent} from './util/tablify.component'
 
@@ -84,6 +84,12 @@ import {KPIComponent} from './statistics/kpi.component'
 import {AppLoadModule} from './app.load.module'
 import {UserInfoService} from './util/user.info.service'
 import {GuardService} from './util/guard.service'
+
+import {LogService} from './log/log.service'
+import {LogPublisher} from './log/publisher'
+import {LogPublisherService} from './log/publisher.service'
+
+import {InjectorContainerModule} from './injector.module'
 
 @NgModule({
     declarations: [
@@ -132,7 +138,7 @@ import {GuardService} from './util/guard.service'
         SampleOverviewComponent,
         KPIComponent,
     ],
-    entryComponents:[
+    entryComponents: [
         GenreFormDialog,
         EntityFormDialog,
         AttributeFormDialog,
@@ -156,6 +162,7 @@ import {GuardService} from './util/guard.service'
         AppLoadModule,
 
         MaterialModule,
+        InjectorContainerModule,
     ],
     providers: [
         //AppLoadService,
@@ -189,7 +196,9 @@ import {GuardService} from './util/guard.service'
             ]
         },
         UserInfoService,
+        LogService,
+        LogPublisherService,
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

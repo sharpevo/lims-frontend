@@ -59,6 +59,12 @@
                     <mat-icon>delete</mat-icon>
                     <span>Clear Database</span>
                 </button>
+                <button
+                    (click)="downloadLog()"
+                    mat-menu-item>
+                    <mat-icon>history</mat-icon>
+                    <span>Export Logs</span>
+                </button>
                 <button mat-menu-item disabled>
                     <mat-icon>bug_report</mat-icon>
                     <span>Bug report</span>
