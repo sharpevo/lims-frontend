@@ -6,6 +6,8 @@ import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
+import {LogCall} from '../log/decorator'
+import {LogService} from '../log/log.service'
 
 import 'rxjs/add/operator/filter'
 
@@ -26,7 +28,7 @@ import 'rxjs/add/operator/filter'
     ],
     templateUrl: './project.management.component.html',
 })
-export class ProjectManagementComponent{
+export class ProjectManagementComponent {
 
     entity: any = {}
 
@@ -39,17 +41,18 @@ export class ProjectManagementComponent{
     skip = 0
     queryCode: string = ''
     queryValue: string = ''
-    queryDateStart: string =''
-    queryDateEnd: string =''
+    queryDateStart: string = ''
+    queryDateEnd: string = ''
 
     constructor(
         public dialog: MatDialog,
         private entityService: EntityService,
         public sampleService: SampleService,
         private snackBar: MatSnackBar,
-    ){}
+        public logger: LogService,
+    ) {}
 
-    ngOnInit(){
+    ngOnInit() {
         this.entityService.retrieveByIdentifierFull(
             "/PROJECT_MANAGEMENT/GENERAL_PROJECT")
             .subscribe(data => {
@@ -58,11 +61,16 @@ export class ProjectManagementComponent{
             })
     }
 
-    getSampleList(){
+    @LogCall
+    getSampleList() {
         let sortStart = ''
         let sortEnd = ''
-        let option = `&where={"SYS_DATE_TERMINATED":{"exists":false}}` +
-            "&limit=10" +
+        let whereCondition = {
+            "SYS_DATE_TERMINATED": {
+                "exists": false
+            }
+        }
+        let option = "&limit=10" +
             "&sort=-createdAt" +
             "&skip=" +
             this.skip
@@ -72,61 +80,67 @@ export class ProjectManagementComponent{
         }
         if (this.queryCode != '' && this.queryCode != 'SYS_DATE_COMPLETED') {
             if (this.queryValue != '') {
-                option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
+                whereCondition[this.queryCode] = {
+                    "regex": `.*${this.queryValue}.*`
+                }
             } else {
                 this.showMessage("Please input the value.")
                 return
             }
         }
         if (this.queryCode == 'SYS_DATE_COMPLETED') {
-            if (this.queryDateStart == '' && this.queryDateEnd == ''){
+            if (this.queryDateStart == '' && this.queryDateEnd == '') {
                 this.showMessage("Please input the date.")
                 return
             }
-            if (this.queryDateStart != ''){
+            if (this.queryDateStart != '') {
                 sortStart = this.queryDateStart
             }
-            if (this.queryDateEnd != ''){
+            if (this.queryDateEnd != '') {
                 sortEnd = this.queryDateEnd
             }
         }
 
+        option = "&where=" + JSON.stringify(whereCondition) + option
+        this.logger.debug("Query", this.queryCode, this.queryValue, this.queryDateStart, this.queryDateEnd)
+        this.logger.debug("Query Option", option)
         this.entityService.retrieveEntity(
             this.entity.id,
             "collection",
             option
         )
-        .subscribe(data => {
-            this.sampleList = data
-            .filter(sample => {
-                if (sortStart == '' && sortEnd == ''){
-                    return true
-                }
-                if (sortStart != '' && sortEnd == ''){
-                    return new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)
-                }
-                if (sortStart == '' && sortEnd != ''){
-                    return new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd)
-                }
-                if (sortStart != '' && sortEnd != ''){
-                    return (new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)) &&
-                        (new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd))
-                }
-            })
+            .subscribe(data => {
+                this.sampleList = data
+                    .filter(sample => {
+                        if (sortStart == '' && sortEnd == '') {
+                            return true
+                        }
+                        if (sortStart != '' && sortEnd == '') {
+                            return new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)
+                        }
+                        if (sortStart == '' && sortEnd != '') {
+                            return new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd)
+                        }
+                        if (sortStart != '' && sortEnd != '') {
+                            return (new Date(sample['SYS_DATE_COMPLETED']) > new Date(sortStart)) &&
+                                (new Date(sample['SYS_DATE_COMPLETED']) < new Date(sortEnd))
+                        }
+                    })
 
-            this.sampleList.forEach(sample => {
-                // excel plugin only export checked sample
-                sample.TMP_CHECKED = true
+                this.logger.debug("Query Result", this.sampleList)
+                this.sampleList.forEach(sample => {
+                    // excel plugin only export checked sample
+                    sample.TMP_CHECKED = true
+                })
             })
-        })
     }
 
-    nextPage(){
+    nextPage() {
         this.skip += 10
         this.getSampleList()
     }
 
-    prevPage(){
+    prevPage() {
         this.skip -= 10
         if (this.skip <= 0) {
             this.skip = 0
@@ -140,7 +154,7 @@ export class ProjectManagementComponent{
 
 
     openNewEntityDialog(entity: any) {
-        let dialogRef = this.dialog.open(SampleFormDialog, {height:'70%', width: '70%'});
+        let dialogRef = this.dialog.open(SampleFormDialog, {height: '70%', width: '70%'});
         dialogRef.componentInstance.config.entity = entity
         dialogRef.componentInstance.config.issueSample = true
         //dialogRef.componentInstance.config.sampleList = this.sampleList.filter(sample => sample.TMP_CHECK)
@@ -152,7 +166,7 @@ export class ProjectManagementComponent{
     }
 
     openEditEntityDialog(sample: any) {
-        let dialogRef = this.dialog.open(EditPMSampleDialog, {height:'70%', width: '70%'});
+        let dialogRef = this.dialog.open(EditPMSampleDialog, {height: '70%', width: '70%'});
         dialogRef.componentInstance.config.entity = this.entity
         dialogRef.componentInstance.config.sampleEdited = sample
         dialogRef.afterClosed().subscribe(result => {
@@ -161,41 +175,41 @@ export class ProjectManagementComponent{
         });
     }
 
-    clearQuery(){
+    clearQuery() {
         this.queryCode = ''
         this.queryValue = ''
         this.getSampleList()
     }
 
-    openSuspendSampleDialog(sample: any, isSuspended: boolean){
+    openSuspendSampleDialog(sample: any, isSuspended: boolean) {
         let data = {sample: sample, isSuspended: isSuspended, remark: ""}
         let dialogRef = this.dialog.open(SuspendSampleDialog, {
             width: '50%',
             data: data,
         })
         dialogRef.afterClosed()
-        .filter(confirmed => !!confirmed)
-        .subscribe(confirmed => {
-            if (isSuspended) {
-                this.suspendSample(sample, data.remark)
-            } else {
-                this.resumeSample(sample, data.remark)
-            }
-        })
+            .filter(confirmed => !!confirmed)
+            .subscribe(confirmed => {
+                if (isSuspended) {
+                    this.suspendSample(sample, data.remark)
+                } else {
+                    this.resumeSample(sample, data.remark)
+                }
+            })
     }
 
-    suspendSample(sample: any, remark: string){
+    suspendSample(sample: any, remark: string) {
         this.sampleService.suspendSample(sample, remark)
-        .subscribe(data => {
-            console.log("SUSPEND", data)
-            this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been suspended")
-        })
+            .subscribe(data => {
+                console.log("SUSPEND", data)
+                this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] + "' has been suspended")
+            })
     }
 
-    resumeSample(sample: any, remark: string){
+    resumeSample(sample: any, remark: string) {
         this.sampleService.resumeSample(sample, remark)
-        .subscribe(data => {
-            this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] +"' has been resumed")
-        })
+            .subscribe(data => {
+                this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] + "' has been resumed")
+            })
     }
 }
