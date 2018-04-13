@@ -34,6 +34,7 @@ import {CustomHttpService} from '../util/custom.http.service'
 import {LogLevel} from '../log/log'
 import {LogService} from '../log/log.service'
 import {LogPublisherService} from '../log/publisher.service'
+import {InjectorContainerModule} from '../injector.module'
 
 // }}}
 
@@ -75,6 +76,7 @@ describe("SampleService test", () => {
             imports: [
                 HttpModule,
                 MaterialModule, // no provider for overlay!
+                InjectorContainerModule,
             ],
             providers: [
                 MockBackend,
