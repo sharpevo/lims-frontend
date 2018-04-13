@@ -28,6 +28,21 @@ export class AppComponent {
     showMessage: boolean = true
     taskCompletedList: any[] = [
         {
+            title: "#232 修复任务下达搜索bug",
+            date: "2018-04-13",
+            highlight: true,
+        },
+        {
+            title: "#228 增加日志模块",
+            date: "2018-04-12",
+            highlight: true,
+        },
+        {
+            title: "#225 重构钉钉消息构建方法",
+            date: "2018-04-09",
+            highlight: true,
+        },
+        {
             title: "#60(hotfix) 修复相关bug(非混样及钉钉消息)",
             date: "2018-03-30",
             highlight: true,
