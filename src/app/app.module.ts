@@ -89,7 +89,7 @@ import {LogService} from './log/log.service'
 import {LogPublisher} from './log/publisher'
 import {LogPublisherService} from './log/publisher.service'
 
-import {setAppInjector} from './app.injector'
+import {InjectorContainerModule} from './injector.module'
 
 @NgModule({
     declarations: [
@@ -162,6 +162,7 @@ import {setAppInjector} from './app.injector'
         AppLoadModule,
 
         MaterialModule,
+        InjectorContainerModule,
     ],
     providers: [
         //AppLoadService,
@@ -200,8 +201,4 @@ import {setAppInjector} from './app.injector'
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-    constructor(injector: Injector) {
-        setAppInjector(injector)
-    }
-}
+export class AppModule {}
