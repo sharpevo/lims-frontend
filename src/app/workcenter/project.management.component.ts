@@ -6,6 +6,8 @@ import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
+import {LogCall} from '../log/decorator'
+import {LogService} from '../log/log.service'
 
 import 'rxjs/add/operator/filter'
 
@@ -47,6 +49,7 @@ export class ProjectManagementComponent{
         private entityService: EntityService,
         public sampleService: SampleService,
         private snackBar: MatSnackBar,
+        public logger: LogService,
     ){}
 
     ngOnInit(){
@@ -58,11 +61,16 @@ export class ProjectManagementComponent{
             })
     }
 
+    @LogCall
     getSampleList(){
         let sortStart = ''
         let sortEnd = ''
-        let option = `&where={"SYS_DATE_TERMINATED":{"exists":false}}` +
-            "&limit=10" +
+        let whereCondition = {
+            "SYS_DATE_TERMINATED": {
+                "exists": false
+            }
+        }
+        let option = "&limit=10" +
             "&sort=-createdAt" +
             "&skip=" +
             this.skip
@@ -72,7 +80,9 @@ export class ProjectManagementComponent{
         }
         if (this.queryCode != '' && this.queryCode != 'SYS_DATE_COMPLETED') {
             if (this.queryValue != '') {
-                option += `&where={"${this.queryCode}":{"regex":".*${this.queryValue}.*"}}`
+                whereCondition[this.queryCode] = {
+                    "regex": `.*${this.queryValue}.*`
+                }
             } else {
                 this.showMessage("Please input the value.")
                 return
@@ -91,6 +101,9 @@ export class ProjectManagementComponent{
             }
         }
 
+        option = "&where=" + JSON.stringify(whereCondition) + option
+        this.logger.debug("Query", this.queryCode, this.queryValue, this.queryDateStart, this.queryDateEnd)
+        this.logger.debug("Query Option", option)
         this.entityService.retrieveEntity(
             this.entity.id,
             "collection",
@@ -114,6 +127,7 @@ export class ProjectManagementComponent{
                 }
             })
 
+                this.logger.debug("Query Result", this.sampleList)
             this.sampleList.forEach(sample => {
                 // excel plugin only export checked sample
                 sample.TMP_CHECKED = true
