@@ -1,7 +1,15 @@
 import {Injectable} from '@angular/core'
 import {EntityService} from '../entity/service'
 
-import { Observable } from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/forkJoin'
+import 'rxjs/add/observable/range'
+import 'rxjs/add/observable/timer'
+import 'rxjs/add/observable/concat'
+import 'rxjs/add/operator/mergeMap'
+import 'rxjs/add/operator/zip'
+import 'rxjs/add/operator/retryWhen'
+
 import {GenreService} from '../genre/service'
 import {UtilService} from '../util/service'
 
@@ -13,15 +21,18 @@ import {DatePipe} from '@angular/common'
 
 import {environment} from '../../environments/environment'
 
+import {LogService} from '../log/log.service'
+import {LogCall} from '../log/decorator'
+
 @Injectable()
-export class SampleService{
+export class SampleService {
 
     userInfo: any = {}
 
     ignoredAttribute: any = {
-        "SYS_WORKCENTER_OPREATOR":true,
+        "SYS_WORKCENTER_OPREATOR": true,
         //"SYS_DATE_COMPLETED":false,
-        "SYS_DATE_SCHEDULED":true,
+        "SYS_DATE_SCHEDULED": true,
     }
 
     constructor(
@@ -30,59 +41,10 @@ export class SampleService{
         public utilService: UtilService,
         public userInfoService: UserInfoService,
         public router: Router,
-        public entityService: EntityService
-    ){
+        public entityService: EntityService,
+        public logger: LogService,
+    ) {
         this.userInfo = this.userInfoService.getUserInfo()
-    }
-
-    buildSampleInlineList(sampleList: any[]): any[]{
-        let resultList: any = {}
-
-        for (let i = 0; i < sampleList.length; i++){
-            let capCode = sampleList[i]['SYS_CAPTURE_CODE']
-            let laneCode = sampleList[i]['SYS_LANE_CODE']
-            let runCode = sampleList[i]['SYS_RUN_CODE']
-            let sampleCode = 'SAMPLES'
-            if (runCode) {
-                if (!resultList[runCode]){
-                    resultList[runCode] = {}
-                }
-                if (!resultList[runCode][laneCode]){
-                    resultList[runCode][laneCode] = {}
-                }
-                if (!resultList[runCode][laneCode][capCode]){
-                    resultList[runCode][laneCode][capCode] = {}
-                    resultList[runCode][laneCode][capCode][sampleCode] = []
-                }
-                resultList[runCode][laneCode][capCode][sampleCode].push(sampleList[i])
-            } else if (laneCode){
-                if (!resultList[laneCode]){
-                    resultList[laneCode] = {}
-                }
-                if (!resultList[laneCode][capCode]){
-                    resultList[laneCode][capCode] = {}
-                    resultList[laneCode][capCode][sampleCode] = []
-                }
-                resultList[laneCode][capCode][sampleCode].push(sampleList[i])
-            } else if (capCode) {
-                // treat general samples as the 'undefined' caps
-                if (!resultList[capCode]){
-                    resultList[capCode] = {}
-                    resultList[capCode][sampleCode] = []
-                }
-                // expression changed error occured w/o the following initialization
-                // in the sample.inline.component
-                sampleList[i]['TMP_CHECKED'] = false
-                resultList[capCode][sampleCode].push(sampleList[i])
-            } else {
-                if (!resultList[sampleCode]) {
-                    resultList[sampleCode] = []
-                }
-                resultList[sampleCode].push(sampleList[i])
-            }
-
-        }
-        return resultList
     }
 
     /**
@@ -94,99 +56,99 @@ export class SampleService{
      * @param callback assignment usually
      *
      */
-    getAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string, callback){
+    getAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string, callback) {
 
         // Get the latest sample
         this.entityService.retrieveBy({
             "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
         })
-        .subscribe(_sampleList => {
+            .subscribe(_sampleList => {
 
-            let sampleList = _sampleList
-            .sort((a,b) => {
+                let sampleList = _sampleList
+                    .sort((a, b) => {
+                        //if (a['updatedAt'] < b['updatedAt']){
+                        if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']) {
+                            return 1
+                        } else {
+                            return -1
+                        }
+                    })
+                let attributeObjectList = []
+
+                let activatedSampleList = sampleList
+                    .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+                //!sample['SYS_DATE_TERMINATED'])
+                if (activatedSampleList.length > 0) {
+                    let uniqueSampleList = []
+                    let seen = {}
+                    activatedSampleList.forEach(sample => {
+                        let key = attributeCode == 'SYS_SAMPLE_CODE' ? attributeCode : attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
+                        if (!seen[key]) {
+                            if (sample[attributeCode]) {
+                                seen[key] = true
+                            }
+
+                            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+                                uniqueSampleList.push(sample)
+                            }
+                        }
+                    })
+
+                    uniqueSampleList
+                        .forEach(sample => {
+                            attributeObjectList.push({
+                                "id": sample.id,
+                                "dateCompleted": sample['SYS_DATE_COMPLETED'],
+                                "dateUpdated": sample['updatedAt'],
+                                "value": sample[attributeCode] ? sample[attributeCode] : "---"
+                            })
+                        })
+                } else {
+                    // For samples that are just submitted, none of which satisfied the
+                    // date condition, so push the attributes of the first sample.
+                    let firstSample = sampleList[0]
+                    attributeObjectList.push({
+                        "id": firstSample.id,
+                        "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
+                        "dateUpdated": firstSample['updatedAt'],
+                        "value": firstSample[attributeCode] ? firstSample[attributeCode] : "---"
+                    })
+                }
+
+                callback(attributeObjectList)
+            })
+    }
+    getAuxiliaryAttributes(sample: any, sampleSet: any[], attributeCode: string, attributeGenre: string) {
+
+        let sampleList = sampleSet
+            .sort((a, b) => {
                 //if (a['updatedAt'] < b['updatedAt']){
-                if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
+                if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']) {
                     return 1
                 } else {
                     return -1
                 }
             })
-            let attributeObjectList = []
-
-            let activatedSampleList = sampleList
-            .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
-            //!sample['SYS_DATE_TERMINATED'])
-            if (activatedSampleList.length > 0){
-                let uniqueSampleList = []
-                let seen = {}
-                activatedSampleList.forEach(sample => {
-                    let key = attributeCode == 'SYS_SAMPLE_CODE'?attributeCode:attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
-                    if (!seen[key]) {
-                        if (sample[attributeCode]){
-                            seen[key] = true
-                        }
-
-                        if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
-                            uniqueSampleList.push(sample)
-                        }
-                    }
-                })
-
-                uniqueSampleList
-                .forEach(sample => {
-                    attributeObjectList.push({
-                        "id": sample.id,
-                        "dateCompleted": sample['SYS_DATE_COMPLETED'],
-                        "dateUpdated": sample['updatedAt'],
-                        "value": sample[attributeCode]?sample[attributeCode]:"---"
-                    })
-                })
-            } else {
-                // For samples that are just submitted, none of which satisfied the
-                // date condition, so push the attributes of the first sample.
-                let firstSample = sampleList[0]
-                attributeObjectList.push({
-                    "id": firstSample.id,
-                    "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
-                    "dateUpdated": firstSample['updatedAt'],
-                    "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
-                })
-            }
-
-            callback(attributeObjectList)
-        })
-    }
-    getAuxiliaryAttributes(sample: any, sampleSet: any[], attributeCode: string, attributeGenre: string){
-
-        let sampleList = sampleSet
-        .sort((a,b) => {
-            //if (a['updatedAt'] < b['updatedAt']){
-            if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
-                return 1
-            } else {
-                return -1
-            }
-        })
         let attributeObjectList = []
 
         let activatedSampleList = sampleList
-        .filter(sample => {
-            if (sample['SYS_DATE_COMPLETED']){
-                return true
-            }
-            if (!sample['SYS_DATE_COMPLETED'] && sample['SYS_IDENTIFIER'].startsWith('/PROJECT_MANAGEMENT')) {
-                return true
-            }
-            return false
-        })// &&
+            .filter(sample => {
+                if (sample['SYS_DATE_COMPLETED']) {
+                    return true
+                }
+                if (!sample['SYS_DATE_COMPLETED'] && sample['SYS_IDENTIFIER'].startsWith('/PROJECT_MANAGEMENT')) {
+                    return true
+                }
+                return false
+            })// &&
         //!sample['SYS_DATE_TERMINATED'])
-        if (activatedSampleList.length > 0){
+        if (activatedSampleList.length > 0) {
             let uniqueSampleList = []
             let seen = {}
             activatedSampleList.forEach(sample => {
-                let key = attributeCode == 'SYS_SAMPLE_CODE'?attributeCode:attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
+                let key = attributeCode == 'SYS_SAMPLE_CODE' ? attributeCode : attributeCode + "|" + sample['SYS_GENRE'] + sample[attributeCode]
                 if (!seen[key]) {
-                    if (sample[attributeCode]){
+                    if (sample[attributeCode]) {
                         seen[key] = true
                     }
 
@@ -197,14 +159,14 @@ export class SampleService{
             })
 
             uniqueSampleList
-            .forEach(sample => {
-                attributeObjectList.push({
-                    "id": sample.id,
-                    "dateCompleted": sample['SYS_DATE_COMPLETED'],
-                    "dateUpdated": sample['updatedAt'],
-                    "value": sample.hasOwnProperty(attributeCode)?sample[attributeCode]:"---"
+                .forEach(sample => {
+                    attributeObjectList.push({
+                        "id": sample.id,
+                        "dateCompleted": sample['SYS_DATE_COMPLETED'],
+                        "dateUpdated": sample['updatedAt'],
+                        "value": sample.hasOwnProperty(attributeCode) ? sample[attributeCode] : "---"
+                    })
                 })
-            })
         } else {
             // For samples that are just submitted, none of which satisfied the
             // date condition, so push the attributes of the first sample.
@@ -213,72 +175,72 @@ export class SampleService{
                 "id": firstSample.id,
                 "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
                 "dateUpdated": firstSample['updatedAt'],
-                "value": firstSample.hasOwnProperty(attributeCode)?firstSample[attributeCode]:"---"
+                "value": firstSample.hasOwnProperty(attributeCode) ? firstSample[attributeCode] : "---"
             })
         }
         return attributeObjectList
     }
 
-    retrieveAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string){
+    retrieveAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string) {
 
         // Get the latest sample
         return this.entityService.retrieveBy({
             "SYS_SAMPLE_CODE": sample['SYS_SAMPLE_CODE']
         })
-        .map(_sampleList => {
+            .map(_sampleList => {
 
-            let sampleList = _sampleList
-            .sort((a,b) => {
-                //if (a['updatedAt'] < b['updatedAt']){
-                if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']){
-                    return 1
-                } else {
-                    return -1
-                }
-            })
-            let attributeObjectList = []
-
-            let activatedSampleList = sampleList
-            .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
-            //!sample['SYS_DATE_TERMINATED'])
-            if (activatedSampleList.length > 0){
-                let uniqueSampleList = []
-                let seen = {}
-                activatedSampleList.forEach(sample => {
-                    let key = attributeCode + "|" + sample[attributeCode]
-                    if (!seen[key]) {
-                        if (sample[attributeCode]){
-                            seen[key] = true
+                let sampleList = _sampleList
+                    .sort((a, b) => {
+                        //if (a['updatedAt'] < b['updatedAt']){
+                        if (a['SYS_DATE_COMPLETED'] < b['SYS_DATE_COMPLETED']) {
+                            return 1
+                        } else {
+                            return -1
                         }
-
-                        if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
-                            uniqueSampleList.push(sample)
-                        }
-                    }
-                })
-
-                uniqueSampleList
-                .forEach(sample => {
-                    attributeObjectList.push({
-                        "id": sample.id,
-                        "dateCompleted": sample['SYS_DATE_COMPLETED'],
-                        "dateUpdated": sample['updatedAt'],
-                        "value": sample[attributeCode]?sample[attributeCode]:"---"
                     })
-                })
-            } else {
-                // For samples that are just submitted, none of which satisfied the
-                // date condition, so push the attributes of the first sample.
-                let firstSample = sampleList[0]
-                attributeObjectList.push({
-                    "id": firstSample.id,
-                    "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
-                    "dateUpdated": firstSample['updatedAt'],
-                    "value": firstSample[attributeCode]?firstSample[attributeCode]:"---"
-                })
-            }
-            return attributeObjectList
-        })
+                let attributeObjectList = []
+
+                let activatedSampleList = sampleList
+                    .filter(sample => sample['SYS_DATE_COMPLETED'])// &&
+                //!sample['SYS_DATE_TERMINATED'])
+                if (activatedSampleList.length > 0) {
+                    let uniqueSampleList = []
+                    let seen = {}
+                    activatedSampleList.forEach(sample => {
+                        let key = attributeCode + "|" + sample[attributeCode]
+                        if (!seen[key]) {
+                            if (sample[attributeCode]) {
+                                seen[key] = true
+                            }
+
+                            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+                                uniqueSampleList.push(sample)
+                            }
+                        }
+                    })
+
+                    uniqueSampleList
+                        .forEach(sample => {
+                            attributeObjectList.push({
+                                "id": sample.id,
+                                "dateCompleted": sample['SYS_DATE_COMPLETED'],
+                                "dateUpdated": sample['updatedAt'],
+                                "value": sample[attributeCode] ? sample[attributeCode] : "---"
+                            })
+                        })
+                } else {
+                    // For samples that are just submitted, none of which satisfied the
+                    // date condition, so push the attributes of the first sample.
+                    let firstSample = sampleList[0]
+                    attributeObjectList.push({
+                        "id": firstSample.id,
+                        "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
+                        "dateUpdated": firstSample['updatedAt'],
+                        "value": firstSample[attributeCode] ? firstSample[attributeCode] : "---"
+                    })
+                }
+                return attributeObjectList
+            })
     }
 
     /**
@@ -295,11 +257,11 @@ export class SampleService{
      * @param sampleList samples to build
      *
      */
-    buildHybridSampleList(sampleList: any, hybridAttributeMap: any): any{
+    buildHybridSampleList(sampleList: any, hybridAttributeMap: any): any {
+
         let hybridObjectMap = {}
         sampleList.forEach(sample => {
-            console.log(sample)
-            if(!hybridObjectMap[sample.id]) {
+            if (!hybridObjectMap[sample.id]) {
                 hybridObjectMap[sample.id] = {}
             }
             if (!hybridObjectMap[sample.id]['attributeObject']) {
@@ -314,13 +276,13 @@ export class SampleService{
         return hybridObjectMap
     }
 
-    parsePreviousSample(sample: any, data: any[]): any{
+    parsePreviousSample(sample: any, data: any[]): any {
         // get previous sample
         let index = -1
         let previousSample = {}
 
-        for (let i=0; i < data.length; i ++){
-            if (data[i].id == sample.id){
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].id == sample.id) {
                 index = i
                 break
             }
@@ -329,19 +291,19 @@ export class SampleService{
         if (index < 0) {
             return
         }
-        if (index == 0){
+        if (index == 0) {
             previousSample = sample
         }
 
-        if (index >= 1){
-            previousSample = data[index-1]
+        if (index >= 1) {
+            previousSample = data[index - 1]
         }
 
         previousSample['TMP_NEXT_SAMPLE_ID'] = sample.id
         return previousSample
     }
 
-    terminateSample(sample: any): any{
+    terminateSample(sample: any): any {
         sample['SYS_DATE_TERMINATED'] = new Date()
         return this.entityService.update(sample)
     }
@@ -362,7 +324,7 @@ export class SampleService{
             OPERATOR: this.userInfo.limsid,
             REMARK: remark,
         }
-        if (!sample['SYS_RESUMPTION']){
+        if (!sample['SYS_RESUMPTION']) {
             sample['SYS_RESUMPTION'] = []
         }
         sample['SYS_RESUMPTION'].push(resumption)
@@ -370,11 +332,11 @@ export class SampleService{
         return this.entityService.update(sample)
     }
 
-    isSuspended(sampleCode: any): Observable<any>{
+    isSuspended(sampleCode: any): Observable<any> {
         return this.entityService.retrieveBy({
             SYS_SAMPLE_CODE: sampleCode
         }).map(samples => {
-            for (let sample of samples){
+            for (let sample of samples) {
                 if (sample['SYS_SUSPENSION'] &&
                     Object.keys(sample['SYS_SUSPENSION']).length > 0) {
                     return true
@@ -384,20 +346,22 @@ export class SampleService{
         })
     }
 
-    terminateSampleObs(sample): Observable<any>{
+    terminateSampleObs(sample): Observable<any> {
         return this.entityService.retrieveBy(
-            {'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
-                'sort': 'SYS_DATE_SCHEDULED'}
+            {
+                'SYS_SAMPLE_CODE': sample['SYS_SAMPLE_CODE'],
+                'sort': 'SYS_DATE_SCHEDULED'
+            }
         ).map(samples => {
             let terminateObs = []
             samples.forEach(sampleItem => {
                 let sampleDate = new Date(sampleItem['SYS_DATE_SCHEDULED'])
                 let refSampleDate = new Date(sample['SYS_DATE_SCHEDULED'])
                 if (sampleDate >= refSampleDate ||
-                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'){
+                    sampleItem['SYS_GENRE_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT/') {
                     sampleItem['SYS_DATE_TERMINATED'] = new Date()
-                terminateObs.push(
-                    this.entityService.update(sampleItem))
+                    terminateObs.push(
+                        this.entityService.update(sampleItem))
                 }
             })
             return terminateObs
@@ -405,21 +369,21 @@ export class SampleService{
 
     }
 
-    retrieveRootTarget(sampleId: string): string{
+    retrieveRootTarget(sampleId: string): string {
         this.entityService.retrieveBy({id: sampleId})
-        .subscribe(data => {
-            console.log("Analyze target:", data)
-            if (data['SYS_TARGET']){
-                this.retrieveRootTarget(data['SYS_TARGET']['id'])
-            } else {
-                return data['SYS_TARGET']
-            }
-        })
+            .subscribe(data => {
+                this.logger.debug("Analyze target", data)
+                if (data['SYS_TARGET']) {
+                    this.retrieveRootTarget(data['SYS_TARGET']['id'])
+                } else {
+                    return data['SYS_TARGET']
+                }
+            })
 
         return ''
     }
 
-    getHybridInfo(sample: any): any{
+    getHybridInfo(sample: any): any {
 
         let runString = 'SYS_RUN_CODE'
         let lanString = 'SYS_LANE_CODE'
@@ -428,21 +392,21 @@ export class SampleService{
         let lanCode = sample[lanString]
         let capCode = sample[capString]
 
-        if (runCode){
+        if (runCode) {
             return {
-                "type":"RUN",
+                "type": "RUN",
                 [runString]: runCode
             }
         }
-        if (lanCode){
+        if (lanCode) {
             return {
-                "type":"LANE",
+                "type": "LANE",
                 [lanString]: lanCode
             }
         }
-        if (capCode){
+        if (capCode) {
             return {
-                "type":"CAPTURE",
+                "type": "CAPTURE",
                 [capString]: capCode
             }
         }
@@ -463,95 +427,167 @@ export class SampleService{
      * @param parentMap BoM/Routing object.
      *
      */
-    submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object:any, parentMap: any){
+    @LogCall
+    submitObject(workcenter: any, sampleList: any[], issueSample: boolean, object: any, parentMap: any) {
 
         // Find the user in the lims by the user email.
         // For the mismatched user, they are illegal to submit any samples.
-        if (!this.userInfo.limsid){
-            console.log("illegal user", this.userInfo)
+        if (!this.userInfo.limsid) {
+            this.logger.error("Illegal user", this.userInfo)
             this.showMessage("Invalid user: " + this.userInfo.email, "OK")
             return
         }
 
         this.entityService.retrieveGenre(workcenter.id)
-        .subscribe(data => {
-            // Take the first genre as default
-            this.genreService.retrieveAttribute(data[0].id)
             .subscribe(data => {
-
-                //data.forEach(attribute => {
-                //switch (attribute.SYS_TYPE){
-                //case "entity":
-                //if (attribute.SYS_TYPE_ENTITY_REF){
-                //// get the identifier of the entity
-                //// TODO: save SYS_IDENTIFIER instead of ID seems better
-                //// or automate populate
-                //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
-                //.subscribe(data => {
-                //// get the entity list
-                //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
-                //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
-                //}
-                //this.entityService.retrieveByIdentifierAndCategory(
-                //data.SYS_IDENTIFIER,
-                //attribute.SYS_FLOOR_ENTITY_TYPE)
-                //.subscribe(data => {
-                //// compose a new key
-                //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
-                //})
-                //})
-                //}else {
-                //}
-                //console.log(">-", attribute.SYS_CODE)
-                //if (!attribute.SYS_TYPE_ENTITY_REF) {
-                //parentMap[attribute.SYS_CODE] = {}
-                //}
-                //break
-                //default:
-                //}
-
-                //})
-
-                let attributeList = data.sort((a,b) => {
-                    if (a.SYS_ORDER > b.SYS_ORDER) {
-                        return 1
-                    } else {
-                        return -1
-                    }
-                })
-                let attributeInfo = {
-                    "attributeList": attributeList,
-                    "parentMap": parentMap
-                }
-
-                if (issueSample){
-                    console.log("issueSample")
-                    this.issueSample(workcenter, object, sampleList, attributeInfo)
-                    return
-                }
-                console.log("submitObject")
-
-                let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
-                let msg_sampleCount = sampleList.length
-                let msg_sampleList = ""
-                // samples from the previous workcenter or the current one in the first
-                // workcenter with workcenter-specific attributes:
-                // - for the attributes defined by administrator, if they are same, use
-                //   the previous one
-                // - for the attributes starts with SYS, use current workcenter
-                sampleList.forEach(sample => {
-                    msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
-                    console.log('processing candidate sample', sample)
-                    //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
-                    this.entityService.retrieveById(sample.id)
+                // Take the first genre as default
+                this.genreService.retrieveAttribute(data[0].id)
                     .subscribe(data => {
-                        console.log("processing sample:", data)
-                        this.submitSample(workcenter, object, data, attributeInfo)
-                    })
-                })
-            })
-        })
 
+                        //data.forEach(attribute => {
+                        //switch (attribute.SYS_TYPE){
+                        //case "entity":
+                        //if (attribute.SYS_TYPE_ENTITY_REF){
+                        //// get the identifier of the entity
+                        //// TODO: save SYS_IDENTIFIER instead of ID seems better
+                        //// or automate populate
+                        //this.entityService.retrieveById(attribute.SYS_TYPE_ENTITY.id)
+                        //.subscribe(data => {
+                        //// get the entity list
+                        //if (!attribute.SYS_FLOOR_ENTITY_TYPE){
+                        //attribute.SYS_FLOOR_ENTITY_TYPE = "object"
+                        //}
+                        //this.entityService.retrieveByIdentifierAndCategory(
+                        //data.SYS_IDENTIFIER,
+                        //attribute.SYS_FLOOR_ENTITY_TYPE)
+                        //.subscribe(data => {
+                        //// compose a new key
+                        //attribute[attribute.SYS_CODE + "_ENTITY_LIST"] = data
+                        //})
+                        //})
+                        //}else {
+                        //}
+                        //console.log(">-", attribute.SYS_CODE)
+                        //if (!attribute.SYS_TYPE_ENTITY_REF) {
+                        //parentMap[attribute.SYS_CODE] = {}
+                        //}
+                        //break
+                        //default:
+                        //}
+
+                        //})
+
+                        let attributeList = data.sort((a, b) => {
+                            if (a.SYS_ORDER > b.SYS_ORDER) {
+                                return 1
+                            } else {
+                                return -1
+                            }
+                        })
+                        let attributeInfo = {
+                            "attributeList": attributeList,
+                            "parentMap": parentMap
+                        }
+
+                        if (issueSample) {
+                            this.issueSample(workcenter, object, sampleList, attributeInfo)
+                            return
+                        }
+
+                        let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
+                        let msg_sampleCount = sampleList.length
+                        let msg_sampleList = ""
+                        // samples from the previous workcenter or the current one in the first
+                        // workcenter with workcenter-specific attributes:
+                        // - for the attributes defined by administrator, if they are same, use
+                        //   the previous one
+                        // - for the attributes starts with SYS, use current workcenter
+                        sampleList.forEach(sample => {
+                            msg_sampleList += ">- [" + sample['SYS_SAMPLE_CODE'] + "](" + sample._id + ")\n\n"
+                            //this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+                            this.entityService.retrieveById(sample.id)
+                                .subscribe(data => {
+                                    this.logger.debug("processing sample", data)
+                                    this.submitSample(workcenter, object, data, attributeInfo)
+                                })
+                        })
+                    })
+            })
+
+
+    }
+
+    @LogCall
+    submitObject$(workcenter: any, sampleList: any[], issueSample: boolean, object: any, parentMap: any): Observable<any> {
+        if (!this.userInfo.limsid) {
+            this.logger.error("Illegal user", this.userInfo)
+            this.showMessage("Invalid user: " + this.userInfo.email, "OK")
+            return Observable.throw("Invalid user: " + this.userInfo.email)
+        }
+
+        return this.entityService.retrieveGenre(workcenter.id)
+            .mergeMap(data => {
+                // Take the first genre as default
+                return this.genreService.retrieveAttribute(data[0].id)
+                    .mergeMap(data => {
+                        let attributeList = data.sort((a, b) => {
+                            if (a.SYS_ORDER > b.SYS_ORDER) {
+                                return 1
+                            } else {
+                                return -1
+                            }
+                        })
+                        let attributeInfo = {
+                            "attributeList": attributeList,
+                            "parentMap": parentMap
+                        }
+
+                        if (issueSample) {
+                            this.issueSample(workcenter, object, sampleList, attributeInfo)
+                            return
+                        }
+
+                        let msg_workcenter = workcenter[workcenter['SYS_LABEL']]
+                        let msg_sampleCount = sampleList.length
+                        // samples from the previous workcenter or the current one in the first
+                        // workcenter with workcenter-specific attributes:
+                        // - for the attributes defined by administrator, if they are same, use
+                        //   the previous one
+                        // - for the attributes starts with SYS, use current workcenter
+                        //return Observable.forkJoin(
+                        ////return Observable.concat(
+                        //sampleList.map(sample => {
+                        //console.log('processing candidate sample', sample)
+                        ////this.entityService.retrieveById(sample['TMP_NEXT_SAMPLE_ID'])
+                        //return this.entityService.retrieveById(sample.id)
+                        ////.map(data => {
+                        //.mergeMap(data => {
+                        //console.log("processing sample:", data)
+                        //return this.submitSample$(workcenter, object, data, attributeInfo)
+                        //})
+                        //})
+                        //)
+                        //.map(data => {
+                        //console.log("FORKJOIN", data)
+                        //return data
+                        //})
+
+
+                        let obs = []
+
+                        sampleList.forEach(sample => {
+                            obs.push(this.entityService.retrieveById(sample.id)
+                                .mergeMap(data => {
+                                    this.logger.debug("processing sample", data)
+                                    return this.submitSample$(workcenter, object, data, attributeInfo)
+                                }))
+                        })
+                        return Observable.forkJoin(obs)
+
+
+
+                    })
+            })
 
     }
 
@@ -566,10 +602,10 @@ export class SampleService{
      *
      */
 
-    issueSample(entity: any, object: any, sampleList: any[], attributeInfo: any){
+    issueSample(entity: any, object: any, sampleList: any[], attributeInfo: any) {
         sampleList.forEach(sample => {
-            if (!sample['SYS_SAMPLE_CODE']){
-                console.log("invalid sample code")
+            if (!sample['SYS_SAMPLE_CODE']) {
+                this.logger.warn("invalid sample code", sample)
             }
 
             // Copy attributes from object to sample
@@ -598,29 +634,28 @@ export class SampleService{
 
             // process samples already in the LIMS delete id before creation if the
             // sample is inside of LIMS
-            if (sample.id){
+            if (sample.id) {
                 //Observable.forkJoin(this.terminateSampleObs(sample))
                 //.subscribe((data: any[][]) => {
                 this.terminateSampleObs(sample)
-                .subscribe(terminatedObs => {
-                    Observable.forkJoin(terminatedObs).subscribe(data => {
-                        //console.log("---->", data)
-                        console.log("---->", data)
-                        delete sample.id
-                        delete sample._id
-                        delete sample.SYS_TARGET
-                        // create object after terminating samples
-                        this.createObject(sample, attributeInfo, true)
+                    .subscribe(terminatedObs => {
+                        Observable.forkJoin(terminatedObs).subscribe(data => {
+                            this.logger.debug("terminate data", data)
+                            delete sample.id
+                            delete sample._id
+                            delete sample.SYS_TARGET
+                            // create object after terminating samples
+                            this.createObject(sample, attributeInfo, true)
 
+                        })
                     })
-                })
             } else {
                 this.createObject(sample, attributeInfo, true)
             }
         })
     }
 
-    submitSample$(entity: any, object: any, selectedSample: any, attributeInfo: any){
+    submitSample$(entity: any, object: any, selectedSample: any, attributeInfo: any) {
 
         return this.entityService.retrieveBy({
             'SYS_TARGET': selectedSample['SYS_TARGET'],
@@ -629,42 +664,42 @@ export class SampleService{
             let sample = {}
             let previousSample = this.parsePreviousSample(selectedSample, data)
             return this.entityService.retrieveAttribute(previousSample.id)
-            .mergeMap(data => {
-                //data.forEach(attribute => {
-                //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
-                //})
+                .mergeMap(data => {
+                    //data.forEach(attribute => {
+                    //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+                    //})
 
-                // Copy capture/lane/run code manually
-                let captureCode = 'SYS_CAPTURE_CODE'
-                let laneCode = 'SYS_LANE_CODE'
-                let runCode = 'SYS_RUN_CODE'
-                if (previousSample[captureCode]) {
-                    sample[captureCode] = previousSample[captureCode]
-                }
-                if (previousSample[laneCode]) {
-                    sample[laneCode] = previousSample[laneCode]
-                }
-                if (previousSample[runCode]) {
-                    sample[runCode] = previousSample[runCode]
-                }
+                    // Copy capture/lane/run code manually
+                    let captureCode = 'SYS_CAPTURE_CODE'
+                    let laneCode = 'SYS_LANE_CODE'
+                    let runCode = 'SYS_RUN_CODE'
+                    if (previousSample[captureCode]) {
+                        sample[captureCode] = previousSample[captureCode]
+                    }
+                    if (previousSample[laneCode]) {
+                        sample[laneCode] = previousSample[laneCode]
+                    }
+                    if (previousSample[runCode]) {
+                        sample[runCode] = previousSample[runCode]
+                    }
 
-                // Copy attributes from object to sample
-                Object.keys(object).forEach(key => {
-                    sample[key] = object[key]
+                    // Copy attributes from object to sample
+                    Object.keys(object).forEach(key => {
+                        sample[key] = object[key]
+                    })
+
+                    // Add customized sample attribute
+                    sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
+                        selectedSample['SYS_CODE']
+
+                    // Add default label, including SYS_SAMPLE_CODE
+                    sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+                    sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
+
+                    sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED') ? object['SYS_DATE_COMPLETED'] : new Date()
+                    sample['SYS_ENTITY_TYPE'] = 'collection'
+                    return this.createObject$(sample, attributeInfo, false)
                 })
-
-                // Add customized sample attribute
-                sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
-                    selectedSample['SYS_CODE']
-
-                // Add default label, including SYS_SAMPLE_CODE
-                sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
-                sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
-
-                sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED')?object['SYS_DATE_COMPLETED']:new Date()
-                sample['SYS_ENTITY_TYPE'] = 'collection'
-                return this.createObject$(sample, attributeInfo, false)
-            })
         })
 
     }
@@ -679,7 +714,7 @@ export class SampleService{
      * @param attributeInfo argument map
      *
      */
-    submitSample(entity: any, object: any, selectedSample: any, attributeInfo: any){
+    submitSample(entity: any, object: any, selectedSample: any, attributeInfo: any) {
 
         this.entityService.retrieveBy({
             'SYS_TARGET': selectedSample['SYS_TARGET'],
@@ -688,117 +723,253 @@ export class SampleService{
             let sample = {}
             let previousSample = this.parsePreviousSample(selectedSample, data)
             this.entityService.retrieveAttribute(previousSample.id)
-            .subscribe(data => {
-                //data.forEach(attribute => {
-                //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
-                //})
+                .subscribe(data => {
+                    //data.forEach(attribute => {
+                    //sample[attribute['SYS_CODE']] = previousSample[attribute['SYS_CODE']]
+                    //})
 
-                // Copy capture/lane/run code manually
-                let captureCode = 'SYS_CAPTURE_CODE'
-                let laneCode = 'SYS_LANE_CODE'
-                let runCode = 'SYS_RUN_CODE'
-                if (previousSample[captureCode]) {
-                    sample[captureCode] = previousSample[captureCode]
-                }
-                if (previousSample[laneCode]) {
-                    sample[laneCode] = previousSample[laneCode]
-                }
-                if (previousSample[runCode]) {
-                    sample[runCode] = previousSample[runCode]
-                }
+                    // Copy capture/lane/run code manually
+                    let captureCode = 'SYS_CAPTURE_CODE'
+                    let laneCode = 'SYS_LANE_CODE'
+                    let runCode = 'SYS_RUN_CODE'
+                    if (previousSample[captureCode]) {
+                        sample[captureCode] = previousSample[captureCode]
+                    }
+                    if (previousSample[laneCode]) {
+                        sample[laneCode] = previousSample[laneCode]
+                    }
+                    if (previousSample[runCode]) {
+                        sample[runCode] = previousSample[runCode]
+                    }
 
-                // Copy attributes from object to sample
-                Object.keys(object).forEach(key => {
-                    sample[key] = object[key]
+                    // Copy attributes from object to sample
+                    Object.keys(object).forEach(key => {
+                        sample[key] = object[key]
+                    })
+
+                    // Add customized sample attribute
+                    sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
+                        selectedSample['SYS_CODE']
+
+                    // Add default label, including SYS_SAMPLE_CODE
+                    sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
+                    sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
+
+                    sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED') ? object['SYS_DATE_COMPLETED'] : new Date()
+                    sample['SYS_ENTITY_TYPE'] = 'collection'
+                    this.createObject(sample, attributeInfo, false)
                 })
-
-                // Add customized sample attribute
-                sample['SYS_IDENTIFIER'] = entity['SYS_IDENTIFIER'] + '/' +
-                    selectedSample['SYS_CODE']
-
-                // Add default label, including SYS_SAMPLE_CODE
-                sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
-                sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
-
-                sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED')?object['SYS_DATE_COMPLETED']:new Date()
-                sample['SYS_ENTITY_TYPE'] = 'collection'
-                this.createObject(sample, attributeInfo, false)
-            })
         })
 
     }
 
-    createObject(sample: any, attributeInfo: any, issueSample: boolean){
+    createObject(sample: any, attributeInfo: any, issueSample: boolean) {
         let targetOutput = []
         this.createObject$(sample, attributeInfo, issueSample)
-        .subscribe(
-            data => {
-                targetOutput.push(data)
-            },
-            err => {
-                console.log("ERROR", err)
-            },
-            () => {
-                this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
-                .subscribe(() => {
-                    this.router.navigate(['/redirect' + this.router.url])
+            .subscribe(
+                data => {
+                    targetOutput.push(data)
+                },
+                err => {
+                    this.logger.error(err)
+                },
+                () => {
+                    //this.sendMessageToDingTalk(issueSample, sample, attributeInfo['attributeList'], targetOutput)
+                    //.subscribe(() => {
+                    //this.router.navigate(['/redirect' + this.router.url])
+                    //})
+
+                    this.logger.debug("args", sample, attributeInfo['attributeInfo'], targetOutput)
+
+                    this.sendMessageToDingTalk$(
+                        issueSample,
+                        [sample],
+                        [sample],
+                        attributeInfo['attributeList'],
+                        targetOutput
+                    )
+                        .subscribe(() => {
+                            this.router.navigate(['/redirect' + this.router.url])
+                        })
+
+                    //let date = new Date()
+                    //let msg_date = date.getFullYear() + '-' +
+                    //(date.getMonth() + 1) + '-' +
+                    //date.getDate() + ' ' +
+                    //date.getHours() + ':' +
+                    //date.getMinutes()
+
+                    //let message = ''
+                    //if (issueSample){
+                    //message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
+                    //message += `scheduled to the following workcenters\n\n`
+                    //} else {
+                    //message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
+                    //attributeInfo['attributeList'].forEach(attr => {
+                    //if (sample.hasOwnProperty(attr.SYS_CODE)) {
+                    //message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
+                    //}
+                    //})
+                    //if (targetOutput.length > 0){
+                    //message += `with the following materials\n\n`
+                    //}
+                    //}
+                    //targetOutput.forEach(target => {
+                    //let sample = target['sample']
+                    //let workcenter = target['workcenter']
+                    ////console.log(target)
+                    //if (issueSample){
+                    //let scheduledDate = new DatePipe('en-US')
+                    //.transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                    //message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+                    //} else {
+
+                    //message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                    //}
+                    //})
+                    //message +=`> \n\n${this.userInfo.name}\n\n` +
+                    //`${msg_date}`
+                    ////console.log("mmm", message)
+                    //let beforeDate = new Date(date)
+                    //beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+                    //let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+                    //let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+                    //let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+                    //this.utilService.sendNotif(
+                    //"actionCard",
+                    //message,
+                    //redirectUrl
+                    //)
+                    //.subscribe(() => {
+                    //console.log("Sending notification:", redirectUrl)
+                    //})
+                    //this.router.navigate(['/redirect' + this.router.url])
                 })
-                //let date = new Date()
-                //let msg_date = date.getFullYear() + '-' +
-                //(date.getMonth() + 1) + '-' +
-                //date.getDate() + ' ' +
-                //date.getHours() + ':' +
-                //date.getMinutes()
-
-                //let message = ''
-                //if (issueSample){
-                //message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
-                //message += `scheduled to the following workcenters\n\n`
-                //} else {
-                //message = `# **${sample.SYS_SAMPLE_CODE}**\n\nsubmitted as\n\n`
-                //attributeInfo['attributeList'].forEach(attr => {
-                //if (sample.hasOwnProperty(attr.SYS_CODE)) {
-                //message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
-                //}
-                //})
-                //if (targetOutput.length > 0){
-                //message += `with the following materials\n\n`
-                //}
-                //}
-                //targetOutput.forEach(target => {
-                //let sample = target['sample']
-                //let workcenter = target['workcenter']
-                ////console.log(target)
-                //if (issueSample){
-                //let scheduledDate = new DatePipe('en-US')
-                //.transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
-                //message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
-                //} else {
-
-                //message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
-                //}
-                //})
-                //message +=`> \n\n${this.userInfo.name}\n\n` +
-                //`${msg_date}`
-                ////console.log("mmm", message)
-                //let beforeDate = new Date(date)
-                //beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
-                //let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
-                //let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
-                //let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
-                //this.utilService.sendNotif(
-                //"actionCard",
-                //message,
-                //redirectUrl
-                //)
-                //.subscribe(() => {
-                //console.log("Sending notification:", redirectUrl)
-                //})
-                //this.router.navigate(['/redirect' + this.router.url])
-            })
     }
 
-    sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]){
+    buildDingTalkMessage(
+        issueSample: boolean,
+        selectedSampleList: any[],
+        submittedSampleList: any[],
+        attributeList: any[],
+        targetOutputList: any[],
+        workcenter?: any
+    ) {
+
+        this.logger.debug("targetOutputList", targetOutputList)
+        const MAX_LENGTH_OF_SAMPLELIST = 3
+
+        let VERB = ''
+        let WITH = ''
+        if (issueSample) {
+            VERB = "issued"
+            WITH = "workcenters"
+        } else {
+            VERB = "submitted"
+            WITH = "materials"
+        }
+        let message = ''
+
+        if (submittedSampleList.length > MAX_LENGTH_OF_SAMPLELIST) {
+            if (workcenter) {
+                message += `# **${workcenter[workcenter['SYS_LABEL']]}**\n\n`
+            } else {
+                message += `# **${submittedSampleList[0]['TMP_CODE'].split('.')[0]}**\n\n`
+            }
+            message += `**${submittedSampleList.length}** samples are ${VERB}:\n\n`
+            submittedSampleList.forEach((submittedSample, index) => {
+                message += `>- ${selectedSampleList[index].SYS_SAMPLE_CODE}\n\n`
+            })
+        } else {
+            submittedSampleList.forEach((submittedSample, index) => {
+                message += `# **${selectedSampleList[index].SYS_SAMPLE_CODE}**\n\n${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_CODE} | ${selectedSampleList[index].CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n` +
+                    `${VERB} as:\n\n`
+
+                attributeList.forEach(attr => {
+                    if (submittedSample.hasOwnProperty(attr.SYS_CODE)) {
+                        message += `>- ${attr[attr['SYS_LABEL']]}: ${submittedSample[attr.SYS_CODE]}\n\n`
+                    }
+                })
+
+
+                message += `${WITH}:\n\n`
+                for (let targetOutput of targetOutputList) {
+
+
+                    this.logger.debug("targetOutput:", targetOutput)
+                    if (targetOutput.length == 0) {
+                        break
+                    }
+
+
+                    for (let target of targetOutput) {
+                        this.logger.debug("target:", target)
+                        let sample = target['sample']
+                        let workcenter = target['workcenter']
+
+                        // forkJoin returns value arbitrarily
+                        if (sample['SYS_SAMPLE_CODE'] == selectedSampleList[index]['SYS_SAMPLE_CODE']) {
+                            this.logger.debug("sample:", sample)
+                            if (issueSample) {
+                                let scheduledDate = new DatePipe('en-US')
+                                    .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                                message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
+                            } else {
+                                message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
+                            }
+
+                            continue
+
+                        }
+                    }
+                }
+            })
+        }
+
+        this.logger.debug("Message", message)
+        return message
+    }
+
+    sendMessageToDingTalk$(
+        issueSample: boolean,
+        selectedSampleList: any[],
+        submittedSampleList: any[],
+        attributeList: any[],
+        targetOutputList: any[],
+        workcenter?: any
+    ) {
+
+        let message = this.buildDingTalkMessage(
+            issueSample,
+            selectedSampleList,
+            submittedSampleList,
+            attributeList,
+            targetOutputList,
+            workcenter
+        )
+        let date = new Date()
+        let msg_date = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
+
+        message += `> \n\n${this.userInfo.name}\n\n` +
+            `${msg_date}`
+        let beforeDate = new Date(date)
+        beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
+        let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
+        let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
+        let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
+        this.logger.info("Sending notification:", redirectUrl)
+        return this.utilService.sendNotif(
+            "actionCard",
+            message,
+            redirectUrl)
+    }
+
+    sendMessageToDingTalk(issueSample: boolean, sample: any, attributeList: any[], targetOutput: any[]) {
+
         let date = new Date()
         let msg_date = date.getFullYear() + '-' +
             (date.getMonth() + 1) + '-' +
@@ -807,7 +978,7 @@ export class SampleService{
             date.getMinutes()
 
         let message = ''
-        if (issueSample){
+        if (issueSample) {
             message = `# **${sample.SYS_SAMPLE_CODE}**\n\n${sample.CONF_GENERAL_PROJECT_PROJECT_CODE} | ${sample.CONF_GENERAL_PROJECT_PROJECT_MANAGER}\n\n`
             message += `scheduled to the following workcenters\n\n`
         } else {
@@ -817,33 +988,32 @@ export class SampleService{
                     message += `>- ${attr[attr['SYS_LABEL']]}: ${sample[attr.SYS_CODE]}\n\n`
                 }
             })
-            if (targetOutput.length > 0){
+            if (targetOutput.length > 0) {
                 message += `with the following materials\n\n`
             }
         }
         targetOutput.forEach(target => {
             let sample = target['sample']
             let workcenter = target['workcenter']
-            //console.log("MSG:", target)
-            if (issueSample){
+            this.logger.debug("target", target)
+            if (issueSample) {
                 let scheduledDate = new DatePipe('en-US')
-                .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
+                    .transform(sample['SYS_DATE_SCHEDULED'], 'MM月dd日')
                 message += `>- ${scheduledDate}: ${workcenter[workcenter['SYS_LABEL']]}\n\n`
             } else {
-                if (workcenter){
+                if (workcenter) {
                     message += `>- ${workcenter[workcenter['SYS_LABEL']]}: ${sample['SYS_QUANTITY']}\n\n`
                 }
             }
         })
-        message +=`> \n\n${this.userInfo.name}\n\n` +
+        message += `> \n\n${this.userInfo.name}\n\n` +
             `${msg_date}`
-        //console.log("mmm", message)
         let beforeDate = new Date(date)
         beforeDate.setDate(date.getDate() + 1) // the day after today in order to include audits today
         let beforeDateString = new DatePipe('en-US').transform(beforeDate, 'yyyy.MM.dd')
         let afterDateString = new DatePipe('en-US').transform(date, 'yyyy.MM.dd')
         let redirectUrl = `${environment.auditUrl}/audit?newdoc.SYS_WORKCENTER_OPERATOR=${this.userInfo.limsid}&dateafter=${afterDateString}&datebefore=${beforeDateString}`
-        console.log("Sending notification:", redirectUrl)
+        this.logger.info("Sending notification:", redirectUrl)
         return this.utilService.sendNotif(
             "actionCard",
             message,
@@ -851,7 +1021,7 @@ export class SampleService{
         )
     }
 
-    createObject$(object: any, attributeInfo: any, issueSample: boolean){
+    createObject$(object: any, attributeInfo: any, issueSample: boolean) {
 
         object['SYS_WORKCENTER_OPERATOR'] = this.userInfo.limsid
         object['SYS_AUDIT_DOCSET'] = this.utilService.getDocSet(
@@ -859,52 +1029,52 @@ export class SampleService{
             object['SYS_SAMPLE_CODE'],
         )
 
-        if (issueSample){
+        if (issueSample) {
             return this.entityService.create(object)
-            .mergeMap(data => {
-                delete data.SYS_WORKCENTER_OPERATOR
-                delete data.SYS_DATE_COMPLETED
-                console.log('Issue sample:', data)
-                return this.buildRelationship(data, attributeInfo)
-            })
-            .retryWhen(
-                attempts => Observable.range(1, 10)
-                .zip(attempts, i => i)
-                .mergeMap(i => {
-                    console.log("delay retry by " + i + " seconds")
-                    return Observable.timer(i * 1000);
-                }))
+                .mergeMap(data => {
+                    delete data.SYS_WORKCENTER_OPERATOR
+                    delete data.SYS_DATE_COMPLETED
+                    this.logger.debug('Issue sample:', data)
+                    return this.buildRelationship(data, attributeInfo)
+                })
+                .retryWhen(
+                    attempts => Observable.range(1, 10)
+                        .zip(attempts, i => i)
+                        .mergeMap(i => {
+                            this.logger.info("delay retry by " + i + " seconds")
+                            return Observable.timer(i * 1000);
+                        }))
         } else {
             let sampleCode = object['SYS_SAMPLE_CODE']
             return this.isSuspended(sampleCode)
-            .mergeMap(isSuspended => {
-                console.log("SUSPEND CHECKING:", isSuspended)
-                if (isSuspended) {
-                    return Observable.throw("Sample '" + sampleCode + "' is suspended")
-                } else {
-                    return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
-                    .mergeMap(data => {
-                        //console.log("retrive chained sample:", data)
-                        object.id = data[0].id
-                        object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
-                        // Using update instead of create since the identifier /workcenter/17R001
-                        // has been assigned to the scheduled sample
-                        return this.entityService.update(object)
-                        .mergeMap(data => {
-                            console.log('Add Entity:', data)
-                            return this.buildRelationship(data, attributeInfo)
-                        })
-                    })
-                    .retryWhen(
-                        attempts => Observable.range(1, 10)
-                        .zip(attempts, i => i)
-                        .mergeMap(i => {
-                            console.log("delay retry by " + i + " seconds")
-                            return Observable.timer(i * 1000);
-                        }))
+                .mergeMap(isSuspended => {
+                    this.logger.debug("SUSPEND CHECKING:", isSuspended)
+                    if (isSuspended) {
+                        return Observable.throw("Sample '" + sampleCode + "' is suspended")
+                    } else {
+                        return this.entityService.retrieveByIdentifierFull(object['SYS_IDENTIFIER'])
+                            .mergeMap(data => {
+                                //this.logger.debug("retrive chained sample:", data)
+                                object.id = data[0].id
+                                object['SYS_DATE_SCHEDULED'] = data[0]['SYS_DATE_SCHEDULED']
+                                // Using update instead of create since the identifier /workcenter/17R001
+                                // has been assigned to the scheduled sample
+                                return this.entityService.update(object)
+                                    .mergeMap(data => {
+                                        this.logger.debug('Add Entity:', data)
+                                        return this.buildRelationship(data, attributeInfo)
+                                    })
+                            })
+                            .retryWhen(
+                                attempts => Observable.range(1, 10)
+                                    .zip(attempts, i => i)
+                                    .mergeMap(i => {
+                                        this.logger.info("delay retry by " + i + " seconds")
+                                        return Observable.timer(i * 1000);
+                                    }))
 
-                }
-            })
+                    }
+                })
         }
     }
 
@@ -916,9 +1086,9 @@ export class SampleService{
      * @param attributeInfo argument map
      *
      */
-    buildRelationship(sourceEntity: any, attributeInfo: any){
+    buildRelationship(sourceEntity: any, attributeInfo: any) {
 
-        //console.log("TEST #1:", sourceEntity, attributeInfo)
+        this.logger.debug("Args", sourceEntity, attributeInfo)
         let observableList = []
 
         let attributeList = attributeInfo['attributeList']
@@ -928,99 +1098,99 @@ export class SampleService{
         Object.keys(parentMap).forEach(key => {
 
             let targetEntityMap = parentMap[key]
-            //console.log("TEST #2:", targetEntityMap)
+            this.logger.debug("targetEntityMap", targetEntityMap)
 
             let SYS_DATE_SCHEDULED: Date
 
             // Get the bom object id, which is used as the key of the actual usage, e.g., <bom object id>
             Object.keys(targetEntityMap)
-            .sort((a,b) => {
-                // sort target entities by SYS_ORDER which is manipulated by admins.
-                if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']){
-                    return 1
-                } else {
-                    return -1
-                }
-            })
-            .forEach((entityId, index) =>{
-
-                // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
-                let targetEntityInput = targetEntityMap[entityId]
-
-                // only process checked Material or Workcenter
-                if (targetEntityInput['SYS_CHECKED']){
-                    //console.log('process checked entry:', targetEntityInput)
-
-                    //console.log("TEST #3 origin:", targetEntityInput)
-                    // Calculate SYS_DATE_SCHEDULED
-
-                    SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
-                    targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
-
-                    if (index == 0){
-                        targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
+                .sort((a, b) => {
+                    // sort target entities by SYS_ORDER which is manipulated by admins.
+                    if (targetEntityMap[a]['SYS_ORDER'] > targetEntityMap[b]['SYS_ORDER']) {
+                        return 1
+                    } else {
+                        return -1
                     }
+                })
+                .forEach((entityId, index) => {
 
-                    //console.log("TEST #3:", targetEntityInput)
-                    // Get the target entity from the SYS_SOURCE
-                    observableList.push(
-                        this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
-                        .mergeMap(targetEntity => {
-                            //console.log("TEST #4:", targetEntity)
+                    // targetEntityInput is the inputs from user and contains SYS_QUANT, SYS_SOURCE, etc.
+                    let targetEntityInput = targetEntityMap[entityId]
 
-                            //.subscribe(targetEntity => {
+                    // only process checked Material or Workcenter
+                    if (targetEntityInput['SYS_CHECKED']) {
 
-                            // check whether SYS_SOURCE has been specified manually
-                            // BoM: 'class' == 'collection'
-                            // Routing: 'class' == 'class', since it's only one option and the
-                            // checkbox is another way to detect checked or not
-                            if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
-                                // SYS_SOURCE has been specified manually
+                        this.logger.debug("targetEntityInput", targetEntityInput)
+                        // Calculate SYS_DATE_SCHEDULED
 
-                                //console.log("---------Entries has been specified:", targetEntity)
-                                //console.log("TEST #6:", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
+                        SYS_DATE_SCHEDULED = this.getScheduledDate(SYS_DATE_SCHEDULED, sourceEntity['SYS_DATE_SCHEDULED'], targetEntityInput['SYS_DURATION'])
+                        targetEntityInput['SYS_DATE_SCHEDULED'] = new Date(SYS_DATE_SCHEDULED)
 
-                            } else {
-                                // SYS_SORUCE is not selected, and it happens only when BoM
-                                // (checked but not selected)
+                        if (index == 0) {
+                            targetEntityInput['SYS_DATE_ARRIVED'] = targetEntityInput['SYS_DATE_SCHEDULED']
+                        }
 
-                                // Get the LOTs of targetEntity and take the first one as the default
-                                return this.entityService.retrieveEntity(
-                                    targetEntityInput['SYS_SOURCE'],
-                                    targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
-                                    .mergeMap(data => {
-                                        //console.log("TEST #5:", targetEntityInput)
+                        this.logger.debug("new targetEntityInput", targetEntityInput)
+                        // Get the target entity from the SYS_SOURCE
+                        observableList.push(
+                            this.entityService.retrieveById(targetEntityInput['SYS_SOURCE'])
+                                .mergeMap(targetEntity => {
+                                    this.logger.debug("targetEntity", targetEntity)
 
-                                        //.subscribe(data => {
-                                        //console.log("---------Retrieve entries in BoM or Routing:", data[0])
-                                        //console.log("merge from entity:", targetEntity)
-                                        if (!data[0]) {
-                                            console.warn("None of LOT under the " +
-                                                         targetEntityInput['SYS_SOURCE'])
-                                        } else {
-                                            //console.log("TEST #7:", sourceEntity, targetEntity, attributeList, targetEntityInput)
-                                            return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
-                                        }
+                                    //.subscribe(targetEntity => {
 
-                                    })
+                                    // check whether SYS_SOURCE has been specified manually
+                                    // BoM: 'class' == 'collection'
+                                    // Routing: 'class' == 'class', since it's only one option and the
+                                    // checkbox is another way to detect checked or not
+                                    if (targetEntity.SYS_ENTITY_TYPE == targetEntityInput['SYS_FLOOR_ENTITY_TYPE']) {
+                                        // SYS_SOURCE has been specified manually
 
-                            }
-                        })
-                    )
-                }
-            })
+                                        //console.log("---------Entries has been specified:", targetEntity)
+                                        this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                        return this.createSubEntity(sourceEntity, targetEntity, attributeList, targetEntityInput)
+
+                                    } else {
+                                        // SYS_SORUCE is not selected, and it happens only when BoM
+                                        // (checked but not selected)
+
+                                        // Get the LOTs of targetEntity and take the first one as the default
+                                        return this.entityService.retrieveEntity(
+                                            targetEntityInput['SYS_SOURCE'],
+                                            targetEntityInput['SYS_FLOOR_ENTITY_TYPE'])
+                                            .mergeMap(data => {
+                                                this.logger.debug("targetEntityInput", targetEntityInput)
+
+                                                //.subscribe(data => {
+                                                //console.log("---------Retrieve entries in BoM or Routing:", data[0])
+                                                //console.log("merge from entity:", targetEntity)
+                                                if (!data[0]) {
+                                                    this.logger.warn("None of LOT under the " +
+                                                        targetEntityInput['SYS_SOURCE'])
+                                                } else {
+                                                    this.logger.debug("createSubEntity args", sourceEntity, targetEntity, attributeList, targetEntityInput)
+                                                    return this.createSubEntity(sourceEntity, data[0], attributeList, targetEntityInput)
+                                                }
+
+                                            })
+
+                                    }
+                                })
+                        )
+                    }
+                })
 
         })
-        //return Observable.of(...observableList).concatAll()
-        return observableList.length == 0 ? Observable.of({}) : Observable.concat(...observableList)
+
+        return Observable.concat(...observableList)
+        //return Observable.forkJoin(observableList)
     }
 
     getScheduledDate(
         SYS_DATE_SCHEDULED: Date,
         sourceEntityScheduledDate: Date,
         targetEntityDuration: number,
-    ){
+    ) {
         if (!SYS_DATE_SCHEDULED) {
             if (sourceEntityScheduledDate) {
                 SYS_DATE_SCHEDULED = new Date(sourceEntityScheduledDate)
@@ -1030,7 +1200,7 @@ export class SampleService{
         } else {
             SYS_DATE_SCHEDULED.setDate(
                 SYS_DATE_SCHEDULED.getDate() +
-                    (targetEntityDuration?targetEntityDuration:0)
+                (targetEntityDuration ? targetEntityDuration : 0)
             )
         }
         return SYS_DATE_SCHEDULED
@@ -1054,14 +1224,14 @@ export class SampleService{
      * @param targetEntityInput The BoM/Routing entry generated by entity/form.inline.component.
      * @return nill
      */
+    @LogCall
     createSubEntity(
-        sourceEntity:any,
-        targetEntity:any,
+        sourceEntity: any,
+        targetEntity: any,
         workcenterAttributeList: any[],
         targetEntityInput: any
     ): Observable<any> {
 
-        //console.log("TEST #1:", sourceEntity, targetEntity, workcenterAttributeList, targetEntityInput)
         let subEntity = {}
 
         // Get default label from the source entity
@@ -1079,18 +1249,17 @@ export class SampleService{
             sourceEntity['SYS_CODE'] + '.' + new Date().getTime() + '.' +
             Math.random().toString().substr(2, 4)
 
-        //console.log("TEST #2 pre pre:", Object.assign({}, subEntity))
-        if (targetEntity['SYS_ENTITY_TYPE'] == 'class'){
+        this.logger.debug("subEntity", Object.assign({}, subEntity))
+        if (targetEntity['SYS_ENTITY_TYPE'] == 'class') {
             // Routing specific operations
 
             subEntity['SYS_ENTITY_TYPE'] = 'collection'
-            //console.log("TEST #2 pre:", Object.assign({}, subEntity))
             workcenterAttributeList.forEach(attribute => {
                 if (!this.ignoredAttribute[attribute.SYS_CODE]) {
                     subEntity[attribute['SYS_CODE']] = sourceEntity[attribute['SYS_CODE']]
                 }
             })
-            //console.log("TEST #2:", subEntity)
+            this.logger.debug("new subEntity", subEntity)
             return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
 
         } else { // == 'collection'
@@ -1098,13 +1267,13 @@ export class SampleService{
 
             subEntity['SYS_ENTITY_TYPE'] = 'object'
             return this.entityService.retrieveAttribute(targetEntity.id)
-            .mergeMap(attributes => {
-                attributes.forEach(attribute => {
-                    subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
+                .mergeMap(attributes => {
+                    attributes.forEach(attribute => {
+                        subEntity[attribute.SYS_CODE] = targetEntity[attribute.SYS_CODE]
+                    })
+                    this.logger.debug("new subEntity", Object.assign({}, subEntity))
+                    return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
                 })
-                //console.log("TEST #2:", Object.assign({}, subEntity))
-                return this.submitSubEntity(subEntity, targetEntity, targetEntityInput)
-            })
         }
     }
 
@@ -1117,46 +1286,47 @@ export class SampleService{
      * sourceEntity['SYS_GENRE'] which is "/PROJECT_MANAGEMENT/GENERAL_PROJECT/"
      *
      */
-    submitSubEntity(subEntity: any, targetEntity:any, targetEntityInput: any): Observable<any> {
-        //console.log("TEST #1:", subEntity, targetEntity, targetEntityInput)
+    @LogCall
+    submitSubEntity(subEntity: any, targetEntity: any, targetEntityInput: any): Observable<any> {
 
         //for both of BoM and Routing
         return this.genreService.retrieveBy({
             "SYS_ENTITY": targetEntity.id
         })
-        .mergeMap(data => {
-            if (data[0]) {
-                // Get SYS_GENRE from the workcenter
+            .mergeMap(data => {
+                if (data[0]) {
+                    // Get SYS_GENRE from the workcenter
 
-                subEntity['SYS_GENRE'] = data[0].id
-                //console.log("TEST #2 GENRE:", data)
-            } else {
-                // Collection of materials may not contains any SYS_GENRE defaultly
+                    subEntity['SYS_GENRE'] = data[0].id
+                    this.logger.debug("genre", data)
+                } else {
+                    // Collection of materials may not contains any SYS_GENRE defaultly
 
-                subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
-                //console.log("TEST #2 TARGET:", subEntity['SYS_GENRE'])
-            }
+                    subEntity['SYS_GENRE'] = targetEntity['SYS_GENRE']
+                    this.logger.debug("genre", subEntity['SYS_GENRE'])
+                }
 
-            // Assign new values to the new material object
-            Object.keys(targetEntityInput).forEach(key => {
-                subEntity[key] = targetEntityInput[key]
+                // Assign new values to the new material object
+                Object.keys(targetEntityInput).forEach(key => {
+                    subEntity[key] = targetEntityInput[key]
+                })
+
+                this.logger.debug("subEntity", subEntity)
+                return this.entityService.create(subEntity)
+                    //.map(entity => {
+                    .mergeMap(entity => {
+                        this.logger.debug("result", {'workcenter': targetEntity, 'sample': subEntity})
+                        return Observable.of({'workcenter': targetEntity, 'sample': subEntity})
+                    })
+                //.delay(100)
             })
-
-            //console.log("TEST #3:", subEntity)
-            return this.entityService.create(subEntity)
-            .map(entity => {
-                //console.log("TEST #4:", {'workcenter': targetEntity, 'sample':subEntity})
-                return {'workcenter': targetEntity, 'sample': subEntity}
-            })
-            //.delay(100)
-        })
-        .retryWhen(
-            attempts => Observable.range(1, 10)
-            .zip(attempts, i => i)
-            .mergeMap(i => {
-                console.log("delay retry by " + i + " seconds")
-                return Observable.timer(i * 1000);
-            }))
+            .retryWhen(
+                attempts => Observable.range(1, 10)
+                    .zip(attempts, i => i)
+                    .mergeMap(i => {
+                        this.logger.info("delay retry by " + i + " seconds")
+                        return Observable.timer(i * 1000);
+                    }))
     }
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action)
