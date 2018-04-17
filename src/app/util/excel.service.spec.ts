@@ -238,7 +238,7 @@ describe("ExcelService", () => {
             Observable.of(entityList)
         )
 
-        service.getParentMap(attributeList).subscribe(data => {
+        service.getParentMap$(attributeList).subscribe(data => {
             expect(data).toEqual(parentMap)
             done()
         })

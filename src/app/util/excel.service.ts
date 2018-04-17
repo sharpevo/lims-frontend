@@ -55,7 +55,7 @@ export class ExcelService {
             })
     }
 
-    getParentMap(attributeList: any[]) {
+    getParentMap$(attributeList: any[]) {
         let parentMap = {}
 
         attributeList = this._getGroupAttributeList(attributeList)
