@@ -91,6 +91,8 @@ import {LogPublisherService} from './log/publisher.service'
 
 import {InjectorContainerModule} from './injector.module'
 
+import {ExcelService} from './util/excel.service'
+
 @NgModule({
     declarations: [
         ObjectKeysPipe,
@@ -198,6 +200,7 @@ import {InjectorContainerModule} from './injector.module'
         UserInfoService,
         LogService,
         LogPublisherService,
+        ExcelService,
     ],
     bootstrap: [AppComponent]
 })
