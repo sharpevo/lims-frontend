@@ -9,6 +9,7 @@ import {Observable} from 'rxjs/Observable'
 import {UserInfoService} from '../util/user.info.service'
 import {LogService} from '../log/log.service'
 import {LogCall} from '../log/decorator'
+import {ExcelService} from '../util/excel.service'
 
 @Component({
     selector: 'plugin-excel-processor',
@@ -39,6 +40,7 @@ export class PluginExcelProcessorComponent {
         private router: Router,
         private userInfoService: UserInfoService,
         public logger: LogService,
+        public excelService: ExcelService,
     ) {
         this.userInfo = this.userInfoService.getUserInfo()
     }
@@ -49,42 +51,20 @@ export class PluginExcelProcessorComponent {
     }
 
     generateParentMap() {
-        // Get the genre of given workcenter
-        this.entityService.retrieveGenre(this.workcenter.id)
-            .subscribe(data => {
-
-                // Get the attributes from the first genre
-                this.genreService.retrieveAttribute(data[0].id)
-                    .subscribe(attributeList => {
-                        this.workcenterAttributeList = attributeList
-                        this.workcenterAttributeList.forEach(attr => {
-
-                            // Process BoM or Routing
-                            if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
-                                this.parentMapKey = attr.SYS_CODE
-                                this.parentMapFloor = attr.SYS_FLOOR_ENTITY_TYPE
-                                this.parentMap[attr.SYS_CODE] = {}
-
-                                // Get the entities under the BoM, note that the empty string indicates
-                                // the "object" entity type which is implemented in the entityService.
-                                this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
-                                    .subscribe(data => {
-                                        this.logger.debug("ExcelPlugin: Get BoM or Routing", data)
-                                        data.forEach(material => {
-                                            this.parentMap[attr.SYS_CODE][material.id] = {}
-                                            material['SYS_SCHEMA'].forEach(materialAttr => {
-                                                this.parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] =
-                                                    material[materialAttr.SYS_CODE]
-                                            })
-                                            // Manually append the SYS_FLOOR_ENTITY_TYPE in BoM/Routing entry
-                                            this.parentMap[attr.SYS_CODE][material.id]['SYS_FLOOR_ENTITY_TYPE'] =
-                                                attr.SYS_FLOOR_ENTITY_TYPE
-                                        })
-                                    })
-                            }
-                        })
+        this.excelService.getWorkcenterAttributeListFromFirstGenre$(this.workcenter.id)
+            .subscribe(attributeList => {
+                this.workcenterAttributeList = attributeList
+                this.excelService.getParentMap$(attributeList)
+                    .subscribe(parentMap => {
+                        this.parentMap = parentMap
+                        this.parentMapKey = Object.keys(parentMap)[0]
+                        let attributeKey = Object.keys(this.parentMap[this.parentMapKey])[0]
+                        this.parentMapFloor =
+                            this.parentMap[this.parentMapKey][attributeKey]['SYS_FLOOR_ENTITY_TYPE']
                     })
+
             })
+
     }
 
     @LogCall
