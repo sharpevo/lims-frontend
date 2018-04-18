@@ -4,12 +4,17 @@ import {Observable} from 'rxjs/Observable'
 
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
+import {SampleService} from '../models/sample'
+import {LogService} from '../log/log.service'
+import {DatePipe} from '@angular/common'
 
 @Injectable()
 export class ExcelService {
     constructor(
         public entityService: EntityService,
         public genreService: GenreService,
+        public sampleService: SampleService,
+        public logger: LogService,
     ) {
     }
 
@@ -70,6 +75,116 @@ export class ExcelService {
         )
             .map(data => parentMap)
 
+    }
+
+    _getSampleById(sampleId: string) {
+        return this.entityService.retrieveBy({"_id": sampleId})
+            .map(sampleList => sampleList[0])
+    }
+
+    _assignAttributeFromExcelToDatabase(
+        sampleInExcel: any,
+        sampleInDatabase: any,
+    ) {
+        sampleInDatabase['SYS_SCHEMA'].forEach(schema => {
+            if (sampleInExcel[schema['SYS_LABEL']]) {
+                if (schema['SYS_TYPE'] != 'entity') {
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                } else {
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                    // TODO: convert value to id
+                }
+            }
+        })
+    }
+
+    _getSampleIdInExcel(sample: any) {
+        return sample['IDENTIFIER']
+    }
+
+    _submitSampleByExcel(
+        sampleInExcel: any,
+        workcenter: any,
+        attributeInfo: any,
+    ) {
+        return this._getSampleById(this._getSampleIdInExcel(sampleInExcel))
+            .mergeMap(sampleInDatabase => {
+                this._assignAttributeFromExcelToDatabase(
+                    sampleInExcel,
+                    sampleInDatabase,
+                )
+                return this.sampleService.submitSample$(
+                    workcenter,
+                    sampleInDatabase,
+                    sampleInDatabase,
+                    attributeInfo,
+                )
+            })
+    }
+
+    _issueSampleByExcel(
+        sampleInExcel,
+        workcenter,
+        attributeInfo,
+    ) {
+        let newSample = {}
+        attributeInfo['attributeList'].forEach(attribute => {
+            newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
+        })
+
+        return this.entityService.retrieveGenre(workcenter.id)
+            .mergeMap(workcenterGenreList => {
+                newSample['SYS_GENRE'] = workcenterGenreList[0]
+                newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+                newSample['SYS_ENTITY_TYPE'] = 'collection'
+                newSample['SYS_IDENTIFIER'] = workcenter['SYS_IDENTIFIER'] +
+                    '/' +
+                    newSample['SYS_SAMPLE_CODE'] + '.' +
+                    new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+
+                return this.sampleService.createObject$(
+                    newSample,
+                    attributeInfo,
+                    true)
+            })
+
+    }
+
+    postSampleByExcel$(
+        workcenter: any,
+        sampleListInExcel: any[],
+        parentMap: any,
+        workcenterAttributeList: any[],
+    ) {
+        let attributeInfo = {
+            "attributeList": workcenterAttributeList,
+            "parentMap": parentMap,
+        }
+        return Observable.forkJoin(
+            sampleListInExcel.map(sampleInExcel => {
+                if (this._getSampleIdInExcel(sampleInExcel)) {
+                    return this._submitSampleByExcel(
+                        sampleInExcel,
+                        workcenter,
+                        attributeInfo,
+                    )
+                } else {
+
+                    if (workcenter.SYS_IDENTIFIER !=
+                        "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
+                        this.logger.error(
+                            "Invalid Excel file",
+                            workcenter.SYS_IDENTIFIER)
+                        return
+                    }
+                    return this._issueSampleByExcel(
+                        sampleInExcel,
+                        workcenter,
+                        attributeInfo,
+                    )
+                }
+            })
+        )
     }
 
 }
