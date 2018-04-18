@@ -115,6 +115,41 @@ export class PluginExcelProcessorComponent {
 
     @LogCall
     updateExcel() {
+        let targetOutput = []
+        let newSampleList = []
+        this.excelService.postSampleByExcel$(
+            this.workcenter,
+            this.excelResultSample,
+            this.parentMap,
+            this.workcenterAttributeList,
+            newSampleList,
+        )
+            .subscribe(
+                data => {
+                    this.logger.debug("UpdateExcel Response", data)
+                    targetOutput.push(data)
+                },
+                err => {
+                },
+                () => {
+                    this.logger.warn("targetoutput", targetOutput)
+                    this.sampleService.sendMessageToDingTalk$(
+                        !this.excelResultSample[0]['IDENTIFIER'], // issueSample
+                        newSampleList,
+                        this.excelResultSample,
+                        this.workcenterAttributeList,
+                        targetOutput,
+                        this.workcenter,
+                    ).subscribe()
+
+                    this.router.navigate(['/redirect' + this.router.url])
+                }
+            )
+
+    }
+
+    @LogCall
+    updateExcel0() {
         let sampleListInExcel = this.excelResultSample
         let parentMap = this.parentMap
         let workcenterAttributeList = this.workcenterAttributeList
