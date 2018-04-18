@@ -106,6 +106,7 @@ export class ExcelService {
         sampleInExcel: any,
         workcenter: any,
         attributeInfo: any,
+        newSampleList?: any[],
     ) {
         return this._getSampleById(this._getSampleIdInExcel(sampleInExcel))
             .mergeMap(sampleInDatabase => {
@@ -113,6 +114,9 @@ export class ExcelService {
                     sampleInExcel,
                     sampleInDatabase,
                 )
+                if (newSampleList) {
+                    newSampleList.push(sampleInDatabase)
+                }
                 return this.sampleService.submitSample$(
                     workcenter,
                     sampleInDatabase,
@@ -126,6 +130,7 @@ export class ExcelService {
         sampleInExcel,
         workcenter,
         attributeInfo,
+        newSampleList?: any[],
     ) {
         let newSample = {}
         attributeInfo['attributeList'].forEach(attribute => {
@@ -142,6 +147,9 @@ export class ExcelService {
                     newSample['SYS_SAMPLE_CODE'] + '.' +
                     new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
 
+                if (newSampleList) {
+                    newSampleList.push(newSample)
+                }
                 return this.sampleService.createObject$(
                     newSample,
                     attributeInfo,
@@ -155,7 +163,11 @@ export class ExcelService {
         sampleListInExcel: any[],
         parentMap: any,
         workcenterAttributeList: any[],
+        newSampleList?: any[],
     ) {
+        if (!newSampleList) {
+            newSampleList = []
+        }
         let attributeInfo = {
             "attributeList": workcenterAttributeList,
             "parentMap": parentMap,
@@ -167,6 +179,7 @@ export class ExcelService {
                         sampleInExcel,
                         workcenter,
                         attributeInfo,
+                        newSampleList,
                     )
                 } else {
 
@@ -181,6 +194,7 @@ export class ExcelService {
                         sampleInExcel,
                         workcenter,
                         attributeInfo,
+                        newSampleList,
                     )
                 }
             })
