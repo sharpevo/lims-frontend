@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core'
 
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/throw'
 
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
@@ -188,7 +189,7 @@ export class ExcelService {
                         this.logger.error(
                             "Invalid Excel file",
                             workcenter.SYS_IDENTIFIER)
-                        return
+                        return Observable.throw("Invalid Excel file")
                     }
                     return this._issueSampleByExcel(
                         sampleInExcel,
