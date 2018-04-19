@@ -127,6 +127,29 @@ export class ExcelService {
             })
     }
 
+    _getFirstGenreByWorkcenterId$(workcenterId: string) {
+        return this.entityService.retrieveGenre(workcenterId)
+            .map(genreList => genreList[0])
+    }
+
+    _initSample(newSample: any, genre: any, workcenterIdentifier: string) {
+        newSample['SYS_GENRE'] = genre // object rather id, refered in backend
+        newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+        newSample['SYS_ENTITY_TYPE'] = 'collection'
+        let dateString = new Date().toISOString()
+        let timestamp = new DatePipe('en-US').transform(dateString, 'yyyyMMddHHmmss')
+        newSample['SYS_IDENTIFIER'] = workcenterIdentifier +
+            '/' +
+            newSample['SYS_SAMPLE_CODE'] + '.' +
+            timestamp
+    }
+
+    _updateSampleObject(sampleInExcel: any, newSample: any, attributeInfo: any) {
+        attributeInfo['attributeList'].forEach(attribute => {
+            newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
+        })
+    }
+
     _issueSampleByExcel(
         sampleInExcel,
         workcenter,
@@ -134,20 +157,12 @@ export class ExcelService {
         newSampleList?: any[],
     ) {
         let newSample = {}
-        attributeInfo['attributeList'].forEach(attribute => {
-            newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
-        })
 
-        return this.entityService.retrieveGenre(workcenter.id)
-            .mergeMap(workcenterGenreList => {
-                newSample['SYS_GENRE'] = workcenterGenreList[0]
-                newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
-                newSample['SYS_ENTITY_TYPE'] = 'collection'
-                newSample['SYS_IDENTIFIER'] = workcenter['SYS_IDENTIFIER'] +
-                    '/' +
-                    newSample['SYS_SAMPLE_CODE'] + '.' +
-                    new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+        this._updateSampleObject(sampleInExcel, newSample, attributeInfo)
 
+        return this._getFirstGenreByWorkcenterId$(workcenter.id)
+            .mergeMap(genre => {
+                this._initSample(newSample, genre, workcenter['SYS_IDENTIFIER'])
                 if (newSampleList) {
                     newSampleList.push(newSample)
                 }
