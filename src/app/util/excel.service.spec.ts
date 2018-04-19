@@ -5,10 +5,13 @@ import {
 import {
     MockBackend,
 } from '@angular/http/testing'
+import {Router} from '@angular/router'
 
 import {ExcelService} from './excel.service'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
+import {SampleService} from '../models/sample'
+import {UtilService} from '../util/service'
 import {UserInfoService} from '../util/user.info.service'
 import {CustomHttpService} from '../util/custom.http.service'
 import {
@@ -28,6 +31,8 @@ import {MatSnackBar} from '@angular/material'
 import {LogService} from '../log/log.service'
 import {LogPublisherService} from '../log/publisher.service'
 
+import {DatePipe} from '@angular/common'
+
 describe("ExcelService", () => {
     let service: ExcelService
     let entityService: EntityService
@@ -45,9 +50,18 @@ describe("ExcelService", () => {
                 BaseRequestOptions,
                 MatSnackBar,
                 SpinnerService,
+                SampleService,
+                UtilService,
                 UserInfoService,
                 LogService,
                 LogPublisherService,
+                DatePipe,
+                {
+                    provide: Router,
+                    useClass: class {
+                        navigate = jasmine.createSpy("navigate")
+                    },
+                },
                 {
                     provide: CustomHttpService,
                     useFactory: (
@@ -83,14 +97,24 @@ describe("ExcelService", () => {
             CustomHttpService,
             EntityService,
             GenreService,
+            SampleService,
+            LogService,
         ], (
             httpService: CustomHttpService,
             entityService: EntityService,
-            genreService: GenreService) => {
-                service = new ExcelService(entityService, genreService)
+            genreService: GenreService,
+            sampleService: SampleService,
+            logService: LogService,
+            ) => {
+                service = new ExcelService(
+                    entityService,
+                    genreService,
+                    sampleService,
+                    logService
+                )
             }))
 
-    it("should return genre by id", done => {
+    it("_getWorkcenterGenre$ should return genre by id", done => {
         let genreList = [
             {
                 "_id": "5ab88e01d98a70566c707cc0",
@@ -114,7 +138,7 @@ describe("ExcelService", () => {
         })
     })
 
-    it("should return attributeList of the first genre in the list", done => {
+    it("getWorkcenterAttributeListFromFirstGenre$ should return attributeList of the first genre in the list", done => {
         let genreList = [
             {
                 "SYS_ENTITY": "FAKE_WORKCENTER_ID",
@@ -149,7 +173,7 @@ describe("ExcelService", () => {
 
     })
 
-    it("should return parentMap", done => {
+    it("getParentMap$ should return parentMap", done => {
         let attributeList = [
             {
                 "SYS_CODE": "FAKE_CODE_1",
@@ -245,4 +269,210 @@ describe("ExcelService", () => {
 
     })
 
+    it("_getSampleById should return first sample when query sample by id", done => {
+        let sampleId = "FAKE_SAMPLE_ID"
+        let sampleList = [
+            {
+                "_id": sampleId,
+                "SYS_SAMPLE_CODE": "18R0001",
+            },
+            {
+                "_id": sampleId,
+                "SYS_SAMPLE_CODE": "18R0002",
+            }
+        ]
+
+        spyOn(service.entityService, "retrieveBy").and.returnValue(
+            Observable.of(sampleList)
+        )
+
+        service._getSampleById(sampleId)
+            .subscribe(sample => {
+                expect(sample).toEqual(sampleList[0])
+                done()
+            })
+    })
+
+    it("_assignAttributeFromExcelToDatabase should assign values of samples from excel to database object", done => {
+        let sampleInExcel = {
+            "key-3": 3.3,
+            "key-2": 2.2,
+        }
+        let sampleInDatabase = {
+            "KEY_1": 1,
+            "KEY_2": 2,
+            "SYS_SCHEMA": [
+                {
+                    "SYS_CODE": "KEY_2",
+                    "SYS_LABEL": "key-2",
+                },
+                {
+                    "SYS_CODE": "KEY_3",
+                    "SYS_LABEL": "key-3",
+                },
+            ]
+        }
+
+        service._assignAttributeFromExcelToDatabase(sampleInExcel, sampleInDatabase)
+        expect(sampleInDatabase['KEY_2']).toEqual(sampleInExcel['key-2'])
+        expect(sampleInDatabase['KEY_3']).toEqual(sampleInExcel['key-3'])
+        done()
+    })
+
+    it("_getSampleIdInExcel should return sample identifier as id", done => {
+        let sampleId = "FAKE_SAMPLE_ID"
+        let sampleInExcel = {
+            "IDENTIFIER": sampleId,
+        }
+        expect(service._getSampleIdInExcel(sampleInExcel)).toEqual(sampleId)
+        done()
+    })
+
+    it("_getFirstGenreByWorkcenterId$ should return the first genre in the list", done => {
+        let genreList = [
+            {
+                "id": "A"
+            },
+            {
+                "id": "B"
+            }
+        ]
+
+        spyOn(service.entityService, "retrieveGenre").and.returnValue(
+            Observable.of(genreList)
+        )
+        service._getFirstGenreByWorkcenterId$("FAKE_WORKCENTER_ID")
+            .subscribe(genre => {
+                expect(genre).toEqual(genreList[0])
+                done()
+            })
+    })
+
+    it("_initSample should init sample with basic information", done => {
+        let sampleInput = {
+            "KEY_1": 1
+        }
+        let genre = {
+            "KEY_GENRE": "genre"
+        }
+        let workcenterIdentifier = "FAKE_IDENTIFIER"
+        let sampleOutput = {
+            "KEY_1": 1,
+            "SYS_GENRE": {
+                "KEY_GENRE": "genre"
+            },
+            "SYS_LABEL": "SYS_SAMPLE_CODE",
+            "SYS_ENTITY_TYPE": "collection",
+            "SYS_IDENTIFIER": "FAKE_IDENTIFIER/undefined.20180419100136"
+        }
+
+        spyOn(Date.prototype, "toISOString").and.returnValue("2018-04-19T02:01:36.435Z")
+        service._initSample(sampleInput, genre, workcenterIdentifier)
+        expect(sampleOutput).toEqual(sampleInput)
+        done()
+    })
+
+    it("_updateSampleObject should update sample in database from excel", done => {
+        let attributeInfo = {
+            "attributeList": [
+                {
+                    "SYS_CODE": "KEY_2",
+                    "SYS_LABEL": "label",
+                    "label": "属性2",
+                },
+                {
+                    "SYS_CODE": "KEY_3",
+                    "SYS_LABEL": "label",
+                    "label": "属性3",
+                },
+            ]
+        }
+
+        let newSample = {
+            "KEY_1": 1,
+            "KEY_2": 2
+        }
+
+        let sampleInExcel = {
+            "属性2": 2.2,
+            "属性3": 3.3,
+        }
+
+        let sampleOutput = {
+            "KEY_1": 1,
+            "KEY_2": 2.2,
+            "KEY_3": 3.3
+        }
+
+        service._updateSampleObject(sampleInExcel, newSample, attributeInfo)
+        expect(sampleOutput).toEqual(newSample)
+        done()
+    })
+
+    describe("postSampleByExcel$", () => {
+        let workcenter = {
+        }
+        let sampleListInExcel = [
+            {
+                "IDENTIFIER": "FAKE_IDENTIFIER",
+            }
+        ]
+        let parentMap = {
+        }
+        let workcenterAttributeList = [
+        ]
+
+        beforeEach(() => {
+            spyOn(service, "_issueSampleByExcel").and.returnValue(Observable.of({}))
+            spyOn(service, "_submitSampleByExcel").and.returnValue(Observable.of({}))
+        })
+
+        it("should call _submitSampleByExcel", done => {
+            service.postSampleByExcel$(
+                workcenter,
+                sampleListInExcel,
+                parentMap,
+                workcenterAttributeList,
+            ).subscribe(data => {
+                expect(service._issueSampleByExcel).not.toHaveBeenCalled()
+                expect(service._submitSampleByExcel).toHaveBeenCalled()
+                done()
+            })
+
+        })
+
+        it("should call _issueSampleByExcel", done => {
+            sampleListInExcel[0]['IDENTIFIER'] = ""
+            workcenter['SYS_IDENTIFIER'] = "/PROJECT_MANAGEMENT/GENERAL_PROJECT"
+            service.postSampleByExcel$(
+                workcenter,
+                sampleListInExcel,
+                parentMap,
+                workcenterAttributeList,
+            ).subscribe(data => {
+                expect(service._issueSampleByExcel).toHaveBeenCalled()
+                expect(service._submitSampleByExcel).not.toHaveBeenCalled()
+                done()
+            })
+        })
+
+        it("should throw error if workcenter identifier is not match", done => {
+
+            sampleListInExcel[0]['IDENTIFIER'] = ""
+            workcenter['SYS_IDENTIFIER'] = "FAKE_IDENTIFIER"
+
+            service.postSampleByExcel$(
+                workcenter,
+                sampleListInExcel,
+                parentMap,
+                workcenterAttributeList,
+            ).subscribe(
+                data => {},
+                error => {
+                    expect(error).toContain("Invalid")
+                    done()
+                })
+        })
+
+    })
 })
