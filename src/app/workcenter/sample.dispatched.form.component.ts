@@ -34,6 +34,7 @@ export class SampleDispatchedFormComponent {
     }
 
     getAttributeListByGenreId(genreId: string) {
+        this.attributeList = []
         this.genreService.retrieveAttribute(genreId)
             .subscribe(attributeList => {
                 this.attributeList = attributeList
@@ -54,5 +55,9 @@ export class SampleDispatchedFormComponent {
                     }
                 })
             })
+    }
+
+    onSelectedTabChange(event) {
+        this.getAttributeListByGenreId(this.genreList[event.index].id)
     }
 }
