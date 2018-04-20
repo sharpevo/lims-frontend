@@ -1,0 +1,117 @@
+<mat-card>
+<mat-tab-group>
+  <mat-tab
+        *ngFor="let genre of genreList"
+        (click)="getAttributesByGenreId(genre.id)"
+        label="{{genre[genre['SYS_LABEL']]}}">
+
+        <div
+            *ngFor="let attribute of attributeList">
+            <div [ngSwitch]="attribute.SYS_TYPE">
+                <div *ngSwitchCase="'string'">
+                    <mat-input-container class="full-width">
+                        <input
+                            matInput
+                            [required]="attribute.SYS_REQUIRED"
+                            type="text"
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'text'">
+                    <mat-input-container class="full-width">
+                        <textarea
+                            matInput
+                            [required]="attribute.SYS_REQUIRED"
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                        </textarea>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'number'">
+                    <mat-input-container class="full-width">
+                        <input
+                            matInput
+                            [required]="attribute.SYS_REQUIRED"
+                            type="number"
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'list'">
+                    <mat-form-field
+                        class="full-width">
+                        <mat-select
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                            <mat-option 
+                                value="{{o.split(':')[0]}}"
+                                *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                                {{o.split(':')[1]}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngSwitchCase="'boolean'">
+                    <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="object[attribute.SYS_CODE]">
+                        {{attribute[attribute['SYS_LABEL']]}}
+                    </mat-checkbox>
+                </div>
+                <div *ngSwitchCase="'date'">
+                    <mat-input-container class="full-width">
+                        <input
+                            matInput
+                            type="date"
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'datetime'">
+                    <mat-input-container class="full-width">
+                        <input
+                            matInput
+                            type="datetime-local"
+                            [(ngModel)]="object[attribute.SYS_CODE]"
+                            placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'file'">
+                    <mat-input-container class="full-width">
+                        {{attribute[attribute['SYS_LABEL']]}}
+                        <input
+                            matInput
+                            type="file"/>
+                    </mat-input-container>
+                </div>
+                <div *ngSwitchCase="'entity'">
+                    <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
+                        <br/>
+                        <entity-select-list
+                            [object]="object"
+                            [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                            [attribute]="attribute"
+                            [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
+                        </entity-select-list>
+                        <br/>
+                        <br/>
+                    </div>
+                    <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
+                        <br/>
+                        <entity-collection-expansion
+                            [object]="parentMap[attribute.SYS_CODE]"
+                            [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                            [entity]="attribute.SYS_TYPE_ENTITY">
+                        </entity-collection-expansion>
+                    </div>
+                </div>
+                <div *ngSwitchDefault>
+                    Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
+                </div>
+            </div>
+        </div>
+  </mat-tab>
+</mat-tab-group>
+</mat-card>
