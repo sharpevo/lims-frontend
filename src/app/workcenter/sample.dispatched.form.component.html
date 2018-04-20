@@ -1,5 +1,6 @@
 <mat-card>
 <mat-tab-group
+    [@.disabled]="true"
     (selectedTabChange)="onSelectedTabChange($event)">
   <mat-tab
         *ngFor="let genre of genreList"
