@@ -9,10 +9,10 @@ import {GenreService} from '../genre/service'
 
 export class SampleDispatchedFormComponent {
     @Input() workcenter
+    @Input() object
     genreList: any[] = []
     attributeList: any[] = []
     parentMap: any = {}
-    object: any = {}
 
     constructor(
         public entityService: EntityService,
