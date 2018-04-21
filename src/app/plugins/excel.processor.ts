@@ -116,17 +116,11 @@ export class PluginExcelProcessorComponent {
 
     @LogCall
     updateExcel() {
-        Object.keys(this.formObject).forEach(key => {
-            for (let attr of this.workcenterAttributeList) {
-                if (attr['SYS_CODE'] == key) {
-                    let label = attr[attr['SYS_LABEL']]
-                    for (let sampleInExcel of this.excelResultSample) {
-                        sampleInExcel[label] = this.formObject[key]
-                    }
-                    break
-                }
-            }
-        })
+        this.excelService.updateSampleInExcelFromFormObject(
+            this.excelResultSample,
+            this.formObject,
+            this.workcenterAttributeList)
+
         let targetOutput = []
         let newSampleList = []
         this.excelService.postSampleByExcel$(
