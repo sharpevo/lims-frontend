@@ -20,6 +20,7 @@ export class PluginExcelProcessorComponent {
     @Input() workcenter
     @Input() sampleList
     @Input() hybridObjectMap
+    @Input() formObject
     @ViewChild('excelUploader') excelUploader
     selectedSampleList: any[] = []
     excelResultSample: any[] = []
@@ -115,6 +116,17 @@ export class PluginExcelProcessorComponent {
 
     @LogCall
     updateExcel() {
+        Object.keys(this.formObject).forEach(key => {
+            for (let attr of this.workcenterAttributeList) {
+                if (attr['SYS_CODE'] == key) {
+                    let label = attr[attr['SYS_LABEL']]
+                    for (let sampleInExcel of this.excelResultSample) {
+                        sampleInExcel[label] = this.formObject[key]
+                    }
+                    break
+                }
+            }
+        })
         let targetOutput = []
         let newSampleList = []
         this.excelService.postSampleByExcel$(

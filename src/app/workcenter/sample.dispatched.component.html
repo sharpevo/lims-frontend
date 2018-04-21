@@ -25,6 +25,7 @@
     *ngIf="workcenter">
     <plugin-excel-processor
         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR']"
+        [formObject]="formObject"
         [hybridObjectMap]="hybridObjectMap"
         [sampleList]="sampleList"
         [workcenter]="workcenter">
