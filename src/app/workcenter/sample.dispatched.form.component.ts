@@ -12,7 +12,7 @@ export class SampleDispatchedFormComponent {
     @Input() object
     genreList: any[] = []
     attributeList: any[] = []
-    parentMap: any = {}
+    parentMapKey: string = "TMP_PARENT_MAP"
 
     constructor(
         public entityService: EntityService,
@@ -20,6 +20,7 @@ export class SampleDispatchedFormComponent {
     ) {}
 
     ngOnInit() {
+        this.object[this.parentMapKey] = {}
         this.getGenreList()
     }
 
@@ -49,7 +50,7 @@ export class SampleDispatchedFormComponent {
                     switch (attribute.SYS_TYPE) {
                         case "entity":
                             if (!attribute.SYS_TYPE_ENTITY_REF) {
-                                this.parentMap[attribute.SYS_CODE] = {}
+                                this.object[this.parentMapKey][attribute.SYS_CODE] = {}
                             }
                             break
                     }
