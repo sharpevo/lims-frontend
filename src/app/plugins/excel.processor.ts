@@ -126,7 +126,7 @@ export class PluginExcelProcessorComponent {
         this.excelService.postSampleByExcel$(
             this.workcenter,
             this.excelResultSample,
-            this.parentMap,
+            this.formObject['TMP_PARENT_MAP'],
             this.workcenterAttributeList,
             newSampleList,
         )
