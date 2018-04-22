@@ -119,14 +119,24 @@ export class PluginExcelProcessorComponent {
         this.excelService.updateSampleInExcelFromFormObject(
             this.excelResultSample,
             this.formObject,
-            this.workcenterAttributeList)
+            this.workcenterAttributeList,
+        )
+
+        let issueSample = !this.excelResultSample[0]['IDENTIFIER']
+        let parentMap = {}
+
+        if (issueSample) {
+            parentMap = this.parentMap
+        } else {
+            parentMap = this.formObject['TMP_PARENT_MAP']
+        }
 
         let targetOutput = []
         let newSampleList = []
         this.excelService.postSampleByExcel$(
             this.workcenter,
             this.excelResultSample,
-            this.formObject['TMP_PARENT_MAP'],
+            parentMap,
             this.workcenterAttributeList,
             newSampleList,
         )
@@ -140,7 +150,7 @@ export class PluginExcelProcessorComponent {
                 () => {
                     this.logger.warn("targetoutput", targetOutput)
                     this.sampleService.sendMessageToDingTalk$(
-                        !this.excelResultSample[0]['IDENTIFIER'], // issueSample
+                        issueSample,
                         newSampleList,
                         this.excelResultSample,
                         this.workcenterAttributeList,
