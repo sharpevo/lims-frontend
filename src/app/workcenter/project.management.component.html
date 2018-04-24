@@ -178,8 +178,14 @@
         class="section-title">
         Utils
     </h3>
+    <form-sample-dispatched
+        *ngIf="(entity | json) != '{}'"
+        [object]="formObject"
+        [workcenter]="entity">
+    </form-sample-dispatched>
     <plugin-excel-processor
         *ngIf="(entity | json) != '{}'"
+        [formObject]="formObject"
         [hybridObjectMap]="{}"
         [sampleList]="sampleList"
         [workcenter]="entity">

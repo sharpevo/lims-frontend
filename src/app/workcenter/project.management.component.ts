@@ -43,6 +43,7 @@ export class ProjectManagementComponent {
     queryValue: string = ''
     queryDateStart: string = ''
     queryDateEnd: string = ''
+    formObject: any = {}
 
     constructor(
         public dialog: MatDialog,
