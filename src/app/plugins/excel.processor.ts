@@ -125,11 +125,7 @@ export class PluginExcelProcessorComponent {
         let issueSample = !this.excelResultSample[0]['IDENTIFIER']
         let parentMap = {}
 
-        if (issueSample) {
-            parentMap = this.parentMap
-        } else {
-            parentMap = this.formObject['TMP_PARENT_MAP']
-        }
+        parentMap = this.formObject['TMP_PARENT_MAP']
 
         let targetOutput = []
         let newSampleList = []
