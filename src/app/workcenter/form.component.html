@@ -1,5 +1,18 @@
-<mat-card>
+<mat-accordion>
+    <mat-expansion-panel
+        (opened)="openPanel('form')"
+        (closed)="closePanel('form')"
+        [expanded]="isExpandedPanel('form')">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Operation
+            </mat-panel-title>
+            <mat-panel-description>
+                Form, BoM, and Excel
+            </mat-panel-description>
+        </mat-expansion-panel-header>
 <mat-tab-group
+            *ngIf="isExpandedPanel('form')"
     [@.disabled]="true"
     (selectedTabChange)="onSelectedTabChange($event)">
   <mat-tab
@@ -117,4 +130,5 @@
         </div>
   </mat-tab>
 </mat-tab-group>
-</mat-card>
+    </mat-expansion-panel>
+</mat-accordion>

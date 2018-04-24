@@ -13,6 +13,9 @@ export class WorkcenterFormComponent {
     genreList: any[] = []
     attributeList: any[] = []
     parentMapKey: string = "TMP_PARENT_MAP"
+    showPanel: any = {
+        'form': false,
+    }
 
     constructor(
         public entityService: EntityService,
@@ -21,6 +24,12 @@ export class WorkcenterFormComponent {
 
     ngOnInit() {
         this.object[this.parentMapKey] = {}
+    }
+
+    initComponent() {
+        this.object[this.parentMapKey] = {}
+        this.genreList = []
+        this.attributeList = []
         this.getGenreList()
     }
 
@@ -60,5 +69,16 @@ export class WorkcenterFormComponent {
 
     onSelectedTabChange(event) {
         this.getAttributeListByGenreId(this.genreList[event.index].id)
+    }
+
+    openPanel(panel: string) {
+        this.showPanel[panel] = true
+        this.initComponent()
+    }
+    closePanel(panel: string) {
+        this.showPanel[panel] = false
+    }
+    isExpandedPanel(panel: string) {
+        return this.showPanel[panel]
     }
 }
