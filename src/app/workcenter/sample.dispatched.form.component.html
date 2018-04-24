@@ -8,6 +8,7 @@
 
         <div
             *ngFor="let attribute of attributeList">
+            <div *ngIf="attribute.SYS_IS_ON_BOARD">
             <div [ngSwitch]="attribute.SYS_TYPE">
                 <div *ngSwitchCase="'string'">
                     <mat-input-container class="full-width">
@@ -112,6 +113,7 @@
                     Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
                 </div>
             </div>
+        </div>
         </div>
   </mat-tab>
 </mat-tab-group>
