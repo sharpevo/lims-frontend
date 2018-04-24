@@ -3,11 +3,11 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 
 @Component({
-    selector: 'form-sample-dispatched',
-    templateUrl: './sample.dispatched.form.component.html',
+    selector: 'workcenter-form',
+    templateUrl: './form.component.html',
 })
 
-export class SampleDispatchedFormComponent {
+export class WorkcenterFormComponent {
     @Input() workcenter
     @Input() object
     genreList: any[] = []

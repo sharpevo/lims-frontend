@@ -92,7 +92,7 @@ import {LogPublisherService} from './log/publisher.service'
 import {InjectorContainerModule} from './injector.module'
 
 import {ExcelService} from './util/excel.service'
-import {SampleDispatchedFormComponent} from './workcenter/sample.dispatched.form.component'
+import {WorkcenterFormComponent} from './workcenter/form.component'
 
 @NgModule({
     declarations: [
@@ -140,7 +140,7 @@ import {SampleDispatchedFormComponent} from './workcenter/sample.dispatched.form
         MaterialOverviewComponent,
         SampleOverviewComponent,
         KPIComponent,
-        SampleDispatchedFormComponent,
+        WorkcenterFormComponent,
     ],
     entryComponents: [
         GenreFormDialog,
