@@ -192,11 +192,11 @@
                     Form, BoM, and Excel
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <form-sample-dispatched
+            <workcenter-form
                 *ngIf="(entity | json) != '{}' && isExpandedPanel('form')"
                 [object]="formObject"
                 [workcenter]="entity">
-            </form-sample-dispatched>
+            </workcenter-form>
             <plugin-excel-processor
                 *ngIf="(entity | json) != '{}'"
                 [formObject]="formObject"
