@@ -224,7 +224,7 @@ export class ExcelService {
     ) {
         for (let attribute of attributeList) {
             let key = attribute['SYS_CODE']
-            if (formObject.hasOwnProperty(key)) {
+            if (formObject && formObject.hasOwnProperty(key)) {
                 let label = attribute[attribute['SYS_LABEL']]
                 for (let sampleInExcel of sampleListInExcel) {
                     sampleInExcel[label] = formObject[key]
