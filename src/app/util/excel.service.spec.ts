@@ -475,4 +475,73 @@ describe("ExcelService", () => {
         })
 
     })
+
+    it("updateSampleInExcelFromObject should update samples in excel by form object", done => {
+        let formObject = {
+            "SYS_WORKCENTER_OPERATOR": "5ab88e01d98a70566c707c64",
+            "CONF_DNA_EXTRACTION_QUBIT": 55,
+            "CONF_DNA_EXTRACTION_OD230": 66
+        }
+
+        let sampleListInExcel = [
+            {
+                "Nanodrop ng/ul": 1.1,
+                "Qubit ng/ul": 2.1,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067a7"
+            },
+            {
+                "Nanodrop ng/ul": 1.2,
+                "Qubit ng/ul": 2.2,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067af"
+            },
+            {
+                "Nanodrop ng/ul": 1.3,
+                "Qubit ng/ul": 2.3,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067b7"
+            }
+        ]
+
+        let attributeList = [
+            {
+                "SYS_CODE": "CONF_DNA_EXTRACTION_OD230",
+                "label": "OD 260/230",
+                "SYS_LABEL": "label",
+            },
+            {
+                "SYS_CODE": "CONF_DNA_EXTRACTION_QUBIT",
+                "test": "Qubit ng/ul",
+                "SYS_LABEL": "test",
+            },
+        ]
+
+        let sampleListInExcelNew = [
+            {
+                "Nanodrop ng/ul": 1.1,
+                "Qubit ng/ul": 55,
+                "OD 260/230": 66,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067a7"
+            },
+            {
+                "Nanodrop ng/ul": 1.2,
+                "Qubit ng/ul": 55,
+                "OD 260/230": 66,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067af"
+            },
+            {
+                "Nanodrop ng/ul": 1.3,
+                "Qubit ng/ul": 55,
+                "OD 260/230": 66,
+                "IDENTIFIER": "5ac19eaf6c208011bc4067b7"
+            }
+        ]
+
+        service.updateSampleInExcelFromFormObject(
+            sampleListInExcel,
+            formObject,
+            attributeList)
+
+        expect(sampleListInExcel).toEqual(sampleListInExcelNew)
+        done()
+    })
+
 })

@@ -20,6 +20,7 @@ export class PluginExcelProcessorComponent {
     @Input() workcenter
     @Input() sampleList
     @Input() hybridObjectMap
+    @Input() formObject
     @ViewChild('excelUploader') excelUploader
     selectedSampleList: any[] = []
     excelResultSample: any[] = []
@@ -115,12 +116,23 @@ export class PluginExcelProcessorComponent {
 
     @LogCall
     updateExcel() {
+        this.excelService.updateSampleInExcelFromFormObject(
+            this.excelResultSample,
+            this.formObject,
+            this.workcenterAttributeList,
+        )
+
+        let issueSample = !this.excelResultSample[0]['IDENTIFIER']
+        let parentMap = {}
+
+        parentMap = this.formObject['TMP_PARENT_MAP']
+
         let targetOutput = []
         let newSampleList = []
         this.excelService.postSampleByExcel$(
             this.workcenter,
             this.excelResultSample,
-            this.parentMap,
+            parentMap,
             this.workcenterAttributeList,
             newSampleList,
         )
@@ -134,7 +146,7 @@ export class PluginExcelProcessorComponent {
                 () => {
                     this.logger.warn("targetoutput", targetOutput)
                     this.sampleService.sendMessageToDingTalk$(
-                        !this.excelResultSample[0]['IDENTIFIER'], // issueSample
+                        issueSample,
                         newSampleList,
                         this.excelResultSample,
                         this.workcenterAttributeList,
