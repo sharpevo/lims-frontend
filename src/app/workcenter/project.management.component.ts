@@ -44,6 +44,9 @@ export class ProjectManagementComponent {
     queryDateStart: string = ''
     queryDateEnd: string = ''
     formObject: any = {}
+    showPanel: any = {
+        'form': false,
+    }
 
     constructor(
         public dialog: MatDialog,
@@ -212,5 +215,15 @@ export class ProjectManagementComponent {
             .subscribe(data => {
                 this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] + "' has been resumed")
             })
+    }
+
+    openPanel(panel: string) {
+        this.showPanel[panel] = true
+    }
+    closePanel(panel: string) {
+        this.showPanel[panel] = false
+    }
+    isExpandedPanel(panel: string) {
+        return this.showPanel[panel]
     }
 }

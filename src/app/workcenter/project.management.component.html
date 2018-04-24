@@ -178,8 +178,22 @@
         class="section-title">
         Utils
     </h3>
+
+    <mat-accordion>
+        <mat-expansion-panel
+            (opened)="openPanel('form')"
+            (closed)="closePanel('form')"
+            [expanded]="isExpandedPanel('form')">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Operation
+                </mat-panel-title>
+                <mat-panel-description>
+                    Form, BoM, and Excel
+                </mat-panel-description>
+            </mat-expansion-panel-header>
     <form-sample-dispatched
-        *ngIf="(entity | json) != '{}'"
+                *ngIf="(entity | json) != '{}' && isExpandedPanel('form')"
         [object]="formObject"
         [workcenter]="entity">
     </form-sample-dispatched>
@@ -190,4 +204,6 @@
         [sampleList]="sampleList"
         [workcenter]="entity">
     </plugin-excel-processor>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>
