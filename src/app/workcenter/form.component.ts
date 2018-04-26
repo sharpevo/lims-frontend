@@ -24,22 +24,23 @@ export class WorkcenterFormComponent {
 
     ngOnInit() {
         this.object[this.parentMapKey] = {}
+        this.genreList = []
+        this.getGenreList()
     }
 
     initComponent() {
         this.object[this.parentMapKey] = {}
-        this.genreList = []
         this.attributeList = []
-        this.getGenreList()
+        if (this.genreList.length > 0) {
+            this.getAttributeListByGenreId(this.genreList[0].id)
+        }
+
     }
 
     getGenreList() {
         this.entityService.retrieveGenre(this.workcenter.id)
             .subscribe(genreList => {
                 this.genreList = genreList
-                if (genreList.length > 0) {
-                    this.getAttributeListByGenreId(genreList[0].id)
-                }
             })
     }
 
