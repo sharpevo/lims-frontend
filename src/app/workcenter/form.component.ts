@@ -48,7 +48,7 @@ export class WorkcenterFormComponent {
         this.entityService.retrieveGenre(this.workcenter.id)
             .subscribe(genreList => {
                 this.genreList = genreList.sort((a, b) => {
-                    return a.createdAt < b.createdAt
+                    return a.SYS_ORDER > b.SYS_ORDER
                 })
             })
     }

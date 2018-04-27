@@ -17,7 +17,7 @@
             (selectedTabChange)="onSelectedTabChange($event)">
             <mat-tab
                 *ngFor="let genre of genreList; let i = index"
-                [disabled]="i == genreList.length - 1"
+                [disabled]="i == 0"
                 label="{{genre[genre['SYS_LABEL']]}}">
 
                 <div
