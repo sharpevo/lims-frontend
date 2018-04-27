@@ -17,7 +17,7 @@
             (selectedTabChange)="onSelectedTabChange($event)">
             <mat-tab
                 *ngFor="let genre of genreList; let i = index"
-                [disabled]="i == 0"
+                [disabled]="!genre.enabled"
                 label="{{genre[genre['SYS_LABEL']]}}">
 
                 <div
