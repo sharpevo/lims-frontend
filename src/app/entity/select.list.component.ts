@@ -1,4 +1,4 @@
-import {Component,Input} from '@angular/core'
+import {Component, Input, Output, EventEmitter} from '@angular/core'
 import {EntityService} from './service'
 import {UserInfoService} from '../util/user.info.service'
 import {Subscription} from 'rxjs/Subscription'
@@ -13,6 +13,8 @@ export class EntitySelectListComponent {
   @Input('attribute') attribute // used in the template for ngModel
   @Input('ceilingEntityId') entityId
   @Input('optionLevel') optionLevel
+    @Input() materialObject
+    @Output() materialObjectChange = new EventEmitter<any>()
   entityList: any[] = []
   placeholder: string = ""
   floorEntityType: string = ""
@@ -53,6 +55,7 @@ export class EntitySelectListComponent {
     this.entityService.retrieveById(this.entityId)
     .subscribe(data => {
       this.placeholder = data[data['SYS_LABEL']]
+                this.materialObjectChange.emit(data)
     })
   }
 }

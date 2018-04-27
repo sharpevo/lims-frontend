@@ -86,6 +86,7 @@
             <span *ngSwitchCase="'entity'">
                 <span *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <entity-select-list
+                        [(materialObject)]="materialObject"
                         [object]="object"
                         [optionLevel]="optionLevel"
                         [attribute]="attribute"

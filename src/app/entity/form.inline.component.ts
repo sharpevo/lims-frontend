@@ -16,6 +16,7 @@ export class EntityFormInlineComponent {
   @Input('optionLevel') optionLevel
   object: any = {}
   attributeList: any[] = []
+    materialObject: any = {}
   constructor(
     private entityService: EntityService) {}
 
@@ -38,6 +39,5 @@ export class EntityFormInlineComponent {
         this.attributeList = data
       })
     }
-
 
 }
