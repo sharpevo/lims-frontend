@@ -5,6 +5,13 @@ import {GenreService} from '../genre/service'
 @Component({
     selector: 'workcenter-form',
     templateUrl: './form.component.html',
+    styles: [`
+        /deep/.mat-tab-label, /deep/.mat-tab-label-active{
+        min-width: 0!important;
+        padding: 5px!important;
+        margin: 5px!important;
+        }
+    `]
 })
 
 export class WorkcenterFormComponent {
