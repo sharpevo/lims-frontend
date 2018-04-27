@@ -23,6 +23,7 @@ export class WorkcenterFormComponent {
     showPanel: any = {
         'form': false,
     }
+    selectedGenreIndex: number = 0
 
     constructor(
         public entityService: EntityService,
@@ -78,6 +79,7 @@ export class WorkcenterFormComponent {
     }
 
     onSelectedTabChange(event) {
+        this.selectedGenreIndex = event.index
         this.getAttributeListByGenreId(this.genreList[event.index].id)
     }
 
