@@ -49,7 +49,7 @@ export class WorkcenterFormComponent {
             .subscribe(genreList => {
                 this.genreList = genreList.sort((a, b) => {
                     return a.SYS_ORDER > b.SYS_ORDER
-                })
+                }).filter(genre => genre.visible)
             })
     }
 
