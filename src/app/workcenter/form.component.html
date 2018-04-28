@@ -99,18 +99,14 @@
                     </div>
                     <div *ngSwitchCase="'entity'">
                         <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
-                            <br/>
                             <entity-select-list
                                 [object]="object"
                                 [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
                                 [attribute]="attribute"
                                 [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
                             </entity-select-list>
-                            <br/>
-                            <br/>
                         </div>
                         <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
-                            <br/>
                             <entity-collection-expansion
                                 [object]="object[parentMapKey][attribute.SYS_CODE]"
                                 [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
@@ -221,18 +217,14 @@
                     </div>
                     <div *ngSwitchCase="'entity'">
                         <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
-                            <br/>
                             <entity-select-list
                                 [object]="object"
                                 [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
                                 [attribute]="attribute"
                                 [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
                             </entity-select-list>
-                            <br/>
-                            <br/>
                         </div>
                         <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
-                            <br/>
                             <entity-collection-expansion
                                 [object]="object[parentMapKey][attribute.SYS_CODE]"
                                 [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
