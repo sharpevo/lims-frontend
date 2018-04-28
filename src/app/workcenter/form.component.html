@@ -8,9 +8,124 @@
                 Operation
             </mat-panel-title>
             <mat-panel-description>
-                Form, BoM, and Excel
             </mat-panel-description>
         </mat-expansion-panel-header>
+        <mat-grid-list
+            *ngIf="commonAttributeList.length > 0"
+            cols="3"
+            rowHeight="80px">
+            <mat-grid-tile
+                *ngFor="let attribute of commonAttributeList">
+                <div [ngSwitch]="attribute.SYS_TYPE">
+                    <div *ngSwitchCase="'string'">
+                        <mat-form-field class="full-width">
+                            <input
+                                matInput
+                                [required]="attribute.SYS_REQUIRED"
+                                type="text"
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                            <span matSuffix>{{attribute.SYS_ATTRIBUTE_UNIT}}</span>
+                        </mat-form-field>
+                    </div>
+                    <div *ngSwitchCase="'text'">
+                        <mat-input-container class="full-width">
+                            <textarea
+                                matInput
+                                [required]="attribute.SYS_REQUIRED"
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                            </textarea>
+                        </mat-input-container>
+                    </div>
+                    <div *ngSwitchCase="'number'">
+                        <mat-form-field class="full-width">
+                            <input
+                                matInput
+                                [required]="attribute.SYS_REQUIRED"
+                                type="number"
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                            <span matSuffix>{{attribute.SYS_ATTRIBUTE_UNIT}}</span>
+                        </mat-form-field>
+                    </div>
+                    <div *ngSwitchCase="'list'">
+                        <mat-form-field
+                            class="full-width">
+                            <mat-select
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}">
+                                <mat-option
+                                    value="{{o.split(':')[0]}}"
+                                    *ngFor="let o of attribute.SYS_TYPE_LIST.split(',')">
+                                    {{o.split(':')[1]}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngSwitchCase="'boolean'">
+                        <mat-checkbox
+                            color="primary"
+                            class="example-margin"
+                            [(ngModel)]="object[attribute.SYS_CODE]">
+                            {{attribute[attribute['SYS_LABEL']]}}
+                        </mat-checkbox>
+                    </div>
+                    <div *ngSwitchCase="'date'">
+                        <mat-form-field class="full-width">
+                            <input
+                                matInput
+                                type="date"
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                        </mat-form-field>
+                    </div>
+                    <div *ngSwitchCase="'datetime'">
+                        <mat-input-container class="full-width">
+                            <input
+                                matInput
+                                type="datetime-local"
+                                [(ngModel)]="object[attribute.SYS_CODE]"
+                                placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
+                        </mat-input-container>
+                    </div>
+                    <div *ngSwitchCase="'file'">
+                        <mat-input-container class="full-width">
+                            {{attribute[attribute['SYS_LABEL']]}}
+                            <input
+                                matInput
+                                type="file"/>
+                        </mat-input-container>
+                    </div>
+                    <div *ngSwitchCase="'entity'">
+                        <div *ngIf="attribute.SYS_TYPE_ENTITY_REF">
+                            <br/>
+                            <entity-select-list
+                                [object]="object"
+                                [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                                [attribute]="attribute"
+                                [ceilingEntityId]="attribute.SYS_TYPE_ENTITY.id">
+                            </entity-select-list>
+                            <br/>
+                            <br/>
+                        </div>
+                        <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
+                            <br/>
+                            <entity-collection-expansion
+                                [object]="object[parentMapKey][attribute.SYS_CODE]"
+                                [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
+                                [entity]="attribute.SYS_TYPE_ENTITY">
+                            </entity-collection-expansion>
+                        </div>
+                    </div>
+                    <div *ngSwitchDefault>
+                        Unknown type: {{attribute[attribute['SYS_LABEL']]}} ({{attribute.SYS_CODE}})
+                    </div>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-card>
         <mat-tab-group
             *ngIf="isExpandedPanel('form')"
             [@.disabled]="true"
@@ -21,7 +136,6 @@
                 label="{{genre[genre['SYS_LABEL']]}}">
             </mat-tab>
         </mat-tab-group>
-        <br/>
         <br/>
         <div
             *ngFor="let attribute of attributeList">
@@ -132,5 +246,6 @@
                 </div>
             </div>
         </div>
+        </mat-card>
     </mat-expansion-panel>
 </mat-accordion>
