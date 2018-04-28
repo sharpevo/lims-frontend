@@ -22,12 +22,12 @@ import {
     MatSelectModule,
     MatChipsModule,
     MatTableModule,
-    MatGridListModule,
     MatSidenavModule,
     MatCheckboxModule
 } from '@angular/material';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
     imports: [
