@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
+import {DatePipe} from '@angular/common'
 
 @Component({
     selector: 'workcenter-form',
@@ -23,6 +24,8 @@ export class WorkcenterFormComponent {
     showPanel: any = {
         'form': false,
     }
+    commonGenre: any = {}
+    commonAttributeList: any[] = []
 
     constructor(
         public entityService: EntityService,
@@ -49,7 +52,22 @@ export class WorkcenterFormComponent {
             .subscribe(genreList => {
                 this.genreList = genreList.sort((a, b) => {
                     return a.SYS_ORDER > b.SYS_ORDER
-                }).filter(genre => genre.visible)
+                }).filter(genre => {
+                    if (genre['SYS_IDENTIFIER'] == this.workcenter['SYS_IDENTIFIER'] + '/') {
+                        this.commonGenre = genre
+                        this.genreService.retrieveAttribute(genre.id)
+                            .subscribe(attributeList => {
+                                this.commonAttributeList = attributeList
+                                    .filter(attribute => {
+                                        if (attribute['SYS_CODE'] == 'SYS_DATE_COMPLETED') {
+                                            this.object[attribute['SYS_CODE']] = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')
+                                        }
+                                        return attribute['SYS_IS_ON_BOARD']
+                                    })
+                            })
+                    }
+                    return genre.visible
+                })
             })
     }
 
