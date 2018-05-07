@@ -181,10 +181,12 @@
     <workcenter-form
         *ngIf="(entity | json) != '{}'"
         [object]="formObject"
+        [(excelAttributeList)]="excelAttributeList"
         [workcenter]="entity">
     </workcenter-form>
     <plugin-excel-processor
         *ngIf="(entity | json) != '{}'"
+        [excelAttributeList]="excelAttributeList"
         [formObject]="formObject"
         [hybridObjectMap]="{}"
         [sampleList]="sampleList"

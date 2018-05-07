@@ -18,6 +18,7 @@ import {DatePipe} from '@angular/common'
 export class WorkcenterFormComponent {
     @Input() workcenter
     @Input() object
+    @Input() excelAttributeList
     genreList: any[] = []
     attributeList: any[] = []
     parentMapKey: string = "TMP_PARENT_MAP"
@@ -26,6 +27,7 @@ export class WorkcenterFormComponent {
     }
     commonGenre: any = {}
     commonAttributeList: any[] = []
+    excelCommonAttributeList: any[] = []
 
     constructor(
         public entityService: EntityService,
@@ -57,13 +59,16 @@ export class WorkcenterFormComponent {
                         this.commonGenre = genre
                         this.genreService.retrieveAttribute(genre.id)
                             .subscribe(attributeList => {
-                                this.commonAttributeList = attributeList
-                                    .filter(attribute => {
-                                        if (attribute['SYS_CODE'] == 'SYS_DATE_COMPLETED') {
-                                            this.object[attribute['SYS_CODE']] = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')
-                                        }
-                                        return attribute['SYS_IS_ON_BOARD']
-                                    })
+                                for (let attribute of attributeList) {
+                                    if (attribute['SYS_CODE'] == 'SYS_DATE_COMPLETED') {
+                                        this.object[attribute['SYS_CODE']] = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')
+                                    }
+                                    if (attribute['SYS_IS_ON_BOARD']) {
+                                        this.commonAttributeList.push(attribute)
+                                    } else {
+                                        this.excelCommonAttributeList.push(attribute)
+                                    }
+                                }
                             })
                     }
                     return genre.visible
@@ -72,17 +77,24 @@ export class WorkcenterFormComponent {
     }
 
     getAttributeListByGenreId(genreId: string) {
-        this.attributeList = []
+        this.attributeList = [] // clear first
+        this.excelAttributeList = this.excelCommonAttributeList.slice() // clear attributes except common ones
         this.genreService.retrieveAttribute(genreId)
             .subscribe(attributeList => {
-                this.attributeList = attributeList
-                    .sort((a, b) => {
-                        if (a.SYS_ORDER > b.SYS_ORDER) {
-                            return 1
-                        } else {
-                            return -1
-                        }
-                    })
+                for (let attribute of attributeList) {
+                    if (attribute['SYS_IS_ON_BOARD']) {
+                        this.attributeList.push(attribute)
+                    } else {
+                        this.excelAttributeList.push(attribute)
+                    }
+                }
+                this.attributeList.sort((a, b) => {
+                    if (a.SYS_ORDER > b.SYS_ORDER) {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                })
                 this.attributeList.map(attribute => {
                     switch (attribute.SYS_TYPE) {
                         case "entity":
