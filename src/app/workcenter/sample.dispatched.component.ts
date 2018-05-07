@@ -17,6 +17,7 @@ export class WorkcenterSampleDispatchedComponent {
     sampleCount: number = 0
     hybridObjectMap: any = {}
     formObject: any = {}
+    excelAttributeList: any[] = []
 
     constructor(
         private entityService: EntityService,

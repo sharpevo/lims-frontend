@@ -18,6 +18,7 @@
 <br/>
 <workcenter-form
     [object]="formObject"
+    [(excelAttributeList)]="excelAttributeList"
     [workcenter]="workcenter">
 </workcenter-form>
 <br/>
@@ -26,6 +27,7 @@
     <plugin-excel-processor
         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR']"
         [formObject]="formObject"
+        [excelAttributeList]="excelAttributeList"
         [hybridObjectMap]="hybridObjectMap"
         [sampleList]="sampleList"
         [workcenter]="workcenter">
