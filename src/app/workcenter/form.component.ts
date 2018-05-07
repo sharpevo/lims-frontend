@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core'
+import {Component, Input, Output, EventEmitter} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {DatePipe} from '@angular/common'
@@ -18,7 +18,8 @@ import {DatePipe} from '@angular/common'
 export class WorkcenterFormComponent {
     @Input() workcenter
     @Input() object
-    @Input() excelAttributeList
+    @Input() excelAttributeList: any[]
+    @Output() excelAttributeListChange = new EventEmitter<any[]>()
     genreList: any[] = []
     attributeList: any[] = []
     parentMapKey: string = "TMP_PARENT_MAP"
@@ -95,6 +96,7 @@ export class WorkcenterFormComponent {
                         return -1
                     }
                 })
+                this.excelAttributeListChange.emit(this.excelAttributeList)
                 this.attributeList.map(attribute => {
                     switch (attribute.SYS_TYPE) {
                         case "entity":

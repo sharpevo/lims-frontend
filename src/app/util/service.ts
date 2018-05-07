@@ -28,17 +28,19 @@ export class UtilService{
       .map(res => res.json())
   }
 
-  getExcelFile(hybridObjectMap: any, workcenterId: string){
+    getExcelFile(hybridObjectMap: any, workcenterId: string, attributeList: any[]) {
     let data = {}
     data['workcenterId'] = workcenterId
     data['hybridObjectMap'] = hybridObjectMap
+        data['attributeList'] = attributeList
     let headers = new Headers()
     headers.append('Content-Type', 'application/json')
     //headers.append('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     return this.http.post(
       '/excel',
       data,
-      {headers: headers,
+            {
+                headers: headers,
         responseType: ResponseContentType.Blob
       })
       //.map(response => new Blob([response['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}))

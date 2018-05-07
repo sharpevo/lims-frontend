@@ -21,6 +21,7 @@ export class PluginExcelProcessorComponent {
     @Input() sampleList
     @Input() hybridObjectMap
     @Input() formObject
+    @Input() excelAttributeList
     @ViewChild('excelUploader') excelUploader
     selectedSampleList: any[] = []
     excelResultSample: any[] = []
@@ -94,7 +95,7 @@ export class PluginExcelProcessorComponent {
             if (template) {
                 hybridSampleList = []
             }
-            this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
+            this.utilService.getExcelFile(hybridSampleList, this.workcenter.id, this.excelAttributeList)
                 .subscribe(data => {
                     var blob = new Blob([data['_body']], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
                     //var file = new File([blob], 'report.xlsx',{ type: 'application/vnd.ms-excel' } )
