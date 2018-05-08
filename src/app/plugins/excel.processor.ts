@@ -22,6 +22,7 @@ export class PluginExcelProcessorComponent {
     @Input() hybridObjectMap
     @Input() formObject
     @Input() excelAttributeList
+    @Input() boardAttributeList
     @ViewChild('excelUploader') excelUploader
     selectedSampleList: any[] = []
     excelResultSample: any[] = []

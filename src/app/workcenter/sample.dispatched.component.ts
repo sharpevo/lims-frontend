@@ -17,6 +17,8 @@ export class WorkcenterSampleDispatchedComponent {
     sampleCount: number = 0
     hybridObjectMap: any = {}
     formObject: any = {}
+
+    boardAttributeList: any[] = []
     excelAttributeList: any[] = []
 
     constructor(
