@@ -86,13 +86,16 @@ export class ExcelService {
     _assignAttributeFromExcelToDatabase(
         sampleInExcel: any,
         sampleInDatabase: any,
+        attributeList: any[],
     ) {
-        sampleInDatabase['SYS_SCHEMA'].forEach(schema => {
-            if (sampleInExcel[schema['SYS_LABEL']]) {
+        attributeList.forEach(schema => {
+            //let label = schema['SYS_LABEL']
+            let label = schema[schema['SYS_LABEL']]
+            if (sampleInExcel[label]) {
                 if (schema['SYS_TYPE'] != 'entity') {
-                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[label]
                 } else {
-                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[label]
                     // TODO: convert value to id
                 }
             }
@@ -114,6 +117,7 @@ export class ExcelService {
                 this._assignAttributeFromExcelToDatabase(
                     sampleInExcel,
                     sampleInDatabase,
+                    attributeInfo['attributeList'],
                 )
                 if (newSampleList) {
                     newSampleList.push(sampleInDatabase)
