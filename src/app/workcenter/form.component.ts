@@ -20,15 +20,18 @@ export class WorkcenterFormComponent {
     @Input() object
     @Input() excelAttributeList: any[]
     @Output() excelAttributeListChange = new EventEmitter<any[]>()
+    @Input() boardAttributeList: any[]
+    @Output() boardAttributeListChange = new EventEmitter<any[]>()
     genreList: any[] = []
-    attributeList: any[] = []
     parentMapKey: string = "TMP_PARENT_MAP"
     showPanel: any = {
         'form': false,
     }
     commonGenre: any = {}
-    commonAttributeList: any[] = []
+    boardCommonAttributeList: any[] = []
+    boardUniqueAttributeList: any[] = []
     excelCommonAttributeList: any[] = []
+    excelUniqueAttributeList: any[] = []
 
     constructor(
         public entityService: EntityService,
@@ -43,7 +46,7 @@ export class WorkcenterFormComponent {
 
     initComponent() {
         this.object[this.parentMapKey] = {}
-        this.attributeList = []
+        this.boardUniqueAttributeList = []
         if (this.genreList.length > 0) {
             this.getAttributeListByGenreId(this.genreList[0].id)
         }
@@ -65,7 +68,7 @@ export class WorkcenterFormComponent {
                                         this.object[attribute['SYS_CODE']] = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')
                                     }
                                     if (attribute['SYS_IS_ON_BOARD']) {
-                                        this.commonAttributeList.push(attribute)
+                                        this.boardCommonAttributeList.push(attribute)
                                     } else {
                                         this.excelCommonAttributeList.push(attribute)
                                     }
@@ -78,26 +81,31 @@ export class WorkcenterFormComponent {
     }
 
     getAttributeListByGenreId(genreId: string) {
-        this.attributeList = [] // clear first
-        this.excelAttributeList = this.excelCommonAttributeList.slice() // clear attributes except common ones
+        this.boardUniqueAttributeList = [] // clear first
+        this.excelUniqueAttributeList = []
         this.genreService.retrieveAttribute(genreId)
             .subscribe(attributeList => {
                 for (let attribute of attributeList) {
                     if (attribute['SYS_IS_ON_BOARD']) {
-                        this.attributeList.push(attribute)
+                        this.boardUniqueAttributeList.push(attribute)
                     } else {
-                        this.excelAttributeList.push(attribute)
+                        this.excelUniqueAttributeList.push(attribute)
                     }
                 }
-                this.attributeList.sort((a, b) => {
+                this.boardUniqueAttributeList.sort((a, b) => {
                     if (a.SYS_ORDER > b.SYS_ORDER) {
                         return 1
                     } else {
                         return -1
                     }
                 })
+
+                this.boardAttributeList = this.boardCommonAttributeList.concat(this.boardUniqueAttributeList)
+                this.boardAttributeListChange.emit(this.boardAttributeList)
+                this.excelAttributeList = this.excelCommonAttributeList.concat(this.excelUniqueAttributeList)
                 this.excelAttributeListChange.emit(this.excelAttributeList)
-                this.attributeList.map(attribute => {
+
+                this.boardUniqueAttributeList.map(attribute => {
                     switch (attribute.SYS_TYPE) {
                         case "entity":
                             if (!attribute.SYS_TYPE_ENTITY_REF) {
