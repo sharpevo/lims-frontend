@@ -93,6 +93,7 @@ import {InjectorContainerModule} from './injector.module'
 
 import {ExcelService} from './util/excel.service'
 import {WorkcenterFormComponent} from './workcenter/form.component'
+import {SampleInfoVerticalComponent} from './sample/info.vertical.component'
 
 @NgModule({
     declarations: [
@@ -141,6 +142,7 @@ import {WorkcenterFormComponent} from './workcenter/form.component'
         SampleOverviewComponent,
         KPIComponent,
         WorkcenterFormComponent,
+        SampleInfoVerticalComponent,
     ],
     entryComponents: [
         GenreFormDialog,
