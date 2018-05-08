@@ -100,6 +100,9 @@ export class ExcelService {
                 }
             }
         })
+        if (sampleInExcel.hasOwnProperty('SYS_GENRE')) {
+            sampleInDatabase['SYS_GENRE'] = sampleInExcel['SYS_GENRE']
+        }
     }
 
     _getSampleIdInExcel(sample: any) {
@@ -232,6 +235,9 @@ export class ExcelService {
                 let label = attribute[attribute['SYS_LABEL']]
                 for (let sampleInExcel of sampleListInExcel) {
                     sampleInExcel[label] = formObject[key]
+                    if (formObject.hasOwnProperty('SYS_GENRE')) {
+                        sampleInExcel['SYS_GENRE'] = formObject['SYS_GENRE']
+                    }
                 }
                 continue
             }

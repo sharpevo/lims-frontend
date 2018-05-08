@@ -83,6 +83,7 @@ export class WorkcenterFormComponent {
     getAttributeListByGenreId(genreId: string) {
         this.boardUniqueAttributeList = [] // clear first
         this.excelUniqueAttributeList = []
+        this.object['SYS_GENRE'] = genreId
         this.genreService.retrieveAttribute(genreId)
             .subscribe(attributeList => {
                 for (let attribute of attributeList) {
