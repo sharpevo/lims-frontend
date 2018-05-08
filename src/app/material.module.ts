@@ -28,6 +28,7 @@ import {
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatAutocompleteModule} from '@angular/material/autocomplete'
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
         MatCheckboxModule,
         MatDialogModule,
         MatTabsModule,
+        MatAutocompleteModule,
     ],
     exports: [
         MatButtonModule,
@@ -91,6 +93,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
         MatCheckboxModule,
         MatDividerModule,
         MatTabsModule,
+        MatAutocompleteModule,
     ]
 })
 export class MaterialModule {}
