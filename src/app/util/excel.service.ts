@@ -140,7 +140,9 @@ export class ExcelService {
     }
 
     _initSample(newSample: any, genre: any, workcenterIdentifier: string) {
-        newSample['SYS_GENRE'] = genre // object rather id, refered in backend
+        if (!newSample.hasOwnProperty('SYS_GENRE')) {
+            newSample['SYS_GENRE'] = genre // object rather id, refered in backend
+        }
         newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
         newSample['SYS_ENTITY_TYPE'] = 'collection'
         let dateString = new Date().toISOString()
@@ -155,6 +157,9 @@ export class ExcelService {
         attributeInfo['attributeList'].forEach(attribute => {
             newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
         })
+        if (sampleInExcel.hasOwnProperty('SYS_GENRE')) {
+            newSample['SYS_GENRE'] = sampleInExcel['SYS_GENRE']
+        }
     }
 
     _issueSampleByExcel(
