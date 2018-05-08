@@ -121,7 +121,7 @@ export class PluginExcelProcessorComponent {
         this.excelService.updateSampleInExcelFromFormObject(
             this.excelResultSample,
             this.formObject,
-            this.workcenterAttributeList,
+            this.boardAttributeList,
         )
 
         let issueSample = !this.excelResultSample[0]['IDENTIFIER']
@@ -135,7 +135,7 @@ export class PluginExcelProcessorComponent {
             this.workcenter,
             this.excelResultSample,
             parentMap,
-            this.workcenterAttributeList,
+            this.boardAttributeList.concat(this.excelAttributeList),
             newSampleList,
         )
             .subscribe(
