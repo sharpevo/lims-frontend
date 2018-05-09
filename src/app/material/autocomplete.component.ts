@@ -13,7 +13,10 @@ import {EntityService} from '../entity/service'
 export class MaterialAutocompleteComponent {
     @Input() filter: any
     @Input() material: any
+    @Input() workcenter: any
     @Output() materialChange = new EventEmitter<any>()
+    placeholder: string = ''
+    baseIdentifier: string = ''
     materialCtrl: FormControl = new FormControl()
     materialList$: Observable<any[]>
     filteredMaterialList$: Observable<any[]>
@@ -21,8 +24,19 @@ export class MaterialAutocompleteComponent {
     constructor(
         public entityService: EntityService
     ) {
+    }
+
+    ngOnInit() {
+        if (this.workcenter['SYS_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT') {
+            this.baseIdentifier = '/PRODUCT_WORKCENTER'
+            this.placeholder = 'more workcenters...'
+        } else {
+            this.baseIdentifier = '/MATERIAL'
+            this.placeholder = 'more materials...'
+        }
+
         this.materialList$ = this.entityService.retrieveByIdentifierAndCategory(
-            '/MATERIAL',
+            this.baseIdentifier,
             'class',
         )
         this.filteredMaterialList$ = this.materialCtrl.valueChanges
@@ -32,9 +46,7 @@ export class MaterialAutocompleteComponent {
             .switchMap(value => {
                 return this.filterMaterials$(value || '')
             })
-    }
 
-    ngOnInit() {
     }
 
     filterMaterials$(materialLabel: string) {

@@ -1,5 +1,5 @@
 <mat-form-field>
-    <input matInput placeholder="Add Material..." [matAutocomplete]="auto" [formControl]="materialCtrl">
+    <input matInput placeholder="{{placeholder}}" [matAutocomplete]="auto" [formControl]="materialCtrl">
     <mat-autocomplete #auto="matAutocomplete">
         <mat-option
             *ngFor="let material of filteredMaterialList$ | async"
