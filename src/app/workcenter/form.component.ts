@@ -32,6 +32,7 @@ export class WorkcenterFormComponent {
     boardUniqueAttributeList: any[] = []
     excelCommonAttributeList: any[] = []
     excelUniqueAttributeList: any[] = []
+    newMaterial: any = {}
 
     constructor(
         public entityService: EntityService,

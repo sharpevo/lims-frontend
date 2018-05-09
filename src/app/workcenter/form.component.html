@@ -230,6 +230,14 @@
                                 [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
                                 [entity]="attribute.SYS_TYPE_ENTITY">
                             </entity-collection-expansion>
+                            <div
+                                fxLayout="row"
+                                fxLayoutAlign="end center" >
+                                <material-autocomplete
+                                    [workcenter]="workcenter"
+                                    [(material)]="newMaterial">
+                                </material-autocomplete>
+                            </div>
                         </div>
                     </div>
                     <div *ngSwitchDefault>
