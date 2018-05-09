@@ -225,11 +225,16 @@
                             </entity-select-list>
                         </div>
                         <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
-                            <entity-collection-expansion
-                                [object]="object[parentMapKey][attribute.SYS_CODE]"
-                                [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
-                                [entity]="attribute.SYS_TYPE_ENTITY">
-                            </entity-collection-expansion>
+                            <div
+                                fxLayout="column"
+                                fxLayoutAlign="space-around stretch"
+                                *ngFor="let entity of getEmbededEntityList$(attribute.SYS_TYPE_ENTITY.id) | async">
+                                <entity-form-inline
+                                    [object]="object[parentMapKey][attribute.SYS_CODE]"
+                                    [optionLevel]="class"
+                                    [entity]="entity">
+                                </entity-form-inline>
+                            </div>
                             <div
                                 fxLayout="row"
                                 fxLayoutAlign="end center" >

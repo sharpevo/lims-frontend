@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {DatePipe} from '@angular/common'
+import {Observable} from 'rxjs/Observable'
 
 @Component({
     selector: 'workcenter-form',
@@ -33,6 +34,8 @@ export class WorkcenterFormComponent {
     excelCommonAttributeList: any[] = []
     excelUniqueAttributeList: any[] = []
     newMaterial: any = {}
+    refEntityList$: Observable<any[]>
+    refEntityList$Map: any = {}
 
     constructor(
         public entityService: EntityService,
@@ -133,4 +136,16 @@ export class WorkcenterFormComponent {
     isExpandedPanel(panel: string) {
         return this.showPanel[panel]
     }
+
+    getEmbededEntityList$(entityId: string) {
+        if (entityId in this.refEntityList$Map) {
+            return this.refEntityList$Map[entityId]
+        } else {
+            this.refEntityList$ = this.entityService.retrieveEntity(entityId, "object")
+                .map(data => data.sort((a, b) => a.SYS_ORDER > b.SYS_ORDER))
+            this.refEntityList$Map[entityId] = this.refEntityList$
+            return this.refEntityList$Map[entityId]
+        }
+    }
+
 }
