@@ -1,14 +1,11 @@
-<form
-    *ngIf="materialList.length > 0">
-    <mat-form-field>
-        <input matInput placeholder="Add Material..." [matAutocomplete]="auto" [formControl]="materialCtrl">
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option
-                *ngFor="let material of filteredMaterials | async"
-                (click)="onMaterialClick(material)"
-                [value]="material[material['SYS_LABEL']]">
-                <span>{{ material[material['SYS_LABEL']] }}</span>
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-</form>
+<mat-form-field>
+    <input matInput placeholder="Add Material..." [matAutocomplete]="auto" [formControl]="materialCtrl">
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+            *ngFor="let material of filteredMaterialList$ | async"
+            (click)="onMaterialClick(material)"
+            [value]="material[material['SYS_LABEL']]">
+            <span>{{ material[material['SYS_LABEL']] }}</span>
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

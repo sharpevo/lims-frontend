@@ -3,6 +3,7 @@ import {FormControl} from '@angular/forms'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/switchMap'
 import {EntityService} from '../entity/service'
 
 @Component({
@@ -13,42 +14,38 @@ export class MaterialAutocompleteComponent {
     @Input() filter: any
     @Input() material: any
     @Output() materialChange = new EventEmitter<any>()
-    materialList: any[] = []
-
     materialCtrl: FormControl = new FormControl()
-    filteredMaterials: Observable<any[]>
+    materialList$: Observable<any[]>
+    filteredMaterialList$: Observable<any[]>
 
     constructor(
         public entityService: EntityService
     ) {
-    }
-
-    ngOnInit() {
-        this.getMaterialList$()
-            .subscribe(materialList => {
-                console.log("ML", materialList)
-                this.materialList = materialList
-                this.filteredMaterials = this.materialCtrl.valueChanges
-                    .startWith('')
-                    .map(material => material ? this.filterMaterials(material) : this.materialList.slice())
-            })
-
-    }
-    getMaterialList$() {
-        return this.entityService.retrieveByIdentifierAndCategory(
+        this.materialList$ = this.entityService.retrieveByIdentifierAndCategory(
             '/MATERIAL',
             'class',
         )
+        this.filteredMaterialList$ = this.materialCtrl.valueChanges
+            .startWith('')
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .switchMap(value => {
+                return this.filterMaterials$(value || '')
+            })
     }
 
-    filterMaterials(title: string) {
-        return this.materialList.filter(material => {
-            return material[material['SYS_LABEL']].toLowerCase().indexOf(title.toLowerCase()) > 0
+    ngOnInit() {
+    }
+
+    filterMaterials$(materialLabel: string) {
+        return this.materialList$.map(res => {
+            return res.filter(material => {
+                return material[material['SYS_LABEL']].toLowerCase().indexOf(materialLabel.toLowerCase()) > 0
+            })
         })
     }
 
     onMaterialClick(material: any) {
-        console.log("click")
         this.materialChange.emit(material)
         this.materialCtrl.setValue('')
     }
