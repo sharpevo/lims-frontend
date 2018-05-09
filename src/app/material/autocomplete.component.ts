@@ -51,9 +51,13 @@ export class MaterialAutocompleteComponent {
 
     filterMaterials$(materialLabel: string) {
         return this.materialList$.map(res => {
-            return res.filter(material => {
-                return material[material['SYS_LABEL']].toLowerCase().indexOf(materialLabel.toLowerCase()) >= 0
-            })
+            if (materialLabel) {
+                return res.filter(material => {
+                    return material[material['SYS_LABEL']].toLowerCase().indexOf(materialLabel.toLowerCase()) >= 0
+                })
+            } else {
+                return res
+            }
         })
     }
 
