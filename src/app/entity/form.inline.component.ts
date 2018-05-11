@@ -66,6 +66,43 @@ export class EntityFormInlineComponent {
                 this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
             })
             this.object["SYS_FLOOR_ENTITY_TYPE"] = this.optionLevel
+        } else if (this.entity['SYS_IDENTIFIER'].startsWith('/PRODUCT_WORKCENTER/')) {
+            this.attributeList = [
+                {
+                    'SYS_ORDER': 10,
+                    'SYS_CODE': 'SYS_CHECKED',
+                    'SYS_TYPE': 'boolean',
+                    'SYS_LABEL': 'label',
+                    'label': '',
+                },
+                {
+                    'SYS_ORDER': 20,
+                    'SYS_CODE': 'SYS_ORDER',
+                    'SYS_TYPE': 'number',
+                    'SYS_LABEL': 'label',
+                    'label': 'Order',
+                },
+                {
+                    'SYS_ORDER': 30,
+                    'SYS_CODE': 'SYS_SOURCE',
+                    'SYS_TYPE': 'entity',
+                    'SYS_LABEL': 'label',
+                    'label': 'Material',
+                    'SYS_TYPE_ENTITY_REF': true,
+                    'SYS_FLOOR_ENTITY_TYPE': 'collection',
+                },
+                {
+                    'SYS_ORDER': 40,
+                    'SYS_CODE': 'SYS_DURATION',
+                    'SYS_TYPE': 'number',
+                    'SYS_LABEL': 'label',
+                    'label': 'Duration',
+                },
+            ]
+            this.attributeList.forEach(attribute => {
+                this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
+            })
+            this.object["SYS_FLOOR_ENTITY_TYPE"] = this.optionLevel
         } else {
             this.entityService.retrieveAttribute(this.entity.id)
                 .subscribe(data => {

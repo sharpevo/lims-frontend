@@ -27,7 +27,7 @@ export class MaterialAutocompleteComponent {
     }
 
     ngOnInit() {
-        if (this.workcenter['SYS_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT') {
+        if (this.isProjectWorkcenter()) {
             this.baseIdentifier = '/PRODUCT_WORKCENTER'
             this.placeholder = 'more workcenters...'
         } else {
@@ -49,6 +49,10 @@ export class MaterialAutocompleteComponent {
 
     }
 
+    isProjectWorkcenter() {
+        return this.workcenter['SYS_IDENTIFIER'] == '/PROJECT_MANAGEMENT/GENERAL_PROJECT'
+    }
+
     filterMaterials$(materialLabel: string) {
         return this.materialList$.map(res => {
             if (materialLabel) {
@@ -65,10 +69,16 @@ export class MaterialAutocompleteComponent {
         let fakeRefEntity = {
             'id': 'fake_' + Date.now(),
             'SYS_CHECKED': true,
-            'SYS_IDENTIFIER': '/MATERIAL/',
+            'SYS_IDENTIFIER': this.baseIdentifier + '/',
             'SYS_SOURCE': material.id,
-            'SYS_QUANTITY': 0,
-            'SYS_REMARK': '手动增加',
+        }
+
+        if (this.isProjectWorkcenter()) {
+            fakeRefEntity['SYS_DURATION'] = 1
+            fakeRefEntity['SYS_ORDER'] = 1000
+        } else {
+            fakeRefEntity['SYS_QUANTITY'] = 0
+            fakeRefEntity['SYS_REMARK'] = '手动增加'
         }
         this.refEntityListSubject.next([...this.refEntityListSubject.getValue(), fakeRefEntity])
         this.refEntityListSubjectChange.emit(this.refEntityListSubject)
