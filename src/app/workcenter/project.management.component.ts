@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
 import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
 import {MatSnackBar} from '@angular/material'
@@ -9,6 +10,8 @@ import {SampleService} from '../models/sample'
 import {LogCall} from '../log/decorator'
 import {LogService} from '../log/log.service'
 
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/forkJoin'
 import 'rxjs/add/operator/filter'
 
 @Component({
@@ -39,6 +42,7 @@ export class ProjectManagementComponent {
     sampleList: any[] = []
     showHistory: any = {}
     skip = 0
+    queryAttributeList: any[] = []
     queryCode: string = ''
     queryValue: string = ''
     queryDateStart: string = ''
@@ -50,6 +54,7 @@ export class ProjectManagementComponent {
     constructor(
         public dialog: MatDialog,
         private entityService: EntityService,
+        public genreService: GenreService,
         public sampleService: SampleService,
         private snackBar: MatSnackBar,
         public logger: LogService,
@@ -61,6 +66,27 @@ export class ProjectManagementComponent {
             .subscribe(data => {
                 this.entity = data[0]
                 this.getSampleList()
+                this.getQueryAttributeList()
+            })
+    }
+
+    getQueryAttributeList() {
+        this.genreService.retrieveBy({
+            'SYS_ENTITY': this.entity.id,
+        })
+            .mergeMap(genreList => {
+                return Observable.forkJoin(
+                    genreList.map(genre => {
+                        return this.genreService.retrieveAttribute(genre.id)
+                    })
+                )
+            })
+            .subscribe(data => {
+                for (let attributeList of data) {
+                    this.queryAttributeList = this.queryAttributeList.concat(
+                        attributeList.filter(attribute => attribute['SYS_TYPE'] != 'entity')
+                    )
+                }
             })
     }
 

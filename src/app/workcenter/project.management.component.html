@@ -9,14 +9,14 @@
         fxLayout="row"
         fxLayoutAlign="end center">
         <mat-form-field
-            *ngIf="sampleList.length > 0">
+            *ngIf="queryAttributeList.length > 0">
             <mat-select
                 [(ngModel)]="queryCode"
                 placeholder="Attribute">
                 <mat-option
                     value="{{attr.SYS_CODE}}"
-                    *ngFor="let attr of sampleList[0].SYS_SCHEMA">
-                    {{attr.SYS_LABEL}}
+                    *ngFor="let attr of queryAttributeList">
+                    {{attr[attr['SYS_LABEL']]}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
