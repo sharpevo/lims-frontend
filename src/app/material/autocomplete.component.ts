@@ -12,9 +12,9 @@ import {EntityService} from '../entity/service'
 })
 export class MaterialAutocompleteComponent {
     @Input() filter: any
-    @Input() material: any
+    @Input() refEntityListSubject: any
     @Input() workcenter: any
-    @Output() materialChange = new EventEmitter<any>()
+    @Output() refEntityListSubjectChange = new EventEmitter<any>()
     placeholder: string = ''
     baseIdentifier: string = ''
     materialCtrl: FormControl = new FormControl()
@@ -62,7 +62,16 @@ export class MaterialAutocompleteComponent {
     }
 
     onMaterialClick(material: any) {
-        this.materialChange.emit(material)
+        let fakeRefEntity = {
+            'id': 'fake_' + Date.now(),
+            'SYS_CHECKED': true,
+            'SYS_IDENTIFIER': '/MATERIAL/',
+            'SYS_SOURCE': material.id,
+            'SYS_QUANTITY': 0,
+            'SYS_REMARK': 'added manually',
+        }
+        this.refEntityListSubject.next([...this.refEntityListSubject.getValue(), fakeRefEntity])
+        this.refEntityListSubjectChange.emit(this.refEntityListSubject)
         this.materialCtrl.setValue('')
     }
 

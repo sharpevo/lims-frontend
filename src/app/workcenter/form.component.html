@@ -226,12 +226,14 @@
                         </div>
                         <div *ngIf="!attribute.SYS_TYPE_ENTITY_REF">
                             <div
+                                *ngIf="(getEmbededEntityList$(attribute.SYS_TYPE_ENTITY.id) | async)?.length > 0">
+                            <div
                                 fxLayout="column"
                                 fxLayoutAlign="space-around stretch"
-                                *ngFor="let entity of getEmbededEntityList$(attribute.SYS_TYPE_ENTITY.id) | async">
+                                *ngFor="let entity of refEntityListObs$ | async">
                                 <entity-form-inline
                                     [object]="object[parentMapKey][attribute.SYS_CODE]"
-                                    [optionLevel]="class"
+                                    [optionLevel]="attribute.SYS_FLOOR_ENTITY_TYPE"
                                     [entity]="entity">
                                 </entity-form-inline>
                             </div>
@@ -240,8 +242,9 @@
                                 fxLayoutAlign="end center" >
                                 <material-autocomplete
                                     [workcenter]="workcenter"
-                                    [(material)]="newMaterial">
+                                    [(refEntityListSubject)]="refEntityList$">
                                 </material-autocomplete>
+                            </div>
                             </div>
                         </div>
                     </div>

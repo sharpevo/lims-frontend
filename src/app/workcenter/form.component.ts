@@ -3,6 +3,7 @@ import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {DatePipe} from '@angular/common'
 import {Observable} from 'rxjs/Observable'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
 @Component({
     selector: 'workcenter-form',
@@ -34,13 +35,19 @@ export class WorkcenterFormComponent {
     excelCommonAttributeList: any[] = []
     excelUniqueAttributeList: any[] = []
     newMaterial: any = {}
-    refEntityList$: Observable<any[]>
+    refEntityList: any[] = []
+    refEntityList$
+    refEntityListObs$
     refEntityList$Map: any = {}
 
     constructor(
         public entityService: EntityService,
         public genreService: GenreService,
-    ) {}
+    ) {
+
+        this.refEntityList$ = new BehaviorSubject([])
+        this.refEntityListObs$ = this.refEntityList$.asObservable()
+    }
 
     ngOnInit() {
         this.object[this.parentMapKey] = {}
@@ -141,9 +148,12 @@ export class WorkcenterFormComponent {
         if (entityId in this.refEntityList$Map) {
             return this.refEntityList$Map[entityId]
         } else {
-            this.refEntityList$ = this.entityService.retrieveEntity(entityId, "object")
-                .map(data => data.sort((a, b) => a.SYS_ORDER > b.SYS_ORDER))
-            this.refEntityList$Map[entityId] = this.refEntityList$
+            this.refEntityList$Map[entityId] = this.entityService.retrieveEntity(entityId, "object")
+                .map(data => {
+                    this.refEntityList = data.sort((a, b) => a.SYS_ORDER > b.SYS_ORDER)
+                    this.refEntityList$.next(this.refEntityList)
+                    return this.refEntityList
+                })
             return this.refEntityList$Map[entityId]
         }
     }
