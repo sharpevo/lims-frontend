@@ -15,7 +15,7 @@
                 placeholder="Attribute">
                 <mat-option
                     value="{{attr.SYS_CODE}}"
-                    *ngFor="let attr of materialObjectList[0].SYS_SCHEMA">
+                    *ngFor="let attr of queryAttributeList">
                     {{attr.SYS_LABEL}}
                 </mat-option>
             </mat-select>
@@ -122,3 +122,20 @@
         </button>
     </div>
 </div>
+<div fxLayout="row" fxLayoutAlign="end center" >
+    <button
+        mat-icon-button>
+        <mat-icon>add</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="prevPage()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="nextPage()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+</div>
+

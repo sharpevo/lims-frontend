@@ -27,6 +27,12 @@ export class MaterialOverviewComponent{
   showPanel: any = {}
   sampleMap: any = {}
   total: string = ''
+    queryAttributeList = [
+        {
+            'SYS_CODE': 'label',
+            'SYS_LABEL': 'label',
+        }
+    ]
 
   constructor(
     public dialog: MatDialog,
