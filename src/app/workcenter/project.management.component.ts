@@ -81,7 +81,7 @@ export class ProjectManagementComponent {
                     })
                 )
             })
-            .subscribe(data => {
+            .subscribe((data: any[][]) => {
                 for (let attributeList of data) {
                     this.queryAttributeList = this.queryAttributeList.concat(
                         attributeList.filter(attribute => attribute['SYS_TYPE'] != 'entity')
