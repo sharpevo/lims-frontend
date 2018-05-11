@@ -105,18 +105,24 @@ export class SampleHistoryComponent {
 
   getWorkcenterList(){
     this.entityService.retrieveBySortBy(
-      {"where":'{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
+            {
+                "where": '{"SYS_IDENTIFIER": {"regex":"^/PRODUCT_WORKCENTER"},"SYS_ENTITY_TYPE": {"=":"class"}}',
       },
       "SYS_ORDER")
       .subscribe(data => {
         this.workcenterList = data
-        this.workcenterList.forEach(workcenter => {
-          this.lineChartLabels.push(workcenter[workcenter['SYS_LABEL']])
-        })
-        // get sample after workcenter
         this.getSampleMap()
       })
   }
+
+    getWorkcenterLabelByIdentifier(identifier: string) {
+        let workcenter = this.workcenterList.find(workcenter => identifier.indexOf(workcenter['SYS_IDENTIFIER']) >= 0)
+        if (workcenter) {
+            return workcenter[workcenter['SYS_LABEL']]
+        } else {
+            return 'unknown'
+        }
+    }
 
   getSampleMap() {
     this.entityService.retrieveBySortBy(
@@ -135,10 +141,12 @@ export class SampleHistoryComponent {
 
             //console.log("#", sample.SYS_IDENTIFIER, sample.SYS_TARGET)
             this.sampleMap[sample['SYS_TARGET']].push(sample)
+                        this.lineChartLabels.push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
           }
 
         })
 
+                console.log("SM", this.sampleMap, this.lineChartLabels)
         let i=0
         Object.keys(this.sampleMap).sort().forEach(key => {
           i += 1
@@ -152,25 +160,11 @@ export class SampleHistoryComponent {
             pointStyle:[],
           }
 
-          let j = 0
-
-          let offset = 0
-          this.workcenterList.forEach(workcenter => {
-            if (!this.sampleMap[key][j]){
-              chartData.data.push(i-1)
-            } else {
-              //console.log("--- " + j + " ---", this.sampleMap[key][j].SYS_SAMPLE_CODE, ": ", this.sampleMap[key][j].SYS_TARGET)
-              let workcenterIdentifier = workcenter['SYS_IDENTIFIER']
-              let sampleGenreIdentifier = this.sampleMap[key][j]['SYS_GENRE_IDENTIFIER']
-              //console.log("S:", sampleGenreIdentifier)
-              //console.log("W:", workcenterIdentifier)
-              if (workcenterIdentifier + '/' == sampleGenreIdentifier){
-                j+=1
-                //console.log("==", j+offset, i)
-                //chartData.data.push({x:j+offset,y:i, r:5})
+                    let j = 1
+                    this.sampleMap[key].forEach(sample => {
                 let scheduledDate = new Date(this.sampleMap[key][j-1]['SYS_DATE_SCHEDULED'])
                 chartData.data.push({
-                  x:j+offset,
+                            x: j,
                   y:i,
                   sample: this.sampleMap[key][j-1],
                   sampleId:this.sampleMap[key][j-1]['id'],
@@ -197,13 +191,8 @@ export class SampleHistoryComponent {
                 }
                 chartData.pointStyle.push(style)
                 chartData.pointRadius.push(radius)
-              } else {
-                offset += 1
-                //console.log("!=", offset)
-                //console.log("!=", i-1)
-                //chartData.data.push(i-1)
-              }
-            }
+                        j += 1
+
 
           })
 
