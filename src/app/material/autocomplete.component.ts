@@ -68,7 +68,7 @@ export class MaterialAutocompleteComponent {
             'SYS_IDENTIFIER': '/MATERIAL/',
             'SYS_SOURCE': material.id,
             'SYS_QUANTITY': 0,
-            'SYS_REMARK': 'added manually',
+            'SYS_REMARK': '手动增加',
         }
         this.refEntityListSubject.next([...this.refEntityListSubject.getValue(), fakeRefEntity])
         this.refEntityListSubjectChange.emit(this.refEntityListSubject)
