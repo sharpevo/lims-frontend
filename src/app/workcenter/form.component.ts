@@ -2,6 +2,8 @@ import {Component, Input, Output, EventEmitter} from '@angular/core'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {DatePipe} from '@angular/common'
+import {Observable} from 'rxjs/Observable'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
 @Component({
     selector: 'workcenter-form',
@@ -32,11 +34,20 @@ export class WorkcenterFormComponent {
     boardUniqueAttributeList: any[] = []
     excelCommonAttributeList: any[] = []
     excelUniqueAttributeList: any[] = []
+    newMaterial: any = {}
+    refEntityList: any[] = []
+    refEntityList$
+    refEntityListObs$
+    refEntityList$Map: any = {}
 
     constructor(
         public entityService: EntityService,
         public genreService: GenreService,
-    ) {}
+    ) {
+
+        this.refEntityList$ = new BehaviorSubject([])
+        this.refEntityListObs$ = this.refEntityList$.asObservable()
+    }
 
     ngOnInit() {
         this.object[this.parentMapKey] = {}
@@ -132,4 +143,19 @@ export class WorkcenterFormComponent {
     isExpandedPanel(panel: string) {
         return this.showPanel[panel]
     }
+
+    getEmbededEntityList$(entityId: string) {
+        if (entityId in this.refEntityList$Map) {
+            return this.refEntityList$Map[entityId]
+        } else {
+            this.refEntityList$Map[entityId] = this.entityService.retrieveEntity(entityId, "object")
+                .map(data => {
+                    this.refEntityList = data.sort((a, b) => a.SYS_ORDER > b.SYS_ORDER)
+                    this.refEntityList$.next(this.refEntityList)
+                    return this.refEntityList
+                })
+            return this.refEntityList$Map[entityId]
+        }
+    }
+
 }
