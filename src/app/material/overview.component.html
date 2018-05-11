@@ -91,7 +91,7 @@
                         <mat-list-item *ngFor="let sample of sampleMap[lot.id]">
                             <mat-icon mat-list-icon>format_color_fill</mat-icon>
                             <h4 mat-line>{{sample.SYS_SAMPLE_CODE}}</h4>
-                            <p mat-line> {{sample.createdAt | date}}: {{sample.SYS_QUANTITY}}, {{sample.REMARK}}</p>
+                            <p mat-line> {{sample.createdAt | date}}: {{sample.SYS_QUANTITY}}, {{sample.SYS_REMARK}}</p>
                         </mat-list-item>
                     </mat-list>
                 </div>
