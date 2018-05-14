@@ -20,89 +20,9 @@ export class SampleHistoryComponent {
 
     public lineChartData: any[] = []
     public lineChartLabels: Array<any> = []
-    public lineChartOptions: any = {
-        showAllTooltips: true,
-        labelFontColor: "#666",
-        scaleFontColor: "green",
-        responsive: true,
-        hover: {
-            mode: "nearest",
-            intersec: true,
-        },
-        interaction: {
-            mode: "nearest",
-        },
-        scales: {
-            yAxes: [
-                {
-                    id: 'y-axis-1',
-                    display: true,
-                    position: 'left',
-                    ticks: {
-                        beginAtZero: false,
-                        stepSize: 1,
-                        callback: (label, index, labels) => {
-                            return this.sample['SYS_SAMPLE_CODE'] + '-' + label
-                        }
-                    },
-                }
-            ],
-            xAxes: [{
-                type: 'linear',
-                position: 'bottom',
-                ticks: {
-                    autoSkip: false,
-                    callback: (label, index, labels) => {
-                        return this.lineChartLabels[label - 1]
-                    }
-                }
-            }]
-        },
-        tooltips: {
-            custom: function(tooltip) {
-                if (!tooltip) return
-                tooltip.displayColors = false
-            },
-            callbacks: {
-                title: function(tooltipItem, data) {
-                    return
-                },
-                label: function(tooltipItem, data) {
-                    let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
-                    let terminatedDate = sample.hasOwnProperty('SYS_DATE_TERMINATED') ? new Date(sample.SYS_DATE_TERMINATED).toDateString() : '-'
-                    let completedDate = sample.hasOwnProperty('SYS_DATE_COMPLETED') ? new Date(sample.SYS_DATE_COMPLETED).toDateString() : '-'
-                    let tipList = []
-                    tipList.push(data.labels[tooltipItem.xLabel - 1])
-                    tipList.push(`id: ${sample.id}`)
-                    if (completedDate != '-') {
-                        tipList.push(`completed: ${completedDate}`)
-                    }
-                    if (terminatedDate != '-') {
-                        tipList.push(`terminated: ${terminatedDate}`)
-                    }
-                    return tipList
-                }
-            }
-        },
-        animation: {
-            duration: 1,
-            onComplete: function() {
-                var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillStyle = '#aaa';
+    public lineChartItemList: any[] = []
+    public lineChartOptionList: any[] = []
 
-                this.data.datasets.forEach(function(dataset, i) {
-                    var meta = chartInstance.controller.getDatasetMeta(i);
-                    meta.data.forEach(function(bar, index) {
-                        var data = dataset.data[index]
-                        ctx.fillText(data.scheduledDate, bar._model.x, bar._model.y - 5);
-                    });
-                });
-            }
-        }
-    };
     public lineChartLegend: boolean = true;
     public lineChartType: string = 'line';
 
@@ -117,7 +37,9 @@ export class SampleHistoryComponent {
             "/PROJECT_MANAGEMENT/GENERAL_PROJECT")
             .subscribe(data => {
                 this.entity = data[0]
+
             })
+
     }
 
     getWorkcenterList() {
@@ -141,6 +63,94 @@ export class SampleHistoryComponent {
         }
     }
 
+    getChartOptions(chartItem) {
+        let options = {
+            showAllTooltips: true,
+            labelFontColor: "#666",
+            scaleFontColor: "green",
+            responsive: true,
+            hover: {
+                mode: "nearest",
+                intersec: true,
+            },
+            interaction: {
+                mode: "nearest",
+            },
+            scales: {
+                yAxes: [
+                    {
+                        id: 'y-axis-1',
+                        display: true,
+                        position: 'left',
+                        ticks: {
+                            beginAtZero: false,
+                            stepSize: 1,
+                            callback: (label, index, labels) => {
+                                return this.sample['SYS_SAMPLE_CODE'] + '-' + label
+                            }
+                        },
+                    }
+                ],
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    ticks: {
+                        autoSkip: false,
+                        callback: (label, index, labels) => {
+                            return chartItem['labels'][label - 1]
+                            //return this.lineChartLabels[label - 1]
+                        }
+                    }
+                }]
+            },
+            tooltips: {
+                custom: function(tooltip) {
+                    if (!tooltip) return
+                    tooltip.displayColors = false
+                },
+                callbacks: {
+                    title: function(tooltipItem, data) {
+                        return
+                    },
+                    label: function(tooltipItem, data) {
+                        let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
+                        let terminatedDate = sample.hasOwnProperty('SYS_DATE_TERMINATED') ? new Date(sample.SYS_DATE_TERMINATED).toDateString() : '-'
+                        let completedDate = sample.hasOwnProperty('SYS_DATE_COMPLETED') ? new Date(sample.SYS_DATE_COMPLETED).toDateString() : '-'
+                        let tipList = []
+                        tipList.push(data.labels[tooltipItem.xLabel - 1])
+                        tipList.push(`id: ${sample.id}`)
+                        if (completedDate != '-') {
+                            tipList.push(`completed: ${completedDate}`)
+                        }
+                        if (terminatedDate != '-') {
+                            tipList.push(`terminated: ${terminatedDate}`)
+                        }
+                        return tipList
+                    }
+                }
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillStyle = '#aaa';
+
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index]
+                            ctx.fillText(data.scheduledDate, bar._model.x, bar._model.y - 5);
+                        });
+                    });
+                }
+            }
+        };
+        return options
+    }
+
     getSampleMap() {
         this.entityService.retrieveBySortBy(
             {'SYS_SAMPLE_CODE': this.sample['SYS_SAMPLE_CODE'], 'SYS_ENTITY_TYPE': 'collection'},
@@ -153,12 +163,15 @@ export class SampleHistoryComponent {
                     // only minions without the master
                     if (sample['SYS_TARGET']) {
                         if (!this.sampleMap[sample['SYS_TARGET']]) {
-                            this.sampleMap[sample['SYS_TARGET']] = []
+                            this.sampleMap[sample['SYS_TARGET']] = {}
+                            this.sampleMap[sample['SYS_TARGET']]['samples'] = []
+                            this.sampleMap[sample['SYS_TARGET']]['labels'] = []
                         }
 
                         //console.log("#", sample.SYS_IDENTIFIER, sample.SYS_TARGET)
-                        this.sampleMap[sample['SYS_TARGET']].push(sample)
-                        this.lineChartLabels.push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
+                        this.sampleMap[sample['SYS_TARGET']]['samples'].push(sample)
+                        this.sampleMap[sample['SYS_TARGET']]['labels'].push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
+                        //this.lineChartLabels.push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
                     }
 
                 })
@@ -166,8 +179,13 @@ export class SampleHistoryComponent {
                 console.log("SM", this.sampleMap, this.lineChartLabels)
                 let i = 0
                 Object.keys(this.sampleMap).sort().forEach(key => {
+                    let sampleList = this.sampleMap[key]['samples']
+                    let labelList = this.sampleMap[key]['labels']
+                    let chartItem = {}
+                    chartItem['data'] = []
+                    chartItem['labels'] = this.sampleMap[key]['labels']
                     i += 1
-                    let dataSetLabel = this.sampleMap[key][0][this.sampleMap[key][0]['SYS_LABEL']] + '-' + i
+                    let dataSetLabel = this.sampleMap[key]['samples'][0][this.sampleMap[key]['samples'][0]['SYS_LABEL']] + '-' + i
                     let chartData = {
                         data: [],
                         fill: false,
@@ -177,14 +195,14 @@ export class SampleHistoryComponent {
                         pointStyle: [],
                     }
 
-                    let j = 1
-                    this.sampleMap[key].forEach(sample => {
-                        let scheduledDate = new Date(this.sampleMap[key][j - 1]['SYS_DATE_SCHEDULED'])
+                    let j = 0
+                    sampleList.forEach(sample => {
+                        let scheduledDate = new Date(sample['SYS_DATE_SCHEDULED'])
                         chartData.data.push({
-                            x: j,
+                            x: j + 1,
                             y: i,
-                            sample: this.sampleMap[key][j - 1],
-                            sampleId: this.sampleMap[key][j - 1]['id'],
+                            sample: sample,
+                            sampleId: sample['id'],
                             //scheduledDate: scheduledDate.getFullYear() + '-' + scheduledDate.getMonth() + '-' + scheduledDate.getDate(),
                             scheduledDate: (scheduledDate.getMonth() + 1) + '月' + scheduledDate.getDate() + '日',
                         })
@@ -192,29 +210,33 @@ export class SampleHistoryComponent {
                         let style = ''
                         let radius = 0
                         // completed samples
-                        if (!this.sampleMap[key][j - 1]['SYS_DATE_TERMINATED'] && this.sampleMap[key][j - 1]['SYS_DATE_COMPLETED']) {
+                        if (!sample['SYS_DATE_TERMINATED'] && sample['SYS_DATE_COMPLETED']) {
                             style = 'rect'
                             radius = 8
                         }
                         // next available samples
-                        if (!this.sampleMap[key][j - 1]['SYS_DATE_TERMINATED'] && !this.sampleMap[key][j - 1]['SYS_DATE_COMPLETED']) {
+                        if (!sample['SYS_DATE_TERMINATED'] && !sample['SYS_DATE_COMPLETED']) {
                             style = 'rectRot'
                             radius = 10
                         }
                         // terminated samples
-                        if (this.sampleMap[key][j - 1]['SYS_DATE_TERMINATED']) {
+                        if (sample['SYS_DATE_TERMINATED']) {
                             style = 'triangle'
                             radius = 8
                         }
                         chartData.pointStyle.push(style)
                         chartData.pointRadius.push(radius)
                         j += 1
-
-
                     })
+                    chartItem['data'].push(chartData)
+                    //this.lineChartData.push(chartData)
 
-                    this.lineChartData.push(chartData)
+                    chartItem['options'] = this.getChartOptions(chartItem)
+                    this.lineChartItemList.push(chartItem)
                 })
+
+                console.log("chart", this.lineChartItemList)
+
 
             })
 
