@@ -21,6 +21,7 @@ export class SampleHistoryComponent {
     public lineChartData: any[] = []
     public lineChartLabels: Array<any> = []
     public lineChartOptions: any = {
+        showAllTooltips: true,
         labelFontColor: "#666",
         scaleFontColor: "green",
         responsive: true,
@@ -58,12 +59,28 @@ export class SampleHistoryComponent {
             }]
         },
         tooltips: {
+            custom: function(tooltip) {
+                if (!tooltip) return
+                tooltip.displayColors = false
+            },
             callbacks: {
+                title: function(tooltipItem, data) {
+                    return
+                },
                 label: function(tooltipItem, data) {
                     let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
-                    let terminatedDate = new Date(sample.SYS_DATE_TERMINATED).toDateString()
-                    let completedDate = new Date(sample.SYS_DATE_COMPLETED).toDateString()
-                    return `id: ${sample.id} completed: ${completedDate} terminated: ${terminatedDate}`
+                    let terminatedDate = sample.hasOwnProperty('SYS_DATE_TERMINATED') ? new Date(sample.SYS_DATE_TERMINATED).toDateString() : '-'
+                    let completedDate = sample.hasOwnProperty('SYS_DATE_COMPLETED') ? new Date(sample.SYS_DATE_COMPLETED).toDateString() : '-'
+                    let tipList = []
+                    tipList.push(data.labels[tooltipItem.xLabel - 1])
+                    tipList.push(`id: ${sample.id}`)
+                    if (completedDate != '-') {
+                        tipList.push(`completed: ${completedDate}`)
+                    }
+                    if (terminatedDate != '-') {
+                        tipList.push(`terminated: ${terminatedDate}`)
+                    }
+                    return tipList
                 }
             }
         },
