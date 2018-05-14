@@ -25,6 +25,48 @@ export class SampleHistoryComponent {
 
     public lineChartLegend: boolean = true;
     public lineChartType: string = 'line';
+    public colors: any = {
+        'blue': '38,139,210',
+        'green': '42,161,152',
+        'grey': '148,159,177',
+        'greylight': '220,220,220',
+        'greydark': '77,83,96',
+    }
+    public lineChartColors: any = {
+        'blue': {
+            backgroundColor: 'rgba(' + this.colors.blue + ',0.2)',
+            borderColor: 'rgba(' + this.colors.blue + ',1)',
+            pointBackgroundColor: 'rgba(' + this.colors.blue + ',1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(' + this.colors.blue + ',0.8)'
+        },
+        'green': {
+            backgroundColor: 'rgba(' + this.colors.green + ',0.2)',
+            borderColor: 'rgba(' + this.colors.green + ',1)',
+            pointBackgroundColor: 'rgba(' + this.colors.green + ',1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(' + this.colors.green + ',0.8)'
+        },
+        'grey': {
+            backgroundColor: 'rgba(' + this.colors.greylight + ',0.2)',
+            borderColor: 'rgba(' + this.colors.greylight + ',1)',
+            pointBackgroundColor: 'rgba(' + this.colors.greylight + ',1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(' + this.colors.greylight + ',0.8)'
+        },
+        'greydark': {
+            backgroundColor: 'rgba(' + this.colors.greydark + ',0.2)',
+            borderColor: 'rgba(' + this.colors.greydark + ',1)',
+            pointBackgroundColor: 'rgba(' + this.colors.greydark + ',1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(' + this.colors.greydark + ',1)'
+        }
+
+    }
 
     constructor(
         public dialog: MatDialog,
@@ -193,6 +235,7 @@ export class SampleHistoryComponent {
                         pointHoverRadius: 10,
                         label: dataSetLabel,
                         pointStyle: [],
+                        pointBackgroundColor: [],
                     }
 
                     let j = 0
@@ -209,25 +252,35 @@ export class SampleHistoryComponent {
 
                         let style = ''
                         let radius = 0
+                        let background = ''
                         // completed samples
                         if (!sample['SYS_DATE_TERMINATED'] && sample['SYS_DATE_COMPLETED']) {
                             style = 'rect'
                             radius = 8
+                            background = 'green'
                         }
                         // next available samples
                         if (!sample['SYS_DATE_TERMINATED'] && !sample['SYS_DATE_COMPLETED']) {
                             style = 'rectRot'
                             radius = 10
+                            background = 'blue'
                         }
                         // terminated samples
                         if (sample['SYS_DATE_TERMINATED']) {
                             style = 'triangle'
                             radius = 8
+                            background = 'grey'
                         }
                         chartData.pointStyle.push(style)
                         chartData.pointRadius.push(radius)
+                        chartData.pointBackgroundColor.push(this.lineChartColors[background].pointBackgroundColor)
                         j += 1
                     })
+                    chartItem['colors'] = [
+                        {
+                            borderColor: this.lineChartColors['blue'].borderColor
+                        }
+                    ]
                     chartItem['data'].push(chartData)
                     //this.lineChartData.push(chartData)
 
