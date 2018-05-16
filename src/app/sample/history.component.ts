@@ -24,7 +24,7 @@ export class SampleHistoryComponent {
     public lineChartItemList: any[] = []
     public lineChartOptionList: any[] = []
 
-    public lineChartLegend: boolean = true;
+    public lineChartLegend: boolean = false;
     public lineChartType: string = 'line';
     public colors: any = {
         'blue': '38,139,210',
@@ -51,6 +51,14 @@ export class SampleHistoryComponent {
             pointHoverBorderColor: 'rgba(' + this.colors.green + ',0.8)'
         },
         'grey': {
+            backgroundColor: 'rgba(' + this.colors.grey + ',0.2)',
+            borderColor: 'rgba(' + this.colors.grey + ',1)',
+            pointBackgroundColor: 'rgba(' + this.colors.grey + ',1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(' + this.colors.grey + ',0.8)'
+        },
+        'greylight': {
             backgroundColor: 'rgba(' + this.colors.greylight + ',0.2)',
             borderColor: 'rgba(' + this.colors.greylight + ',1)',
             pointBackgroundColor: 'rgba(' + this.colors.greylight + ',1)',
@@ -251,27 +259,11 @@ export class SampleHistoryComponent {
                             scheduledDate: (scheduledDate.getMonth() + 1) + '月' + scheduledDate.getDate() + '日',
                         })
 
-                        let style = ''
-                        let radius = 0
-                        let background = ''
-                        // completed samples
-                        if (!sample['SYS_DATE_TERMINATED'] && sample['SYS_DATE_COMPLETED']) {
-                            style = 'rect'
-                            radius = 8
-                            background = 'green'
-                        }
-                        // next available samples
-                        if (!sample['SYS_DATE_TERMINATED'] && !sample['SYS_DATE_COMPLETED']) {
-                            style = 'rectRot'
-                            radius = 10
-                            background = 'blue'
-                        }
-                        // terminated samples
-                        if (sample['SYS_DATE_TERMINATED']) {
-                            style = 'triangle'
-                            radius = 8
-                            background = 'grey'
-                        }
+                        let pointStyle = this.getPointStyleBySample(sample)
+                        let style = pointStyle.style
+                        let radius = pointStyle.radius
+                        let background = pointStyle.background
+
                         chartData.pointStyle.push(style)
                         chartData.pointRadius.push(radius)
                         chartData.pointBackgroundColor.push(this.lineChartColors[background].pointBackgroundColor)
@@ -279,7 +271,7 @@ export class SampleHistoryComponent {
                     })
                     chartItem['colors'] = [
                         {
-                            borderColor: this.lineChartColors['blue'].borderColor
+                            borderColor: this.lineChartColors['grey'].borderColor
                         }
                     ]
                     chartItem['data'].push(chartData)
