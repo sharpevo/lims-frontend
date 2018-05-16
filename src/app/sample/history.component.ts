@@ -1,16 +1,27 @@
-import {Component, Input} from '@angular/core'
+import {Component, Input, ViewChild} from '@angular/core'
 import {EntityService} from '../entity/service'
+import {SampleService} from '../models/sample'
 import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from '../workcenter/form.dialog.component'
+import {MatMenuTrigger} from '@angular/material'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/forkJoin'
 
 @Component({
     selector: 'sample-history',
     templateUrl: './history.component.html',
+    styles: [
+        `.chartContextMenuClass {
+            position:absolute;
+        }`
+    ],
 })
 
 export class SampleHistoryComponent {
     @Input() sample: any
     @Input() selectedSampleList: any[]
+    @ViewChild(MatMenuTrigger) chartContextMenu: MatMenuTrigger
+    chartContextMenuStyle: any = {}
     sampleMap: any = {}
     workcenterList: any[] = []
 
@@ -79,7 +90,8 @@ export class SampleHistoryComponent {
 
     constructor(
         public dialog: MatDialog,
-        private entityService: EntityService
+        private entityService: EntityService,
+        public sampleService: SampleService,
     ) {}
 
     ngOnInit() {
@@ -313,8 +325,21 @@ export class SampleHistoryComponent {
 
 
             //this.openNewEntityDialog(sample)
+            console.log(this.lineChartSelectedSampleMap)
         }
-        console.log(this.lineChartSelectedSampleMap)
+    }
+
+    public chartRightClicked(chartItem: any, eventObject: any) {
+        if (eventObject.which == 3) {
+            console.log(eventObject)
+            this.chartContextMenuStyle = {
+                'display': 'block',
+                'left': eventObject.clientX + 'px',
+                'top': eventObject.clientY + 'px',
+            }
+            this.chartContextMenu.openMenu()
+            return false
+        }
     }
 
     getPointStyleBySample(sample: any) {
@@ -358,5 +383,15 @@ export class SampleHistoryComponent {
             this.lineChartData = []
             this.getSampleMap()
         });
+    }
+
+    terminateAll() {
+        Observable.forkJoin(
+            Object.keys(this.lineChartSelectedSampleMap).map(key => {
+                let sample = this.lineChartSelectedSampleMap[key]
+                return this.sampleService.terminateSample(sample)
+            })
+        ).subscribe(data => {
+        })
     }
 }
