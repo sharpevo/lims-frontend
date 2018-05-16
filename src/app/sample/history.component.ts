@@ -18,6 +18,7 @@ export class SampleHistoryComponent {
 
     sampleList: any[] = []
 
+    public lineChartSelectedSampleMap: any = {}
     public lineChartData: any[] = []
     public lineChartLabels: Array<any> = []
     public lineChartItemList: any[] = []
@@ -300,12 +301,54 @@ export class SampleHistoryComponent {
         return Object.keys(this.sampleMap)
     }
 
-    public chartClicked(eventObject: any) {
+    public chartClicked(chartItem: any, eventObject: any) {
         if (eventObject.active.length > 0) {
             let datasetIndex = eventObject.active[0]._datasetIndex
             let sampleIndex = eventObject.active[0]._index
-            let sample = this.lineChartData[datasetIndex].data[sampleIndex].sample
-            this.openNewEntityDialog(sample)
+            let chartid = eventObject.active[0]._chart.id
+            let sample = chartItem.data[datasetIndex].data[sampleIndex].sample
+
+            let pointStyle = this.getPointStyleBySample(sample)
+            if (this.lineChartSelectedSampleMap.hasOwnProperty(sample.id)) {
+                delete this.lineChartSelectedSampleMap[sample.id]
+                chartItem.data[datasetIndex].pointBackgroundColor[sampleIndex] = this.lineChartColors[pointStyle.background].pointBackgroundColor
+                //chartItem.data[datasetIndex].pointRadius[sampleIndex] = pointStyle.radius
+            } else {
+                this.lineChartSelectedSampleMap[sample.id] = sample
+                chartItem.data[datasetIndex].pointBackgroundColor[sampleIndex] = '#000000'
+                //chartItem.data[datasetIndex].pointRadius[sampleIndex] = pointStyle.radius * 1.5
+            }
+
+
+            //this.openNewEntityDialog(sample)
+        }
+        console.log(this.lineChartSelectedSampleMap)
+    }
+
+    getPointStyleBySample(sample: any) {
+        // completed samples
+        if (!sample['SYS_DATE_TERMINATED'] && sample['SYS_DATE_COMPLETED']) {
+            return {
+                style: 'rect',
+                radius: 8,
+                background: 'greylight',
+            }
+        }
+        // next available samples
+        if (!sample['SYS_DATE_TERMINATED'] && !sample['SYS_DATE_COMPLETED']) {
+            return {
+                style: 'rectRot',
+                radius: 10,
+                background: 'greylight',
+            }
+        }
+        // terminated samples
+        if (sample['SYS_DATE_TERMINATED']) {
+            return {
+                style: 'triangle',
+                radius: 8,
+                background: 'greylight',
+            }
         }
     }
 
