@@ -386,12 +386,42 @@ export class SampleHistoryComponent {
     }
 
     terminateAll() {
-        Observable.forkJoin(
-            Object.keys(this.lineChartSelectedSampleMap).map(key => {
-                let sample = this.lineChartSelectedSampleMap[key]
-                return this.sampleService.terminateSample(sample)
+        let sampleIdList = Object.keys(this.lineChartSelectedSampleMap)
+        if (sampleIdList.length > 0) {
+            Observable.forkJoin(
+                sampleIdList.map(key => {
+                    let sample = this.lineChartSelectedSampleMap[key]
+                    return this.sampleService.terminateSample(sample)
+                })
+            ).subscribe(data => {
+                this.refreshChart()
             })
-        ).subscribe(data => {
-        })
+        } else {
+            console.log("No sample selected")
+        }
+    }
+
+    recoverAll() {
+        let sampleIdList = Object.keys(this.lineChartSelectedSampleMap)
+        if (sampleIdList.length > 0) {
+            Observable.forkJoin(
+                sampleIdList.map(key => {
+                    let sample = this.lineChartSelectedSampleMap[key]
+                    return this.sampleService.activateSample(sample)
+                })
+            ).subscribe(data => {
+                this.refreshChart()
+                console.log(data)
+            })
+        } else {
+            console.log("No sample selected")
+        }
+    }
+
+    refreshChart() {
+        this.sampleMap = {}
+        this.lineChartItemList = []
+        this.lineChartSelectedSampleMap = {}
+        this.getSampleMap()
     }
 }

@@ -1,14 +1,7 @@
-
-<div
-    class="chartContextMenuClass"
-    [ngStyle]="chartContextMenuStyle"
-    [matMenuTriggerFor]="chartContextMenu">
-</div>
 <div
     *ngFor="let chartItem of lineChartItemList"
     style="display: block;">
     <canvas baseChart width="200" height="100"
-                (contextmenu)="chartRightClicked(chartItem, $event)"
                 [datasets]="chartItem['data']"
                 [labels]="chartItem['labels']"
                 [options]="chartItem['options']"
@@ -18,16 +11,21 @@
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked(chartItem, $event)"></canvas>
 </div>
+<div
+    fxLayoutGap="10px"
+    fxLayout="row"
+    fxLayoutAlign="start center">
+    <button
+        mat-button
+        [disabled]="(lineChartSelectedSampleMap|json) == '{}'"
+        (click)="terminateAll()">
+        Terminate
+    </button>
+    <button
+        mat-button
+        [disabled]="(lineChartSelectedSampleMap|json) == '{}'"
+        (click)="recoverAll()">
+        Recover
+    </button>
+</div>
 
-<mat-menu
-    #chartContextMenu="matMenu">
-    <button
-        (click)="terminateAll()"
-        mat-menu-item>
-        Terminate all
-    </button>
-    <button
-        mat-menu-item>
-        ITEM 1
-    </button>
-</mat-menu>
