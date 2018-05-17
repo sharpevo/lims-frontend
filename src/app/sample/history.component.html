@@ -1,6 +1,17 @@
 <div
     *ngFor="let chartItem of lineChartItemList"
     style="display: block;">
+    <div
+        fxLayout="row"
+        fxLayoutGap="10px"
+        fxLayoutAlign="end center">
+        <div style="opacity:0.7;font-size:50%">
+            {{targetSampleMap[chartItem['targetSampleId']].id}}
+        </div>
+        <div>
+            {{targetSampleMap[chartItem['targetSampleId']].createdAt | date: 'yyyy.MM.dd hh:mm'}}
+        </div>
+    </div>
     <canvas baseChart width="200" height="100"
                 [datasets]="chartItem['data']"
                 [labels]="chartItem['labels']"

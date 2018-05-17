@@ -28,6 +28,7 @@ export class SampleHistoryComponent {
     entity: any = {}
 
     sampleList: any[] = []
+    targetSampleMap: any[] = []
 
     public lineChartSelectedSampleMap: any = {}
     public lineChartData: any[] = []
@@ -235,6 +236,8 @@ export class SampleHistoryComponent {
                         this.sampleMap[sample['SYS_TARGET']]['samples'].push(sample)
                         this.sampleMap[sample['SYS_TARGET']]['labels'].push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
                         //this.lineChartLabels.push(this.getWorkcenterLabelByIdentifier(sample.SYS_IDENTIFIER))
+                    } else {
+                        this.targetSampleMap[sample.id] = sample
                     }
 
                 })
@@ -247,6 +250,7 @@ export class SampleHistoryComponent {
                     let chartItem = {}
                     chartItem['data'] = []
                     chartItem['labels'] = this.sampleMap[key]['labels']
+                    chartItem['targetSampleId'] = key
                     i += 1
                     let dataSetLabel = this.sampleMap[key]['samples'][0][this.sampleMap[key]['samples'][0]['SYS_LABEL']] + '-' + i
                     let chartData = {
