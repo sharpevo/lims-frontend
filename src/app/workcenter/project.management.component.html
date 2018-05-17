@@ -127,9 +127,22 @@
             <mat-action-row>
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button mat-button color="accent" (click)="openSuspendSampleDialog(sample, true)">Suspend</button>
-                <button mat-button color="primary" (click)="openSuspendSampleDialog(sample,false)">Resume</button>
+                <button mat-button (click)="openRescheduleSampleDialog(sample)">Reschedule</button>
+                <div *ngIf="sample.SYS_SUSPENSION; then resumeButton else suspendButton"></div>
+                <ng-template #suspendButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample, true)">
+                        Suspend
+                    </button>
+                </ng-template>
+                <ng-template #resumeButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample,false)">
+                        Resume
+                    </button>
+                </ng-template>
             </mat-action-row>
         </mat-expansion-panel>
     </mat-accordion>
