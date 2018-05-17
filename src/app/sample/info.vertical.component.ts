@@ -22,6 +22,7 @@ const GENERAL_PROJECT_GENRE_IDENTIFIER = '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'
 })
 export class SampleInfoVerticalComponent {
     @Input() sampleCode
+    @Input() sampleId
     commonAttributeList: any[] = []
     uniqueAttributeList: any[] = []
     uniqueGenre: any = {}
@@ -37,39 +38,52 @@ export class SampleInfoVerticalComponent {
     }
 
     getAttributeList() {
-        this.entityService.retrieveBy({
-            "SYS_SAMPLE_CODE": this.sampleCode
-        })
-            .subscribe(data => {
-                this.sample = data
-                    .sort((a, b) => {
-                        if (a.updatedAt < b.updatedAt) {
-                            return 1
-                        } else {
-                            return -1
-                        }
-                    })
-                    .find(item => {
-                        return item['SYS_IDENTIFIER']
-                            .startsWith(GENERAL_PROJECT_GENRE_IDENTIFIER)
-                    })
-
-                this.uniqueAttributeList = this.sample['SYS_SCHEMA']
-
-                this.getUniqueGenre$().subscribe(genre => {
-                    this.uniqueGenre = genre
-                    if (this.uniqueGenre['SYS_IDENTIFIER'] == GENERAL_PROJECT_GENRE_IDENTIFIER) {
-                        this.commonAttributeList = []
-
-                    } else {
-                        this.getCommonAttribute$()
-                            .subscribe(attributeList => {
-                                this.commonAttributeList = attributeList
-                            })
-
-                    }
+        if (this.sampleCode) {
+            this.entityService.retrieveBy({
+                "SYS_SAMPLE_CODE": this.sampleCode
+            })
+                .subscribe(data => {
+                    this.parseAttributes(data)
                 })
+        } else if (this.sampleId) {
+            this.entityService.retrieveBy({
+                "_id": this.sampleId
+            }).subscribe(data => {
+                this.parseAttributes(data)
+            })
+        }
+    }
 
+    parseAttributes(sampleList: any[]) {
+        this.sample = this.getProjectSample(sampleList)
+        this.uniqueAttributeList = this.sample['SYS_SCHEMA']
+        this.getUniqueGenre$().subscribe(genre => {
+            this.uniqueGenre = genre
+            if (this.uniqueGenre['SYS_IDENTIFIER'] == GENERAL_PROJECT_GENRE_IDENTIFIER) {
+                this.commonAttributeList = []
+
+            } else {
+                this.getCommonAttribute$()
+                    .subscribe(attributeList => {
+                        this.commonAttributeList = attributeList
+                    })
+
+            }
+        })
+    }
+
+    getProjectSample(sampleList: any[]) {
+        return sampleList
+            .sort((a, b) => {
+                if (a.updatedAt < b.updatedAt) {
+                    return 1
+                } else {
+                    return -1
+                }
+            })
+            .find(item => {
+                return item['SYS_IDENTIFIER']
+                    .startsWith(GENERAL_PROJECT_GENRE_IDENTIFIER)
             })
     }
 
