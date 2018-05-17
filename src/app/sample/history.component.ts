@@ -146,11 +146,17 @@ export class SampleHistoryComponent {
                         id: 'y-axis-1',
                         display: true,
                         position: 'left',
+                        scaleLabel: {
+                            display: true,
+                            labelString: this.targetSampleMap[chartItem['targetSampleId']].id
+                        }
                         ticks: {
                             beginAtZero: false,
                             stepSize: 1,
+                            minRotation: 90,
                             callback: (label, index, labels) => {
-                                return this.sample['SYS_SAMPLE_CODE'] + '-' + label
+                                return ''
+                                //return this.sample['SYS_SAMPLE_CODE'] + '-' + label
                             }
                         },
                     }
