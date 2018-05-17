@@ -178,8 +178,8 @@ export class SampleHistoryComponent {
                     },
                     label: function(tooltipItem, data) {
                         let sample = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].sample
-                        let terminatedDate = sample.hasOwnProperty('SYS_DATE_TERMINATED') ? new Date(sample.SYS_DATE_TERMINATED).toDateString() : '-'
-                        let completedDate = sample.hasOwnProperty('SYS_DATE_COMPLETED') ? new Date(sample.SYS_DATE_COMPLETED).toDateString() : '-'
+                        let terminatedDate = sample['SYS_DATE_TERMINATED'] ? new Date(sample.SYS_DATE_TERMINATED).toDateString() : '-'
+                        let completedDate = sample['SYS_DATE_COMPLETED'] ? new Date(sample.SYS_DATE_COMPLETED).toDateString() : '-'
                         let tipList = []
                         tipList.push(data.labels[tooltipItem.xLabel - 1])
                         tipList.push(`id: ${sample.id}`)
