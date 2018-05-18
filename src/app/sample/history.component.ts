@@ -149,7 +149,7 @@ export class SampleHistoryComponent {
                         scaleLabel: {
                             display: true,
                             labelString: this.targetSampleMap[chartItem['targetSampleId']].id
-                        }
+                        },
                         ticks: {
                             beginAtZero: false,
                             stepSize: 1,
