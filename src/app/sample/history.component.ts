@@ -13,7 +13,11 @@ import 'rxjs/add/observable/forkJoin'
     styles: [
         `.chartContextMenuClass {
             position:absolute;
-        }`
+        }
+        .terminatedSample {
+            opacity: 1.0;
+        }
+        `
     ],
 })
 
