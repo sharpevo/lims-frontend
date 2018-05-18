@@ -86,17 +86,23 @@ export class ExcelService {
     _assignAttributeFromExcelToDatabase(
         sampleInExcel: any,
         sampleInDatabase: any,
+        attributeList: any[],
     ) {
-        sampleInDatabase['SYS_SCHEMA'].forEach(schema => {
-            if (sampleInExcel[schema['SYS_LABEL']]) {
+        attributeList.forEach(schema => {
+            //let label = schema['SYS_LABEL']
+            let label = schema[schema['SYS_LABEL']]
+            if (sampleInExcel[label]) {
                 if (schema['SYS_TYPE'] != 'entity') {
-                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[label]
                 } else {
-                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                    sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[label]
                     // TODO: convert value to id
                 }
             }
         })
+        if (sampleInExcel.hasOwnProperty('SYS_GENRE')) {
+            sampleInDatabase['SYS_GENRE'] = sampleInExcel['SYS_GENRE']
+        }
     }
 
     _getSampleIdInExcel(sample: any) {
@@ -114,6 +120,7 @@ export class ExcelService {
                 this._assignAttributeFromExcelToDatabase(
                     sampleInExcel,
                     sampleInDatabase,
+                    attributeInfo['attributeList'],
                 )
                 if (newSampleList) {
                     newSampleList.push(sampleInDatabase)
@@ -133,7 +140,9 @@ export class ExcelService {
     }
 
     _initSample(newSample: any, genre: any, workcenterIdentifier: string) {
-        newSample['SYS_GENRE'] = genre // object rather id, refered in backend
+        if (!newSample.hasOwnProperty('SYS_GENRE')) {
+            newSample['SYS_GENRE'] = genre // object rather id, refered in backend
+        }
         newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
         newSample['SYS_ENTITY_TYPE'] = 'collection'
         let dateString = new Date().toISOString()
@@ -148,6 +157,9 @@ export class ExcelService {
         attributeInfo['attributeList'].forEach(attribute => {
             newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
         })
+        if (sampleInExcel.hasOwnProperty('SYS_GENRE')) {
+            newSample['SYS_GENRE'] = sampleInExcel['SYS_GENRE']
+        }
     }
 
     _issueSampleByExcel(
@@ -228,6 +240,9 @@ export class ExcelService {
                 let label = attribute[attribute['SYS_LABEL']]
                 for (let sampleInExcel of sampleListInExcel) {
                     sampleInExcel[label] = formObject[key]
+                    if (formObject.hasOwnProperty('SYS_GENRE')) {
+                        sampleInExcel['SYS_GENRE'] = formObject['SYS_GENRE']
+                    }
                 }
                 continue
             }

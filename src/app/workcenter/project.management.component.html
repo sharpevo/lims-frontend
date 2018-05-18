@@ -9,14 +9,14 @@
         fxLayout="row"
         fxLayoutAlign="end center">
         <mat-form-field
-            *ngIf="sampleList.length > 0">
+            *ngIf="queryAttributeList.length > 0">
             <mat-select
                 [(ngModel)]="queryCode"
                 placeholder="Attribute">
                 <mat-option
                     value="{{attr.SYS_CODE}}"
-                    *ngFor="let attr of sampleList[0].SYS_SCHEMA">
-                    {{attr.SYS_LABEL}}
+                    *ngFor="let attr of queryAttributeList">
+                    {{attr[attr['SYS_LABEL']]}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -75,6 +75,11 @@
                 </button>
             </div>
         </mat-input-container>
+        <button
+            (click)="exportSample()"
+            mat-icon-button>
+            <mat-icon>file_download</mat-icon>
+        </button>
     </div>
 </div>
 <div
@@ -107,49 +112,42 @@
                 <mat-panel-description>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="space-between center" >
-                <div style="width:700px">
+            <div
+                *ngIf="showHistory[sample.id]"
+                fxLayout="row"
+                fxLayoutAlign="space-between center" >
+                <div fxFlex="70" style="width:700px">
                     <sample-history
                         *ngIf="showHistory[sample.id]"
                         [sample]="sample">
                     </sample-history>
                 </div>
-                <div fxLayout="column" fxLayoutAlign="start start" >
-                    <div
-                        *ngFor="let schema of sample.SYS_SCHEMA"
-                        fxLayout="row" fxLayoutAlign="space-between center" >
-                        <div style="opacity:0.7">
-                            {{schema.SYS_LABEL}}:
-                        </div>
-                        <div style="margin-left: 5px;">
-                            <b>
-                                <span
-                                    *ngIf="schema.SYS_TYPE == 'date'">
-                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
-                                </span>
-                                <span
-                                    *ngIf="schema.SYS_TYPE != 'date'">
-                                        {{sample[schema.SYS_CODE]}}
-                                </span>
-                            </b>
-                        </div>
-                    </div>
-                    <div style="opacity:0.7">
-                        Created:
-                    </div>
-                    <div style="margin-left: 5px;">
-                        <b>
-                            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
-                        </b>
-                    </div>
+                <div fxFlex="5">
                 </div>
+                <sample-info-vertical
+                     fxFlex
+                     [sampleId]="sample.id">
+                </sample-info-vertical>
             </div>
             <mat-action-row>
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button mat-button color="accent" (click)="openSuspendSampleDialog(sample, true)">Suspend</button>
-                <button mat-button color="primary" (click)="openSuspendSampleDialog(sample,false)">Resume</button>
+                <button mat-button (click)="terminateSample(sample)">Terminate</button>
+                <div *ngIf="sample.SYS_SUSPENSION; then resumeButton else suspendButton"></div>
+                <ng-template #suspendButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample, true)">
+                        Suspend
+                    </button>
+                </ng-template>
+                <ng-template #resumeButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample,false)">
+                        Resume
+                    </button>
+                </ng-template>
             </mat-action-row>
         </mat-expansion-panel>
     </mat-accordion>
@@ -181,10 +179,14 @@
     <workcenter-form
         *ngIf="(entity | json) != '{}'"
         [object]="formObject"
+        [(excelAttributeList)]="excelAttributeList"
+        [(boardAttributeList)]="boardAttributeList"
         [workcenter]="entity">
     </workcenter-form>
     <plugin-excel-processor
         *ngIf="(entity | json) != '{}'"
+        [excelAttributeList]="excelAttributeList"
+        [boardAttributeList]="boardAttributeList"
         [formObject]="formObject"
         [hybridObjectMap]="{}"
         [sampleList]="sampleList"
