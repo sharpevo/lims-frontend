@@ -46,6 +46,19 @@ export class UtilService {
         //.map(response => new Blob([response['_body']],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}))
     }
 
+    getSampleDetailInExcel(option: string) {
+        let data = {}
+        let headers = new Headers()
+        headers.append('Content-Type', 'application/json')
+        return this.http.post(
+            `/excelexport${option ? option : ''}`,
+            data,
+            {
+                headers: headers,
+                responseType: ResponseContentType.Blob
+            })
+    }
+
     getExcelUrl(sampleList: any, workcenterId: string) {
         let ids = ''
         sampleList.forEach(sample => {
