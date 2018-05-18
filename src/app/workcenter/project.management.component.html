@@ -127,7 +127,7 @@
             <mat-action-row>
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button mat-button (click)="openRescheduleSampleDialog(sample)">Reschedule</button>
+                <button mat-button (click)="terminateSample(sample)">Terminate</button>
                 <div *ngIf="sample.SYS_SUSPENSION; then resumeButton else suspendButton"></div>
                 <ng-template #suspendButton>
                     <button

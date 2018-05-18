@@ -241,4 +241,12 @@ export class ProjectManagementComponent {
                 this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] + "' has been resumed")
             })
     }
+
+    terminateSample(sample: any) {
+        this.sampleService.terminateSample(sample)
+            .subscribe(data => {
+                this.showHistory[sample.id] = false
+                this.showMessage("Sample '" + sample.SYS_SAMPLE_CODE + "' has been terminated")
+            })
+    }
 }
