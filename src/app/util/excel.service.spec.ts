@@ -313,7 +313,7 @@ describe("ExcelService", () => {
             ]
         }
 
-        service._assignAttributeFromExcelToDatabase(sampleInExcel, sampleInDatabase)
+        service._assignAttributeFromExcelToDatabase(sampleInExcel, sampleInDatabase, sampleInDatabase.SYS_SCHEMA)
         expect(sampleInDatabase['KEY_2']).toEqual(sampleInExcel['key-2'])
         expect(sampleInDatabase['KEY_3']).toEqual(sampleInExcel['key-3'])
         done()

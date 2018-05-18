@@ -9,14 +9,14 @@
         fxLayout="row"
         fxLayoutAlign="end center">
         <mat-form-field
-            *ngIf="sampleList.length > 0">
+            *ngIf="queryAttributeList.length > 0">
             <mat-select
                 [(ngModel)]="queryCode"
                 placeholder="Attribute">
                 <mat-option
                     value="{{attr.SYS_CODE}}"
-                    *ngFor="let attr of sampleList[0].SYS_SCHEMA">
-                    {{attr.SYS_LABEL}}
+                    *ngFor="let attr of queryAttributeList">
+                    {{attr[attr['SYS_LABEL']]}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -75,6 +75,11 @@
                 </button>
             </div>
         </mat-input-container>
+        <button
+            (click)="exportSample()"
+            mat-icon-button>
+            <mat-icon>file_download</mat-icon>
+        </button>
     </div>
 </div>
 <div
@@ -121,15 +126,28 @@
                 </div>
                 <sample-info-vertical
                      fxFlex
-                     [sampleCode]="sample.SYS_SAMPLE_CODE">
+                     [sampleId]="sample.id">
                 </sample-info-vertical>
             </div>
             <mat-action-row>
                 <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
                 <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button mat-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button mat-button color="accent" (click)="openSuspendSampleDialog(sample, true)">Suspend</button>
-                <button mat-button color="primary" (click)="openSuspendSampleDialog(sample,false)">Resume</button>
+                <button mat-button (click)="terminateSample(sample)">Terminate</button>
+                <div *ngIf="sample.SYS_SUSPENSION; then resumeButton else suspendButton"></div>
+                <ng-template #suspendButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample, true)">
+                        Suspend
+                    </button>
+                </ng-template>
+                <ng-template #resumeButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample,false)">
+                        Resume
+                    </button>
+                </ng-template>
             </mat-action-row>
         </mat-expansion-panel>
     </mat-accordion>
