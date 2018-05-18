@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core'
+import {DatePipe} from '@angular/common'
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {MatDialog, MatDialogRef} from '@angular/material'
@@ -7,6 +8,7 @@ import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
+import {UtilService} from '../util/service'
 import {LogCall} from '../log/decorator'
 import {LogService} from '../log/log.service'
 
@@ -56,6 +58,7 @@ export class ProjectManagementComponent {
         private entityService: EntityService,
         public genreService: GenreService,
         public sampleService: SampleService,
+        public utilService: UtilService,
         private snackBar: MatSnackBar,
         public logger: LogService,
     ) {}
@@ -88,6 +91,61 @@ export class ProjectManagementComponent {
                     )
                 }
             })
+    }
+
+    exportSample() {
+        this.utilService.getSampleDetailInExcel(this.getQueryClause())
+            .subscribe(data => {
+                var blob = new Blob([data['_body']], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+
+                const pdfUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+
+                let timestamp = new DatePipe('en-US').transform(new Date(), 'yyyyMMdd.HHmmss')
+                anchor.download = this.entity[this.entity['SYS_LABEL']] + '.' + timestamp + '.xlsx';
+                anchor.href = pdfUrl;
+                anchor.click()
+            })
+    }
+
+    getQueryClause() {
+        let sortStart = ''
+        let sortEnd = ''
+        let whereCondition = {
+            "SYS_DATE_TERMINATED": {
+                "exists": false
+            }
+        }
+        let option = "&sort=-createdAt"
+        if (this.queryCode == '' && this.queryCode != "") {
+            this.showMessage("Please take an attribute.")
+            return
+        }
+        if (this.queryCode != '' && this.queryCode != 'SYS_DATE_COMPLETED') {
+            if (this.queryValue != '') {
+                whereCondition[this.queryCode] = {
+                    "regex": `.*${this.queryValue}.*`
+                }
+            } else {
+                this.showMessage("Please input the value.")
+                return
+            }
+        }
+        if (this.queryCode == 'SYS_DATE_COMPLETED') {
+            if (this.queryDateStart == '' && this.queryDateEnd == '') {
+                this.showMessage("Please input the date.")
+                return
+            }
+            if (this.queryDateStart != '') {
+                sortStart = this.queryDateStart
+            }
+            if (this.queryDateEnd != '') {
+                sortEnd = this.queryDateEnd
+            }
+        }
+
+        option = "?where=" + JSON.stringify(whereCondition) + option
+        return option
     }
 
     @LogCall
