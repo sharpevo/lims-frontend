@@ -16,10 +16,20 @@
     </plugin-index-validator>
 </span>
 <br/>
+<workcenter-form
+    [object]="formObject"
+    [(excelAttributeList)]="excelAttributeList"
+    [(boardAttributeList)]="boardAttributeList"
+    [workcenter]="workcenter">
+</workcenter-form>
+<br/>
 <span
     *ngIf="workcenter">
     <plugin-excel-processor
         *ngIf="workcenter['SYS_WORKCENTER_PLUGIN_EXCEL_PROCESSOR']"
+        [formObject]="formObject"
+        [excelAttributeList]="excelAttributeList"
+        [boardAttributeList]="boardAttributeList"
         [hybridObjectMap]="hybridObjectMap"
         [sampleList]="sampleList"
         [workcenter]="workcenter">

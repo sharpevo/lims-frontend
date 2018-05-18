@@ -39,7 +39,21 @@
             [(ngModel)]="object.TMP_CODE"
             placeholder="CODE"/>
     </mat-input-container>
-	<br/>
+    <mat-input-container class="full-width">
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="object.SYS_LABEL"
+            [value]="SYS_LABEL"
+            placeholder="SYS_LABEL"/>
+    </mat-input-container>
+    <mat-input-container class="full-width">
+        <input
+            matInput
+            type="text"
+            [(ngModel)]="object[object.SYS_LABEL]"
+            placeholder="{{object.SYS_LABEL}}"/>
+    </mat-input-container>
     <mat-form-field>
         <mat-select
             class="full-width"

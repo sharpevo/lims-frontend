@@ -142,7 +142,6 @@
                 <div
                     *ngIf="(workcenter | json) != '{}'">
                     <workcenter-sample-dispatched
-                        *ngIf="sampleList.length > 0"
                         #dispatchedComponent
                         [workcenter]="workcenter"
                         [sampleList]="sampleList">

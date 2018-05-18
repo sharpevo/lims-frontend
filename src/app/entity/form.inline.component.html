@@ -1,6 +1,6 @@
 <div
     fxLayout="row"
-    fxLayoutAlign="start stretch">
+    fxLayoutAlign="space-between center">
     <span
         *ngFor="let attribute of attributeList">
         <span [ngSwitch]="attribute.SYS_TYPE">
@@ -25,7 +25,7 @@
                 </mat-input-container>
             </span>
             <span *ngSwitchCase="'number'">
-                <mat-input-container class="full-width">
+                <mat-form-field class="full-width">
                     <input
                         matInput
                         [required]="attribute.SYS_REQUIRED"
@@ -33,7 +33,12 @@
                         value="{{entity[attribute.SYS_CODE]}}"
                         [(ngModel)]="object[attribute.SYS_CODE]"
                         placeholder="{{attribute[attribute['SYS_LABEL']]}}"/>
-                </mat-input-container>
+                    <span
+                        matSuffix>
+                        {{materialObject.SYS_OUTBOUND_UNIT}}
+                    </span>
+                </mat-form-field>
+
             </span>
             <span *ngSwitchCase="'list'">
                 <mat-form-field>
@@ -86,6 +91,7 @@
             <span *ngSwitchCase="'entity'">
                 <span *ngIf="attribute.SYS_TYPE_ENTITY_REF">
                     <entity-select-list
+                        [(materialObject)]="materialObject"
                         [object]="object"
                         [optionLevel]="optionLevel"
                         [attribute]="attribute"

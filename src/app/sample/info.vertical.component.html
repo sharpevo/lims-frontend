@@ -1,0 +1,178 @@
+
+<div
+    *ngIf="sample"
+    fxLayout="column"
+    fxLayoutAlign="start start" >
+    <h4 *ngIf="commonAttributeList.length > 0">
+        Common
+    </h4>
+    <div
+        *ngFor="let schema of commonAttributeList"
+        fxLayout="row" fxLayoutAlign="space-between center" >
+        <div style="opacity:0.7">
+            {{schema[schema['SYS_LABEL']]}}:
+        </div>
+        <div style="margin-left: 5px;">
+            <b>
+                <span
+                    *ngIf="schema.SYS_TYPE == 'date'">
+                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                </span>
+                <span
+                    *ngIf="schema.SYS_TYPE != 'date'">
+                        {{sample[schema.SYS_CODE]}}
+                </span>
+            </b>
+        </div>
+    </div>
+    <h4 *ngIf="uniqueAttributeList.length > 0">
+        {{uniqueGenre[uniqueGenre['SYS_LABEL']]}}
+    </h4>
+    <div
+        *ngFor="let schema of uniqueAttributeList"
+        fxLayout="row" fxLayoutAlign="space-between center" >
+        <div style="opacity:0.7">
+            {{schema['SYS_LABEL']}}:
+        </div>
+        <div style="margin-left: 5px;">
+            <b>
+                <span
+                    *ngIf="schema.SYS_TYPE == 'date'">
+                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                </span>
+                <span
+                    *ngIf="schema.SYS_TYPE != 'date'">
+                        {{sample[schema.SYS_CODE]}}
+                </span>
+            </b>
+        </div>
+    </div>
+    <div style="opacity:0.7">
+        Created:
+    </div>
+    <div style="margin-left: 5px;">
+        <b>
+            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
+        </b>
+    </div>
+    <mat-list>
+    <mat-divider></mat-divider>
+    </mat-list>
+    <div style="opacity:0.7">
+        SUSPENSION LOG:
+    </div>
+    <br/>
+    <div
+        fxLayout="column" fxLayoutAlign="start star"
+        *ngFor="let resumption of sample.SYS_RESUMPTION">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div style="opacity:0.7">
+                <mat-icon>pause</mat-icon>
+            </div>
+            <div
+                fxLayout="column" fxLayoutAlign="start start">
+                <div
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
+                        <span *ngSwitchCase="'REMARK'">
+                            <b>
+                                {{resumption.SUSPENSION[key]}}
+                            </b>
+                        </span>
+                        <span *ngSwitchCase="'OPERATOR'">
+                            <b>
+                                <entity-tostring
+                                    [entityId]="resumption.SUSPENSION[key]">
+                                </entity-tostring>
+                            </b>
+                        </span>
+                        <span *ngSwitchCase="'DATE'">
+                            <b>
+                                {{resumption.SUSPENSION[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </b>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div style="opacity:0.7">
+                <mat-icon>play_arrow</mat-icon>
+            </div>
+            <div
+                fxLayout="column" fxLayoutAlign="start start">
+                <div
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div
+                        *ngIf="key != 'SUSPENSION'"
+                        style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
+                        <b>
+                            <span *ngSwitchCase="'REMARK'">
+                                {{resumption[key]}}
+                            </span>
+                            <span *ngSwitchCase="'OPERATOR'">
+                                <entity-tostring
+                                    [entityId]="resumption[key]">
+                                </entity-tostring>
+                            </span>
+                            <span *ngSwitchCase="'DATE'">
+                                {{resumption[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </span>
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <br/>
+    <div *ngIf="sample.SYS_SUSPENSION">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div style="opacity:0.7">
+                <mat-icon>pause</mat-icon>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start start" >
+                <div
+                    *ngFor="let key of ['REMARK', 'OPERATOR', 'DATE']"
+                    fxLayout="row"
+                    fxLayoutAlign="start start">
+                    <div style="opacity:0.7">
+                        {{key}}:
+                    </div>
+                    <div
+                        style="margin-left:5px;"
+                        [ngSwitch]="key">
+                        <b>
+                            <span *ngSwitchCase="'REMARK'">
+                                {{sample.SYS_SUSPENSION[key]}}
+                            </span>
+                            <span *ngSwitchCase="'OPERATOR'">
+                                <entity-tostring
+                                    [entityId]="sample.SYS_SUSPENSION[key]">
+                                </entity-tostring>
+                            </span>
+                            <span *ngSwitchCase="'DATE'">
+                                {{sample.SYS_SUSPENSION[key] | date: 'yyyy.MM.dd HH:mm'}}
+                            </span>
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -91,6 +91,11 @@ import {LogPublisherService} from './log/publisher.service'
 
 import {InjectorContainerModule} from './injector.module'
 
+import {ExcelService} from './util/excel.service'
+import {WorkcenterFormComponent} from './workcenter/form.component'
+import {SampleInfoVerticalComponent} from './sample/info.vertical.component'
+import {MaterialAutocompleteComponent} from './material/autocomplete.component'
+
 @NgModule({
     declarations: [
         ObjectKeysPipe,
@@ -137,6 +142,9 @@ import {InjectorContainerModule} from './injector.module'
         MaterialOverviewComponent,
         SampleOverviewComponent,
         KPIComponent,
+        WorkcenterFormComponent,
+        SampleInfoVerticalComponent,
+        MaterialAutocompleteComponent,
     ],
     entryComponents: [
         GenreFormDialog,
@@ -198,6 +206,7 @@ import {InjectorContainerModule} from './injector.module'
         UserInfoService,
         LogService,
         LogPublisherService,
+        ExcelService,
     ],
     bootstrap: [AppComponent]
 })

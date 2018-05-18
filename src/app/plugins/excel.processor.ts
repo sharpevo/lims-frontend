@@ -9,6 +9,7 @@ import {Observable} from 'rxjs/Observable'
 import {UserInfoService} from '../util/user.info.service'
 import {LogService} from '../log/log.service'
 import {LogCall} from '../log/decorator'
+import {ExcelService} from '../util/excel.service'
 
 @Component({
     selector: 'plugin-excel-processor',
@@ -19,6 +20,9 @@ export class PluginExcelProcessorComponent {
     @Input() workcenter
     @Input() sampleList
     @Input() hybridObjectMap
+    @Input() formObject
+    @Input() excelAttributeList
+    @Input() boardAttributeList
     @ViewChild('excelUploader') excelUploader
     selectedSampleList: any[] = []
     excelResultSample: any[] = []
@@ -39,6 +43,7 @@ export class PluginExcelProcessorComponent {
         private router: Router,
         private userInfoService: UserInfoService,
         public logger: LogService,
+        public excelService: ExcelService,
     ) {
         this.userInfo = this.userInfoService.getUserInfo()
     }
@@ -49,42 +54,20 @@ export class PluginExcelProcessorComponent {
     }
 
     generateParentMap() {
-        // Get the genre of given workcenter
-        this.entityService.retrieveGenre(this.workcenter.id)
-            .subscribe(data => {
-
-                // Get the attributes from the first genre
-                this.genreService.retrieveAttribute(data[0].id)
-                    .subscribe(attributeList => {
-                        this.workcenterAttributeList = attributeList
-                        this.workcenterAttributeList.forEach(attr => {
-
-                            // Process BoM or Routing
-                            if (attr.SYS_TYPE == 'entity' && !attr.SYS_TYPE_ENTITY_REF) {
-                                this.parentMapKey = attr.SYS_CODE
-                                this.parentMapFloor = attr.SYS_FLOOR_ENTITY_TYPE
-                                this.parentMap[attr.SYS_CODE] = {}
-
-                                // Get the entities under the BoM, note that the empty string indicates
-                                // the "object" entity type which is implemented in the entityService.
-                                this.entityService.retrieveEntity(attr.SYS_TYPE_ENTITY.id, "")
-                                    .subscribe(data => {
-                                        this.logger.debug("ExcelPlugin: Get BoM or Routing", data)
-                                        data.forEach(material => {
-                                            this.parentMap[attr.SYS_CODE][material.id] = {}
-                                            material['SYS_SCHEMA'].forEach(materialAttr => {
-                                                this.parentMap[attr.SYS_CODE][material.id][materialAttr.SYS_CODE] =
-                                                    material[materialAttr.SYS_CODE]
-                                            })
-                                            // Manually append the SYS_FLOOR_ENTITY_TYPE in BoM/Routing entry
-                                            this.parentMap[attr.SYS_CODE][material.id]['SYS_FLOOR_ENTITY_TYPE'] =
-                                                attr.SYS_FLOOR_ENTITY_TYPE
-                                        })
-                                    })
-                            }
-                        })
+        this.excelService.getWorkcenterAttributeListFromFirstGenre$(this.workcenter.id)
+            .subscribe(attributeList => {
+                this.workcenterAttributeList = attributeList
+                this.excelService.getParentMap$(attributeList)
+                    .subscribe(parentMap => {
+                        this.parentMap = parentMap
+                        this.parentMapKey = Object.keys(parentMap)[0]
+                        let attributeKey = Object.keys(this.parentMap[this.parentMapKey])[0]
+                        this.parentMapFloor =
+                            this.parentMap[this.parentMapKey][attributeKey]['SYS_FLOOR_ENTITY_TYPE']
                     })
+
             })
+
     }
 
     @LogCall
@@ -113,7 +96,7 @@ export class PluginExcelProcessorComponent {
             if (template) {
                 hybridSampleList = []
             }
-            this.utilService.getExcelFile(hybridSampleList, this.workcenter.id)
+            this.utilService.getExcelFile(hybridSampleList, this.workcenter.id, this.excelAttributeList)
                 .subscribe(data => {
                     var blob = new Blob([data['_body']], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
                     //var file = new File([blob], 'report.xlsx',{ type: 'application/vnd.ms-excel' } )
@@ -135,6 +118,155 @@ export class PluginExcelProcessorComponent {
 
     @LogCall
     updateExcel() {
+        this.excelService.updateSampleInExcelFromFormObject(
+            this.excelResultSample,
+            this.formObject,
+            this.boardAttributeList,
+        )
+
+        let issueSample = !this.excelResultSample[0]['IDENTIFIER']
+        let parentMap = {}
+
+        parentMap = this.formObject['TMP_PARENT_MAP']
+
+        let targetOutput = []
+        let newSampleList = []
+        this.excelService.postSampleByExcel$(
+            this.workcenter,
+            this.excelResultSample,
+            parentMap,
+            this.boardAttributeList.concat(this.excelAttributeList),
+            newSampleList,
+        )
+            .subscribe(
+                data => {
+                    this.logger.debug("UpdateExcel Response", data)
+                    targetOutput.push(data)
+                },
+                err => {
+                },
+                () => {
+                    this.logger.warn("targetoutput", targetOutput)
+                    this.sampleService.sendMessageToDingTalk$(
+                        issueSample,
+                        newSampleList,
+                        this.excelResultSample,
+                        this.workcenterAttributeList,
+                        targetOutput,
+                        this.workcenter,
+                    ).subscribe()
+
+                    this.router.navigate(['/redirect' + this.router.url])
+                }
+            )
+
+    }
+
+    @LogCall
+    updateExcel0() {
+        let sampleListInExcel = this.excelResultSample
+        let parentMap = this.parentMap
+        let workcenterAttributeList = this.workcenterAttributeList
+
+        let targetOutput = []
+        let newSampleList = []
+        Observable.forkJoin(
+            sampleListInExcel.map(sampleInExcel => {
+                let sampleInExcelId = sampleInExcel['IDENTIFIER']
+                if (sampleInExcelId) {
+
+                    this.logger.debug("Submit Sample", sampleInExcel)
+
+                    return this.entityService.retrieveBy({
+                        "_id": sampleInExcelId,
+                    })
+                        .mergeMap(sampleInExcelIdList => {
+                            this.logger.debug("Get sample by ID", sampleInExcelIdList)
+                            let sampleInDatabase = sampleInExcelIdList[0]
+
+                            // copy values in excel to the samples in database by SYS_LABEL
+                            sampleInDatabase['SYS_SCHEMA'].forEach(schema => {
+                                if (sampleInExcel[schema['SYS_LABEL']]) {
+                                    if (schema['SYS_TYPE'] != 'entity') {
+                                        sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                                    } else {
+                                        sampleInDatabase[schema['SYS_CODE']] = sampleInExcel[schema['SYS_LABEL']]
+                                        // TODO: convert value to id
+                                    }
+                                }
+                            })
+
+                            newSampleList.push(sampleInDatabase)
+                            return this.sampleService.submitSample$(
+                                this.workcenter,
+                                sampleInDatabase,
+                                sampleInDatabase,
+                                {
+                                    "attributeList": workcenterAttributeList,
+                                    "parentMap": parentMap,
+                                }
+                            )
+                        })
+                } else {
+
+                    this.logger.debug("Issue Sample", sampleInExcel)
+
+                    if (this.workcenter.SYS_IDENTIFIER != "/PROJECT_MANAGEMENT/GENERAL_PROJECT") {
+                        this.logger.error("Not allowed to upload samples at this workcenter", this.workcenter.SYS_IDENTIFIER)
+                        return
+                    }
+
+                    let newSample = {}
+                    workcenterAttributeList.forEach(attribute => {
+                        newSample[attribute['SYS_CODE']] = sampleInExcel[attribute[attribute['SYS_LABEL']]]
+                    })
+
+                    return this.entityService.retrieveGenre(this.workcenter.id)
+                        .mergeMap(workcenterGenreList => {
+                            newSample['SYS_GENRE'] = workcenterGenreList[0]
+                            newSample['SYS_LABEL'] = 'SYS_SAMPLE_CODE'
+                            newSample['SYS_ENTITY_TYPE'] = 'collection'
+                            newSample['SYS_IDENTIFIER'] = this.workcenter['SYS_IDENTIFIER'] +
+                                '/' +
+                                newSample['SYS_SAMPLE_CODE'] + '.' +
+                                new DatePipe('en-US').transform(new Date(), 'yyyyMMddHHmmss')
+
+                            newSampleList.push(newSample)
+                            return this.sampleService.createObject$(
+                                newSample,
+                                {
+                                    "attributeList": workcenterAttributeList,
+                                    "parentMap": parentMap,
+                                },
+                                true)
+                        })
+                }
+            })
+        )
+            .subscribe(
+                data => {
+                    this.logger.debug("UpdateExcel Response", data)
+                    targetOutput.push(data)
+                },
+                err => {
+                },
+                () => {
+                    this.sampleService.sendMessageToDingTalk$(
+                        !sampleListInExcel[0]['IDENTIFIER'], // issueSample
+                        newSampleList,
+                        sampleListInExcel,
+                        workcenterAttributeList,
+                        targetOutput,
+                        this.workcenter,
+                    ).subscribe()
+
+                    this.router.navigate(['/redirect' + this.router.url])
+                }
+            )
+    }
+
+    @LogCall
+    updateExcel1() {
 
         // update the parentMap according to the excel if another sheets provides some.
         if (this.excelResultGroup.length > 0) {

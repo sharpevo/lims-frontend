@@ -308,6 +308,11 @@ export class SampleService {
         return this.entityService.update(sample)
     }
 
+    activateSample(sample: any): any {
+        sample['SYS_DATE_TERMINATED'] = ''
+        return this.entityService.update(sample)
+    }
+
     suspendSample(sample: any, remark?: string): Observable<any> {
         sample['SYS_SUSPENSION'] = {
             DATE: new Date(),
@@ -696,7 +701,7 @@ export class SampleService {
                     sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
                     sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
-                    sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED') ? object['SYS_DATE_COMPLETED'] : new Date()
+                    sample['SYS_DATE_COMPLETED'] = new Date()
                     sample['SYS_ENTITY_TYPE'] = 'collection'
                     return this.createObject$(sample, attributeInfo, false)
                 })
@@ -755,7 +760,7 @@ export class SampleService {
                     sample['SYS_LABEL'] = selectedSample['SYS_LABEL']
                     sample[sample['SYS_LABEL']] = selectedSample[selectedSample['SYS_LABEL']]
 
-                    sample['SYS_DATE_COMPLETED'] = object.hasOwnProperty('SYS_DATE_COMPLETED') ? object['SYS_DATE_COMPLETED'] : new Date()
+                    sample['SYS_DATE_COMPLETED'] = new Date()
                     sample['SYS_ENTITY_TYPE'] = 'collection'
                     this.createObject(sample, attributeInfo, false)
                 })

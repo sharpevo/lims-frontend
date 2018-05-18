@@ -1,0 +1,11 @@
+<mat-form-field>
+    <input matInput placeholder="{{placeholder}}" [matAutocomplete]="auto" [formControl]="materialCtrl">
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+            *ngFor="let material of filteredMaterialList$ | async"
+            (click)="onMaterialClick(material)"
+            [value]="material[material['SYS_LABEL']]">
+            <span>{{ material[material['SYS_LABEL']] }}</span>
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

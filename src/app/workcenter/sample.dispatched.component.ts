@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable'
     selector: 'workcenter-sample-dispatched',
     templateUrl: './sample.dispatched.component.html',
 })
-export class WorkcenterSampleDispatchedComponent{
+export class WorkcenterSampleDispatchedComponent {
     @Input() sampleList
     @Input() callback
     @Input() checkedEntityList
@@ -16,19 +16,23 @@ export class WorkcenterSampleDispatchedComponent{
     dispatchedSampleList: any[] = []
     sampleCount: number = 0
     hybridObjectMap: any = {}
+    formObject: any = {}
+
+    boardAttributeList: any[] = []
+    excelAttributeList: any[] = []
 
     constructor(
         private entityService: EntityService,
         private sampleService: SampleService,
-    ){}
+    ) {}
 
-    ngOnInit(){
+    ngOnInit() {
         this.getSampleList()
     }
 
-    getSampleList(){
+    getSampleList() {
         this.dispatchedSampleList = []
-        if (!this.sampleList){
+        if (!this.sampleList) {
             return
         }
 
@@ -39,35 +43,36 @@ export class WorkcenterSampleDispatchedComponent{
             chainedSampleObs.push(
                 this.entityService.retrieveBy({
                     'SYS_TARGET': d['SYS_TARGET'],
-                    'sort': 'SYS_ORDER'})
+                    'sort': 'SYS_ORDER'
+                })
             )
         })
 
         Observable
-        .forkJoin(chainedSampleObs)
-        .subscribe((data: any[][]) => {
+            .forkJoin(chainedSampleObs)
+            .subscribe((data: any[][]) => {
 
-            for (let i=0; i<data.length; i++){
-                let currentSample = this.sampleList[i]
-                let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
+                for (let i = 0; i < data.length; i++) {
+                    let currentSample = this.sampleList[i]
+                    let previousSample = this.sampleService.parsePreviousSample(this.sampleList[i], data[i])
 
-                if (currentSample[operatorCode] &&
-                    !currentSample['SYS_DATE_TERMINATED'] &&
+                    if (currentSample[operatorCode] &&
+                        !currentSample['SYS_DATE_TERMINATED'] &&
                         !currentSample['SYS_DATE_COMPLETED']) {
-                    if (previousSample.id == currentSample.id){
-                        currentSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
-                        currentSample['TMP_NEXT_SAMPLE_INDEX'] = i
-                        this.dispatchedSampleList.push(currentSample)
-                    } else {
-                        previousSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
-                        previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
-                        this.dispatchedSampleList.push(previousSample)
+                        if (previousSample.id == currentSample.id) {
+                            currentSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+                            currentSample['TMP_NEXT_SAMPLE_INDEX'] = i
+                            this.dispatchedSampleList.push(currentSample)
+                        } else {
+                            previousSample['TMP_NEXT_SAMPLE_ID'] = currentSample.id
+                            previousSample['TMP_NEXT_SAMPLE_INDEX'] = i
+                            this.dispatchedSampleList.push(previousSample)
+                        }
                     }
                 }
-            }
 
-            this.sampleCount = this.dispatchedSampleList.length
-        })
+                this.sampleCount = this.dispatchedSampleList.length
+            })
 
     }
 

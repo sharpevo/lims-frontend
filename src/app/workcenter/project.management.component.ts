@@ -1,14 +1,19 @@
 import {Component, Input} from '@angular/core'
+import {DatePipe} from '@angular/common'
 import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
 import {MatDialog, MatDialogRef} from '@angular/material'
 import {SampleFormDialog} from './form.dialog.component'
 import {MatSnackBar} from '@angular/material'
 import {EditPMSampleDialog} from './project.management.edit.dialog'
 import {SuspendSampleDialog} from './project.management.suspend.dialog'
 import {SampleService} from '../models/sample'
+import {UtilService} from '../util/service'
 import {LogCall} from '../log/decorator'
 import {LogService} from '../log/log.service'
 
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/forkJoin'
 import 'rxjs/add/operator/filter'
 
 @Component({
@@ -39,15 +44,21 @@ export class ProjectManagementComponent {
     sampleList: any[] = []
     showHistory: any = {}
     skip = 0
+    queryAttributeList: any[] = []
     queryCode: string = ''
     queryValue: string = ''
     queryDateStart: string = ''
     queryDateEnd: string = ''
+    formObject: any = {}
+    excelAttributeList: any[] = []
+    boardAttributeList: any[] = []
 
     constructor(
         public dialog: MatDialog,
         private entityService: EntityService,
+        public genreService: GenreService,
         public sampleService: SampleService,
+        public utilService: UtilService,
         private snackBar: MatSnackBar,
         public logger: LogService,
     ) {}
@@ -58,7 +69,83 @@ export class ProjectManagementComponent {
             .subscribe(data => {
                 this.entity = data[0]
                 this.getSampleList()
+                this.getQueryAttributeList()
             })
+    }
+
+    getQueryAttributeList() {
+        this.genreService.retrieveBy({
+            'SYS_ENTITY': this.entity.id,
+        })
+            .mergeMap(genreList => {
+                return Observable.forkJoin(
+                    genreList.map(genre => {
+                        return this.genreService.retrieveAttribute(genre.id)
+                    })
+                )
+            })
+            .subscribe((data: any[][]) => {
+                for (let attributeList of data) {
+                    this.queryAttributeList = this.queryAttributeList.concat(
+                        attributeList.filter(attribute => attribute['SYS_TYPE'] != 'entity')
+                    )
+                }
+            })
+    }
+
+    exportSample() {
+        this.utilService.getSampleDetailInExcel(this.getQueryClause())
+            .subscribe(data => {
+                var blob = new Blob([data['_body']], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+
+                const pdfUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+
+                let timestamp = new DatePipe('en-US').transform(new Date(), 'yyyyMMdd.HHmmss')
+                anchor.download = this.entity[this.entity['SYS_LABEL']] + '.' + timestamp + '.xlsx';
+                anchor.href = pdfUrl;
+                anchor.click()
+            })
+    }
+
+    getQueryClause() {
+        let sortStart = ''
+        let sortEnd = ''
+        let whereCondition = {
+            "SYS_DATE_TERMINATED": {
+                "exists": false
+            }
+        }
+        let option = "&sort=-createdAt"
+        if (this.queryCode == '' && this.queryCode != "") {
+            this.showMessage("Please take an attribute.")
+            return
+        }
+        if (this.queryCode != '' && this.queryCode != 'SYS_DATE_COMPLETED') {
+            if (this.queryValue != '') {
+                whereCondition[this.queryCode] = {
+                    "regex": `.*${this.queryValue}.*`
+                }
+            } else {
+                this.showMessage("Please input the value.")
+                return
+            }
+        }
+        if (this.queryCode == 'SYS_DATE_COMPLETED') {
+            if (this.queryDateStart == '' && this.queryDateEnd == '') {
+                this.showMessage("Please input the date.")
+                return
+            }
+            if (this.queryDateStart != '') {
+                sortStart = this.queryDateStart
+            }
+            if (this.queryDateEnd != '') {
+                sortEnd = this.queryDateEnd
+            }
+        }
+
+        option = "?where=" + JSON.stringify(whereCondition) + option
+        return option
     }
 
     @LogCall
@@ -210,6 +297,14 @@ export class ProjectManagementComponent {
         this.sampleService.resumeSample(sample, remark)
             .subscribe(data => {
                 this.showMessage("Sample '" + data['SYS_SAMPLE_CODE'] + "' has been resumed")
+            })
+    }
+
+    terminateSample(sample: any) {
+        this.sampleService.terminateSample(sample)
+            .subscribe(data => {
+                this.showHistory[sample.id] = false
+                this.showMessage("Sample '" + sample.SYS_SAMPLE_CODE + "' has been terminated")
             })
     }
 }
