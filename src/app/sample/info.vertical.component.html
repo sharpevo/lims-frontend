@@ -1,6 +1,18 @@
 
+<mat-accordion>
+    <mat-expansion-panel
+        *ngFor="let sample of projectSampleList$ | async">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{sample.SYS_SAMPLE_CODE}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{sample.createdAt | date: 'yyyy.MM.dd'}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <ng-template matExpansionPanelContent>
 <div
-    *ngIf="sample"
     fxLayout="column"
     fxLayoutAlign="start start" >
     <h4 *ngIf="commonAttributeList.length > 0">
@@ -25,11 +37,11 @@
             </b>
         </div>
     </div>
-    <h4 *ngIf="uniqueAttributeList.length > 0">
-        {{uniqueGenre[uniqueGenre['SYS_LABEL']]}}
+    <h4 *ngIf="getUniqueGenreBySample$(sample) | async as genre">
+        {{genre[genre['SYS_LABEL']]}}
     </h4>
     <div
-        *ngFor="let schema of uniqueAttributeList"
+        *ngFor="let schema of getUniqueAttributeListBySample$(sample) | async"
         fxLayout="row" fxLayoutAlign="space-between center" >
         <div style="opacity:0.7">
             {{schema['SYS_LABEL']}}:
@@ -176,3 +188,6 @@
         </div>
     </div>
 </div>
+</ng-template>
+    </mat-expansion-panel>
+</mat-accordion>
