@@ -4,10 +4,10 @@
         *ngFor="let sample of projectSampleList$ | async">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                {{sample.SYS_SAMPLE_CODE}}
+                {{sample.createdAt | date: 'yyyy.MM.dd'}}
             </mat-panel-title>
             <mat-panel-description>
-                {{sample.createdAt | date: 'yyyy.MM.dd'}}
+                {{sample.createdAt | date: 'hh:mm'}}
             </mat-panel-description>
         </mat-expansion-panel-header>
 
