@@ -23,6 +23,11 @@ const GENERAL_PROJECT_GENRE_IDENTIFIER = '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'
 export class SampleInfoVerticalComponent {
     @Input() sampleCode
     @Input() sampleId
+    commonGenreId: string
+    commonAttributeList$: Observable<any[]>
+    projectSampleList$: Observable<any[]>
+    attributeListMap: any = {}
+
     commonAttributeList: any[] = []
     uniqueAttributeList: any[] = []
     uniqueGenre: any = {}
@@ -34,75 +39,65 @@ export class SampleInfoVerticalComponent {
     ) {}
 
     ngOnInit() {
-        this.getAttributeList()
+        this.projectSampleList$ = this.getProjectSampleList$()
+        this.getCommonAttributeList$()
+            .subscribe(data => {
+                this.commonAttributeList = data
+            })
     }
 
-    getAttributeList() {
+    getSampleList$() {
         if (this.sampleCode) {
-            this.entityService.retrieveBy({
+            return this.entityService.retrieveBy({
                 "SYS_SAMPLE_CODE": this.sampleCode
             })
-                .subscribe(data => {
-                    this.parseAttributes(data)
-                })
         } else if (this.sampleId) {
-            this.entityService.retrieveBy({
+            return this.entityService.retrieveBy({
                 "_id": this.sampleId
-            }).subscribe(data => {
-                this.parseAttributes(data)
             })
+        } else {
+            return Observable.of({})
         }
     }
 
-    parseAttributes(sampleList: any[]) {
-        this.sample = this.getProjectSample(sampleList)
-        this.uniqueAttributeList = this.sample['SYS_SCHEMA']
-        this.getUniqueGenre$().subscribe(genre => {
-            this.uniqueGenre = genre
-            if (this.uniqueGenre['SYS_IDENTIFIER'] == GENERAL_PROJECT_GENRE_IDENTIFIER) {
-                this.commonAttributeList = []
-
-            } else {
-                this.getCommonAttribute$()
-                    .subscribe(attributeList => {
-                        this.commonAttributeList = attributeList
+    getProjectSampleList$() {
+        return this.getSampleList$()
+            .map(data => {
+                return data
+                    .sort((a, b) => {
+                        if (a.updatedAt < b.updatedAt) {
+                            return 1
+                        } else {
+                            return -1
+                        }
                     })
-
-            }
-        })
-    }
-
-    getProjectSample(sampleList: any[]) {
-        return sampleList
-            .sort((a, b) => {
-                if (a.updatedAt < b.updatedAt) {
-                    return 1
-                } else {
-                    return -1
-                }
-            })
-            .find(item => {
-                return item['SYS_IDENTIFIER']
-                    .startsWith(GENERAL_PROJECT_GENRE_IDENTIFIER)
+                    .filter(item => {
+                        return item['SYS_IDENTIFIER']
+                            .startsWith(GENERAL_PROJECT_GENRE_IDENTIFIER)
+                    })
             })
     }
 
-    getUniqueGenre$(): Observable<any> {
-        return this.genreService.retrieveBy({'_id': this.sample['SYS_GENRE']})
-            .map(genreList => genreList[0])
-    }
-
-    getCommonAttribute$(): Observable<any[]> {
+    getCommonAttributeList$() {
         return this.genreService.retrieveBy({
             'SYS_IDENTIFIER': GENERAL_PROJECT_GENRE_IDENTIFIER,
         })
             .mergeMap(genreList => {
                 let genre = genreList[0]
-                if (genre.id == this.sample['SYS_GENRE']) {
-                    return Observable.of([])
-                } else {
-                    return this.genreService.retrieveAttribute(genre.id)
-                }
+                this.commonGenreId = genre.id
+                return this.genreService.retrieveAttribute(genre.id)
             })
     }
+
+    getUniqueAttributeListBySample$(sample: any) {
+        if (!this.attributeListMap[sample.id]) {
+            if (sample['SYS_GENRE']['id'] == this.commonGenreId) {
+                this.attributeListMap[sample.id] = Observable.of([])
+            } else {
+                this.attributeListMap[sample.id] = Observable.of(sample['SYS_SCHEMA'])
+            }
+        }
+        return this.attributeListMap[sample.id]
+    }
+
 }
