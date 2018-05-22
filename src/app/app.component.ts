@@ -28,7 +28,47 @@ export class AppComponent {
     showMessage: boolean = true
     taskCompletedList: any[] = [
         {
-            title: "#232 修复任务下达搜索bug",
+            title: "#230 根据质量管理部模板更新属性 [b93a4b1, 9841e82]",
+            date: "2018-05-18",
+            highlight: true,
+        },
+        {
+            title: "#252 样品总表(部分测试) [f39ba43, 708798e]",
+            date: "2018-05-18",
+            highlight: true,
+        },
+        {
+            title: "#257 重新设计样品重下达 [-]",
+            date: "2018-05-15",
+            highlight: true,
+        },
+        {
+            title: "#255 重构SampleHistoryComponent [a04fceb7]",
+            date: "2018-05-14",
+            highlight: true,
+        },
+        {
+            title: "#251 补全方式实时增加物料 [4b4c933]",
+            date: "2018-05-11",
+            highlight: true,
+        },
+        {
+            title: "#189 液相多重实验分开下达 [0be8929]",
+            date: "2018-04-27",
+            highlight: true,
+        },
+        {
+            title: "#244 同Workcenter多BoM支持 [d2b089]",
+            date: "2018-04-24",
+            highlight: true,
+        },
+        {
+            title: "#239 Excel Service单元测试 [bcec91f]",
+            date: "2018-04-19",
+            highlight: true,
+        },
+        {
+            title: "#232 修复任务下达搜索bug [3078cb5]",
             date: "2018-04-13",
             highlight: true,
         },
@@ -78,41 +118,41 @@ export class AppComponent {
             date: "2018-02-02",
             highlight: true,
         },
-        {
-            title: "#198(HOTFIX) 任务下达bug",
-            date: "2018-01-29",
-            highlight: true,
-        },
-        {
-            title: "#193 修复请求体过大导致的拒绝服务",
-            date: "2018-01-25",
-            highlight: true,
-        },
-        {
-            title: "#195 修复混样样品详单编号缺失bug",
-            date: "2018-01-25",
-            highlight: true,
-        },
-        {
-            title: "#194 Simple Table多列查询",
-            date: "2018-01-25",
-            highlight: true,
-        },
-        {
-            title: "#180 修复混合样品Index导出缺失Bug",
-            date: "2018-01-25",
-            highlight: true,
-        },
-        {
-            title: "#190 Simple Table性能优化",
-            date: "2018-01-24",
-            highlight: true,
-        },
-        {
-            title: "#183 绩效统计及建库液相数量统计",
-            date: "2018-01-17",
-            highlight: true,
-        },
+        //{
+        //title: "#198(HOTFIX) 任务下达bug",
+        //date: "2018-01-29",
+        //highlight: true,
+        //},
+        //{
+        //title: "#193 修复请求体过大导致的拒绝服务",
+        //date: "2018-01-25",
+        //highlight: true,
+        //},
+        //{
+        //title: "#195 修复混样样品详单编号缺失bug",
+        //date: "2018-01-25",
+        //highlight: true,
+        //},
+        //{
+        //title: "#194 Simple Table多列查询",
+        //date: "2018-01-25",
+        //highlight: true,
+        //},
+        //{
+        //title: "#180 修复混合样品Index导出缺失Bug",
+        //date: "2018-01-25",
+        //highlight: true,
+        //},
+        //{
+        //title: "#190 Simple Table性能优化",
+        //date: "2018-01-24",
+        //highlight: true,
+        //},
+        //{
+        //title: "#183 绩效统计及建库液相数量统计",
+        //date: "2018-01-17",
+        //highlight: true,
+        //},
         //{
         //title: "#170 服务器迁移至先知主机",
         //date: "2018-01-12",
@@ -270,8 +310,8 @@ export class AppComponent {
             date: "?",
         },
         {
-            title: "#189 液相多重实验分开下达",
-            date: "Week: 05",
+            title: "#243 样品属性手动选择最优结果",
+            date: "?",
         },
         {
             title: "",
