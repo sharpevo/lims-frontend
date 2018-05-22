@@ -24,14 +24,12 @@ export class SampleInfoVerticalComponent {
     @Input() sampleCode
     @Input() sampleId
     commonGenreId: string
-    commonAttributeList$: Observable<any[]>
     projectSampleList$: Observable<any[]>
     attributeListMap: any = {}
+    uniqueGenre$: Observable<any>
+    uniqueGenreMap: any = {}
 
     commonAttributeList: any[] = []
-    uniqueAttributeList: any[] = []
-    uniqueGenre: any = {}
-    sample: any
 
     constructor(
         public entityService: EntityService,
@@ -89,9 +87,20 @@ export class SampleInfoVerticalComponent {
             })
     }
 
+    getUniqueGenreBySample$(sample: any) {
+        if (!this.uniqueGenreMap[sample['SYS_GENRE']]) {
+            console.log("retrieve genre")
+            this.uniqueGenreMap[sample['SYS_GENRE']] = this.genreService.retrieveBy({
+                '_id': sample['SYS_GENRE']
+            })
+                .map(data => data[0])
+        }
+        return this.uniqueGenreMap[sample['SYS_GENRE']]
+    }
+
     getUniqueAttributeListBySample$(sample: any) {
         if (!this.attributeListMap[sample.id]) {
-            if (sample['SYS_GENRE']['id'] == this.commonGenreId) {
+            if (sample['SYS_GENRE'] == this.commonGenreId) {
                 this.attributeListMap[sample.id] = Observable.of([])
             } else {
                 this.attributeListMap[sample.id] = Observable.of(sample['SYS_SCHEMA'])
