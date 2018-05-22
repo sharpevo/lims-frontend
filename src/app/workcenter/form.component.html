@@ -11,7 +11,7 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-grid-list
-            *ngIf="boardCommonAttributeList.length > 0"
+            *ngIf="boardCommonAttributeList.length > 0 && isExpandedPanel('form')"
             cols="3"
             rowHeight="80px">
             <mat-grid-tile
