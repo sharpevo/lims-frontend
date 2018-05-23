@@ -93,6 +93,16 @@ export class TablifyComponent{
             })
         }
 
+        this.getCommonAttributeList$().subscribe(attributeList => {
+            attributeList.forEach(attribute => {
+                this.columnList.push({
+                    'SYS_CODE': attribute['SYS_CODE'],
+                    'SYS_LABEL': attribute[attribute['SYS_LABEL']],
+                    'SYS_TYPE': attribute['SYS_TYPE'],
+
+                })
+            })
+
         // convert object to map
         this.columnList.forEach(column => {
             let key = column['SYS_CODE']
@@ -119,6 +129,11 @@ export class TablifyComponent{
 
             if (!this.sampleDataSource) { return; }
             this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+                })
+        })
+
+    }
+
     getCommonAttributeList$() {
         let workcenterIdentifier = this.rawSampleList[0]['SYS_IDENTIFIER'].split("/").slice(0, -1).join("/")
         return this.genreService.retrieveBy({
@@ -189,7 +204,8 @@ export class TablifyComponent{
                             sample['TMP_SAMPLE_SET'] = sampleList
                             return {
                                 "sample": sample,
-                                "sampleSet": sampleList}
+                                "sampleSet": sampleList
+                            }
                         }))
 
                     })
@@ -465,7 +481,6 @@ export class SampleDataSource extends DataSource<any> {
             let result = []
             Observable.forkJoin(
                 data.map(sample => {
-                    console.log("SAMPLE", sample)
                     result.push(sample)
                     if (sample['TMP_HYBRID_TYPE'] &&
                         sample['TMP_HYBRID_TYPE'] != 'SAMPLE'){ // HYBRID, requireds inner sample query
@@ -501,7 +516,6 @@ export class SampleDataSource extends DataSource<any> {
             "SYS_SAMPLE_CODE": queryCode
         })
         .map(sampleList => {
-            console.log("SUB SAMPLE", sampleList)
             if (sampleList[0]['SYS_SAMPLE_CODE'] == sample['SYS_SAMPLE_CODE']) {
                 sample['TMP_SAMPLE_SET'] = sampleList
             }
