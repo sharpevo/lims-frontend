@@ -67,7 +67,6 @@ export class SampleOverviewComponent {
                                 .subscribe(data => {
                                     sample['TMP_SOURCE'] = data[data['SYS_LABEL']]
                                     this.sampleProductWorkcenterList.push(sample)
-                                    console.log("WC", sample)
                                 })
                         }
                         if (sample.SYS_IDENTIFIER.startsWith("/MATERIAL/")) {
