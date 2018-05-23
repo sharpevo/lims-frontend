@@ -16,6 +16,7 @@ import {SampleService} from '../models/sample'
 import {SimpleTableDialog} from './simple.table.dialog'
 
 import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
 
 @Component({
     selector: 'simple-table',
@@ -49,7 +50,8 @@ export class TablifyComponent{
         public dialog: MatDialog,
         private sampleService: SampleService,
         private entityService: EntityService,
-    ){
+        public genreService: GenreService,
+    ) {
     }
 
     sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
@@ -117,7 +119,15 @@ export class TablifyComponent{
 
             if (!this.sampleDataSource) { return; }
             this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+    getCommonAttributeList$() {
+        let workcenterIdentifier = this.rawSampleList[0]['SYS_IDENTIFIER'].split("/").slice(0, -1).join("/")
+        return this.genreService.retrieveBy({
+            'SYS_IDENTIFIER': workcenterIdentifier + '/',
         })
+            .mergeMap(genreList => {
+                let genre = genreList[0]
+                return this.genreService.retrieveAttribute(genre.id)
+            })
     }
 
     clearProjectCode(){
