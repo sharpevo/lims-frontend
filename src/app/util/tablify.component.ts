@@ -58,7 +58,6 @@ export class TablifyComponent {
     sampleDataSource: SampleDataSource | null
 
     ngOnInit() {
-
         this.columnList = this.columnList.slice()
         this.shownSampleList.forEach(sample => {
             this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
@@ -100,7 +99,6 @@ export class TablifyComponent {
                     'SYS_CODE': attribute['SYS_CODE'],
                     'SYS_LABEL': attribute[attribute['SYS_LABEL']],
                     'SYS_TYPE': attribute['SYS_TYPE'],
-
                 })
             })
 

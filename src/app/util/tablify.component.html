@@ -43,105 +43,82 @@
 	<mat-table #table [dataSource]="sampleDataSource" class="simple-table" matSort>
 
         <div *ngIf="sampleDataSource">
-		<ng-container
-			cdkColumnDef="{{columnKey}}"
-			*ngFor="let columnKey of columnMapKeys">
-            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <mat-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
-                    <mat-checkbox
-                        [(ngModel)]="isSelectAll"
-                        (ngModelChange)="selectAllSamples()"
-                        color="primary">
-                    </mat-checkbox>
-                </mat-header-cell>
-            </span>
-            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <mat-header-cell *cdkHeaderCellDef
-                    [style.min-width]="getMinWidth(columnKey)"
-                    class="simple-table-header-cell" mat-sort-header>
-                    {{columnMap[columnKey]['SYS_LABEL']}}
-                </mat-header-cell>
-            </span>
-            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
-                <mat-cell
-                    *cdkCellDef="let row"
-                    [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
-                    <mat-checkbox
-                        [disabled]="row['TMP_SUSPENDED']"
-                        [(ngModel)]="row['TMP_CHECKED']"
-                        (ngModelChange)="selectSample(row)"
-                        color="primary">
-                        <!--<span style="font-size:0.5em;opacity:0.5">-->
-                            <!--{{row.id}} -->
-                            <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX].id.substr(21)}})-->
+            <ng-container
+                cdkColumnDef="{{columnKey}}"
+                *ngFor="let columnKey of columnMapKeys">
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+                    <mat-header-cell *cdkHeaderCellDef class="simple-table-header-cell-checkbox">
+                        <mat-checkbox
+                            [(ngModel)]="isSelectAll"
+                            (ngModelChange)="selectAllSamples()"
+                            color="primary">
+                        </mat-checkbox>
+                    </mat-header-cell>
+                </span>
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                    <mat-header-cell *cdkHeaderCellDef
+                        [style.min-width]="getMinWidth(columnKey)"
+                        class="simple-table-header-cell" mat-sort-header>
+                        {{columnMap[columnKey]['SYS_LABEL']}}
+                    </mat-header-cell>
+                </span>
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] == 'checkbox'">
+                    <mat-cell
+                        *cdkCellDef="let row"
+                        [ngClass]="{'simple-table-cell-checkbox': row['TMP_TABLE_ITEM'],'simple-table-cell-checkbox-indent': !row['TMP_TABLE_ITEM']}">
+                        <mat-checkbox
+                            [disabled]="row['TMP_SUSPENDED']"
+                            [(ngModel)]="row['TMP_CHECKED']"
+                            (ngModelChange)="selectSample(row)"
+                            color="primary">
+                            <!--<span style="font-size:0.5em;opacity:0.5">-->
+                                <!--{{row.id}} -->
+                                <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX].id.substr(21)}})-->
 
-                            <!--The question mark is used for the samples that do not have any next sample id-->
-                            <!--for example, samples in the scheduled/completed-->
-                            <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX]?.id.substr(21)}})-->
-                        <!--</span>-->
-                    </mat-checkbox>
-                </mat-cell>
-            </span>
-            <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
-                <mat-cell *cdkCellDef="let row"
-                    class="simple-table-cell"
-                    [style.min-width]="getMinWidth(columnKey)">
-                    <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
-                        <span *ngIf="!targetHybridType">
-                            <span *ngIf="row['SYS_RUN_CODE']">
-                                <span
-                                    (click)="openInternalSampleDialog(row)">
-                                    {{row['SYS_RUN_CODE']}}
+                                <!--The question mark is used for the samples that do not have any next sample id-->
+                                <!--for example, samples in the scheduled/completed-->
+                                <!--({{rawSampleList[row.TMP_NEXT_SAMPLE_INDEX]?.id.substr(21)}})-->
+                            <!--</span>-->
+                        </mat-checkbox>
+                    </mat-cell>
+                </span>
+                <span *ngIf="columnMap[columnKey]['SYS_TYPE'] != 'checkbox'">
+                    <mat-cell *cdkCellDef="let row"
+                        class="simple-table-cell"
+                        [style.min-width]="getMinWidth(columnKey)">
+                        <span *ngIf="row['TMP_TABLE_ITEM'] && columnKey == 'SYS_SAMPLE_CODE'">
+                            <span *ngIf="!targetHybridType">
+                                <span *ngIf="row['SYS_RUN_CODE']">
+                                    <span
+                                        (click)="openInternalSampleDialog(row)">
+                                        {{row['SYS_RUN_CODE']}}
+                                    </span>
+                                </span>
+                                <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
+                                    <span
+                                        (click)="openInternalSampleDialog(row)">
+                                        {{row['SYS_LANE_CODE']}}
+                                    </span>
+                                </span>
+                                <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
+                                    <span
+                                        (click)="openInternalSampleDialog(row)">
+                                        {{row['SYS_CAPTURE_CODE']}}
+                                    </span>
                                 </span>
                             </span>
-                            <span *ngIf="!row['SYS_RUN_CODE'] && row['SYS_LANE_CODE']">
+                            <span *ngIf="targetHybridType">
                                 <span
+                                    *ngIf="targetHybridType == 'SAMPLE'">
+                                    {{row['SYS_'+targetHybridType+'_CODE']}}
+                                </span>
+                                <span
+                                    *ngIf="targetHybridType != 'SAMPLE'"
                                     (click)="openInternalSampleDialog(row)">
-                                    {{row['SYS_LANE_CODE']}}
+                                    {{row['SYS_'+targetHybridType+'_CODE']?row['SYS_'+targetHybridType+'_CODE']:"(null)"}}
                                 </span>
                             </span>
-                            <span *ngIf="!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && row['SYS_CAPTURE_CODE']">
-                                <span
-                                    (click)="openInternalSampleDialog(row)">
-                                    {{row['SYS_CAPTURE_CODE']}}
-                                </span>
-                            </span>
-                        </span>
-                        <span *ngIf="targetHybridType">
-                            <span
-                                *ngIf="targetHybridType == 'SAMPLE'">
-                                {{row['SYS_'+targetHybridType+'_CODE']}}
-                            </span>
-                            <span
-                                *ngIf="targetHybridType != 'SAMPLE'"
-                                (click)="openInternalSampleDialog(row)">
-                                {{row['SYS_'+targetHybridType+'_CODE']?row['SYS_'+targetHybridType+'_CODE']:"(null)"}}
-                            </span>
-                        </span>
-                        <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
-                            <show-auxiliary-attribute
-                                *ngIf="row['TMP_SAMPLE_SET']"
-                                [hybridObject]="hybridObjectMap"
-                                [sample]="row"
-                                [sampleSet]="row['TMP_SAMPLE_SET']"
-                                [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
-                                [attributeType]="columnMap[columnKey]['SYS_TYPE']"
-                                [attributeGenre]="columnMap[columnKey]['SYS_GENRE']"
-                                [attributeCode]="columnKey">
-                            </show-auxiliary-attribute>
-                        </span>
-                    </span>
-                    <span *ngIf="!row['TMP_TABLE_ITEM'] || columnKey != 'SYS_SAMPLE_CODE'">
-                        <span [ngSwitch]="columnMap[columnKey]['SYS_TYPE']">
-                            <span *ngSwitchCase="'date'">
-                                {{row[columnKey] | date: 'yyyy.MM.dd'}}
-                            </span>
-                            <span *ngSwitchCase="'entity'">
-                                <entity-tostring
-                                    [entityId]="row[columnKey]">
-                                </entity-tostring>
-                            </span>
-                            <span *ngSwitchDefault>
+                            <span *ngIf="(!row['SYS_RUN_CODE'] && !row['SYS_LANE_CODE'] && !row['SYS_CAPTURE_CODE'])">
                                 <show-auxiliary-attribute
                                     *ngIf="row['TMP_SAMPLE_SET']"
                                     [hybridObject]="hybridObjectMap"
@@ -154,10 +131,33 @@
                                 </show-auxiliary-attribute>
                             </span>
                         </span>
-                    </span>
-                </mat-cell>
-            </span>
-		</ng-container>
+                        <span *ngIf="!row['TMP_TABLE_ITEM'] || columnKey != 'SYS_SAMPLE_CODE'">
+                            <span [ngSwitch]="columnMap[columnKey]['SYS_TYPE']">
+                                <span *ngSwitchCase="'date'">
+                                    {{row[columnKey] | date: 'yyyy.MM.dd'}}
+                                </span>
+                                <span *ngSwitchCase="'entity'">
+                                    <entity-tostring
+                                        [entityId]="row[columnKey]">
+                                    </entity-tostring>
+                                </span>
+                                <span *ngSwitchDefault>
+                                    <show-auxiliary-attribute
+                                        *ngIf="row['TMP_SAMPLE_SET']"
+                                        [hybridObject]="hybridObjectMap"
+                                        [sample]="row"
+                                        [sampleSet]="row['TMP_SAMPLE_SET']"
+                                        [attributeLabel]="columnMap[columnKey]['SYS_LABEL']"
+                                        [attributeType]="columnMap[columnKey]['SYS_TYPE']"
+                                        [attributeGenre]="columnMap[columnKey]['SYS_GENRE']"
+                                        [attributeCode]="columnKey">
+                                    </show-auxiliary-attribute>
+                                </span>
+                            </span>
+                        </span>
+                    </mat-cell>
+                </span>
+            </ng-container>
         </div>
 
 		<mat-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
