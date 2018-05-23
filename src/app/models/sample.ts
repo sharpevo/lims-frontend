@@ -152,7 +152,7 @@ export class SampleService {
                         seen[key] = true
                     }
 
-                    if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+                    if (sample.hasOwnProperty(attributeCode)) {
                         uniqueSampleList.push(sample)
                     }
                 }
