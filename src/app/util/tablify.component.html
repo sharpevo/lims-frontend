@@ -42,6 +42,7 @@
 	</div>
 	<mat-table #table [dataSource]="sampleDataSource" class="simple-table" matSort>
 
+        <div *ngIf="sampleDataSource">
 		<ng-container
 			cdkColumnDef="{{columnKey}}"
 			*ngFor="let columnKey of columnMapKeys">
@@ -157,6 +158,7 @@
                 </mat-cell>
             </span>
 		</ng-container>
+        </div>
 
 		<mat-header-row *cdkHeaderRowDef="columnMapKeys" class="simple-table-header-row">
 		</mat-header-row>
@@ -167,7 +169,7 @@
 		</mat-row>
 	</mat-table>
 	<mat-paginator #paginator
-		[length]="sampleDataSource.dataLength"
+		[length]="sampleDataSource?sampleDataSource.dataLength:0"
 		[pageIndex]="0"
 		[pageSize]="10"
 		[pageSizeOptions]="[1,2, 10, 25, 100]">
