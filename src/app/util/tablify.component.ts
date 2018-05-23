@@ -3,8 +3,8 @@ import {MatPaginator} from '@angular/material'
 import {MatSort} from '@angular/material';
 import {MatDialog, MatDialogRef} from '@angular/material'
 
-import { DataSource } from '@angular/cdk/table';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {DataSource} from '@angular/cdk/table';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/observable/merge'
@@ -16,13 +16,14 @@ import {SampleService} from '../models/sample'
 import {SimpleTableDialog} from './simple.table.dialog'
 
 import {EntityService} from '../entity/service'
+import {GenreService} from '../genre/service'
 
 @Component({
     selector: 'simple-table',
     styleUrls: ['./tablify.component.css'],
     templateUrl: './tablify.component.html'
 })
-export class TablifyComponent{
+export class TablifyComponent {
 
     @Input() rawSampleList
     @Input() shownSampleList
@@ -49,31 +50,32 @@ export class TablifyComponent{
         public dialog: MatDialog,
         private sampleService: SampleService,
         private entityService: EntityService,
-    ){
+        public genreService: GenreService,
+    ) {
     }
 
     sampleDatabase: SampleDatabase// = new SampleDatabase(this.rawSampleList)
     sampleDataSource: SampleDataSource | null
 
-    ngOnInit(){
-
+    ngOnInit() {
+        this.columnList = this.columnList.slice()
         this.shownSampleList.forEach(sample => {
             this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
         })
         this.projectCodeList = Object.keys(this.projectCodeMap).sort()
 
-        if (!this.columnList){
+        if (!this.columnList) {
             // fix undefined bug
             this.columnList = []
         }
 
         let hasSampleCode = false
         this.columnList.forEach(column => {
-            if (column['SYS_CODE'] == 'SYS_SAMPLE_CODE'){
+            if (column['SYS_CODE'] == 'SYS_SAMPLE_CODE') {
                 hasSampleCode = true
             }
         })
-        if (!hasSampleCode){
+        if (!hasSampleCode) {
             this.columnList.unshift({
                 "SYS_CODE": "SYS_SAMPLE_CODE",
                 "SYS_LABEL": "样品编码",
@@ -82,7 +84,7 @@ export class TablifyComponent{
         }
 
         if (!this.columnList[0] ||
-            this.columnList[0].SYS_TYPE != "checkbox"){
+            this.columnList[0].SYS_TYPE != "checkbox") {
             // Artificial column for checkbox
             this.columnList.unshift({
                 "SYS_CODE": "id",
@@ -91,65 +93,87 @@ export class TablifyComponent{
             })
         }
 
-        // convert object to map
-        this.columnList.forEach(column => {
-            let key = column['SYS_CODE']
-            // get keys in a order
-            this.columnMapKeys.push(key)
-            this.columnMap[key] = {}
+        this.getCommonAttributeList$().subscribe(attributeList => {
+            attributeList.forEach(attribute => {
+                this.columnList.push({
+                    'SYS_CODE': attribute['SYS_CODE'],
+                    'SYS_LABEL': attribute[attribute['SYS_LABEL']],
+                    'SYS_TYPE': attribute['SYS_TYPE'],
+                })
+            })
 
-            // the choices are useful for the attributes retrieved from the
-            // SYS_SCHEMA instead of the attribute list.
-            this.columnMap[key]['SYS_LABEL']= column[column['SYS_LABEL']]?column[column['SYS_LABEL']]:column['SYS_LABEL']
-            this.columnMap[key]['SYS_TYPE']= column['SYS_TYPE']
-            this.columnMap[key]['SYS_GENRE'] = column['SYS_GENRE']?column['SYS_GENRE']:'--' // to analyze auxiliary attribute
+            // convert object to map
+            this.columnList.forEach(column => {
+                let key = column['SYS_CODE']
+                // get keys in a order
+                this.columnMapKeys.push(key)
+                this.columnMap[key] = {}
+
+                // the choices are useful for the attributes retrieved from the
+                // SYS_SCHEMA instead of the attribute list.
+                this.columnMap[key]['SYS_LABEL'] = column[column['SYS_LABEL']] ? column[column['SYS_LABEL']] : column['SYS_LABEL']
+                this.columnMap[key]['SYS_TYPE'] = column['SYS_TYPE']
+                this.columnMap[key]['SYS_GENRE'] = column['SYS_GENRE'] ? column['SYS_GENRE'] : '--' // to analyze auxiliary attribute
+            })
+
+            this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
+            this.sampleDataSource = new SampleDataSource(this.entityService, this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
+            Observable.fromEvent(this.filter.nativeElement, 'keyup')
+                .debounceTime(150)
+                .distinctUntilChanged()
+                .subscribe(() => {
+
+                    this.isSelectAll = false
+                    this.clearSelectedSamples()
+
+                    if (!this.sampleDataSource) {return;}
+                    this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
+                })
         })
 
-        this.sampleDatabase = new SampleDatabase(this.shownSampleList, this.targetHybridType)
-        this.sampleDataSource = new SampleDataSource(this.entityService, this.sampleDatabase, this.paginator, this.sort, this.columnMapKeys)
-        Observable.fromEvent(this.filter.nativeElement, 'keyup')
-        .debounceTime(150)
-        .distinctUntilChanged()
-        .subscribe(() => {
-
-            this.isSelectAll=false
-            this.clearSelectedSamples()
-
-            if (!this.sampleDataSource) { return; }
-            this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
-        })
     }
 
-    clearProjectCode(){
+    getCommonAttributeList$() {
+        let workcenterIdentifier = this.rawSampleList[0]['SYS_IDENTIFIER'].split("/").slice(0, -1).join("/")
+        return this.genreService.retrieveBy({
+            'SYS_IDENTIFIER': workcenterIdentifier + '/',
+        })
+            .mergeMap(genreList => {
+                let genre = genreList[0]
+                return this.genreService.retrieveAttribute(genre.id)
+            })
+    }
+
+    clearProjectCode() {
         this.projectCode = ""
         this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     }
 
-    getMinWidth(columnKey: string){
+    getMinWidth(columnKey: string) {
         if (columnKey == 'CONF_GENERAL_PROJECT_PROJECT_CODE') {
             return "200px"
         } else {
             return "100px"
         }
     }
-    onProjectCodeChange(event){
-        this.isSelectAll=false
+    onProjectCodeChange(event) {
+        this.isSelectAll = false
         this.clearSelectedSamples()
 
-        if (!this.sampleDataSource) { return; }
+        if (!this.sampleDataSource) {return;}
         this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
     }
 
-    selectSample(row: any){
+    selectSample(row: any) {
         this.setSampleChecked(row, row['TMP_CHECKED'])
     }
 
     // Normally, the operatable samples might be the processing stage meaning the
     // value of checkboxes should be treated with the current sample id instead
     // of the previous one as default.
-    checkCurrentSample(sample: any, checked: boolean){
+    checkCurrentSample(sample: any, checked: boolean) {
         let currentSampleIndex = sample['TMP_NEXT_SAMPLE_INDEX']
-        if (currentSampleIndex >= 0){
+        if (currentSampleIndex >= 0) {
             console.log("C", sample.id)
             this.rawSampleList[currentSampleIndex]['TMP_CHECKED'] = checked
             this.rawSampleList[currentSampleIndex]['SYS_HYBRID_INFO'] = sample['SYS_HYBRID_INFO']
@@ -158,19 +182,19 @@ export class TablifyComponent{
         }
     }
 
-    setSampleChecked(row: any, checked: boolean){
-        if (row['TMP_TABLE_ITEM']){
+    setSampleChecked(row: any, checked: boolean) {
+        if (row['TMP_TABLE_ITEM']) {
             // hybrid sample checking
             let hybridInfo = this.sampleService.getHybridInfo(row)
-            if (!hybridInfo){
+            if (!hybridInfo) {
                 this.checkCurrentSample(row, checked)
             } else {
                 let hybridType = hybridInfo['type']
-                let hybridCode = hybridInfo['SYS_'+hybridType+'_CODE']
+                let hybridCode = hybridInfo['SYS_' + hybridType + '_CODE']
 
                 let sampleSetObs = []
 
-                if (this.sampleDatabase.hybridMap[hybridType][hybridCode]){
+                if (this.sampleDatabase.hybridMap[hybridType][hybridCode]) {
                     this.sampleDatabase.hybridMap[hybridType][hybridCode].forEach(sample => {
 
                         sampleSetObs.push(this.entityService.retrieveBy({
@@ -179,48 +203,49 @@ export class TablifyComponent{
                             sample['TMP_SAMPLE_SET'] = sampleList
                             return {
                                 "sample": sample,
-                                "sampleSet": sampleList}
+                                "sampleSet": sampleList
+                            }
                         }))
 
                     })
 
                     Observable.concat(...sampleSetObs)
-                    .subscribe(data => {
-                        let sample = data['sample']
-                        let sampleSet = data['sampleSet']
-                        console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
+                        .subscribe(data => {
+                            let sample = data['sample']
+                            let sampleSet = data['sampleSet']
+                            console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
 
-                        sample['TMP_CHECKED'] = checked
+                            sample['TMP_CHECKED'] = checked
 
-                        // build auxiliary object for exporting
-                        Object.keys(this.columnMap).forEach(key => {
-                            // assume the inner samples hybridObjectMap is undefined
-                            if (!this.hybridObjectMap){
-                                this.hybridObjectMap = {}
-                            }
-                            if (!this.hybridObjectMap[sample['SYS_SAMPLE_CODE']]) {
-                                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
-                            }
-                            let attributeObjectList = this.sampleService.getAuxiliaryAttributes(sample, sampleSet, key, this.columnMap[key]['SYS_GENRE'])
-                            if (attributeObjectList.length > 0) {
-                                this.hybridObjectMap[sample['SYS_SAMPLE_CODE']][key] = {
-                                    'value': attributeObjectList[0]['value'],
-                                    'SYS_LABEL': this.columnMap[key]['SYS_LABEL'],
-                                    'SYS_CODE': key,
-                                    'SYS_TYPE': this.columnMap[key]['SYS_TYPE'],
+                            // build auxiliary object for exporting
+                            Object.keys(this.columnMap).forEach(key => {
+                                // assume the inner samples hybridObjectMap is undefined
+                                if (!this.hybridObjectMap) {
+                                    this.hybridObjectMap = {}
                                 }
-                            }
-                        })
+                                if (!this.hybridObjectMap[sample['SYS_SAMPLE_CODE']]) {
+                                    this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
+                                }
+                                let attributeObjectList = this.sampleService.getAuxiliaryAttributes(sample, sampleSet, key, this.columnMap[key]['SYS_GENRE'])
+                                if (attributeObjectList.length > 0) {
+                                    this.hybridObjectMap[sample['SYS_SAMPLE_CODE']][key] = {
+                                        'value': attributeObjectList[0]['value'],
+                                        'SYS_LABEL': this.columnMap[key]['SYS_LABEL'],
+                                        'SYS_CODE': key,
+                                        'SYS_TYPE': this.columnMap[key]['SYS_TYPE'],
+                                    }
+                                }
+                            })
 
-                        this.checkCurrentSample(sample, checked)
-                        let index = this.selectedSampleIdList.indexOf(sample.id)
-                        if (index != -1 && !checked) {
-                            this.selectedSampleIdList.splice(index, 1)
-                        }
-                        if (index == -1 && checked){
-                            this.selectedSampleIdList.push(sample.id)
-                        }
-                    }, err => {}, () => {})
+                            this.checkCurrentSample(sample, checked)
+                            let index = this.selectedSampleIdList.indexOf(sample.id)
+                            if (index != -1 && !checked) {
+                                this.selectedSampleIdList.splice(index, 1)
+                            }
+                            if (index == -1 && checked) {
+                                this.selectedSampleIdList.push(sample.id)
+                            }
+                        }, err => {}, () => {})
                 }
             }
         } else {
@@ -236,22 +261,22 @@ export class TablifyComponent{
     }
 
 
-    selectAllSamples(){
+    selectAllSamples() {
         this.sampleDataSource.changePageSize(
-            this.isSelectAll?this.sampleDataSource.currentSampleList.length:10
+            this.isSelectAll ? this.sampleDataSource.currentSampleList.length : 10
         )
         this.sampleDataSource.filter = this.filter.nativeElement.value + "&" + this.projectCode
-        if (this.isSelectAll){
+        if (this.isSelectAll) {
             this.selectedSampleIdList = []
             this.sampleDataSource.currentSampleList.forEach(sample => {
-                if (!sample['TMP_SUSPENDED']){
+                if (!sample['TMP_SUSPENDED']) {
                     sample['TMP_CHECKED'] = true
                     this.setSampleChecked(sample, true)
                 }
             })
         } else {
             this.sampleDataSource.currentSampleList.forEach(sample => {
-                if (!sample['TMP_SUSPENDED']){
+                if (!sample['TMP_SUSPENDED']) {
                     sample['TMP_CHECKED'] = false
                     this.checkCurrentSample(sample, false)
                 }
@@ -260,7 +285,7 @@ export class TablifyComponent{
         }
     }
 
-    clearSelectedSamples(){
+    clearSelectedSamples() {
         this.selectedSampleIdList = []
         this.sampleDataSource.currentSampleList.forEach(sample => {
             sample['TMP_CHECKED'] = false
@@ -268,7 +293,7 @@ export class TablifyComponent{
         })
     }
 
-    expandSample(sample: any, hybridType: string){
+    expandSample(sample: any, hybridType: string) {
         this.sampleDatabase.rawSampleList.forEach(rawSample => {
             if (sample.SYS_SAMPLE_CODE == rawSample.SYS_SAMPLE_CODE) {
                 rawSample['TMP_LIST_SAMPLE'] = !rawSample['TMP_LIST_SAMPLE']
@@ -278,10 +303,10 @@ export class TablifyComponent{
         this.sampleDataSource.filter = this.filter.nativeElement.value
     }
 
-    openInternalSampleDialog(sample: any){
+    openInternalSampleDialog(sample: any) {
         console.log(sample)
         let hybridType = sample['TMP_HYBRID_TYPE']
-        let hybridCode = sample['SYS_'+hybridType+'_CODE']
+        let hybridCode = sample['SYS_' + hybridType + '_CODE']
         let dialogRef = this.dialog.open(SimpleTableDialog, {height: '500px', width: '800px'});
         dialogRef.componentInstance.config.sampleList = this.sampleDatabase.hybridMap[hybridType][hybridCode]
         dialogRef.componentInstance.config.hybridType = hybridType
@@ -299,14 +324,14 @@ export class SampleDatabase {// {{{
     constructor(
         private _rawSampleList: any[],
         private targetHybridType: string
-    ){
+    ) {
         this.rawSampleList = _rawSampleList
         this.buildSampleList()
     }
 
     // Build sample list with only one sample for the same type of hybrid
     // and push all the inner samples to the corresponding collections.
-    buildSampleList(){
+    buildSampleList() {
 
         // Fix duplicated samples
         this.dataChange = new BehaviorSubject<any>([])
@@ -328,9 +353,9 @@ export class SampleDatabase {// {{{
             let capCode = sample[capString]
 
 
-            if (!this.targetHybridType){
+            if (!this.targetHybridType) {
                 if (runCode) {
-                    if (!this.hybridMap['RUN'][runCode]){
+                    if (!this.hybridMap['RUN'][runCode]) {
                         isHybrid = true
                         this.hybridMap['RUN'][runCode] = []
                     }
@@ -338,7 +363,7 @@ export class SampleDatabase {// {{{
                     this.hybridMap['RUN'][runCode].push(rawSample)
                 }
                 if (!runCode && lanCode) {
-                    if (!this.hybridMap['LANE'][lanCode]){
+                    if (!this.hybridMap['LANE'][lanCode]) {
                         isHybrid = true
                         this.hybridMap['LANE'][lanCode] = []
                     }
@@ -346,7 +371,7 @@ export class SampleDatabase {// {{{
                     this.hybridMap['LANE'][lanCode].push(rawSample)
                 }
                 if (!runCode && !lanCode && capCode) {
-                    if (!this.hybridMap['CAPTURE'][capCode]){
+                    if (!this.hybridMap['CAPTURE'][capCode]) {
                         isHybrid = true
                         this.hybridMap['CAPTURE'][capCode] = []
                     }
@@ -357,15 +382,15 @@ export class SampleDatabase {// {{{
                 sample['TMP_TABLE_ITEM'] = isHybrid || (!runCode && !lanCode && !capCode)
 
                 // New hybrid samples or pure samples
-                if (isHybrid || (!runCode && !lanCode && !capCode)){
+                if (isHybrid || (!runCode && !lanCode && !capCode)) {
                     cd.push(sample)
                     this.dataChange.next(cd)
                 }
             } else {
 
-                let hybridCode = sample['SYS_'+this.targetHybridType+'_CODE']
+                let hybridCode = sample['SYS_' + this.targetHybridType + '_CODE']
 
-                if (!this.hybridMap[this.targetHybridType][hybridCode]){
+                if (!this.hybridMap[this.targetHybridType][hybridCode]) {
                     isHybrid = true
                     this.hybridMap[this.targetHybridType][hybridCode] = []
                 }
@@ -374,7 +399,7 @@ export class SampleDatabase {// {{{
 
                 sample['TMP_TABLE_ITEM'] = isHybrid
                 // New hybrid samples or pure samples
-                if (isHybrid || (!runCode && !lanCode && !capCode)){
+                if (isHybrid || (!runCode && !lanCode && !capCode)) {
                     cd.push(sample)
                     this.dataChange.next(cd)
                 }
@@ -397,8 +422,8 @@ export class SampleDataSource extends DataSource<any> {
     sampleSetMap: any = {}
 
     _filterChange = new BehaviorSubject('');
-    get filter(): string { return this._filterChange.value; }
-    set filter(filter: string) { this._filterChange.next(filter); }
+    get filter(): string {return this._filterChange.value;}
+    set filter(filter: string) {this._filterChange.next(filter);}
 
     constructor(
         private entityService: EntityService,
@@ -410,7 +435,7 @@ export class SampleDataSource extends DataSource<any> {
         super();
     }
 
-    changePageSize(pageSize: number){
+    changePageSize(pageSize: number) {
         console.log("change page size", this._paginator.pageSize, pageSize)
         this._paginator.pageSize = pageSize
     }
@@ -455,26 +480,25 @@ export class SampleDataSource extends DataSource<any> {
             let result = []
             Observable.forkJoin(
                 data.map(sample => {
-                    console.log("SAMPLE", sample)
                     result.push(sample)
                     if (sample['TMP_HYBRID_TYPE'] &&
-                        sample['TMP_HYBRID_TYPE'] != 'SAMPLE'){ // HYBRID, requireds inner sample query
+                        sample['TMP_HYBRID_TYPE'] != 'SAMPLE') { // HYBRID, requireds inner sample query
                         let queryObject = {}
-                    let hybridKey = sample['SYS_HYBRID_INFO']['HYBRID_KEY']
-                    let hybridValue = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
-                    queryObject[hybridKey] = hybridValue
+                        let hybridKey = sample['SYS_HYBRID_INFO']['HYBRID_KEY']
+                        let hybridValue = sample['SYS_HYBRID_INFO']['HYBRID_CODE']
+                        queryObject[hybridKey] = hybridValue
 
-                    return this.entityService.retrieveBy(queryObject)
-                    .mergeMap(innerSampleList => {
-                        console.log("INNER SAMPLE", innerSampleList)
+                        return this.entityService.retrieveBy(queryObject)
+                            .mergeMap(innerSampleList => {
+                                console.log("INNER SAMPLE", innerSampleList)
 
-                        return Observable.forkJoin(
-                            innerSampleList.map(innerSample => {
-                                return this.isSuspended(sample, innerSample['SYS_SAMPLE_CODE'])
+                                return Observable.forkJoin(
+                                    innerSampleList.map(innerSample => {
+                                        return this.isSuspended(sample, innerSample['SYS_SAMPLE_CODE'])
+                                    })
+                                )
+
                             })
-                        )
-
-                    })
                     } else { // SAMPLE, not query inner samples
                         return this.isSuspended(sample, sample['SYS_SAMPLE_CODE'])
                     }
@@ -486,32 +510,31 @@ export class SampleDataSource extends DataSource<any> {
         })
     }
 
-    isSuspended(sample: any, queryCode: string){
+    isSuspended(sample: any, queryCode: string) {
         return this.entityService.retrieveBy({
             "SYS_SAMPLE_CODE": queryCode
         })
-        .map(sampleList => {
-            console.log("SUB SAMPLE", sampleList)
-            if (sampleList[0]['SYS_SAMPLE_CODE'] == sample['SYS_SAMPLE_CODE']) {
-                sample['TMP_SAMPLE_SET'] = sampleList
-            }
-            for (let s of sampleList){
-                if (s['SYS_SUSPENSION'] && Object.keys(s['SYS_SUSPENSION']).length > 0) {
-                    sample['TMP_SUSPENDED'] = true
-                    break
+            .map(sampleList => {
+                if (sampleList[0]['SYS_SAMPLE_CODE'] == sample['SYS_SAMPLE_CODE']) {
+                    sample['TMP_SAMPLE_SET'] = sampleList
                 }
-            }
+                for (let s of sampleList) {
+                    if (s['SYS_SUSPENSION'] && Object.keys(s['SYS_SUSPENSION']).length > 0) {
+                        sample['TMP_SUSPENDED'] = true
+                        break
+                    }
+                }
 
-        })
+            })
     }
 
     disconnect() {}
     getSortedData(data: any[]): any[] {
-        if (!this._sort.active || this._sort.direction == '') { return data; }
+        if (!this._sort.active || this._sort.direction == '') {return data;}
 
         data = data.sort((a, b) => {
-            let propertyA: number|string = '';
-            let propertyB: number|string = '';
+            let propertyA: number | string = '';
+            let propertyB: number | string = '';
 
             switch (this._sort.active) {
                 case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
