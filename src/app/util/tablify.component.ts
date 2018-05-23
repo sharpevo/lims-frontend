@@ -59,6 +59,7 @@ export class TablifyComponent {
 
     ngOnInit() {
 
+        this.columnList = this.columnList.slice()
         this.shownSampleList.forEach(sample => {
             this.projectCodeMap[sample.CONF_GENERAL_PROJECT_PROJECT_CODE] = true
         })
