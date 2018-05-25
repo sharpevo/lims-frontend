@@ -35,35 +35,10 @@
                     <mat-panel-description>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div fxLayout="column" fxLayoutAlign="start start" >
-                    <div
-                        *ngFor="let schema of sample.SYS_SCHEMA"
-                        fxLayout="row" fxLayoutAlign="space-between center" >
-                        <div style="opacity:0.7">
-                            {{schema.SYS_LABEL}}:
-                        </div>
-                        <div style="margin-left: 5px;">
-                            <b>
-                                <span
-                                    *ngIf="schema.SYS_TYPE == 'date'">
-                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
-                                </span>
-                                <span
-                                    *ngIf="schema.SYS_TYPE != 'date'">
-                                        {{sample[schema.SYS_CODE]}}
-                                </span>
-                            </b>
-                        </div>
-                    </div>
-                    <div style="opacity:0.7">
-                        Created:
-                    </div>
-                    <div style="margin-left: 5px;">
-                        <b>
-                            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
-                        </b>
-                    </div>
-                </div>
+                <sample-info-vertical
+                    [commonGenreIdentifier]="sample['TMP_WORKCENTER']['SYS_IDENTIFIER'] + '/'"
+                    [sample]="sample">
+                </sample-info-vertical>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
@@ -149,9 +124,9 @@
     </div>
 </div>
 
-<sample-info-vertical
+<sample-info-vertical-panel
     fxFlex="25"
     *ngIf="sampleProductWorkcenterList.length > 0"
     [sampleCode]="sampleProjectManagementList[0].SYS_SAMPLE_CODE">
-</sample-info-vertical>
+</sample-info-vertical-panel>
 </div>
