@@ -27,7 +27,7 @@
                 (closed)="closePanel(sample.id + '-workcenter')">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{sample['TMP_SOURCE']}}
+                        {{sample['TMP_WORKCENTER'][sample['TMP_WORKCENTER']['SYS_LABEL']]}}
                         <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
                             ({{sample.id}})
                         </span>
@@ -75,7 +75,7 @@
                 (closed)="closePanel(sample.id + '-material')">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{sample['TMP_SOURCE']}} x {{sample['SYS_QUANTITY']}}
+                        {{sample['TMP_WORKCENTER'][sample['TMP_WORKCENTER']['SYS_LABEL']]}} x {{sample['SYS_QUANTITY']}}
                         <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
                             ({{sample.id}})
                         </span>
