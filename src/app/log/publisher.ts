@@ -1,6 +1,7 @@
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import {LogLevel, LogEntry} from './log'
+import {environment} from '../../environments/environment'
 
 export abstract class LogPublisher {
     location: string
@@ -30,7 +31,9 @@ export class LogConsole extends LogPublisher {
 
         switch (record.level) {
             case (LogLevel.DEBUG):
-                console.log("%c %s", this.debugStyle, ...record.buildLogObject())
+                if (LogLevel.DEBUG > LogLevel[environment.logConsoleLevel]) {
+                    console.log("%c %s", this.debugStyle, ...record.buildLogObject())
+                }
                 break
             case (LogLevel.INFO):
                 console.log("%c %s", this.infoStyle, ...record.buildLogObject())
