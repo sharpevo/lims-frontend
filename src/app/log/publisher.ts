@@ -68,6 +68,7 @@ export class LogLocalStorage extends LogPublisher {
     pendingEntryList: any[] = []
 
     getAll(): Observable<LogEntry[]> {
+        this.sync()
         return Observable.of(JSON.parse(localStorage.getItem(this.location)) || [])
     }
 
