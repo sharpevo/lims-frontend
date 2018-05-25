@@ -1,6 +1,7 @@
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/of'
 import {LogLevel, LogEntry} from './log'
+import {environment} from '../../environments/environment'
 
 export abstract class LogPublisher {
     location: string
@@ -30,7 +31,9 @@ export class LogConsole extends LogPublisher {
 
         switch (record.level) {
             case (LogLevel.DEBUG):
-                console.log("%c %s", this.debugStyle, ...record.buildLogObject())
+                if (LogLevel.DEBUG > LogLevel[environment.logConsoleLevel]) {
+                    console.log("%c %s", this.debugStyle, ...record.buildLogObject())
+                }
                 break
             case (LogLevel.INFO):
                 console.log("%c %s", this.infoStyle, ...record.buildLogObject())
@@ -62,22 +65,32 @@ export class LogLocalStorage extends LogPublisher {
         super()
         this.location = "lims-logging"
     }
+    pendingEntryList: any[] = []
 
     getAll(): Observable<LogEntry[]> {
+        this.sync()
         return Observable.of(JSON.parse(localStorage.getItem(this.location)) || [])
     }
 
     log(record: LogEntry): Observable<boolean> {
-        let logEntryList: LogEntry[]
         try {
-            logEntryList = JSON.parse(localStorage.getItem(this.location)) || []
-            logEntryList.push(record)
-            localStorage.setItem(this.location, JSON.stringify(logEntryList))
+
+            this.pendingEntryList.push(record)
+            if (this.pendingEntryList.length > 1000) {
+                this.sync()
+            }
         } catch (e) {
             console.error(e)
         }
         return Observable.of(true)
+    }
 
+    sync() {
+        let logEntryList: LogEntry[]
+        logEntryList = JSON.parse(localStorage.getItem(this.location)) || []
+        logEntryList = logEntryList.concat(this.pendingEntryList)
+        localStorage.setItem(this.location, JSON.stringify(logEntryList))
+        this.pendingEntryList = []
     }
 
     clear(): Observable<boolean> {

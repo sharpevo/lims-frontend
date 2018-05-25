@@ -106,7 +106,6 @@ export class EntityFormInlineComponent {
         } else {
             this.entityService.retrieveAttribute(this.entity.id)
                 .subscribe(data => {
-                    console.log("form", data)
                     data.forEach(attribute => {
                         this.object[attribute.SYS_CODE] = this.entity[attribute.SYS_CODE]
                     })
