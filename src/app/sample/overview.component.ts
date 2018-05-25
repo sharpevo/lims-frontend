@@ -65,14 +65,14 @@ export class SampleOverviewComponent {
                         if (sample.SYS_IDENTIFIER.startsWith("/PRODUCT_WORKCENTER/")) {
                             this.entityService.retrieveById(sample.SYS_SOURCE)
                                 .subscribe(data => {
-                                    sample['TMP_SOURCE'] = data[data['SYS_LABEL']]
+                                    sample['TMP_WORKCENTER'] = data
                                     this.sampleProductWorkcenterList.push(sample)
                                 })
                         }
                         if (sample.SYS_IDENTIFIER.startsWith("/MATERIAL/")) {
                             this.entityService.retrieveById(sample.SYS_SOURCE)
                                 .subscribe(data => {
-                                    sample['TMP_SOURCE'] = data[data['SYS_LABEL']]
+                                    sample['TMP_WORKCENTER'] = data
                                     this.sampleMaterialList.push(sample)
                                     console.log("M", sample)
                                 })

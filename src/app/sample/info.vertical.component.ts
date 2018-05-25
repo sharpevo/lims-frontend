@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core'
-import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/empty'
@@ -21,64 +20,28 @@ const GENERAL_PROJECT_GENRE_IDENTIFIER = '/PROJECT_MANAGEMENT/GENERAL_PROJECT/'
     templateUrl: './info.vertical.component.html',
 })
 export class SampleInfoVerticalComponent {
-    @Input() sampleCode
-    @Input() sampleId
+    @Input() sample
+    @Input() commonGenreIdentifier
     commonGenreId: string
-    projectSampleList$: Observable<any[]>
     attributeListMap: any = {}
-    uniqueGenre$: Observable<any>
     uniqueGenreMap: any = {}
 
     commonAttributeList: any[] = []
 
     constructor(
-        public entityService: EntityService,
         public genreService: GenreService,
     ) {}
 
     ngOnInit() {
-        this.projectSampleList$ = this.getProjectSampleList$()
         this.getCommonAttributeList$()
             .subscribe(data => {
                 this.commonAttributeList = data
             })
     }
 
-    getSampleList$() {
-        if (this.sampleCode) {
-            return this.entityService.retrieveBy({
-                "SYS_SAMPLE_CODE": this.sampleCode
-            })
-        } else if (this.sampleId) {
-            return this.entityService.retrieveBy({
-                "_id": this.sampleId
-            })
-        } else {
-            return Observable.of({})
-        }
-    }
-
-    getProjectSampleList$() {
-        return this.getSampleList$()
-            .map(data => {
-                return data
-                    .sort((a, b) => {
-                        if (a.updatedAt < b.updatedAt) {
-                            return 1
-                        } else {
-                            return -1
-                        }
-                    })
-                    .filter(item => {
-                        return item['SYS_IDENTIFIER']
-                            .startsWith(GENERAL_PROJECT_GENRE_IDENTIFIER)
-                    })
-            })
-    }
-
     getCommonAttributeList$() {
         return this.genreService.retrieveBy({
-            'SYS_IDENTIFIER': GENERAL_PROJECT_GENRE_IDENTIFIER,
+            'SYS_IDENTIFIER': this.commonGenreIdentifier,
         })
             .mergeMap(genreList => {
                 let genre = genreList[0]
@@ -89,11 +52,17 @@ export class SampleInfoVerticalComponent {
 
     getUniqueGenreBySample$(sample: any) {
         if (!this.uniqueGenreMap[sample['SYS_GENRE']]) {
-            console.log("retrieve genre")
             this.uniqueGenreMap[sample['SYS_GENRE']] = this.genreService.retrieveBy({
                 '_id': sample['SYS_GENRE']
             })
-                .map(data => data[0])
+                .map(data => {
+                    let genre = data[0]
+                    if (genre['SYS_IDENTIFIER'] == this.commonGenreIdentifier) {
+                        return {}
+                    } else {
+                        return data[0]
+                    }
+                })
         }
         return this.uniqueGenreMap[sample['SYS_GENRE']]
     }

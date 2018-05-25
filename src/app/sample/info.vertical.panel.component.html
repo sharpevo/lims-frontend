@@ -1,0 +1,22 @@
+
+<mat-accordion>
+    <mat-expansion-panel
+        [expanded]="i == 0"
+        *ngFor="let sample of projectSampleList$ | async; let i = index">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{sample.createdAt | date: 'yyyy.MM.dd'}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{sample.createdAt | date: 'hh:mm'}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <ng-template matExpansionPanelContent>
+            <sample-info-vertical
+                [commonGenreIdentifier]="generalProjectGenreIdentifier"
+                [sample]="sample">
+            </sample-info-vertical>
+        </ng-template>
+    </mat-expansion-panel>
+</mat-accordion>

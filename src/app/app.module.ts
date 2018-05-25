@@ -94,6 +94,7 @@ import {InjectorContainerModule} from './injector.module'
 import {ExcelService} from './util/excel.service'
 import {WorkcenterFormComponent} from './workcenter/form.component'
 import {SampleInfoVerticalComponent} from './sample/info.vertical.component'
+import {SampleInfoVerticalPanelComponent} from './sample/info.vertical.panel.component'
 import {MaterialAutocompleteComponent} from './material/autocomplete.component'
 
 @NgModule({
@@ -144,6 +145,7 @@ import {MaterialAutocompleteComponent} from './material/autocomplete.component'
         KPIComponent,
         WorkcenterFormComponent,
         SampleInfoVerticalComponent,
+        SampleInfoVerticalPanelComponent,
         MaterialAutocompleteComponent,
     ],
     entryComponents: [
