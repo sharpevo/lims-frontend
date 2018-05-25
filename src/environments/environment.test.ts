@@ -6,4 +6,5 @@ export const environment = {
   limsbotUrl: "http://notif.lims.igenetech.cn/send",
   auditUrl: "http://audit.lims.igenetech.cn",
   version: "Build 980d500 | test 20171223_1641",
+    logConsoleLevel: "INFO",
 };
