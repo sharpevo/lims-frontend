@@ -65,22 +65,31 @@ export class LogLocalStorage extends LogPublisher {
         super()
         this.location = "lims-logging"
     }
+    pendingEntryList: any[] = []
 
     getAll(): Observable<LogEntry[]> {
         return Observable.of(JSON.parse(localStorage.getItem(this.location)) || [])
     }
 
     log(record: LogEntry): Observable<boolean> {
-        let logEntryList: LogEntry[]
         try {
-            logEntryList = JSON.parse(localStorage.getItem(this.location)) || []
-            logEntryList.push(record)
-            localStorage.setItem(this.location, JSON.stringify(logEntryList))
+
+            this.pendingEntryList.push(record)
+            if (this.pendingEntryList.length > 1000) {
+                this.sync()
+            }
         } catch (e) {
             console.error(e)
         }
         return Observable.of(true)
+    }
 
+    sync() {
+        let logEntryList: LogEntry[]
+        logEntryList = JSON.parse(localStorage.getItem(this.location)) || []
+        logEntryList = logEntryList.concat(this.pendingEntryList)
+        localStorage.setItem(this.location, JSON.stringify(logEntryList))
+        this.pendingEntryList = []
     }
 
     clear(): Observable<boolean> {
