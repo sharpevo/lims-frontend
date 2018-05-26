@@ -28,6 +28,31 @@ export class AppComponent {
     showMessage: boolean = true
     taskCompletedList: any[] = [
         {
+            title: "#265 Execel上传性能优化(7倍) [8d3f1f6]",
+            date: "2018-05-25",
+            highlight: true,
+        },
+        {
+            title: "#273 重构SampleInfoVerticalComponent [0cf0e90]",
+            date: "2018-05-25",
+            highlight: true,
+        },
+        {
+            title: "#264 多BoM支持后Excel上传Bugs修复 [80c1abd]",
+            date: "2018-05-23",
+            highlight: true,
+        },
+        {
+            title: "#262 多BoM支持后SimpleTable Bugs修复 [fd022cf]",
+            date: "2018-05-23",
+            highlight: true,
+        },
+        {
+            title: "#261 项目管理样品属性多Genre显示 [581ec00]",
+            date: "2018-05-22",
+            highlight: true,
+        },
+        {
             title: "#230 根据质量管理部模板更新属性 [b93a4b1, 9841e82]",
             date: "2018-05-18",
             highlight: true,
