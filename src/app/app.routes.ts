@@ -5,10 +5,11 @@ import {WorkcenterOverviewComponent} from './workcenter/overview.component'
 import {WorkcenterDashboardComponent} from './workcenter/dashboard.component'
 import {ProjectManagementComponent} from './workcenter/project.management.component'
 import {AppsComponent} from './apps/component'
-import {UserService} from './util/user.service'
+import {GuardService} from './util/guard.service'
 import {RedirectComponent} from './util/redirect.component'
 import {MaterialOverviewComponent} from './material/overview.component'
 import {SampleOverviewComponent} from './sample/overview.component'
+import {KPIComponent} from './statistics/kpi.component'
 
 const routes: Routes = [
   //{path: 'genre', component: GenreComponent},
@@ -19,38 +20,38 @@ const routes: Routes = [
   {
     path: 'apps',
     component: AppsComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'view/:id',
     component: ViewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'tree',
     component: TreeViewComponent,
-    canActivate: [UserService],
-    data: {
-      expectedRole: 'lims-admin',
-    },
+    canActivate: [GuardService],
+    //data: {
+    //expectedRole: 'lims-admin',
+    //},
   },
   {
     path: 'workcenter-overview',
     component: WorkcenterOverviewComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'workcenter-dashboard/:id',
     component: WorkcenterDashboardComponent,
-    canActivate: [UserService],
-    data: {
-      expectedRole: 'lims-workcenter-',
-    },
+    canActivate: [GuardService],
+    //data: {
+    //expectedRole: 'lims-workcenter-',
+    //},
   },
   {
     path: 'project-management',
     component: ProjectManagementComponent,
-    canActivate: [UserService],
+    canActivate: [GuardService],
   },
   {
     path: 'material-overview',
@@ -70,10 +71,15 @@ const routes: Routes = [
   {
     path: 'sample-overview/:sample_code',
     component: SampleOverviewComponent,
-    //canActivate: [UserService],
+    canActivate: [GuardService],
     //data: {
     //expectedRole: 'lims-workcenter-',
     //},
+  },
+  {
+    path: 'statistics/kpi',
+    component: KPIComponent,
+    //canActivate: [GuardService],
   },
 ]
 

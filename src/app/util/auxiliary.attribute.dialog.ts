@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'show-auxiliary-attribute-dialog',
@@ -9,7 +9,7 @@ export class ShowAuxiliaryAttributeDialog {
 
   config: any = {}
   constructor(
-    public dialogRef: MdDialogRef<ShowAuxiliaryAttributeDialog>
+    public dialogRef: MatDialogRef<ShowAuxiliaryAttributeDialog>
   ){}
 
   ngOnInit(){

@@ -1,0 +1,140 @@
+<div
+    fxLayout="row"
+    fxLayoutAlign="space-between center" >
+    <h3
+        i18n="@@kpi-title">
+        KPI
+    </h3>
+    <div
+        fxLayoutGap="10px"
+        fxLayout="row"
+        fxLayoutAlign="end center">
+        <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <mat-input-container>
+                <input
+                    matInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateStart"
+                    placeholder="starts at..."/>
+            </mat-input-container>
+            <mat-input-container>
+                <input
+                    matInput
+                    type="date"
+                    (keyup.enter)="getSampleList()"
+                    [(ngModel)]="queryDateEnd"
+                    placeholder="ends at..."/>
+            </mat-input-container>
+        </div>
+        <button
+            mat-button
+            color="primary"
+            aria-label="Search"
+            placeholder="Search"
+            (click)="getSampleList()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+</div>
+<h4 class="section-title">
+    <span
+        i18n="@@kpi-timerange">
+        Time:
+    </span> {{queryDateStart}} - {{queryDateEnd}}
+</h4>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title></mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+    <!--<img mat-card-image src="assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+    <mat-card-content>
+        <table *ngIf="done">
+            <thead>
+                <tr>
+                    <th class="workcenter-column">
+                        Workcenter
+                    </th>
+                    <th *ngFor="let operatorId of operatorMap | objectKeys">
+                        <entity-tostring
+                            [entityId]="operatorId">
+                        </entity-tostring>
+                    </th>
+                    <th>
+                        Sum
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let workcenterId of workcenterMap | objectKeys">
+                    <td class="workcenter-column">
+                        {{workcenterMap[workcenterId]['label']}}
+                    </td>
+                    <td (click)="showDetail(workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId])"
+                        *ngFor = "let operatorId of operatorMap | objectKeys">
+                        {{workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'].hasOwnProperty(operatorId)?workcenterMap[workcenterId]['TMP_OPERATOR_SAMPLE_LIST'][operatorId].length:''}}
+                    </td>
+                    <td (click)="showDetail(workcenterMap[workcenterId]['TMP_SAMPLE_LIST'])">
+                        {{workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length>0?workcenterMap[workcenterId]['TMP_SAMPLE_LIST'].length:''}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+  </mat-card-content>
+</mat-card>
+
+
+<h4 class="section-title"
+    i18n="@@kpi-title-detail"
+    *ngIf="detailedSampleList?.length > 0">
+    Detail
+</h4>
+<mat-accordion [multi]="false">
+    <mat-expansion-panel
+        *ngFor="let sample of detailedSampleList">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{sample.SYS_SAMPLE_CODE}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{sample.id}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div fxLayout="column" fxLayoutAlign="start start" >
+            <div
+                *ngFor="let schema of sample.SYS_SCHEMA"
+                fxLayout="row" fxLayoutAlign="space-between center" >
+                <div style="opacity:0.7">
+                    {{schema.SYS_LABEL}}:
+                </div>
+                <div style="margin-left: 5px;">
+                    <b>
+                        <span
+                            *ngIf="schema.SYS_TYPE == 'date'">
+                            {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
+                        </span>
+                        <span
+                            *ngIf="schema.SYS_TYPE == 'entity'">
+                            <entity-tostring
+                                [entityId]="sample[schema.SYS_CODE]">
+                            </entity-tostring>
+                        </span>
+                        <span
+                            *ngIf="schema.SYS_TYPE != 'date' && schema.SYS_TYPE != 'entity'">
+                                {{sample[schema.SYS_CODE]}}
+                        </span>
+                    </b>
+                </div>
+            </div>
+            <div style="opacity:0.7">
+                Created:
+            </div>
+            <div style="margin-left: 5px;">
+                <b>
+                    {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
+                </b>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

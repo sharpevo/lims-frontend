@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 
 import {EntityService} from '../entity/service'
 import {GenreService} from '../genre/service'
@@ -19,11 +19,11 @@ export class EditPMSampleDialog {
     "SYS_DATE_SCHEDULED": true,
   }
   constructor(
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private entityService: EntityService,
     private genreService: GenreService,
     private router: Router,
-    public dialogRef: MdDialogRef<EditPMSampleDialog>) {}
+    public dialogRef: MatDialogRef<EditPMSampleDialog>) {}
 
     ngOnInit(){
       this.getAttributeList()

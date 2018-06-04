@@ -1,35 +1,41 @@
-<!--<table style="margin-left: 50px; opacity: 0.5">-->
-    <!--<th-->
-        <!--*ngFor="let workcenter of workcenterList">-->
-        <!--<entity-tostring-->
-            <!--[entity]="workcenter">-->
-        <!--</entity-tostring>-->
-    <!--</th>-->
-    <!--<tr-->
-        <!--*ngFor="let targetId of getTargetSampleIds()">-->
-        <!--<td-->
-            <!--*ngFor="let workcenter of workcenterList">-->
-            <!--<md-checkbox-->
-                <!--color="primary"-->
-                <!--class="example-margin"-->
-                <!--[(ngModel)]="sample.TMP_CHECK">-->
-                <!--{{sample.SYS_SAMPLE_CODE}}-->
-            <!--</md-checkbox>-->
-            <!--<entity-tostring-->
-                <!--[entity]="sampleMatrix[targetId][workcenter['SYS_IDENTIFIER']+'/']">-->
-            <!--</entity-tostring>-->
-        <!--</td>-->
-    <!--</tr>-->
-<!--</table>-->
 <div
-    *ngIf="lineChartData.length > 0"
+    *ngFor="let chartItem of lineChartItemList"
     style="display: block;">
+    <div
+        fxLayout="row"
+        fxLayoutGap="10px"
+        fxLayoutAlign="end center">
+        <div>
+            {{targetSampleMap[chartItem['targetSampleId']].createdAt | date: 'yyyy.MM.dd hh:mm'}}
+        </div>
+    </div>
     <canvas baseChart width="200" height="100"
-                [datasets]="lineChartData"
-                [labels]="lineChartLabels"
-                [options]="lineChartOptions"
+                [class.terminatedSample]="targetSampleMap[chartItem['targetSampleId']].SYS_DATE_TERMINATED"
+                [datasets]="chartItem['data']"
+                [labels]="chartItem['labels']"
+                [options]="chartItem['options']"
+                [colors]="chartItem['colors']"
                 [legend]="lineChartLegend"
                 [chartType]="lineChartType"
                 (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+                (chartClick)="chartClicked(chartItem, $event)"></canvas>
+    <br/>
 </div>
+<div
+    fxLayoutGap="10px"
+    fxLayout="row"
+    fxLayoutAlign="start center">
+    <button
+        mat-button
+        [disabled]="(lineChartSelectedSampleMap|json) == '{}'"
+        (click)="terminateAll()">
+        Terminate
+    </button>
+    <button
+        mat-button
+        [disabled]="(lineChartSelectedSampleMap|json) == '{}'"
+        (click)="recoverAll()">
+        Recover
+    </button>
+</div>
+

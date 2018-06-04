@@ -6,8 +6,8 @@
     </h3>
     <button
         tabindex="-1"
-        md-icon-button
-        md-dialog-close>
+        mat-icon-button
+        mat-dialog-close>
         x 
     </button>
 </div>
@@ -16,147 +16,162 @@
 <div
     fxLayout="column"
     fxLayoutAlign="center stretch"> 
-    <md-input-container
+    <mat-input-container
         style="display:none"
         class="full-width">
         <input
-            mdInput
+            matInput
             disabled
             type="text"
             [(ngModel)]="object.id"
             placeholder="Key"/>
-    </md-input-container>
-    <md-select
-        class="full-width"
-        placeholder="Entity Type"
-        [(ngModel)]="object.SYS_GENRE">
-        <md-option
-            *ngFor="let genre of genreList"
-            (click)="getAttributesByGenre(genre.id)"
-            [value]="genre.id">
-            {{genre[genre["SYS_LABEL"]]}}
-        </md-option>
-    </md-select>
+    </mat-input-container>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            placeholder="Entity Type"
+            [(ngModel)]="object.SYS_GENRE">
+            <mat-option
+                *ngFor="let genre of genreList"
+                (click)="getAttributesByGenre(genre.id)"
+                [value]="genre.id">
+                {{genre[genre["SYS_LABEL"]]}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <br/>
-    <md-input-container class="full-width">
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             required
             type="text"
             [(ngModel)]="object.SYS_CODE"
             placeholder="Key"/>
-    </md-input-container>
-    <md-input-container class="full-width">
+    </mat-input-container>
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             required
             type="text"
             [(ngModel)]="object.label"
             placeholder="Title"/>
-    </md-input-container>
-    <md-input-container class="full-width">
+    </mat-input-container>
+    <mat-input-container class="full-width">
         <input
-            mdInput
+            matInput
             type="number"
             [(ngModel)]="object.SYS_ORDER"
             placeholder="Nubmer of order"/>
-    </md-input-container>
+    </mat-input-container>
     <br/>
-    <md-select
-        class="full-width"
-        placeholder="Attribute data type"
-        [(ngModel)]="object.SYS_TYPE">
-        <md-option
-            *ngFor="let type of objectTypeList"
-            [value]="type.value">
-            {{type.title}}
-        </md-option>
-    </md-select>
+    <mat-form-field>
+        <mat-select
+            class="full-width"
+            placeholder="Attribute data type"
+            [(ngModel)]="object.SYS_TYPE">
+            <mat-option
+                *ngFor="let type of objectTypeList"
+                [value]="type.value">
+                {{type.title}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <br/>
     <span [ngSwitch]="object.SYS_TYPE">
         <span *ngSwitchCase="'entity'">
-            <md-select
-                class="full-width"
-                placeholder="Entity Level">
-                <!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
-                <md-option
-                *ngFor="let category of categoryList"
-                (click)="getEntityListByType(category.value)"
-                [value]="category.value">
-                    {{category.title}}
-                </md-option>
-            </md-select>
-            <br/>
-            <br/>
-            <md-select
-                class="full-width"
-                placeholder="Select the entity (single)"
-                [(ngModel)]="object.SYS_TYPE_ENTITY">
-                <md-option
-                *ngFor="let entity of entityCandidateList"
-                [value]="entity.id">
-                    {{entity[entity["SYS_LABEL"]]}}
-                </md-option>
-            </md-select>
-            <br/>
-            <br/>
-            <md-select
-                class="full-width"
-                placeholder="Target Entity"
-                [(ngModel)]="object.SYS_FLOOR_ENTITY_TYPE">
-                <md-option
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Entity Level">
+                    <!--[(ngModel)]="object.SYS_CEILING_ENTITY_TYPE"-->
+                    <mat-option
                     *ngFor="let category of categoryList"
+                    (click)="getEntityListByType(category.value)"
                     [value]="category.value">
-                    {{category.title}}
-                </md-option>
-            </md-select>
+                        {{category.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <br/>
             <br/>
-            <md-checkbox
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Select the entity (single)"
+                    [(ngModel)]="object.SYS_TYPE_ENTITY">
+                    <mat-option
+                    *ngFor="let entity of entityCandidateList"
+                    [value]="entity.id">
+                        {{entity[entity["SYS_LABEL"]]}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br/>
+            <br/>
+            <mat-form-field>
+                <mat-select
+                    class="full-width"
+                    placeholder="Target Entity"
+                    [(ngModel)]="object.SYS_FLOOR_ENTITY_TYPE">
+                    <mat-option
+                        *ngFor="let category of categoryList"
+                        [value]="category.value">
+                        {{category.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br/>
+            <br/>
+            <mat-checkbox
                 color="primary"
                 [(ngModel)]="object.SYS_TYPE_ENTITY_REF">
                 Take as reference and not expand the list
-            </md-checkbox>
+            </mat-checkbox>
         </span>
         <span *ngSwitchCase="'list'">
-            <md-input-container class="full-width">
+            <mat-input-container class="full-width">
                 <input
-                    mdInput
+                    matInput
                     required
                     type="text"
                     [(ngModel)]="object.SYS_TYPE_LIST"
                     placeholder="value:title,value:title,..."/>
-            </md-input-container>
+            </mat-input-container>
         </span>
     </span>
-    <md-input-container class="full-width">
+    <mat-input-container class="full-width">
         <textarea
-            mdInput
+            matInput
             [(ngModel)]="object.description"
             placeholder="Description">
         </textarea>
-    </md-input-container>
-    <md-checkbox
+    </mat-input-container>
+    <mat-checkbox
         color="primary"
         [(ngModel)]="object.SYS_REQUIRED">
         Required
-    </md-checkbox>
-    <md-checkbox
+    </mat-checkbox>
+    <mat-checkbox
         color="primary"
         [(ngModel)]="object.SYS_IS_ENTITY_LABEL">
         As label
-    </md-checkbox>
+    </mat-checkbox>
+    <mat-checkbox
+        color="primary"
+        [(ngModel)]="object.SYS_IS_ON_BOARD">
+        Onboard
+    </mat-checkbox>
 </div>
 <div
     fxLayout="row"
     fxLayoutAlign="end end">
     <button 
-        md-button
+        mat-button
         (click)="createObject()">
         SUBMIT
     </button>
     <button 
-        md-button
+        mat-button
         (click)="object = {}">
         CLEAR
     </button>
@@ -166,7 +181,7 @@
     *ngFor="let attribute of attributeList"
     fxLayout="column"
     fxLayoutAlign="center stretch">
-    <md-card
+    <mat-card
         fxLayout="row"
         fxLayoutAlign="space-between center">
         <div>
@@ -194,16 +209,16 @@
             {{attribute.SYS_TYPE}}
             <span style="color: #aaa">{{attribute.id}}</span>
             <button
-                md-icon-button
+                mat-icon-button
                   (click)="editAttribute(attribute)">
                 /
             </button>
             <button
-                md-icon-button
+                mat-icon-button
                 (click)="deleteAttributeById(attribute.id)">
                 x
             </button>
         </div>
-    </md-card>
+    </mat-card>
     <br/>
 </div>

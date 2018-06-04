@@ -1,25 +1,30 @@
 <div fxLayout="row" fxLayoutAlign="space-between center"
     (window:resize)="onSizeChanged($event)">
     <div fxFlex>
-        <md-grid-list
+        <mat-grid-list
             cols="{{gridCols}}"
             rowHeight="1:1">
-            <md-grid-tile
+            <mat-grid-tile
                 *ngFor="let app of appList">
-                <md-card
+                <mat-card
                     (click)="navigateTo(app)"
                     class="square_board">
                     <div
                         style="height:100%"
                         fxLayout="column"
                         fxLayoutAlign="space-between center" >
-                        <md-icon style="text-align: center" fxFlex=70 class="appIcon">{{app.icon}}</md-icon>
+                        <mat-icon style="text-align: center" fxFlex=70 class="appIcon">{{app.icon}}</mat-icon>
                         <label class="appLabel">
                             {{app.label}}
                         </label>
+                        <span
+                            *ngIf="app.sampleCount > 0"
+                            class="sample-count">
+                            {{app.sampleCount}}
+                        </span>
                     </div>
-                </md-card>
-            </md-grid-tile>
-        </md-grid-list>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
     </div>
 </div>

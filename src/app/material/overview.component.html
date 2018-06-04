@@ -8,45 +8,47 @@
         fxLayoutGap="10px"
         fxLayout="row"
         fxLayoutAlign="end center">
-        <md-select
-            *ngIf="materialObjectList.length > 0"
-            [(ngModel)]="queryCode"
-            placeholder="Attribute">
-            <md-option
-                value="{{attr.SYS_CODE}}"
-                *ngFor="let attr of materialObjectList[0].SYS_SCHEMA">
-                {{attr.SYS_LABEL}}
-            </md-option>
-        </md-select>
-        <md-input-container>
+        <mat-form-field
+            *ngIf="materialObjectList.length > 0">
+            <mat-select
+                [(ngModel)]="queryCode"
+                placeholder="Attribute">
+                <mat-option
+                    value="{{attr.SYS_CODE}}"
+                    *ngFor="let attr of queryAttributeList">
+                    {{attr.SYS_LABEL}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-input-container>
             <button
-                md-button
-                mdPrefix
-                md-icon-button
+                mat-button
+                matPrefix
+                mat-icon-button
                 aria-label="Clear"
                 placeholder="Search"
                 (click)="getMaterialList()">
-                <md-icon>search</md-icon>
+                <mat-icon>search</mat-icon>
             </button>
             <input
-                mdInput
+                matInput
                 type="text"
                 (keyup.enter)="getMaterialList()"
                 [(ngModel)]="queryValue"
                 placeholder=""/>
-            <md-error *ngIf="queryCode==''">
+            <mat-error *ngIf="queryCode==''">
                 Attribute is <strong>required</strong>
-            </md-error>
+            </mat-error>
             <button
-                md-button
+                mat-button
                 *ngIf="queryValue"
-                mdSuffix
-                md-icon-button
+                matSuffix
+                mat-icon-button
                 aria-label="Clear"
                 (click)="clearQuery()">
-                <md-icon>close</md-icon>
+                <mat-icon>close</mat-icon>
             </button>
-        </md-input-container>
+        </mat-input-container>
     </div>
 </div>
 
@@ -62,61 +64,78 @@
     <div
         fxLayout="column"
         fxLayoutAlign="space-between stretch">
-        <md-accordion [multi]="true">
+        <mat-accordion [multi]="true">
         <div *ngFor="let lot of material['TMP_LOT_LIST']">
-            <md-expansion-panel
+            <mat-expansion-panel
                 [expanded]="isExpanded(lot.id)"
                 (opened)="openPanel(lot.id)"
                 (closed)="closePanel(lot.id)">
-                <md-expansion-panel-header>
-                    <md-panel-title>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
                         {{lot[lot['SYS_LABEL']]}}
                         <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
                             ({{lot.id}})
                         </span>
-                    </md-panel-title>
-                    <md-panel-description>
-                    </md-panel-description>
-                </md-expansion-panel-header>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
                 <div fxLayout="row" fxLayoutAlign="start stretch" >
-                    <md-list>
+                    <mat-list>
                         <h3 mat-subheader>采购记录(planning...)</h3>
-                        <md-list-item>
+                        <mat-list-item>
                             ...
-                        </md-list-item>
-                        <md-divider></md-divider>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
                         <h3 mat-subheader>样品记录: {{total}}</h3>
-                        <md-list-item *ngFor="let sample of sampleMap[lot.id]">
-                            <md-icon mat-list-icon>format_color_fill</md-icon>
-                            <h4 md-line>{{sample.SYS_SAMPLE_CODE}}</h4>
-                            <p md-line> {{sample.createdAt | date}}: {{sample.SYS_QUANTITY}}, {{sample.REMARK}}</p>
-                        </md-list-item>
-                    </md-list>
+                        <mat-list-item *ngFor="let sample of sampleMap[lot.id]">
+                            <mat-icon mat-list-icon>format_color_fill</mat-icon>
+                            <h4 mat-line>{{sample.SYS_SAMPLE_CODE}}</h4>
+                            <p mat-line> {{sample.createdAt | date}}: {{sample.SYS_QUANTITY}}, {{sample.SYS_REMARK}}</p>
+                        </mat-list-item>
+                    </mat-list>
                 </div>
-                <md-action-row>
-                    <button md-button (click)="openEditEntityDialog(lot)">Add</button>
-                    <button md-button color="accent" (click)="showMessage('planning...')">Default LOT</button>
-                    <button md-button color="warn" (click)="showMessage('planning...')">Disable</button>
-                </md-action-row>
-            </md-expansion-panel>
+                <mat-action-row>
+                    <button mat-button (click)="openEditEntityDialog(lot)">Add</button>
+                    <button mat-button color="accent" (click)="showMessage('planning...')">Default LOT</button>
+                    <button mat-button color="warn" (click)="showMessage('planning...')">Disable</button>
+                </mat-action-row>
+            </mat-expansion-panel>
         </div>
-        </md-accordion>
+        </mat-accordion>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" >
         <button
-            md-icon-button
+            mat-icon-button
             (click)="showMessage('planning...')">
-            <md-icon>add</md-icon>
+            <mat-icon>add</mat-icon>
         </button>
         <button
-            md-icon-button
+            mat-icon-button
             (click)="showMessage('planning...')">
-            <md-icon>keyboard_arrow_left</md-icon>
+            <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
         <button
-            md-icon-button
+            mat-icon-button
             (click)="showMessage('planning...')">
-            <md-icon>keyboard_arrow_right</md-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
         </button>
     </div>
 </div>
+<div fxLayout="row" fxLayoutAlign="end center" >
+    <button
+        mat-icon-button>
+        <mat-icon>add</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="prevPage()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        (click)="nextPage()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+</div>
+

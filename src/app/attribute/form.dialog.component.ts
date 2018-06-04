@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 import {AttributeService} from './service'
 import {GenreService} from '../genre/service'
@@ -41,7 +41,7 @@ export class AttributeFormDialog {
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
-    public dialogRef: MdDialogRef<AttributeFormDialog>){}
+    public dialogRef: MatDialogRef<AttributeFormDialog>){}
 
     ngOnInit(){
       this.getGenreListByEntityId(this.config.entity.id)

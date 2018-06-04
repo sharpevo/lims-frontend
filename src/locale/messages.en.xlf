@@ -3,50 +3,48 @@
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="en">
     <body>
       <trans-unit id="dashboard-tab-scheduled" datatype="html">
-        <source>Scheduled</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      <target state="final">Scheduled</target></trans-unit>
+        <source>
+        Scheduled
+    </source>
+        
+      <target state="translated">Scheduled</target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit>
       <trans-unit id="dashboard-tab-processing" datatype="html">
-        <source>Processing</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      <target state="final">Processing</target></trans-unit>
+        <source>
+        Processing
+    </source>
+        
+      <target state="translated">Processing</target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
       <trans-unit id="dashboard-tab-completed" datatype="html">
-        <source>Completed</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      <target state="final">Completed</target></trans-unit>
+        <source>
+        Completed
+    </source>
+        
+      <target state="translated">Completed</target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">184</context></context-group></trans-unit>
       <trans-unit id="dashboard-scheduled-samples" datatype="html">
         <source>
+                    SCHEDULED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
+        
+      <target state="translated">
             SCHEDULED SAMPLES
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workcenter/dashboard.component.ts</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      <target state="final">
-            SCHEDULED SAMPLES
-        </target></trans-unit>
+        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">30</context></context-group></trans-unit>
       <trans-unit id="dashboard-activated-samples" datatype="html">
         <source>
                     ACTIVATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
                 </source>
         
       <target state="translated">
             ACTIVATED SAMPLES
-        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit>
+        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
       
       <trans-unit id="dashboard-operator" datatype="html">
         <source>Operator</source>
         
-      <target state="final">Operator</target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit>
+      <target state="final">Operator</target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-dispatch" datatype="html">
         <source>
                         DISPATCH
@@ -54,7 +52,7 @@
         
       <target state="final">
                         DISPATCH
-                    </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
       <trans-unit id="dashboard-btn-terminate" datatype="html">
         <source>
                         TERMINATE
@@ -62,31 +60,37 @@
         
       <target state="translated">
                         TERMINATED
-                    </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">106</context></context-group></trans-unit>
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">117</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">170</context></context-group></trans-unit>
       <trans-unit id="dashboard-dispateched-samples" datatype="html">
         <source>
                     DISPATCHED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
                 </source>
         
       <target state="translated">
             DISPATCHED SAMPLES
-        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit>
+        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">130</context></context-group></trans-unit>
       <trans-unit id="dashboard-completed-samples" datatype="html">
         <source>
-            COMPLETED SAMPLES
-        </source>
+                    COMPLETED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
         
-      <target state="final">
+      <target state="translated">
             COMPLETED SAMPLES
-        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">130</context></context-group></trans-unit>
+        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">199</context></context-group></trans-unit>
       <trans-unit id="dashboard-terminated-samples" datatype="html">
         <source>
-            TERMINATED SAMPLES
-        </source>
+                    TERMINATED SAMPLES
+                    <x id="START_TAG_SPAN" ctype="x-span"/>
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span"/>
+                </source>
         
-      <target state="final">
+      <target state="translated">
             TERMINATED SAMPLES
-        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">150</context></context-group></trans-unit>
+        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">237</context></context-group></trans-unit>
     <trans-unit id="dashboard-btn-release" datatype="html">
         <source>
                         RELEASE
@@ -94,13 +98,148 @@
         
       <target state="translated">
                             RELEASE
-                        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="dashboard-btn-process" datatype="html">
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="dashboard-btn-process" datatype="html">
         <source>
                         PROCESS
                     </source>
         
       <target state="translated">
                             <x id="START_TAG_SPAN" ctype="x-span"/>PROCESS<x id="CLOSE_TAG_SPAN" ctype="x-span"/>
-                        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit></body>
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/workcenter/dashboard.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit><trans-unit id="project-management-sample-section" datatype="html">
+        <source>
+        Sample List
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      <target state="final">
+        Sample List
+    </target></trans-unit><trans-unit id="project-management-util-section" datatype="html">
+        <source>
+        Utils
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workcenter/project.management.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+      <target state="final">
+        Utils
+    </target></trans-unit><trans-unit id="plugin-excel-intro-export" datatype="html">
+        <source>
+                            Export:
+                        </source>
+        
+      <target state="final">
+                            Export:
+                        </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="plugin-excel-button-export" datatype="html">
+        <source>
+                    EXPORT
+                </source>
+        
+      <target state="final">
+                    EXPORT
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="plugin-excel-label-choosefile" datatype="html">
+        <source>
+                        Choose File:
+                    </source>
+        
+      <target state="final">
+                        Choose File:
+                    </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="plugin-excel-button-import" datatype="html">
+        <source>
+                    IMPORT
+                </source>
+        
+      <target state="final">
+                    IMPORT
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="plugin-excel-button-template" datatype="html">
+        <source>
+                    TEMPLATE
+                </source>
+        
+      <target state="final">
+                    TEMPLATE
+                </target><context-group purpose="location"><context context-type="sourcefile">app/plugins/excel.processor.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="plugin-excel-title" datatype="html">
+        <source>
+            Plugin: Excel Processor
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/excel.processor.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      <target state="final">
+            Plugin: Excel Processor
+        </target></trans-unit><trans-unit id="plugin-index-validator-title" datatype="html">
+        <source>
+            Plugin: Index Validator
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      <target state="final">
+            Plugin: Index Validator
+        </target></trans-unit><trans-unit id="plugin-index-result-pass" datatype="html">
+        <source>
+            PASS
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      <target state="final">
+            PASS
+        </target></trans-unit><trans-unit id="plugin-index-result-fail" datatype="html">
+        <source>
+            FAIL
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      <target state="final">
+            FAIL
+        </target></trans-unit><trans-unit id="plugin-index-result-intro" datatype="html">
+        <source>
+            No sample selected
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/plugins/index.validator.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      <target state="final">
+            No sample selected
+        </target></trans-unit><trans-unit id="kpi-title" datatype="html">
+        <source>
+        KPI
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      <target state="final">
+        KPI
+    </target></trans-unit><trans-unit id="kpi-timerange" datatype="html">
+        <source>
+        Time:
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      <target state="final">
+        Time:
+    </target></trans-unit><trans-unit id="kpi-title-detail" datatype="html">
+        <source>
+    Detail
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/statistics/kpi.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      <target state="final">
+    Detail
+</target></trans-unit></body>
   </file>
 </xliff>

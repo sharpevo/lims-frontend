@@ -20,3 +20,9 @@
     max-width: 800px;
     background-color: #f1f1f1;
 }
+.highlight-log {
+    font-weight: bold !important;
+}
+.cancelled-feature {
+    text-decoration: line-through;
+}

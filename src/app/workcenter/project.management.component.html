@@ -8,171 +8,186 @@
         fxLayoutGap="10px"
         fxLayout="row"
         fxLayoutAlign="end center">
-        <md-select
-            *ngIf="sampleList.length > 0"
-            [(ngModel)]="queryCode"
-            placeholder="Attribute">
-            <md-option
-                value="{{attr.SYS_CODE}}"
-                *ngFor="let attr of sampleList[0].SYS_SCHEMA">
-                {{attr.SYS_LABEL}}
-            </md-option>
-        </md-select>
-        <md-input-container
+        <mat-form-field
+            *ngIf="queryAttributeList.length > 0">
+            <mat-select
+                [(ngModel)]="queryCode"
+                placeholder="Attribute">
+                <mat-option
+                    value="{{attr.SYS_CODE}}"
+                    *ngFor="let attr of queryAttributeList">
+                    {{attr[attr['SYS_LABEL']]}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-input-container
             *ngIf="queryCode != 'SYS_DATE_COMPLETED'">
             <button
-                md-button
-                mdPrefix
-                md-icon-button
+                mat-button
+                matPrefix
+                mat-icon-button
                 aria-label="Clear"
                 placeholder="Search"
                 (click)="getSampleList()">
-                <md-icon>search</md-icon>
+                <mat-icon>search</mat-icon>
             </button>
             <input
-                mdInput
+                matInput
                 type="text"
                 (keyup.enter)="getSampleList()"
                 [(ngModel)]="queryValue"
                 placeholder=""/>
-            <md-error *ngIf="queryCode==''">
+            <mat-error *ngIf="queryCode==''">
                 Attribute is <strong>required</strong>
-            </md-error>
+            </mat-error>
             <button
-                md-button
+                mat-button
                 *ngIf="queryValue"
-                mdSuffix
-                md-icon-button
+                matSuffix
+                mat-icon-button
                 aria-label="Clear"
                 (click)="clearQuery()">
-                <md-icon>close</md-icon>
+                <mat-icon>close</mat-icon>
             </button>
-        </md-input-container>
-        <md-input-container
+        </mat-input-container>
+        <mat-input-container
             *ngIf="queryCode == 'SYS_DATE_COMPLETED'">
             <div fxLayout="row" fxLayoutAlign="space-between center" >
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateStart"
                     placeholder="starts at..."/>
                 <input
-                    mdInput
+                    matInput
                     type="date"
                     (keyup.enter)="getSampleList()"
                     [(ngModel)]="queryDateEnd"
                     placeholder="ends at..."/>
                 <button
-                    md-button
-                    md-icon-button
+                    mat-button
+                    mat-icon-button
                     aria-label="Search"
                     placeholder="Search"
                     (click)="getSampleList()">
-                    <md-icon>search</md-icon>
+                    <mat-icon>search</mat-icon>
                 </button>
             </div>
-        </md-input-container>
+        </mat-input-container>
+        <button
+            (click)="exportSample()"
+            mat-icon-button>
+            <mat-icon>file_download</mat-icon>
+        </button>
     </div>
 </div>
 <div
     style="margin-top:20px"
     fxLayout="row"
     fxLayoutAlign="space-between end" >
-    <h3 class="section-title">
+    <h3
+        i18n="@@project-management-sample-section"
+        class="section-title">
         Sample List
     </h3>
 </div>
 <div
     fxLayout="column"
     fxLayoutAlign="space-between stretch">
-    <md-accordion [multi]="true">
-    <div *ngFor="let sample of sampleList">
-        <md-expansion-panel
+    <mat-accordion [multi]="true">
+        <mat-expansion-panel
+            *ngFor="let sample of sampleList"
             (opened)="showHistory[sample.id] = true"
             (closed)="showHistory[sample.id] = false"
+            [class.suspend-panel]="sample.SYS_SUSPENSION"
             [class.disabled-panel]="sample.SYS_DATE_TERMINATED">
-            <md-expansion-panel-header>
-                <md-panel-title>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
                     {{sample.SYS_SAMPLE_CODE}}
                     <span style="opacity:0.5;font-size:0.5em;margin-left:5px;">
                         ({{sample.id}})
                     </span>
-                </md-panel-title>
-                <md-panel-description>
-                </md-panel-description>
-            </md-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="space-between center" >
-                <div style="width:700px">
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div
+                *ngIf="showHistory[sample.id]"
+                fxLayout="row"
+                fxLayoutAlign="space-between start" >
+                <div fxFlex="70" style="width:700px">
                     <sample-history
                         *ngIf="showHistory[sample.id]"
                         [sample]="sample">
                     </sample-history>
                 </div>
-                <div fxLayout="column" fxLayoutAlign="start start" >
-                    <div
-                        *ngFor="let schema of sample.SYS_SCHEMA"
-                        fxLayout="row" fxLayoutAlign="space-between center" >
-                        <div style="opacity:0.7">
-                            {{schema.SYS_LABEL}}:
-                        </div>
-                        <div style="margin-left: 5px;">
-                            <b>
-                                <span
-                                    *ngIf="schema.SYS_TYPE == 'date'">
-                                    {{sample[schema.SYS_CODE] | date: 'yyyy.MM.dd HH:mm'}}
-                                </span>
-                                <span
-                                    *ngIf="schema.SYS_TYPE != 'date'">
-                                        {{sample[schema.SYS_CODE]}}
-                                </span>
-                            </b>
-                        </div>
-                    </div>
-                    <div style="opacity:0.7">
-                        Created:
-                    </div>
-                    <div style="margin-left: 5px;">
-                        <b>
-                            {{sample.createdAt | date: 'yyyy.MM.dd HH:mm'}}
-                        </b>
-                    </div>
+                <div fxFlex="8">
                 </div>
+                <sample-info-vertical-panel
+                     fxFlex
+                     [sampleCode]="sample.SYS_SAMPLE_CODE">
+                </sample-info-vertical-panel>
             </div>
-            <md-action-row>
-                <button md-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
-                <button md-button (click)="openEditEntityDialog(sample)">Edit</button>
-                <button md-button color="accent" (click)="showMessage('Click the dot in the diagram')">Reschedule</button>
-                <button md-button color="warn" (click)="showMessage('planning...')">Pause</button>
-            </md-action-row>
-        </md-expansion-panel>
-    </div>
-    </md-accordion>
+            <mat-action-row>
+                <button mat-button [routerLink]="['/sample-overview', sample.SYS_SAMPLE_CODE]">Detail</button>
+                <button mat-button (click)="openEditEntityDialog(sample)">Edit</button>
+                <button mat-button (click)="terminateSample(sample)">Terminate</button>
+                <div *ngIf="sample.SYS_SUSPENSION; then resumeButton else suspendButton"></div>
+                <ng-template #suspendButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample, true)">
+                        Suspend
+                    </button>
+                </ng-template>
+                <ng-template #resumeButton>
+                    <button
+                        mat-button
+                        (click)="openSuspendSampleDialog(sample,false)">
+                        Resume
+                    </button>
+                </ng-template>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>
 <div fxLayout="row" fxLayoutAlign="end center" >
     <button
-        md-icon-button
+        mat-icon-button
         (click)="openNewEntityDialog(entity)">
-        <md-icon>add</md-icon>
+        <mat-icon>add</mat-icon>
     </button>
     <button
-        md-icon-button
+        mat-icon-button
         (click)="prevPage()">
-        <md-icon>keyboard_arrow_left</md-icon>
+        <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <button
-        md-icon-button
+        mat-icon-button
         (click)="nextPage()">
-        <md-icon>keyboard_arrow_right</md-icon>
+        <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
 </div>
 <div
     style="margin-top: 20px">
-    <h3 class="section-title">
+    <h3
+        i18n="@@project-management-util-section"
+        class="section-title">
         Utils
     </h3>
+    <workcenter-form
+        *ngIf="(entity | json) != '{}'"
+        [object]="formObject"
+        [(excelAttributeList)]="excelAttributeList"
+        [(boardAttributeList)]="boardAttributeList"
+        [workcenter]="entity">
+    </workcenter-form>
     <plugin-excel-processor
         *ngIf="(entity | json) != '{}'"
+        [excelAttributeList]="excelAttributeList"
+        [boardAttributeList]="boardAttributeList"
+        [formObject]="formObject"
         [hybridObjectMap]="{}"
         [sampleList]="sampleList"
         [workcenter]="entity">

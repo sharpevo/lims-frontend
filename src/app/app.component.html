@@ -1,11 +1,17 @@
 <section layout="row" flex>
-    <md-toolbar
+    <mat-toolbar
         class="fixed-toolbar">
-        <button md-icon-button checked="true" (click)="sidenav.toggle()">
-            <md-icon class="toolbar-icon">menu</md-icon>
+        <button mat-icon-button checked="true" style="display:none;" (click)="sidenav.toggle()">
+            <mat-icon class="toolbar-icon">menu</mat-icon>
         </button>
-        <button md-icon-button checked="true" [routerLink]="['apps']">
-            <md-icon class="toolbar-icon">apps</md-icon>
+        <button mat-icon-button checked="true" [routerLink]="['/']">
+            <mat-icon class="toolbar-icon">home</mat-icon>
+        </button>
+        <button mat-icon-button checked="true" (click)="refresh()">
+            <mat-icon class="toolbar-icon">refresh</mat-icon>
+        </button>
+        <button mat-icon-button checked="true" [routerLink]="['apps']">
+            <mat-icon class="toolbar-icon">apps</mat-icon>
         </button>
         <span class="toolbar-version">
             {{environment.version}}
@@ -13,175 +19,202 @@
         <span class="toolbar-spacer"></span>
         <span class="toolbar-version">
             <span *ngIf="userInfo">
-                <button md-button [mdMenuTriggerFor]="userMenu">
+                <button mat-button [matMenuTriggerFor]="userMenu">
                     {{userInfo.email}}
                 </button>
-                <md-menu #userMenu="mdMenu">
+                <mat-menu #userMenu="matMenu">
                     <a
                         href="{{environment.uicUrl}}/profile"
-                        md-menu-item>
-                        <md-icon>account_circle</md-icon>
+                        mat-menu-item>
+                        <mat-icon>account_circle</mat-icon>
                         <span>Profile</span>
                     </a>
-                    <button md-menu-item disabled>
-                        <md-icon>email</md-icon>
+                    <button mat-menu-item disabled>
+                        <mat-icon>email</mat-icon>
                         <span>{{userInfo.email}}</span>
                     </button>
                     <a
                         href="{{environment.uicUrl}}/logout"
-                        md-menu-item>
-                        <md-icon>exit_to_app</md-icon>
+                        mat-menu-item>
+                        <mat-icon>exit_to_app</mat-icon>
                         <span>Logout</span>
                     </a>
-                </md-menu>
+                </mat-menu>
             </span>
         </span>
         <span class="toolbar-version">
-            <button md-icon-button [mdMenuTriggerFor]="appMenu">
-                <md-icon>more_vert</md-icon>
+            <button mat-icon-button [matMenuTriggerFor]="appMenu">
+                <mat-icon>more_vert</mat-icon>
             </button>
-            <md-menu #appMenu="mdMenu">
+            <mat-menu #appMenu="matMenu">
                 <button
                     (click)="refresh()"
-                    md-menu-item>
-                    <md-icon>refresh</md-icon>
+                    mat-menu-item>
+                    <mat-icon>refresh</mat-icon>
                     <span>Refresh</span>
                 </button>
-                <button md-menu-item disabled>
-                    <md-icon>bug_report</md-icon>
+                <button
+                    (click)="restore()"
+                    mat-menu-item>
+                    <mat-icon>delete</mat-icon>
+                    <span>Clear Database</span>
+                </button>
+                <button
+                    (click)="downloadLog()"
+                    mat-menu-item>
+                    <mat-icon>history</mat-icon>
+                    <span>Export Logs</span>
+                </button>
+                <button mat-menu-item disabled>
+                    <mat-icon>bug_report</mat-icon>
                     <span>Bug report</span>
                 </button>
-            </md-menu>
+            </mat-menu>
         </span>
-    </md-toolbar>
-    <md-sidenav-container style="background:#f1f1f1" fullscreen>
-        <md-sidenav #sidenav mode="side" class="app-sidenav" opened="false">
-            <md-list>
+    </mat-toolbar>
+    <mat-sidenav-container style="background:#f1f1f1" fullscreen>
+        <mat-sidenav #sidenav mode="side" class="app-sidenav" opened="false">
+            <mat-list>
                 <!--<h1 style="text-align:center;font-size:1.5em;">Entities</h1>-->
-                <!--<md-divider></md-divider>-->
-            </md-list>
-            <md-list>
-                <h3 md-subheader> System Admin </h3>
-                <md-list-item>
+                <!--<mat-divider></mat-divider>-->
+            </mat-list>
+            <mat-list>
+                <h3 mat-subheader> System Admin </h3>
+                <mat-list-item>
                     <button 
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['genre']">
                         Type
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button 
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['attribute']">
                         Attribute
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button 
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['entity']">
                         Entity
                     </button>
-                </md-list-item>
-                <md-divider></md-divider>
-                <h3 md-subheader> App Admin </h3>
-                <md-list-item *ngFor="let e of serviceList">
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader> App Admin </h3>
+                <mat-list-item *ngFor="let e of serviceList">
                     <button
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['view', e.id]">
                         {{e.label?e.label:"(no label)"}}
                     </button>
-                </md-list-item>
-                <md-divider></md-divider>
-                <h3 md-subheader> User </h3>
-                <md-list-item>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader> User </h3>
+                <mat-list-item>
                     <button 
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['manufacturing']">
                         Manufacturing
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button 
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['query']">
                         Query
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['tree']">
                         Tree
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['workcenter-overview']">
                         Workcenter Overview
                     </button>
-                </md-list-item>
-                <md-list-item>
+                </mat-list-item>
+                <mat-list-item>
                     <button
-                        md-list-item
-                        md-button
+                        mat-list-item
+                        mat-button
                         class="sidenav-item-button"
                         [routerLink]="['project-management']">
                         Project Management
                     </button>
-                </md-list-item>
-            </md-list>
-        </md-sidenav>
+                </mat-list-item>
+            </mat-list>
+        </mat-sidenav>
         <div class="central-content">
             <div *ngIf="showMessage">
-                <md-list>
-                    <h3 md-subheader>Changelog</h3>
-                    <md-list-item *ngFor="let log of taskCompletedList">
-                        <md-icon
+                <mat-list>
+                    <h1 mat-subheader>Changelog</h1>
+                    <mat-list-item *ngFor="let log of taskCompletedList">
+                        <mat-icon
                             *ngIf="log.title != ''"
-                            md-list-icon>check_box</md-icon>
-                        <md-icon
+                            mat-list-icon>check_box</mat-icon>
+                        <mat-icon
                             *ngIf="log.title == ''"
-                            md-list-icon>more_horiz</md-icon>
-                        <h4 md-line>{{log.title}}</h4>
-                        <p md-line> {{log.date}} </p>
-                    </md-list-item>
-                    <md-divider></md-divider>
-                    <h3 md-subheader>Next</h3>
-                    <md-list-item *ngFor="let log of taskPlannedList">
-                        <md-icon
+                            mat-list-icon>more_horiz</mat-icon>
+                        <h4
+                            mat-line
+                            [class.highlight-log]="log.highlight">
+                            <a
+                                href="{{log.url}}"
+                                *ngIf="log.url">
+                                {{log.title}}
+                            </a>
+                            <span
+                                *ngIf="!log.url">
+                                {{log.title}}
+                            </span>
+                        </h4>
+                        <p style="opacity:0.4;" mat-line>{{log.date}}</p>
+                    </mat-list-item>
+                    <h1 mat-subheader>Issues (high and normal priority)</h1>
+                    <mat-list-item *ngFor="let log of taskPlannedList">
+                        <mat-icon
                             *ngIf="log.title != ''"
-                            md-list-icon>check_box_outline_blank</md-icon>
-                        <md-icon
+                            mat-list-icon>check_box_outline_blank</mat-icon>
+                        <mat-icon
                             *ngIf="log.title == ''"
-                            md-list-icon>more_horiz</md-icon>
-                        <h4 md-line>{{log.title}}</h4>
-                        <p md-line> {{log.date}} </p>
-                    </md-list-item>
-                </md-list>
+                            mat-list-icon>more_horiz</mat-icon>
+                        <h4
+                            mat-line
+                            [class.cancelled-feature]="log.title == '#189 液相多重实验分开下达'">
+                            {{log.title}}
+                        </h4>
+                        <p style="opacity:0.4;" mat-line>{{log.date}}</p>
+                    </mat-list-item>
+                </mat-list>
             </div>
             <router-outlet
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)">
             </router-outlet>
         </div>
-    </md-sidenav-container>
+    </mat-sidenav-container>
     <spinner-component></spinner-component>
 </section>

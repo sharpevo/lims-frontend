@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 import {GenreService} from '../genre/service'
 import {AttributeService} from '../attribute/service'
 
@@ -16,8 +16,8 @@ export class SimpleTableDialog {
   constructor(
     private genreService: GenreService,
     private attributeService: AttributeService,
-    private snackBar: MdSnackBar,
-    public dialogRef: MdDialogRef<SimpleTableDialog>
+    private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<SimpleTableDialog>
   ){}
 
   ngOnInit(){

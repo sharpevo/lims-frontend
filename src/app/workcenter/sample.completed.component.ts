@@ -5,38 +5,36 @@ import {SampleService} from '../models/sample'
 
 
 @Component({
-  selector: 'workcenter-sample-completed',
-  templateUrl: './sample.completed.component.html',
+    selector: 'workcenter-sample-completed',
+    templateUrl: './sample.completed.component.html',
 })
 export class WorkcenterSampleCompletedComponent{
-  @Input() sampleList
-  @Input() callback
-  @Input() workcenter
+    @Input() sampleList
+    @Input() callback
+    @Input() workcenter
 
-  completedSampleList: any[] = []
-  builtSampleList: any[] = []
+    completedSampleList: any[] = []
 
-  constructor(
-    private entityService: EntityService,
-    private sampleService: SampleService,
-  ){}
+    constructor(
+        private entityService: EntityService,
+        private sampleService: SampleService,
+    ){}
 
-  ngOnInit(){
-    this.getSampleList()
-  }
-
-  getSampleList(){
-
-    this.completedSampleList = []
-    if (!this.sampleList){
-      return
+    ngOnInit(){
+        this.getSampleList()
     }
-    this.sampleList.forEach(sample => {
-      if (sample['SYS_DATE_COMPLETED'] &&
-          !sample['SYS_DATE_TERMINATED']) {
-        this.completedSampleList.push(sample)
-      }
-    })
-    this.builtSampleList = this.sampleService.buildSampleInlineList(this.completedSampleList)
-  }
+
+    getSampleList(){
+
+        this.completedSampleList = []
+        if (!this.sampleList){
+            return
+        }
+        this.sampleList.forEach(sample => {
+            if (sample['SYS_DATE_COMPLETED'] &&
+                !sample['SYS_DATE_TERMINATED']) {
+                this.completedSampleList.push(sample)
+            }
+        })
+    }
 }

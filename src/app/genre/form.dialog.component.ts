@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
-import {MdDialog, MdDialogRef} from '@angular/material';
-import {MdSnackBar} from '@angular/material'
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatSnackBar} from '@angular/material'
 
 import {AttributeService} from '../attribute/service'
 import {GenreService} from './service'
@@ -18,11 +18,11 @@ export class GenreFormDialog {
   attributeList: any[] = []
   entityList: any[] = []
   constructor(
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private genreService: GenreService,
     private entityService: EntityService,
     private attributeService: AttributeService,
-    public dialogRef: MdDialogRef<GenreFormDialog>) {}
+    public dialogRef: MatDialogRef<GenreFormDialog>) {}
 
     ngOnInit(){
       this.initObject()
