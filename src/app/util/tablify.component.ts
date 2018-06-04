@@ -95,11 +95,13 @@ export class TablifyComponent {
 
         this.getCommonAttributeList$().subscribe(attributeList => {
             attributeList.forEach(attribute => {
-                this.columnList.push({
-                    'SYS_CODE': attribute['SYS_CODE'],
-                    'SYS_LABEL': attribute[attribute['SYS_LABEL']],
-                    'SYS_TYPE': attribute['SYS_TYPE'],
-                })
+                if (this.columnList.map(column => {return column['SYS_CODE']}).indexOf(attribute['SYS_CODE']) < 0) {
+                    this.columnList.push({
+                        'SYS_CODE': attribute['SYS_CODE'],
+                        'SYS_LABEL': attribute[attribute['SYS_LABEL']],
+                        'SYS_TYPE': attribute['SYS_TYPE'],
+                    })
+                }
             })
 
             // convert object to map
