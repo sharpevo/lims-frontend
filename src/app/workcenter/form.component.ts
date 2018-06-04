@@ -88,6 +88,8 @@ export class WorkcenterFormComponent {
                     }
                     return genre.visible
                 })
+                this.excelAttributeList = this.excelCommonAttributeList
+                this.excelAttributeListChange.emit(this.excelAttributeList)
             })
     }
 
