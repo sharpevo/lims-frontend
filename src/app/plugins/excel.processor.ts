@@ -134,34 +134,34 @@ export class PluginExcelProcessorComponent {
 
         this.excelService.convertIndexCodeToEntityId$(this.excelResultSample)
             .subscribe(converted => {
-        this.excelService.postSampleByExcel$(
-            this.workcenter,
-            this.excelResultSample,
-            parentMap,
-            this.boardAttributeList.concat(this.excelAttributeList),
-            newSampleList,
-        )
-            .subscribe(
-                data => {
-                    this.logger.debug("UpdateExcel Response", data)
-                    targetOutput.push(data)
-                },
-                err => {
-                },
-                () => {
-                    this.logger.warn("targetoutput", targetOutput)
-                    this.sampleService.sendMessageToDingTalk$(
-                        issueSample,
-                        newSampleList,
-                        this.excelResultSample,
-                        this.workcenterAttributeList,
-                        targetOutput,
-                        this.workcenter,
-                    ).subscribe()
+                this.excelService.postSampleByExcel$(
+                    this.workcenter,
+                    this.excelResultSample,
+                    parentMap,
+                    this.boardAttributeList.concat(this.excelAttributeList),
+                    newSampleList,
+                )
+                    .subscribe(
+                        data => {
+                            this.logger.debug("UpdateExcel Response", data)
+                            targetOutput.push(data)
+                        },
+                        err => {
+                        },
+                        () => {
+                            this.logger.warn("targetoutput", targetOutput)
+                            this.sampleService.sendMessageToDingTalk$(
+                                issueSample,
+                                newSampleList,
+                                this.excelResultSample,
+                                this.workcenterAttributeList,
+                                targetOutput,
+                                this.workcenter,
+                            ).subscribe()
 
-                    this.router.navigate(['/redirect' + this.router.url])
-                }
-            )
+                            this.router.navigate(['/redirect' + this.router.url])
+                        }
+                    )
             })
 
     }
