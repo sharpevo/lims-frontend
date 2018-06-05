@@ -12,5 +12,5 @@ export const environment = {
     //limsbotUrl: "http://notif.lims.igenetech.cn/send",
     auditUrl: "http://audit.lims.igenetech.cn",
     version: "dev",
-    logConsoleLevel: "INFO",
+    logConsoleLevel: "ALL",
 };
