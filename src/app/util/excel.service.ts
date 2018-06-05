@@ -249,4 +249,43 @@ export class ExcelService {
         }
     }
 
+    convertIndexCodeToEntityId$(
+        sampleListInExcel: any[],
+    ) {
+        let tpe1Label = "TPE 1.0编号"
+        let tpe2Label = "TPE 2.0编号"
+        let igt5Label = "IGT-I5编号"
+        let igt7Label = "IGT-I7编号"
+
+        return Observable.forkJoin(
+            this.entityService.retrieveByIdentifier("/MATERIAL/TPE/"),
+            this.entityService.retrieveByIdentifier("/MATERIAL/IGT/"),
+        ).map((data: any[][]) => {
+            let tpeList = data[0]
+            let igtList = data[1]
+            for (let sampleInExcel of sampleListInExcel) {
+                // Teated as material but not track on the usage
+                for (let tpe of tpeList) {
+                    if (sampleInExcel[tpe1Label] == tpe['SYS_INDEX_CODE']) {
+                        sampleInExcel[tpe1Label] = tpe.id
+                    }
+                    if (sampleInExcel[tpe2Label] == tpe['SYS_INDEX_CODE']) {
+                        sampleInExcel[tpe2Label] = tpe.id
+                    }
+                }
+                for (let igt of igtList) {
+                    if (sampleInExcel[igt5Label] == igt['SYS_INDEX_CODE']) {
+                        sampleInExcel[igt5Label] = igt.id
+                    }
+                    if (sampleInExcel[igt7Label] == igt['SYS_INDEX_CODE']) {
+                        sampleInExcel[igt7Label] = igt.id
+                    }
+                }
+            }
+        })
+
+
+
+    }
+
 }
