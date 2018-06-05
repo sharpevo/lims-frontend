@@ -229,7 +229,7 @@ export class TablifyComponent {
                                     this.hybridObjectMap[sample['SYS_SAMPLE_CODE']] = {}
                                 }
                                 let attributeObjectList = this.sampleService.getAuxiliaryAttributes(sample, sampleSet, key, this.columnMap[key]['SYS_GENRE'])
-                                if (attributeObjectList.length > 0) {
+                                if (attributeObjectList.length > 0 && key != "id") {
                                     this.hybridObjectMap[sample['SYS_SAMPLE_CODE']][key] = {
                                         'value': attributeObjectList[0]['value'],
                                         'SYS_LABEL': this.columnMap[key]['SYS_LABEL'],
