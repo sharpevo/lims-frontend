@@ -131,6 +131,9 @@ export class PluginExcelProcessorComponent {
 
         let targetOutput = []
         let newSampleList = []
+
+        this.excelService.convertIndexCodeToEntityId$(this.excelResultSample)
+            .subscribe(converted => {
         this.excelService.postSampleByExcel$(
             this.workcenter,
             this.excelResultSample,
@@ -159,6 +162,7 @@ export class PluginExcelProcessorComponent {
                     this.router.navigate(['/redirect' + this.router.url])
                 }
             )
+            })
 
     }
 
