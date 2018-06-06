@@ -45,7 +45,7 @@ export class PluginIndexValidatorComponent {
         private sampleService: SampleService,
     ) {}
 
-    ngOnInit(){
+    ngOnInit() {
         this.updatePreviousCheckedList()
 
         this.indexSysCodeList.concat(this.sequenceSysCodeList).forEach(key => {
@@ -57,46 +57,46 @@ export class PluginIndexValidatorComponent {
         })
     }
 
-    ngDoCheck(){
-        if (this.isSampleListChanged()){
+    ngDoCheck() {
+        if (this.isSampleListChanged()) {
             this.validateIndices()
         }
     }
 
-    updatePreviousCheckedList(){
+    updatePreviousCheckedList() {
         this.previousCheckedList = []
-        for (let i=0; i<this.sampleList.length; i++){
+        for (let i = 0; i < this.sampleList.length; i++) {
             let sample = this.sampleList[i]
-            if (sample['TMP_CHECKED']){
-                this.previousCheckedList.push(true) 
+            if (sample['TMP_CHECKED']) {
+                this.previousCheckedList.push(true)
             } else {
-                this.previousCheckedList.push(false) 
+                this.previousCheckedList.push(false)
             }
         }
     }
 
-    isSampleListChanged(): boolean{
-        for (let i=0; i<this.sampleList.length; i++){
+    isSampleListChanged(): boolean {
+        for (let i = 0; i < this.sampleList.length; i++) {
             let sample = this.sampleList[i]
             if (sample['TMP_CHECKED'] != null &&
-                sample['TMP_CHECKED'] != this.previousCheckedList[i]){
+                sample['TMP_CHECKED'] != this.previousCheckedList[i]) {
                 console.log("==", sample['TMP_CHECKED'], this.previousCheckedList[i])
-            this.updatePreviousCheckedList()
-            return true
+                this.updatePreviousCheckedList()
+                return true
             }
         }
         return false
     }
 
-    validateIndices(){
+    validateIndices() {
         this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
         this.resultList = []
         this.seqMap = []
-        if (this.selectedSampleList.length == 0){
+        if (this.selectedSampleList.length == 0) {
             return
         }
         let sampleObs = []
-        for (let i=0; i<this.selectedSampleList.length; i++){
+        for (let i = 0; i < this.selectedSampleList.length; i++) {
             let sample = this.selectedSampleList[i]
             this.resultList[i] = true
 
@@ -133,32 +133,32 @@ export class PluginIndexValidatorComponent {
                             'sampleId': sample.id,
                             'index': i
                         }
-                        })
+                    })
                 )
             })
         } // end of for loop
 
         Observable
-        .forkJoin(sampleObs)
-        .subscribe(data => {
-            console.log("DATA", data)
-            data.forEach(result => {
-                let key = result['key']
+            .forkJoin(sampleObs)
+            .subscribe(data => {
+                console.log("DATA", data)
+                data.forEach(result => {
+                    let key = result['key']
                     let attr = result['value'] ? result['value'] : ''
-                let sampleId = result['sampleId']
-                let index = result['index']
+                    let sampleId = result['sampleId']
+                    let index = result['index']
                     this.sampleMap[sampleId][key] = attr
-            })
+                })
 
-            this.result = true
-            this.selectedSampleList.forEach((sample, index) => {
-                this.checkSequence(sample.id, index)
+                this.result = true
+                this.selectedSampleList.forEach((sample, index) => {
+                    this.checkSequence(sample.id, index)
+                })
             })
-        })
 
     }
 
-    checkSequence(sampleId: string, index: number){
+    checkSequence(sampleId: string, index: number) {
         let tpe1 = this.sampleMap[sampleId]["SYS_INDEX_TPE_1"]
         let tpe2 = this.sampleMap[sampleId]["SYS_INDEX_TPE_2"]
         let igt1 = this.sampleMap[sampleId]["SYS_INDEX_IGT_1"]
@@ -167,7 +167,7 @@ export class PluginIndexValidatorComponent {
         let ext2 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"]
         let key = tpe1 + tpe2 + igt1 + igt2 + ext1 + ext2
 
-        if (this.seqMap.hasOwnProperty(key) && Number(this.seqMap[key]) != index){
+        if (this.seqMap.hasOwnProperty(key) && Number(this.seqMap[key]) != index) {
             console.log("duped: ", sampleId, key, this.seqMap)
             this.result = false
             this.resultList[index] = false
