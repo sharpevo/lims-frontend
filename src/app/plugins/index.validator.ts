@@ -108,10 +108,11 @@ export class PluginIndexValidatorComponent {
                         key,
                         this.genreMap[key]
                     ).mergeMap(data => {
-                        let id = data[0].value
-                        if (id.length != 24) { // eliminate '---'
+                        //console.log("auxi", data)
+                        if (data.length == 0 || data[0].value.length != 24) { // eliminate '---'
                             return Observable.of({'key': key, 'value': '', 'sampleId': sample.id, 'index': i})
                         }
+                        let id = data[0].value
                         return this.entityService.retrieveBy({
                             "_id": data[0].value, // latest value ?
                         }).map(indexEntity => {
@@ -127,11 +128,20 @@ export class PluginIndexValidatorComponent {
                         key,
                         this.genreMap[key]
                     ).map(data => {
-                        return {
-                            'key': key,
-                            'value': data[0]['value'],
-                            'sampleId': sample.id,
-                            'index': i
+                        if (data.length == 0) {
+                            return {
+                                'key': key,
+                                'value': '',
+                                'sampleId': sample.id,
+                                'index': i
+                            }
+                        } else {
+                            return {
+                                'key': key,
+                                'value': data[0]['value'],
+                                'sampleId': sample.id,
+                                'index': i
+                            }
                         }
                     })
                 )
