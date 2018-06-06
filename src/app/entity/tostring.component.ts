@@ -27,7 +27,10 @@ export class EntityToStringComponent {
   }
 
   getEntityLabel(){
-
+        if (!this.entity) {
+            this.label = this.entity || this.entityId
+            return
+        }
     // Get all the attributes and check whether the `SYS_IS_ENTITY_LABEL` is
     // true, which is assigned while the creation of the attribute
     this.entityService.retrieveAttribute(this.entity.id)
