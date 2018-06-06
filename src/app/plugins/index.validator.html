@@ -37,22 +37,22 @@
                         Sample Code
                     </th>
                     <th>
-                        Index Sequence #1 I7
+                        TPE 1.0编号
                     </th>
                     <th>
-                        Index Code #1 I7
+                        TPE 2.0编号
                     </th>
                     <th>
-                        Index Sequence #2 I7
+                        IGT-I5编号
                     </th>
                     <th>
-                        Index Code #2 I7
+                        IGT-I5编号
                     </th>
                     <th>
-                        Index Sequence #2 I5
+                        Index 序列 (I5)
                     </th>
                     <th>
-                        Index Code #2 I5
+                        Index 序列 (I7)
                     </th>
                 </tr>
             </thead>
@@ -73,7 +73,7 @@
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            {{this.sampleMap[sample.id][codeMap['SI7_SEQN_KEY']]}}
+                            {{this.sampleMap[sample.id]["SYS_INDEX_TPE_1"]}}
                             <!--<show-auxiliary-attribute-->
                                 <!--[outputValue]="sampleMap"-->
                                 <!--[hybridObject]="{}"-->
@@ -86,7 +86,10 @@
                         </span>
                     </td>
                     <td>
-                        {{this.sampleMap[sample.id][codeMap['SI7_CODE_KEY']]}}
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id]["SYS_INDEX_TPE_2"]}}
+                        </span>
                         <!--<show-auxiliary-attribute-->
                             <!--[hybridObject]="{}"-->
                             <!--[sample]="sample"-->
@@ -99,7 +102,7 @@
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            {{this.sampleMap[sample.id][codeMap['MI7_SEQN_KEY']]}}
+                            {{this.sampleMap[sample.id]["SYS_INDEX_IGT_I5"]}}
                             <!--<show-auxiliary-attribute-->
                                 <!--[outputValue]="sampleMap"-->
                                 <!--[hybridObject]="{}"-->
@@ -112,7 +115,10 @@
                         </span>
                     </td>
                     <td>
-                        {{this.sampleMap[sample.id][codeMap['MI7_CODE_KEY']]}}
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id]["SYS_INDEX_IGT_I7"]}}
+                        </span>
                         <!--<show-auxiliary-attribute-->
                             <!--[hybridObject]="{}"-->
                             <!--[sample]="sample"-->
@@ -125,7 +131,7 @@
                     <td>
                         <span
                             [class.td-warn]="!resultList[i]">
-                            {{this.sampleMap[sample.id][codeMap['MI5_SEQN_KEY']]}}
+                            {{this.sampleMap[sample.id]["SYS_INDEX_EXT_SEQUENCE_I5"]}}
                             <!--<show-auxiliary-attribute-->
                                 <!--[outputValue]="sampleMap"-->
                                 <!--[hybridObject]="{}"-->
@@ -138,7 +144,10 @@
                         </span>
                     </td>
                     <td>
-                        {{this.sampleMap[sample.id][codeMap['MI5_CODE_KEY']]}}
+                        <span
+                            [class.td-warn]="!resultList[i]">
+                            {{this.sampleMap[sample.id]["SYS_INDEX_EXT_SEQUENCE_I7"]}}
+                        </span>
                         <!--<show-auxiliary-attribute-->
                             <!--[hybridObject]="{}"-->
                             <!--[sample]="sample"-->
