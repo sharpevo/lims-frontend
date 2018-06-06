@@ -161,8 +161,8 @@ export class PluginIndexValidatorComponent {
     checkSequence(sampleId: string, index: number) {
         let tpe1 = this.sampleMap[sampleId]["SYS_INDEX_TPE_1"] ? this.sampleMap[sampleId]["SYS_INDEX_TPE_1"] : ''
         let tpe2 = this.sampleMap[sampleId]["SYS_INDEX_TPE_2"] ? this.sampleMap[sampleId]["SYS_INDEX_TPE_2"] : ''
-        let igt1 = this.sampleMap[sampleId]["SYS_INDEX_IGT_1"] ? this.sampleMap[sampleId]["SYS_INDEX_IGT_1"] : ''
-        let igt2 = this.sampleMap[sampleId]["SYS_INDEX_IGT_2"] ? this.sampleMap[sampleId]["SYS_INDEX_IGT_2"] : ''
+        let igt1 = this.sampleMap[sampleId]["SYS_INDEX_IGT_I5"] ? this.sampleMap[sampleId]["SYS_INDEX_IGT_I5"] : ''
+        let igt2 = this.sampleMap[sampleId]["SYS_INDEX_IGT_I7"] ? this.sampleMap[sampleId]["SYS_INDEX_IGT_I7"] : ''
         let ext1 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I5"] ? this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I5"] : ''
         let ext2 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"] ? this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"] : ''
         let key = tpe1 + tpe2 + igt1 + igt2 + ext1 + ext2
