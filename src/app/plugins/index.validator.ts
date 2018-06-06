@@ -10,6 +10,17 @@ import {Observable} from 'rxjs/Observable'
     styleUrls: ['./index.validator.css']
 })
 export class PluginIndexValidatorComponent {
+    indexSysCodeList: any[] = [
+        "SYS_INDEX_TPE_1",
+        "SYS_INDEX_TPE_2",
+        "SYS_INDEX_IGT_I5",
+        "SYS_INDEX_IGT_I7",
+    ]
+    sequenceSysCodeList: any[] = [
+        "SYS_INDEX_EXT_SEQUENCE_I5",
+        "SYS_INDEX_EXT_SEQUENCE_I7",
+    ]
+
     @Input() sampleList
     selectedSampleList: any[] = []
     result: boolean = true
@@ -36,12 +47,11 @@ export class PluginIndexValidatorComponent {
 
     ngOnInit(){
         this.updatePreviousCheckedList()
-        console.log(this.previousCheckedList)
-        Object.keys(this.codeMap).forEach(key => {
+
+        this.indexSysCodeList.concat(this.sequenceSysCodeList).forEach(key => {
             this.attributeService.retrieveBy({
-                "SYS_CODE": this.codeMap[key]
-            })
-            .subscribe(data => {
+                "SYS_CODE": key
+            }).subscribe(data => {
                 this.genreMap[key] = data[0].SYS_GENRE.id
             })
         })
@@ -91,18 +101,41 @@ export class PluginIndexValidatorComponent {
             this.resultList[i] = true
 
             this.sampleMap[sample.id] = {}
-            Object.keys(this.codeMap).forEach(key => {
+            this.indexSysCodeList.forEach(key => {
                 sampleObs.push(
                     this.sampleService.retrieveAuxiliaryAttributeList(
                         sample,
-                        this.codeMap[key],
-                        this.genreMap[key])
-                        .map(data => {
-                            return {'key': key, 'attrValueList': data, 'sampleId': sample.id, 'index': i}
+                        key,
+                        this.genreMap[key]
+                    ).mergeMap(data => {
+                        let id = data[0].value
+                        if (id.length != 24) { // eliminate '---'
+                            return Observable.of({'key': key, 'value': '', 'sampleId': sample.id, 'index': i})
+                        }
+                        return this.entityService.retrieveBy({
+                            "_id": data[0].value, // latest value ?
+                        }).map(indexEntity => {
+                            return {'key': key, 'value': indexEntity[0]['SYS_INDEX_SEQUENCE'], 'sampleId': sample.id, 'index': i}
+                        })
+                    })
+                )
+            })
+            this.sequenceSysCodeList.forEach(key => {
+                sampleObs.push(
+                    this.sampleService.retrieveAuxiliaryAttributeList(
+                        sample,
+                        key,
+                        this.genreMap[key]
+                    ).map(data => {
+                        return {
+                            'key': key,
+                            'value': data[0],
+                            'sampleId': sample.id,
+                            'index': i
+                        }
                         })
                 )
             })
-
         } // end of for loop
 
         Observable
@@ -111,10 +144,10 @@ export class PluginIndexValidatorComponent {
             console.log("DATA", data)
             data.forEach(result => {
                 let key = result['key']
-                let attr = result['attrValueList']
+                    let attr = result['value'] ? result['value'] : ''
                 let sampleId = result['sampleId']
                 let index = result['index']
-                this.sampleMap[sampleId][this.codeMap[key]] = attr.length > 0?attr[0]['value']:''
+                    this.sampleMap[sampleId][key] = attr
             })
 
             this.result = true
@@ -126,10 +159,14 @@ export class PluginIndexValidatorComponent {
     }
 
     checkSequence(sampleId: string, index: number){
-        let mi5 = this.sampleMap[sampleId][this.codeMap['MI5_SEQN_KEY']]
-        let mi7 = this.sampleMap[sampleId][this.codeMap['MI7_SEQN_KEY']]
-        let si7 = this.sampleMap[sampleId][this.codeMap['SI7_SEQN_KEY']]
-        let key = si7 + mi7 + mi5
+        let tpe1 = this.sampleMap[sampleId]["SYS_INDEX_TPE_1"]
+        let tpe2 = this.sampleMap[sampleId]["SYS_INDEX_TPE_2"]
+        let igt1 = this.sampleMap[sampleId]["SYS_INDEX_IGT_1"]
+        let igt2 = this.sampleMap[sampleId]["SYS_INDEX_IGT_2"]
+        let ext1 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I5"]
+        let ext2 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"]
+        let key = tpe1 + tpe2 + igt1 + igt2 + ext1 + ext2
+
         if (this.seqMap.hasOwnProperty(key) && Number(this.seqMap[key]) != index){
             console.log("duped: ", sampleId, key, this.seqMap)
             this.result = false
