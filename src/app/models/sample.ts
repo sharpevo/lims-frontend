@@ -182,6 +182,17 @@ export class SampleService {
     }
 
     retrieveAuxiliaryAttributeList(sample: any, attributeCode: string, attributeGenre: string) {
+        if (!attributeGenre) {
+            return Observable.of([''])
+        }
+
+        return this.genreService.retrieveBy({
+            "_id": attributeGenre,
+        }).mergeMap(genreList => {
+            let genre = genreList[0]
+            return this.genreService.retrieveBy({
+                "SYS_ENTITY": genre['SYS_ENTITY'].id
+            }).mergeMap(genreList => {
 
         // Get the latest sample
         return this.entityService.retrieveBy({
@@ -213,7 +224,8 @@ export class SampleService {
                                 seen[key] = true
                             }
 
-                            if (attributeGenre == sample['SYS_GENRE'] || attributeCode == "SYS_SAMPLE_CODE") {
+                                    if (genreList.indexOf(sample['SYS_GENRE']) ||
+                                        attributeCode == "SYS_SAMPLE_CODE") {
                                 uniqueSampleList.push(sample)
                             }
                         }
@@ -241,6 +253,8 @@ export class SampleService {
                 }
                 return attributeObjectList
             })
+            })
+        })
     }
 
     /**
