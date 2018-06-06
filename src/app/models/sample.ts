@@ -237,7 +237,7 @@ export class SampleService {
                                         "id": sample.id,
                                         "dateCompleted": sample['SYS_DATE_COMPLETED'],
                                         "dateUpdated": sample['updatedAt'],
-                                        "value": sample[attributeCode] ? sample[attributeCode] : "---"
+                                        "value": sample[attributeCode] ? sample[attributeCode] : ""
                                     })
                                 })
                         } else {
@@ -248,7 +248,7 @@ export class SampleService {
                                 "id": firstSample.id,
                                 "dateCompleted": firstSample['SYS_DATE_COMPLETED'],
                                 "dateUpdated": firstSample['updatedAt'],
-                                "value": firstSample[attributeCode] ? firstSample[attributeCode] : "---"
+                                "value": firstSample[attributeCode] ? firstSample[attributeCode] : ""
                             })
                         }
                         return attributeObjectList
