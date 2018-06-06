@@ -219,17 +219,19 @@ export class SampleService {
                             let seen = {}
                             activatedSampleList.forEach(sample => {
                                 let key = attributeCode + "|" + sample[attributeCode]
+                                let isValidGenre = genreList.map(genre => genre.id).indexOf(sample['SYS_GENRE']) >= 0
                                 if (!seen[key]) {
-                                    if (sample[attributeCode]) {
+                                    if (sample[attributeCode] && isValidGenre) {
                                         seen[key] = true
                                     }
 
-                                    if (genreList.indexOf(sample['SYS_GENRE']) ||
-                                        attributeCode == "SYS_SAMPLE_CODE") {
+                                    if (isValidGenre) {// ||
+                                        //console.log("GC", genreList.map(genre => genre.id).indexOf(sample['SYS_GENRE']), attributeCode, genreList, sample['SYS_GENRE'], sample.id)
                                         uniqueSampleList.push(sample)
                                     }
                                 }
                             })
+                            //console.log("US", uniqueSampleList)
 
                             uniqueSampleList
                                 .forEach(sample => {
