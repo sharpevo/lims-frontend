@@ -39,6 +39,9 @@ export class PluginIndexValidatorComponent {
     seqMap: any = {}
     test: string = ''
 
+    resultMap: any = {}
+    keyMap: any = {}
+
     constructor(
         private entityService: EntityService,
         private attributeService: AttributeService,
@@ -80,7 +83,19 @@ export class PluginIndexValidatorComponent {
             let sample = this.sampleList[i]
             if (sample['TMP_CHECKED'] != null &&
                 sample['TMP_CHECKED'] != this.previousCheckedList[i]) {
-                console.log("==", sample['TMP_CHECKED'], this.previousCheckedList[i])
+
+                if (!sample['TMP_CHECKED']) { // uncheck
+                    delete this.keyMap[sample.id]
+                    delete this.resultMap[sample.id]
+                    delete this.sampleMap[sample.id]
+                    this.result = true
+                    this.sampleList.filter(sample => sample.TMP_CHECKED).forEach((sample, index) => {
+                        if (!this.checkSequence(sample.id, index)) {
+                            this.result = false
+                        }
+                    })
+                }
+
                 this.updatePreviousCheckedList()
                 return true
             }
@@ -89,15 +104,19 @@ export class PluginIndexValidatorComponent {
     }
 
     validateIndices() {
+
         this.selectedSampleList = this.sampleList.filter(sample => sample.TMP_CHECKED)
         this.resultList = []
         this.seqMap = []
-        if (this.selectedSampleList.length == 0) {
+
+        let toParsedSampleList = this.selectedSampleList.filter(sample => !this.sampleMap[sample.id])
+
+        if (toParsedSampleList.length == 0) {
             return
         }
         let sampleObs = []
-        for (let i = 0; i < this.selectedSampleList.length; i++) {
-            let sample = this.selectedSampleList[i]
+        for (let i = 0; i < toParsedSampleList.length; i++) {
+            let sample = toParsedSampleList[i]
             this.resultList[i] = true
 
             this.sampleMap[sample.id] = {}
@@ -160,15 +179,15 @@ export class PluginIndexValidatorComponent {
                     this.sampleMap[sampleId][key] = attr
                 })
 
-                this.result = true
-                this.selectedSampleList.forEach((sample, index) => {
+                toParsedSampleList.forEach((sample, index) => {
                     this.checkSequence(sample.id, index)
                 })
+
             })
 
     }
 
-    checkSequence(sampleId: string, index: number) {
+    checkSequence(sampleId: string, index: number): boolean {
         let tpe1 = this.sampleMap[sampleId]["SYS_INDEX_TPE_1"] ? this.sampleMap[sampleId]["SYS_INDEX_TPE_1"] : ''
         let tpe2 = this.sampleMap[sampleId]["SYS_INDEX_TPE_2"] ? this.sampleMap[sampleId]["SYS_INDEX_TPE_2"] : ''
         let igt1 = this.sampleMap[sampleId]["SYS_INDEX_IGT_I5"] ? this.sampleMap[sampleId]["SYS_INDEX_IGT_I5"] : ''
@@ -177,16 +196,18 @@ export class PluginIndexValidatorComponent {
         let ext2 = this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"] ? this.sampleMap[sampleId]["SYS_INDEX_EXT_SEQUENCE_I7"] : ''
         let key = tpe1 + tpe2 + igt1 + igt2 + ext1 + ext2
 
-        if (this.seqMap.hasOwnProperty(key) && Number(this.seqMap[key]) != index) {
-            console.log("duped: ", sampleId, key, this.seqMap)
-            this.result = false
-            this.resultList[index] = false
-            this.resultList[Number(this.seqMap[key])] = false
-        } else if (key) {
-            this.seqMap[key] = '' + index
-            this.resultList[index] = true
+        this.keyMap[sampleId] = key
+        this.resultMap[sampleId] = true
+        for (let _sampleId of Object.keys(this.keyMap)) {
+            if (_sampleId != sampleId &&
+                this.keyMap[_sampleId] == key) {
+                this.resultMap[_sampleId] = false
+                this.resultMap[sampleId] = false
+                this.result = false
+                return this.result
+            }
         }
-        //console.log("sample: ", sampleId, "index: " + index, "key: " + key, this.seqMap, "resultList", this.resultList)
+        return this.result
     }
 
 }
