@@ -176,7 +176,7 @@ export class TablifyComponent {
     checkCurrentSample(sample: any, checked: boolean) {
         let currentSampleIndex = sample['TMP_NEXT_SAMPLE_INDEX']
         if (currentSampleIndex >= 0) {
-            console.log("C", sample.id)
+            //console.log("C", sample.id)
             this.rawSampleList[currentSampleIndex]['TMP_CHECKED'] = checked
             this.rawSampleList[currentSampleIndex]['SYS_HYBRID_INFO'] = sample['SYS_HYBRID_INFO']
         } else {
@@ -215,7 +215,7 @@ export class TablifyComponent {
                         .subscribe(data => {
                             let sample = data['sample']
                             let sampleSet = data['sampleSet']
-                            console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
+                            //console.log('Retriving auxi attrs of ', sample['SYS_SAMPLE_CODE'])
 
                             sample['TMP_CHECKED'] = checked
 
@@ -492,7 +492,7 @@ export class SampleDataSource extends DataSource<any> {
 
                         return this.entityService.retrieveBy(queryObject)
                             .mergeMap(innerSampleList => {
-                                console.log("INNER SAMPLE", innerSampleList)
+                                //console.log("INNER SAMPLE", innerSampleList)
 
                                 return Observable.forkJoin(
                                     innerSampleList.map(innerSample => {
@@ -506,7 +506,8 @@ export class SampleDataSource extends DataSource<any> {
                     }
 
                 })
-            ).subscribe(error => console.log("SimpleTable:", error))
+            ).subscribe()
+            //).subscribe(error => console.log("SimpleTable:", error))
 
             return result
         })
